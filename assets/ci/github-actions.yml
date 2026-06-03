@@ -1,0 +1,37 @@
+# Spec-Driven QA quality gate — drop into .github/workflows/quality-gate.yml
+# Runs the suite on every PR and blocks merge unless readiness clears threshold.
+name: Spec-Driven QA Quality Gate
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    env:
+      # judge provider for headless runs; set the matching secret in repo settings
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      MIN_READINESS: "85"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install pypdf python-docx --break-system-packages
+      # Assumes a committed run dir with 01_requirements.json + 02_testcases.json,
+      # and the system-under-test reachable (spin it up in a prior step / service).
+      - name: Execute suite
+        run: python scripts/run_suite.py runs/ci/02_testcases.json --out runs/ci/03_results.json
+      - name: Evaluate AI cases (LLM-as-judge)
+        run: python scripts/judge.py run runs/ci --provider anthropic
+      - name: Score release readiness
+        run: python scripts/score_release.py runs/ci
+      - name: Build report
+        run: python scripts/make_report.py runs/ci
+      - uses: actions/upload-artifact@v4
+        with: { name: quality-report, path: runs/ci/report.html }
+      - name: Enforce gate
+        run: |
+          SCORE=$(python -c "import json;print(json.load(open('runs/ci/readiness.json'))['score'])")
+          REC=$(python -c "import json;print(json.load(open('runs/ci/readiness.json'))['recommendation'])")
+          echo "Readiness: $SCORE ($REC)"
+          python -c "import json,sys; r=json.load(open('runs/ci/readiness.json')); sys.exit(0 if (r['score']>=${MIN_READINESS} and r['recommendation']!='hold') else 1)"
