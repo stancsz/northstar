@@ -21,6 +21,10 @@ trigger_phrases:
   - QA my agent
   - release readiness report
   - build a test suite from this spec
+  - conformance test against this standard
+  - is this repo conformant with <standard>
+  - audit this repo against <standard>
+  - check conformance to <standard>
 compatibility: Python >= 3.10. Optional extras (auto-installable): pypdf / python-docx for PRD ingestion; playwright + chromium for the visual report render; a judge API key (ANTHROPIC_API_KEY / MINIMAX_API_KEY / OPENAI_API_KEY) for headless evaluation. Without an API key Claude scores inline for free.
 ---
 
@@ -96,6 +100,38 @@ Two ways in:
   surface findings to the user, and apply human sign-off before the report.
   Use this when the user says stakes are high (fintech, healthcare, regulated).
 
+Two input kinds:
+- **PRD** (default): product requirements describing features to test. See Layer 1 below.
+- **Standards Conformance**: an external standard (e.g. `GB/T 25000.51-2016.pdf`)
+  whose clauses we test a target repo against. See Layer 0 below for dispatch.
+
+---
+
+## Layer 0 — DISPATCH (mode detection)
+
+The first thing you do on `/spec-driven-qa <path>` is pick the input mode. The
+heuristic is path + content sniff, with the user able to override:
+
+1. **Path signal — Standards Conformance.** The input path contains `standards/`,
+   `conformance/`, or a known standard-ID token (`_gbt_`, `_gb_`, `_iso_`, `_iec_`,
+   `_en_`, `_bs_`, `_jis_`, `_din_`) — treat as a standard.
+2. **Content signal — Standards Conformance.** The extracted text contains ≥30
+   numbered clause headings (matching `^\s*\d+(?:\.\d+){0,3}\s+\S+`) and
+   normative modal verbs (English `shall/must`, Chinese `应/应按/不得/必须/应符合`)
+   in proportions typical of a standard (not a marketing doc). Treat as a standard.
+3. **User override.** "Treat this as a PRD" or "Treat this as a standard" wins.
+4. **Default.** If neither signal fires, treat as PRD.
+
+After dispatch, in Standards Conformance mode, **ask the user which repo to test**
+(single AskUserQuestion with `cwd` as the default). Don't proceed silently — a
+standards run against the wrong repo is worse than no run.
+
+Confirm the mode to the user before ingesting: "Treating this as a standards
+document — say 'as PRD' if I got it wrong. Which repo should I test against it?"
+
+The rest of this document describes both modes. PRD-mode behavior is unchanged;
+each layer has a **Standards Conformance mode** sub-bullet listing the deltas.
+
 ---
 
 ## Layer 1 — UNDERSTAND (Requirements → Testable Structure)
@@ -124,6 +160,17 @@ Goal: a validated requirement graph with ambiguities and predicted gaps flagged
    This checks IDs/dependencies/cycles and adds heuristic ambiguity flags. Fix any
    structural error it reports before moving on. Surface the ambiguities to the
    user — a contradiction caught here is worth a hundred tests downstream.
+
+**Standards Conformance mode.** Use `scripts/ingest_standard.py` instead of
+`ingest_prd.py`. The script extracts clause headings, finds normative sentences
+using the Chinese + English modal set, and writes `standards_index.json` at the
+run root. Author `01_requirements.json` with one entry per normative clause:
+`type = "conformance_criterion"`, `standard_id` (e.g. `"GB/T 25000.51-2016"`),
+`clause` (e.g. `"5.1.1"`), `standard_name` (the standard's full title, surfaced
+in the report), and `risk` (assess per clause: critical for security/safety,
+high for functional suitability, medium for documentation, low for stylistic).
+Skip clauses that require runtime validation — they become `manual` cases in
+Layer 2, not conformance requirements.
 
 ---
 
@@ -182,6 +229,20 @@ This is generated mechanically so coverage is meaningful, not invented. Read
    `02_testcases.json` is the deliverable test suite. Convert to
    Markdown/Excel/TestRail/Jira from this file if the user wants those formats.
 
+**Standards Conformance mode.** Most cases use the new `codebase` target kind
+(`target.kind: "codebase"`, with `pattern` + optional `regex`/`file_match`).
+For each "shall X" clause, write a positive-existence case
+(`expected.predicate: "result['count'] >= 1"`). For each "shall not / 不得 X"
+clause, write a negative-absence case
+(`expected.predicate: "result['count'] == 0"`). Read
+`references/standards_to_testcases.md` for the full translation table —
+including the "static check" coverage list (file/path/regex patterns) and the
+clauses you should NOT reduce to a static check (latency, throughput,
+correctness of crypto, race conditions — mark those `target.kind: "manual"`).
+The classical expander can help if your `_test_model.json` has one variable
+per area to scan (e.g. `middleware / routes / tests`) with a
+`target_template: {kind: codebase, regex: "auth"}`.
+
 ---
 
 ## Layer 3 — EXECUTE (Cases → Results)
@@ -204,6 +265,15 @@ python scripts/run_suite.py "$RUN/02_testcases.json" --out "$RUN/03_results.json
 For **agent** products, capture the full decision trace (each tool call, reasoning
 step, state transition) and write `agent_traces` entries in `05_evaluations.json`
 per `references/rubric_guide.md`. The trace is the test, not just the final answer.
+
+**Standards Conformance mode.** Pass the target repo to the runner:
+`python scripts/run_suite.py "$RUN/02_testcases.json" --out "$RUN/03_results.json" --repo /path/to/repo`.
+The runner injects `--repo` into every `codebase` target missing its own
+`target.repo` (or set `SDQ_REPO=/path/to/repo` in the environment). The result
+shape — `{files, count, matches, scanned_files, scanned_bytes, errors}` — is
+fed into the existing `expected.predicate` evaluator unchanged. `--samples`
+is irrelevant for static checks (always 1). `manual` runtime clauses are
+honestly `skipped`, not faked as pass.
 
 ---
 
@@ -259,6 +329,14 @@ Adversarial coverage is not optional for any user-facing LLM.
 varying input profiles (names, locales, genders); a quality system scores them
 equivalently. Divergence is a consistency defect.
 
+**Standards Conformance mode.** The judge is not used (no rubric cases). The
+adversarial / OWASP pack is only relevant if the target repo contains a
+user-facing LLM surface; usually you skip Layer 5's adversarial probes and go
+straight to Layer 6. If the standard has its own security/privacy clauses
+(most do), wire the relevant PII/access-control detectors from
+`references/compliance.md` into a small `compliance.json`; the readiness score
+will then carry weight from those checks via the existing 0.15·compliance term.
+
 ---
 
 ## Layer 6 — REPORT & COMPLY (Evidence → Decisions)
@@ -281,6 +359,25 @@ Goal: a decision, not a pile of logs.
    ```
    Coverage is requirement-mapped, every defect carries a reproduction path, and
    the readiness scorecard shows the ship / ship-with-caveats / hold call.
+
+**Standards Conformance mode.** `make_report.py` automatically inserts a
+**Conformance Matrix** section between the Coverage Map and Defects, with one
+row per `conformance_criterion` requirement: `Clause | Standard | Title | Status
+| Evidence`. Status is `pass`/`fail`/`skipped` from the results. A clause whose
+all-cases are `skipped` is rendered as `runtime / not exercised by static check`
+in the Evidence column. The compliance component of the readiness score is the
+clause-level pass rate, so the same ship-with-caveats / hold thresholds apply.
+**Localized rendering** — pass `--lang zh` (or set `SDQ_LANG=zh`) to render the
+report in Chinese: section headings, column headers, status/severity/recommendation
+labels, the Conformance Matrix "Standard:" / "N clauses" header, and the
+"runtime / not exercised" evidence note are all translated. Clause text and
+the standard name come from the source document and are passed through
+unchanged, so mixed Chinese/English standards (e.g. GB/T with English titles)
+render correctly. **Default the report language to `zh` when the input
+standard's `standard_id` starts with a Chinese-national prefix** (`GB/T`, `GB`,
+`DA/T`, `DB`); otherwise default to `en`. Both are 1-line arguments; the
+artifact files do not change so you can re-render the same run in either
+language without re-running the suite.
 
 ---
 
@@ -316,6 +413,19 @@ the substance and the formatting.
 
 4. Only now present `report.html` to the user (use `present_files` if available),
    and state the key hidden limitations alongside the readiness call.
+
+**Standards Conformance mode.** `limitations.md` MUST enumerate:
+- which clauses were marked `skipped` (runtime/behavior) and why;
+- that static checks are grep+glob, not AST or runtime;
+- any directories excluded from the scan (large vendored trees, generated
+  files) and why the agent trusts the omission;
+- the standards_index.json's `clause_count` vs the actual clauses you turned
+  into requirements — explain the gap (informative clauses, scope cuts,
+  duplicate headings, OCR losses).
+The new `verify.py` FAILs for conformance — `conformance_criterion` reqs must
+have `standard_id` + `clause`, codebase targets must have a non-empty `pattern`,
+`standards_index.json` must exist when `standard_id` is used — catch the common
+drafting mistakes before you present the report.
 
 ---
 
@@ -354,6 +464,43 @@ python scripts/make_report.py "$RUN"
 python scripts/verify.py "$RUN"            # then `view "$RUN/report.png"` and eyeball it
 ```
 
+## One-shot run (Standards Conformance mode, quick reference)
+
+```bash
+RUN=runs/$(date +%Y%m%d-%H%M%S); mkdir -p "$RUN"
+REPO=/path/to/target/repo                    # ask the user; don't guess
+
+# 0. DISPATCH: standards/gbt_25000_51_2016.pdf matches the path heuristic -> Standards mode.
+
+# 1. UNDERSTAND — ingest the standard
+python scripts/ingest_standard.py standards/gbt_25000_51_2016.pdf --out "$RUN"
+#    -> Claude writes $RUN/01_requirements.json with type="conformance_criterion"
+#       and standard_id/clause populated per requirement.
+python scripts/graph_tools.py "$RUN/01_requirements.json"
+
+# 2A. GENERATE (classical backbone) — only if you want EP/BVA expansion
+python scripts/generate_test_cases.py scaffold "$RUN/01_requirements.json" --out "$RUN/02_testcases.json"
+python scripts/classical_tests.py model "$RUN/01_requirements.json" --out "$RUN/_test_model.json"
+#    -> Claude fills in variables/partitions (e.g. area: middleware/routes/tests)
+#       and target_template: {kind: codebase, regex: ...}
+python scripts/classical_tests.py expand "$RUN/_test_model.json" --into "$RUN/02_testcases.json"
+
+# 2B. GENERATE — Claude adds positive/negative codebase cases per clause
+#    (see references/standards_to_testcases.md for the translation table)
+python scripts/generate_test_cases.py validate "$RUN/02_testcases.json" --graph "$RUN/01_requirements.json"
+
+# 3. EXECUTE — pass the target repo to the runner
+python scripts/run_suite.py "$RUN/02_testcases.json" --out "$RUN/03_results.json" --repo "$REPO"
+
+# 6. REPORT & COMPLY
+python scripts/score_release.py "$RUN"     # -> defects.json + readiness.json
+python scripts/make_report.py "$RUN" --lang zh   # -> report.html + report.md (Conformance Matrix auto-rendered)
+
+# 7. VERIFY (mandatory) — author limitations.md FIRST, listing runtime-clauses skipped
+#    and the standards_index.json clause_count vs req-count gap.
+python scripts/verify.py "$RUN"            # then `view "$RUN/report.png"` and eyeball it
+```
+
 ## File map
 
 ```
@@ -362,18 +509,20 @@ spec-driven-qa/
 ├── scripts/
 │   ├── _common.py           shared IO / severity weights
 │   ├── ingest_prd.py        L1: PRD -> text + candidate requirements
+│   ├── ingest_standard.py   L1 (Standards Conformance mode): standard -> clauses + normative sentences
 │   ├── graph_tools.py       L1: validate + enrich requirement graph
 │   ├── generate_test_cases.py L2: scaffold + validate suite
-│   ├── classical_tests.py    L2A: auto EP/BVA/decision-table/state-transition backbone
-│   ├── run_suite.py         L3: execute http/cli/python/manual targets
+│   ├── classical_tests.py    L2A: auto EP/BVA/decision-table/state-transition backbone (+ codebase target)
+│   ├── run_suite.py         L3: execute http/cli/python/codebase/manual targets
 │   ├── judge.py             L5: LLM-as-judge (inline or API) + consistency
 │   ├── adversarial.py       L5: OWASP LLM Top 10 probe runner
 │   ├── score_release.py     L6: defect consolidation + readiness score
-│   ├── make_report.py       L6: report.html + report.md (+ hidden limitations)
+│   ├── make_report.py       L6: report.html + report.md (+ Conformance Matrix + hidden limitations)
 │   └── verify.py            L7: quality/format lint + report rasterization (--strict gate)
 ├── references/
 │   ├── schemas.md           every JSON artifact's shape — read first
 │   ├── classical_techniques.md  the test model + EP/BVA/DT/ST expansion
+│   ├── standards_to_testcases.md L2 (Standards Conformance mode): clause -> codebase test case
 │   ├── rubric_guide.md      writing non-deterministic rubrics + agent traces
 │   ├── owasp_llm_top10.md   adversarial probe reference
 │   └── compliance.md        GDPR/PIPL/SOC2/ISO25010 + PII detectors

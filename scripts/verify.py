@@ -106,6 +106,38 @@ def main():
         chk("FAIL", "every requirement covered", not uncovered,
             f"uncovered: {uncovered}" if uncovered else "100% requirement coverage")
 
+    # --- Standards Conformance mode: conformance_criterion reqs have standard_id + clause ---
+    if graph:
+        conf_reqs = [r for r in graph["requirements"] if r.get("type") == "conformance_criterion"]
+        if conf_reqs:
+            bad = [r["id"] for r in conf_reqs
+                   if not r.get("standard_id") or not r.get("clause")]
+            chk("FAIL", "conformance_criterion reqs have standard_id + clause", not bad,
+                f"missing standard_id or clause: {bad}" if bad
+                else f"all {len(conf_reqs)} conformance reqs tagged with standard_id + clause")
+            # standards_index.json must exist at run root
+            idx = opt(f"{rd}/standards_index.json")
+            any_tagged = any(r.get("standard_id") for r in graph["requirements"])
+            chk("FAIL" if any_tagged else "INFO",
+                "standards_index.json present when standard_id is used",
+                idx is not None,
+                ("standards_index.json missing — run ingest_standard.py to create it, "
+                 "or remove standard_id from the requirement graph.") if not idx and any_tagged
+                else "")
+
+    # --- codebase targets have a valid glob pattern ---
+    if tc:
+        bad_codebase = []
+        for c in tc["cases"]:
+            tgt = c.get("target", {})
+            if tgt.get("kind") == "codebase":
+                pat = tgt.get("pattern")
+                if not pat or not isinstance(pat, (str, list)) or (
+                        isinstance(pat, str) and not pat.strip()):
+                    bad_codebase.append(c["id"])
+        chk("FAIL", "codebase targets have a non-empty pattern", not bad_codebase,
+            f"codebase targets missing pattern: {bad_codebase}" if bad_codebase else "")
+
     # --- skipped cases are not silently passed ---
     if res:
         skipped = [r["case_id"] for r in res["results"] if r["status"] == "skipped"]

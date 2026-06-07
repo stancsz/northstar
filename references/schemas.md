@@ -42,11 +42,16 @@ AI/rubric case must map to a requirement that also has at least one
     {
       "id": "R-001",
       "text": "Verbatim or lightly-normalized requirement statement.",
-      "type": "functional | non_functional | ai_behavior | security | compliance",
+      "type": "functional | non_functional | ai_behavior | security | compliance | conformance_criterion",
       "acceptance_criteria": ["AC the requirement must satisfy"],
       "depends_on": ["R-000"],
       "is_ai_feature": false,
-      "risk": "low | medium | high | critical"
+      "risk": "low | medium | high | critical",
+
+      // Standards Conformance mode — populate when type == "conformance_criterion"
+      "standard_id": "GB/T 25000.51-2016",
+      "standard_name": "Software product quality — Part 51: Quality requirements and test for commercial off-the-shelf (COTS) software product",
+      "clause": "5.1.1"
     }
   ],
   "ambiguities": [
@@ -59,7 +64,26 @@ AI/rubric case must map to a requirement that also has at least one
 ```
 
 `type` and `is_ai_feature` drive downstream behavior: AI features get rubrics +
-adversarial probes instead of exact-match assertions.
+adversarial probes instead of exact-match assertions. `conformance_criterion`
+is used in **Standards Conformance mode** (one `codebase` target per requirement,
+matched against a target repo). For conformance requirements, `standard_id` and
+`clause` MUST be populated; `verify.py` enforces this. See also
+`standards_index.json` at the run root (Layer 1, Standards Conformance mode).
+
+### `standards_index.json` (Standards Conformance mode, run root)
+
+```json
+{
+  "standard_id": "GB/T 25000.51-2016",
+  "standard_name": "Software product quality — Part 51",
+  "edition": "2016",
+  "publisher": "SAC (中国国家标准化管理委员会)",
+  "source_path": "standards/gbt_25000_51_2016.pdf",
+  "clause_count": 87,
+  "normative_sentence_count": 213,
+  "generated_at": "ISO-8601"
+}
+```
 
 ---
 
@@ -77,10 +101,16 @@ adversarial probes instead of exact-match assertions.
       "preconditions": ["state required before the test"],
       "steps": ["ordered action steps"],
       "target": {
-        "kind": "http | cli | python | manual",
+        "kind": "http | cli | python | manual | codebase",
         "request": {"method": "POST", "url": "...", "headers": {}, "body": {}},
         "command": "echo example",
-        "module": "pkg.mod", "callable": "func", "args": [], "kwargs": {}
+        "module": "pkg.mod", "callable": "func", "args": [], "kwargs": {},
+
+        // Standards Conformance mode (repo is also passed via --repo / $SDQ_REPO)
+        "repo": "/abs/path/to/repo",
+        "pattern": "**/*.py",
+        "regex": "TODO|FIXME",
+        "file_match": "**/auth/**"
       },
       "expected": {
         "mode": "exact | predicate | rubric",
@@ -108,6 +138,51 @@ adversarial probes instead of exact-match assertions.
 
 Rubrics are the heart of non-deterministic evaluation. A case whose `expected.mode`
 is `rubric` is scored by `judge.py`, not by string comparison.
+
+### `target.kind == "codebase"` (Standards Conformance mode)
+
+Static check against a target repo. The repo path is supplied per-run via
+`run_suite.py --repo <path>` (falls back to env var `SDQ_REPO`); the per-case
+`target.repo` field overrides it.
+
+Fields:
+
+- `pattern` (required): a glob (e.g. `**/*.py`, `**/auth/**`, `*.md`) — files matched
+  by `pathlib.Path.rglob` are scanned.
+- `regex` (optional): a Python regex applied to each matched file's text; only
+  files with at least one match contribute to `matches[]`.
+- `file_match` (optional): a glob; if set, only files whose **path** (relative to
+  repo root) matches the glob contribute to `matches[]`. Useful when you want
+  the regex to apply only to a sub-tree.
+
+Result shape (consumed by `expected.predicate` exactly like other targets):
+
+```json
+{
+  "repo": "/abs/path/to/repo",
+  "files": ["/abs/path/.../a.py", "/abs/path/.../b.py"],
+  "count": 2,
+  "matches": [
+    {"file": "/abs/path/.../a.py", "line": 14, "text": "TODO: refactor"},
+    {"file": "/abs/path/.../b.py", "line":  3, "text": "FIXME: race"}
+  ],
+  "scanned_files": 47,
+  "scanned_bytes": 184320,
+  "errors": []
+}
+```
+
+Common predicate idioms:
+
+- Existence (positive): `result['count'] >= 1`  (clause: "shall provide X")
+- Absence (negative): `result['count'] == 0`    (clause: "shall not contain X")
+- Match-a-line:     `any('api_key' in m['text'].lower() for m in result['matches'])`
+- File path only:   `any('auth' in m['file'] for m in result['matches'])`
+
+Files larger than 5 MiB or matching `*.{png,jpg,jpeg,gif,pdf,zip,tar,bin,exe,so,dll}`
+are skipped to keep scans fast and avoid decoding binary garbage. Directories
+matching `.git`, `node_modules`, `__pycache__`, `venv`, `.venv`, `dist`, `build`
+are skipped.
 
 ---
 

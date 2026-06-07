@@ -49,6 +49,7 @@ Then just talk to Claude Code:
 /spec-driven-qa
 test my refund chatbot against this PRD
 is this feature ready to ship?
+/spec-driven-qa standards/gbt_25000_51_2016.pdf    # Standards Conformance mode
 ```
 
 Claude reads `SKILL.md` and drives the pipeline. You don't run the scripts by
@@ -109,17 +110,94 @@ python scripts/verify.py "$RUN" --strict   # lints + renders report.png; --stric
 
 ---
 
+## Standards Conformance Mode
+
+Point the skill at an external standard and a target repo; it will derive test
+cases from the standard's clauses and check whether the repo conforms.
+
+```
+/spec-driven-qa standards/gbt_25000_51_2016.pdf
+```
+
+The agent auto-detects Standards Conformance mode (path under `standards/` or
+filename containing `_gbt_`/`_iso_`/`_iec_`/etc), then asks which repo to test
+against. After you confirm, it runs the same classical-first pipeline:
+
+```bash
+cd ~/.claude/skills/spec-driven-qa
+RUN=runs/$(date +%Y%m%d-%H%M%S); mkdir -p "$RUN"
+REPO=/path/to/target/repo
+
+python scripts/ingest_standard.py standards/gbt_25000_51_2016.pdf --out "$RUN"
+#    -> Claude writes $RUN/01_requirements.json with type="conformance_criterion"
+#       and standard_id + clause populated per requirement.
+python scripts/generate_test_cases.py scaffold "$RUN/01_requirements.json" --out "$RUN/02_testcases.json"
+python scripts/classical_tests.py model "$RUN/01_requirements.json" --out "$RUN/_test_model.json"
+#    -> Claude fills in areas to scan (e.g. middleware / routes / tests)
+#       and target_template: {kind: codebase, regex: "auth"}.
+python scripts/classical_tests.py expand "$RUN/_test_model.json" --into "$RUN/02_testcases.json"
+#    -> Claude adds positive/negative codebase cases per clause (see
+#       references/standards_to_testcases.md for the translation table).
+
+python scripts/run_suite.py "$RUN/02_testcases.json" --out "$RUN/03_results.json" --repo "$REPO"
+python scripts/score_release.py "$RUN"
+python scripts/make_report.py "$RUN"     # report auto-renders a Conformance Matrix
+
+# author limitations.md FIRST, then:
+python scripts/verify.py "$RUN" --strict
+#    -> Claude opens report.png and visually confirms formatting before showing you
+```
+
+What you get back: a **Conformance Matrix** in the report, with one row per
+clause (`Clause | Standard | Title | Status | Evidence`). The readiness score
+treats the clause-level pass rate as the compliance component, so a standards
+run uses the same ship-with-caveats / hold thresholds as a PRD run. Static
+checks (grep + glob) cover 80% of "shall X" / "shall not X" clauses;
+runtime-required clauses (latency, throughput, crypto correctness) are
+reported as `skipped` and enumerated in `limitations.md` — green-by-omission
+is the failure mode the skill is designed to prevent.
+
+**Chinese report (--lang zh).** Render the report in Chinese when auditing
+against a Chinese-national standard (GB/T, DA/T, etc.) or shipping to a
+Chinese-speaking audience:
+
+```bash
+python scripts/make_report.py "$RUN" --lang zh   # or: SDQ_LANG=zh python scripts/make_report.py "$RUN"
+```
+
+Section headings, column headers, status / severity / recommendation labels,
+the Conformance Matrix "Standard:" header, the clauses-count line, and the
+"runtime / not exercised" evidence note are all translated. Clause text and
+the standard name come from the source document and are passed through
+unchanged, so mixed Chinese/English standards render correctly. The
+artifact files (`01_requirements.json`, `03_results.json`, `defects.json`,
+`readiness.json`, `limitations.md`) are language-neutral, so you can
+re-render the same run in either language without re-executing the suite.
+Default to `--lang zh` when the input standard's ID starts with a
+Chinese-national prefix (`GB/T`, `GB`, `DA/T`, `DB`); otherwise default
+to `en`. Unknown languages fall back to English with a one-line log
+message.
+
+The full Standards Conformance workflow lives in `SKILL.md` (Layer 0 — DISPATCH
+and the per-layer Standards Conformance sub-bullets). See
+`references/standards_to_testcases.md` for the clause-to-test-case translation
+table and the list of clause shapes that should NOT be reduced to a static
+check.
+
+---
+
 ## What you get
 
 | Artifact | What it is |
 |---|---|
-| `01_requirements.json` | Requirement graph with dependencies, AI flags, ambiguities, predicted gaps |
-| `02_testcases.json` | The test suite — classical backbone + AI rubrics + adversarial |
+| `01_requirements.json` | Requirement graph with dependencies, AI flags, ambiguities, predicted gaps (Standards Conformance: `type=conformance_criterion` + `standard_id` + `clause`) |
+| `02_testcases.json` | The test suite — classical backbone + AI rubrics + adversarial (Standards Conformance: `codebase` target kind) |
 | `03_results.json` | Execution results (pass/fail/error/needs_eval/skipped) |
 | `05_evaluations.json` | AI judge verdicts + consistency, adversarial outcomes, agent traces |
 | `defects.json` | Defect log, each with severity and a reproduction path |
 | `readiness.json` | Release-readiness score + ship / ship-with-caveats / hold call |
-| `report.html` / `report.md` | The human-readable report (coverage map, defects, limitations) |
+| `standards_index.json` | Standards Conformance mode: standard metadata + clause counts |
+| `report.html` / `report.md` | The human-readable report (coverage map, Conformance Matrix, defects, limitations) |
 | `report.png` | Rasterized report for the mandatory visual check |
 | `limitations.md` | Hidden limitations — what was NOT tested and what could still fail |
 

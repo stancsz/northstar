@@ -119,6 +119,13 @@ def build_target(template, values, variables):
         for var, path in (template.get("body_paths") or {}).items():  # var -> path
             if var in values:
                 put(path, values[var])
+    elif kind == "codebase":
+        # Standards Conformance mode: inject the variable's value into the
+        # `pattern` field. Useful when the test model has one variable per
+        # partition (e.g. middleware / routes / tests).
+        first_var = next(iter(values), None)
+        if first_var is not None and "pattern" not in t:
+            t["pattern"] = str(values[first_var])
     for k in ("arg_from", "args_from", "kwargs_from", "body_path", "body_paths"):
         t.pop(k, None)
     return t
