@@ -47,6 +47,7 @@ Copy-Item -Recurse spec-driven-qa-skill "$env:USERPROFILE\.claude\skills\spec-dr
 /spec-driven-qa
 拿这份 PRD 测测我的退款客服
 这个 feature 能上吗？
+/spec-driven-qa standards/gbt_25000_51_2016.pdf    # 标准符合性模式
 ```
 
 Claude 自己读 `SKILL.md`，然后把整条流水线跑起来。你不用动手敲脚本
@@ -106,17 +107,84 @@ GitHub Actions 的 CI 卡口模板。）
 
 ---
 
+## 标准符合性模式
+
+把 skill 指向一份外部标准 + 一个目标 repo，它会自动从标准条款里长出
+测试用例，然后检查这个 repo 到底符不符合。
+
+```
+/spec-driven-qa standards/gbt_25000_51_2016.pdf
+```
+
+agent 会自动识别出这是"标准符合性"模式（路径在 `standards/` 下、或
+文件名带 `_gbt_` / `_iso_` / `_iec_` 等），然后问你要测哪个 repo。确认
+之后，跑的还是那条 classical-first 的流水线：
+
+```bash
+cd ~/.claude/skills/spec-driven-qa
+RUN=runs/$(date +%Y%m%d-%H%M%S); mkdir -p "$RUN"
+REPO=/path/to/target/repo
+
+python scripts/ingest_standard.py standards/gbt_25000_51_2016.pdf --out "$RUN"
+#    -> Claude 写 $RUN/01_requirements.json，type="conformance_criterion"，
+#       每条标准填好 standard_id + clause。
+python scripts/generate_test_cases.py scaffold "$RUN/01_requirements.json" --out "$RUN/02_testcases.json"
+python scripts/classical_tests.py model "$RUN/01_requirements.json" --out "$RUN/_test_model.json"
+#    -> Claude 填好要扫描的区域（比如 middleware / routes / tests）
+#       和 target_template: {kind: codebase, regex: "auth"}。
+python scripts/classical_tests.py expand "$RUN/_test_model.json" --into "$RUN/02_testcases.json"
+#    -> Claude 再按条款一条条加 positive / negative 的 codebase 用例
+#       （参考 references/standards_to_testcases.md 的翻译表）。
+
+python scripts/run_suite.py "$RUN/02_testcases.json" --out "$RUN/03_results.json" --repo "$REPO"
+python scripts/score_release.py "$RUN"
+python scripts/make_report.py "$RUN" --lang zh    # 报告自动出"符合性矩阵"
+
+# 先写 limitations.md，再跑：
+python scripts/verify.py "$RUN" --strict
+#    -> Claude 打开 report.png 用眼睛扫一眼版面，再拿给你看
+```
+
+拿到的东西：报告里会多一节 **符合性矩阵**，每行一个条款
+（`条款 | 标准 | 标题 | 状态 | 证据`）。readiness 评分里把"条款级通过率"
+当成 compliance 组件算进去，所以这一套跟 PRD 跑出来的 ship / hold 阈值
+是同一把尺子。静态检查（grep + glob）能盖住 80% 的"应 X" / "不得 X"
+条款；需要运行时验证的（延迟、吞吐、密码学正确性等）会被标成 `skipped`，
+列进 `limitations.md` —— 不会用"没测 = 绿"糊弄过去。
+
+完整的标准符合性工作流写在 `SKILL.md` 的 Layer 0 — DISPATCH 和每层
+的"标准符合性"子条目里。条款怎么翻成测试用例、哪些条款**不能**压成
+静态检查，参考 `references/standards_to_testcases.md`。
+
+**报告想出中文？** 加 `--lang zh`（或 `SDQ_LANG=zh`）：
+
+```bash
+python scripts/make_report.py "$RUN" --lang zh
+```
+
+章节标题、列表头、状态 / 严重度 / 建议标签、符合性矩阵的"标准:"头、
+条款计数行、运行时跳过的提示 全部翻成中文。条款正文和标准名是从
+源文档原样透出来的，混排中英的标准（比如 GB/T 配英文 title）也正常
+显示。底层产物（`01_requirements.json` / `03_results.json` /
+`defects.json` / `readiness.json` / `limitations.md`）跟语言无关，
+所以同一份 run 可以用不同语言反复渲染，不用重跑测试。默认规则：标准
+ID 是中国国标前缀（`GB/T` / `GB` / `DA/T` / `DB`）时用 `zh`，否则用
+`en`。`--lang` 写错会自动回退英文并打一行日志。
+
+---
+
 ## 你最后拿到什么
 
 | 产物 | 是什么 |
 |---|---|
-| `01_requirements.json` | 需求图：依赖关系、AI 标记、歧义、预测的覆盖空洞 |
-| `02_testcases.json` | 测试套件 —— classical backbone + AI rubric + 对抗 |
+| `01_requirements.json` | 需求图：依赖关系、AI 标记、歧义、预测的覆盖空洞（标准符合性模式：`type=conformance_criterion` + `standard_id` + `clause`） |
+| `02_testcases.json` | 测试套件 —— classical backbone + AI rubric + 对抗（标准符合性模式：`codebase` target kind） |
 | `03_results.json` | 执行结果（pass / fail / error / needs_eval / skipped） |
 | `05_evaluations.json` | LLM 裁判的裁决 + 一致性、对抗结果、agent trace |
 | `defects.json` | 缺陷清单，每条都带 severity 和复现路径 |
 | `readiness.json` | 上线评分 + ship / ship-with-caveats / hold 三选一 |
-| `report.html` / `report.md` | 给人看的报告（覆盖图、缺陷、限制） |
+| `standards_index.json` | 标准符合性模式：标准的元信息 + 条款计数 |
+| `report.html` / `report.md` | 给人看的报告（覆盖图、符合性矩阵、缺陷、限制） |
 | `report.png` | 报告渲染图，强制要"用眼睛看一眼"的那张 |
 | `limitations.md` | 老实交代：哪些没测、上线后还可能在哪儿翻车 |
 
@@ -167,8 +235,10 @@ classical / AI / 对抗 三层各自够不到什么、生产环境还可能在�
   `judge.py emit` / `ingest`；headless（CI 或大批量）用
   `judge.py run "$RUN" --provider anthropic|minimax|openai`，从环境
   变量读对应的 `*_API_KEY`。
-- **Target 类型：** 测试用例可以打 `http` / `cli` / `python` / `manual`
-  四种 target。`manual` 不会假装跑过 —— 老老实实标 untested。
+- **Target 类型：** 测试用例可以打 `http` / `cli` / `python` / `codebase` /
+  `manual` 五种 target。`codebase` 是标准符合性模式用的静态检查
+  （grep + glob，自带 `.git` / `node_modules` / 二进制 / 大文件的跳过
+  规则）；`manual` 不会假装跑过 —— 老老实实标 untested。
 
 ---
 
@@ -196,7 +266,13 @@ spec-driven-qa/
 ├── README.md                      英文版
 ├── README.zh-CN.md                中文版（你正在看）
 ├── scripts/                       流水线脚本（Claude 跑，你也可以手跑）
-├── references/                    schema、classical 技术、rubric、OWASP、合规
+│   ├── ingest_standard.py         Layer 1（标准符合性模式）：从标准里抽条款 + 规范性句子
+│   ├── classical_tests.py         Layer 2A：自动 classical backbone（支持 codebase target）
+│   ├── run_suite.py               Layer 3：执行 http / cli / python / codebase / manual
+│   ├── make_report.py             Layer 6：report.html + report.md（含符合性矩阵 + 中文）
+│   └── verify.py                  Layer 7：lint + 报告渲染为图（`--strict` 硬卡口）
+├── references/                    schema、classical 技术、标准翻译、rubric、OWASP、合规
+│   └── standards_to_testcases.md  Layer 2（标准符合性模式）：条款 → codebase 用例的翻译表
 └── assets/ci/github-actions.yml   可选的 CI 质量卡口
 ```
 
