@@ -1,0 +1,35 @@
+collaboration:
+  mode: AUTO
+  classification:
+    risk: low
+    risk_reasons: []
+    complexity: low
+    complexity_reasons: []
+    confidence_in_classification: high
+  authority:
+    intent: human
+    initiative: ai
+    execution: ai
+    acceptance: verifier
+    commit: automatic_reversible
+  bounds:
+    scope: Describe the bounded task.
+    permissions: []
+    prohibited_actions: []
+    data_access: []
+    token_budget: 0
+    monetary_budget: 0
+    max_retries: 0
+  evidence_required: [tests, diff]
+  escalation:
+    triggers: [verifier_failure, novel_condition, scope_expansion, permission_expansion, budget_exceeded, unresolved_disagreement, irreversible_side_effect, security_or_privacy_concern]
+    target_mode: GUARD
+    on_human_timeout: stop_and_preserve_state
+  rollback:
+    available: true
+    procedure: Restore the named recovery point.
+    recovery_point: Record before execution.
+  audit:
+    decision_log: true
+    override_reason_required: true
+    artifacts: []

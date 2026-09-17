@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Q4 collaboration contract",
+  "type": "object",
+  "required": ["collaboration"],
+  "properties": {
+    "collaboration": {
+      "type": "object",
+      "required": ["mode", "classification", "authority", "bounds", "evidence_required", "escalation", "rollback", "audit"],
+      "properties": {
+        "mode": {"enum": ["AUTO", "GUARD", "COCREATE", "CHALLENGE", "HUMAN_ONLY"]},
+        "classification": {"type": "object", "required": ["risk", "complexity"]},
+        "authority": {"type": "object", "required": ["intent", "initiative", "execution", "acceptance", "commit"]},
+        "bounds": {"type": "object", "required": ["scope", "permissions", "prohibited_actions", "data_access", "token_budget", "monetary_budget", "max_retries"]},
+        "evidence_required": {"type": "array", "minItems": 1},
+        "escalation": {"type": "object", "required": ["triggers", "target_mode", "on_human_timeout"]},
+        "rollback": {"type": "object", "required": ["available", "procedure", "recovery_point"]},
+        "audit": {"type": "object", "required": ["decision_log", "override_reason_required", "artifacts"]}
+      }
+    }
+  }
+}
