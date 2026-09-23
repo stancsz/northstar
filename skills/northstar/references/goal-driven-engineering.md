@@ -1,6 +1,6 @@
 # Goal-driven engineering in Northstar
 
-Northstar incorporates the useful Goal-Driven Engineering operating model from [stancsz/goal-driven-engineering](https://github.com/stancsz/goal-driven-engineering): durable product intent sits above a self-contained `GOAL.md`; an agent owns the implementation path and evidence until the goal is proven complete. Product direction and acceptance belong to the Steward (the user or an explicitly authorized product owner). The Builder may choose and change implementation details autonomously within that contract. Northstar extends this model with an explicit business-viability gate and point-of-no-return approval rules.
+Northstar incorporates the useful Goal-Driven Engineering operating model from [stancsz/goal-driven-engineering](https://github.com/stancsz/goal-driven-engineering): durable product intent sits above a self-contained `GOAL.md`; an agent owns the implementation path and evidence until the goal is proven complete. Product direction and acceptance belong to the Steward (the user or an explicitly authorized product owner). The Builder may choose and change implementation details autonomously within the agreed outcome and constraints. Northstar adds early discussion of business viability and explicit decisions before irreversible actions.
 
 ## Shape a viable goal before building
 
@@ -18,18 +18,34 @@ If the user explicitly has a non-commercial mission, replace revenue with a clea
 
 ## GOAL.md lifecycle
 
-Use one active `GOAL.md` for a coherent outcome unless the user asks for parallel goals. Make it self-contained enough that a fresh agent can continue from the repository and the goal file.
+Use `docs/goal/<goal>/GOAL.md` for a coherent outcome, with one active goal unless the user asks for parallel goals. Track status in the file and link it from `docs/goal/README.md`; keeping the path stable preserves links from evaluations and commits. Make it self-contained enough that a fresh agent can continue from the repository and linked documentation.
 
-1. **Steward shapes the contract:** record North Star, target customer, problem, value thesis, supporting evidence and assumptions, outcome, source of truth, acceptance criteria, constraints, non-goals, and escalation conditions.
+1. **Steward shapes the goal:** record North Star, target customer, problem, value thesis, supporting evidence and assumptions, outcome, source of truth, acceptance criteria, constraints, non-goals, and escalation conditions.
 2. **Builder executes:** inspect current reality, choose the highest-value next step, research implementation unknowns, implement a coherent slice, verify it, and record decisions and evidence in `GOAL.md`.
 3. **Critic challenges completion:** inspect the actual artifact and diff against the original intent, owner quality examples, and acceptance criteria. Identify substitutions, weakened requirements, and hidden work left for the user. Return actionable findings with impact and evidence.
 4. **Verifier checks:** exercise the real behavior and relevant failure cases, including integration/runtime or operational paths when the claim requires them. Use an independent reviewer for substantial work when available; otherwise perform a fresh verification pass and state the limitation.
-5. **Builder repairs:** fix blocking findings within the existing contract and submit the updated artifact for review again. Preserve finding history; update evidence after changes. Routine defects remain Builder work.
+5. **Builder repairs:** fix blocking findings within the agreed scope and submit the updated artifact for review again. Preserve finding history; update evidence after changes. Routine defects remain Builder work.
 6. **Steward closes:** compare the reviewed result with the original goal, owner standards, and reference product. Close when agreed behavior works and material findings are fixed. Report what was actually checked and any remaining limitations. Product intent, viability assumptions, acceptance, and authority cannot be weakened by the Builder to make a goal pass.
 
-Keep implementation detail below the goal contract. Do not create extra task lists or planning layers unless they solve a concrete coordination problem. Read [assets/GOAL.template.md](../assets/GOAL.template.md) when creating a durable goal.
+Keep implementation detail below the goal. Do not create extra task lists or planning layers unless they solve a concrete coordination problem. Use [the Markdown goal template](../templates/GOAL.md) when creating a durable goal.
 
 Keep review proportional and practical. Use the actual code, product, and concise notes in the goal. An engineering review should find and fix weaknesses, not become a separate reporting project.
+
+## Durable documentation and handoffs
+
+Use `docs/northstar/` for durable direction and standards, `docs/goal/` for execution, and `docs/evals/` for what review and verification actually found. Maintain a short README index in each directory once it contains useful material. Keep each fact in one authoritative place and cross-link it.
+
+Only subdirectories belong directly under `docs/`. Put supporting documentation outside those three categories in `docs/misc/`, including installation guides and translations. Keep each index inside its category, and update links when moving existing material.
+
+At the start of work, read the root and relevant nested `AGENTS.md`, then the linked North Star, active goal, and applicable evaluations. At meaningful decision points, update the appropriate document. Before a context switch, delegation handoff, or completion, reconcile the goal's status and remaining work with the repository. Record failures and limitations alongside successes. Do not rely on chat history as the only record.
+
+An evaluation should make its conclusion reproducible: link the goal and artifact revision, state the environment and method, describe observed results and relevant evidence, and identify unresolved issues. Keep durable evidence with its evaluation or at a stable artifact link. Temporary logs in `tmp/` alone are insufficient for a long-lived claim; preserve the useful excerpt or promote the necessary artifact.
+
+Keep `AGENTS.md` concise and specific: reading order, repository map, working commands, important constraints, and contribution practices. Update it when these change, preserve existing project rules, and use nested instructions only for genuine local differences. Avoid copying the product specification or a generic handbook into it.
+
+Agents and subagents use `tmp/<task-or-agent>/` for disposable files and respect the project's `.gitignore`. Each delegate receives the relevant docs, its write scope, documentation responsibility, and scratch location. Shared docs have one editing owner; other agents send findings to that owner. Before committing, inspect the diff and staged paths, preserve unrelated work, and use a meaningful message that describes the change and its reason.
+
+The entire project shares a 100 GB artifact ceiling, including ignored files and attributable caches or copies outside the main checkout. Check current usage and expected peak growth before artifact-heavy work, recheck after large output, and address bloat around 80 GB. Include each delegate's expected storage use in its brief. Reuse data and remove only your own disposable output when safe; preserve source, user data, other agents' work, and required evidence. Stop new artifact growth that cannot fit instead of silently exceeding the cap.
 
 ## Product reference and quality expectations
 
@@ -45,6 +61,6 @@ Separate product uncertainty from implementation uncertainty:
 
 - **Product or business uncertainty** (customer, pain, value, positioning, willingness to pay, economics, durable constraints) must be surfaced to the Steward early. AI can gather evidence and recommend, but cannot invent the answer.
 - **Implementation uncertainty** (libraries, APIs, architecture within approved constraints, debugging, test design) is Builder work. Research and decide autonomously within the goal and permissions.
-- **Point-of-no-return action** (release, destructive migration/deletion, spending, permission change, external commitment) is governed by the collaboration contract. Prepare and verify first; get explicit approval before crossing it.
+- **Point-of-no-return action** (release, destructive migration/deletion, spending, permission change, external commitment) depends on the user's authorization. Prepare and verify first, and obtain the required approval before crossing it.
 
 GDE's conceptual roles map to Northstar modes by decision rights, not by fixed persona: product intent and major value tradeoffs remain human-owned; reversible research and implementation are usually `AUTO`; high-impact execution is `GUARD`; high-impact unresolved product or architectural choices are `CHALLENGE`; human-sovereignty decisions use `HUMAN_ONLY`.

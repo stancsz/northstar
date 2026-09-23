@@ -1,20 +1,14 @@
-# Run artifacts
-runs/
-*.png
-*.pdf
-*.docx
+# Disposable project artifacts
+/tmp/
 
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
-venv/
+# Local environment and secrets
 .env
+.env.*
+!.env.example
+!.env.*.example
 
 # Editors / OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-tmp/

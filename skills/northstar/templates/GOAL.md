@@ -1,14 +1,14 @@
 # Goal: <production-value outcome>
 
+Location: docs/goal/<goal>/GOAL.md
+
 Status: active
 
 ## North Star
 
-- Target customer / user:
-- Painful job and current alternative:
-- Value delivered and reason to adopt:
-- Revenue or sustainability model:
-- Evidence, assumptions, and riskiest unknown:
+- Direction and owner standards: <relative link to docs/northstar/>
+- Contribution to that direction: <the customer/business value this goal advances>
+- Relevant assumptions and unknowns: <link durable research; record goal-specific details here>
 
 ## Outcome
 
@@ -20,7 +20,7 @@ Status: active
 
 ## Source of truth
 
-<Product spec, customer evidence, architecture decision, or user instruction.>
+<Links to product specs, customer evidence, architecture decisions, and relevant AGENTS.md instructions.>
 
 ## Acceptance criteria
 
@@ -30,11 +30,11 @@ Status: active
 ## Constraints and invariants
 
 - <Product, security, reliability, cost, or compatibility constraints>
+- Total project artifacts stay below 100 GB across all agents; account for ignored files, scratch work, caches, and peak growth before large operations.
 
 ## Reference product and quality expectations
 
-- <Strongest relevant comparable product, why it is the reference, and sources/date>
-- <Owner examples of acceptable quality and unacceptable shortcuts>
+- <Link to the reference product research and owner standards in docs/northstar/>
 - <Concrete competitive gaps in the real workflow, UX, effectiveness, and maintainability>
 
 ## Non-goals
@@ -58,12 +58,12 @@ Status: active
 
 ### Validation and evidence
 
-- <Commands, customer/market evidence, runtime behavior, or operational proof>
+- <Link to docs/evals/ results: evaluated revision/environment, checks actually run, observations, limitations, and durable evidence>
 
 ### Remaining gap
 
-- <Unmet acceptance criterion, production blocker, or none>
+- <Unmet acceptance criterion, production blocker, and next action; or none>
 
 ### Critique and fixes
 
-- <Material quality finding, its fix, and how the corrected behavior was checked>
+- <Brief material findings and fixes, with links to their evaluation details>

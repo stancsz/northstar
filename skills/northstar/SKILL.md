@@ -7,6 +7,21 @@ description: Use when shaping a product or advancing software toward production 
 
 Move the project toward a useful, verifiable production outcome. Do not confuse activity, a research prototype, or a plausible guess with progress. Treat user time and model tokens as scarce: every investigation or change should resolve a decision, reduce a real risk, or advance the outcome.
 
+## Work from the repository's documentation
+
+Read `AGENTS.md`, applicable nested instructions, the project direction, the active goal, and relevant prior evaluations before choosing work. Use the repository's docs as shared memory across conversations and agent handoffs:
+
+- `docs/northstar/`: product purpose, customer and business thesis, owner standards, reference products, durable decisions, and unresolved assumptions.
+- `docs/goal/<goal>/GOAL.md`: the current outcome, acceptance, approach, progress, decisions, and remaining work. Keep a short goal index in `docs/goal/README.md`.
+- `docs/evals/`: useful comparison results, critic findings, verification evidence, failures, fixes, and known limitations linked to the goal and evaluated revision.
+- `docs/misc/`: supporting documentation that does not belong to the North Star, a goal, or an evaluation, such as installation guides or translations.
+
+Keep `docs/` itself free of files: it contains only subdirectories. Place indexes and documents inside the appropriate subdirectory; do not leave miscellaneous Markdown, images, or reports directly under `docs/`.
+
+Write material discoveries and decisions back as the work proceeds. Before handoff or completion, reconcile docs with the actual result and make the next action clear. Link to the authoritative document instead of copying the same information into several places. Keep navigation current and preserve useful history; docs should let another capable agent continue correctly. Adapt existing documentation in place and update links when moving it.
+
+Maintain a concise, project-specific `AGENTS.md`: explain where to start reading, the repository layout, real build/test commands, important invariants, and how to contribute cleanly. Keep detailed product knowledge in `docs/`.
+
 ## Start with the North Star
 
 At the beginning of a new project or product direction, establish a credible business and product thesis before implementation. Do not let an ambiguous idea pass straight into code:
@@ -42,7 +57,7 @@ Treat a requested 98% parity target seriously: define which tasks and measurable
 
 ## Critique, fix shortcuts, and verify
 
-Learn the owner's standards from their instructions, corrections, and examples of accepted and rejected work. Keep these useful distinctions in `GOAL.md`; separate confirmed preferences from assumptions. Critics should share the owner's priorities and still challenge weak ideas.
+Learn the owner's standards from their instructions, corrections, and examples of accepted and rejected work. Keep durable standards in `docs/northstar/`, link them from the goal, and separate confirmed preferences from assumptions. Critics should share the owner's priorities and still challenge weak ideas.
 
 Before calling meaningful work complete, review the actual result from two perspectives:
 
@@ -54,6 +69,20 @@ Use independent reviewers for substantial deliveries when available. Give them t
 Fix material findings and recheck the result. Do not merely describe defects, rename them as polish, lower acceptance, or defer essential work to declare success. Research ordinary technical problems and repair them within existing authority. If an actual limit prevents completion, report the specific unfinished behavior and best next step.
 
 Prefer the simplest solution that delivers the agreed quality. Token pressure and implementation convenience do not excuse a worse product. Apply these as engineering habits proportional to the work; keep notes concise and use the existing goal, code, and evidence.
+
+Record useful review and verification results in `docs/evals/`, including what was inspected, the revision/environment, observed results, remaining gaps, and repairs. Distinguish checks actually run from proposed checks. Preserve the evidence needed to support the conclusion; leave disposable logs and experiments in `tmp/`.
+
+## Keep the repository clean
+
+Every agent and subagent owns the cleanliness of its work. Put loose scripts, downloads, debug logs, screenshots, experiments, and generated review artifacts in `tmp/<task-or-agent>/`. Promote only useful, reviewed material into the appropriate source, test, asset, or docs directory, and update any links that need to survive scratch cleanup. Do not scatter files in the root or delete other agents' work.
+
+Maintain `.gitignore` for `tmp/`, actual build/cache output, local environment files, and credentials. Keep shareable environment examples trackable. Avoid broad file-extension ignores that hide legitimate source or documentation assets; check what is staged as well as what is ignored.
+
+Before handoff or commit, inspect status and diffs, remove only your own disposable clutter when safe, update the relevant docs, and stage only intended files. Use focused commits with a concrete subject explaining the change; explain non-obvious reasons in the body. Avoid vague messages such as "updates" or "fix stuff". Follow the user's requested commit/branch/PR workflow.
+
+Include these practices in delegated task briefs: relevant docs and `AGENTS.md`, write ownership, a scoped `tmp/` location, expected documentation updates, and meaningful evidence on return. Coordinate edits to shared docs through their assigned owner; the main agent integrates the findings and checks the repository is organized before reporting completion.
+
+Keep total project artifacts below **100 GB** (100,000,000,000 bytes), shared by all agents and subagents. Count tracked and ignored files, scratch work, downloads, datasets, caches, build output, and project-attributable copies or worktrees; moving artifacts elsewhere does not reset the budget. Measure usage before large downloads, builds, extraction, or generation, account for temporary expansion, and recheck after substantial growth. Address bloat early, around 80 GB, with bounded output, reuse, and cleanup of your own disposable material. If the next operation cannot fit, pause that growth and propose a smaller approach. Preserve user data, other agents' work, and necessary evidence; do not delete them merely to meet the limit.
 
 ## Stop at the point of no return
 

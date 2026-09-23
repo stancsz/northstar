@@ -1,26 +1,21 @@
 # Northstar
 
-**Production-first AI engineering.** Turn an ambiguous idea into a viable product direction, then keep each unit of research and implementation pointed at real user and business value.
+Production-first AI engineering practices, delivered as Markdown skills.
 
-Northstar makes the AI challenge the product thesis before coding: who needs this, what painful problem it solves, why they would choose or pay for it, and whether the economics and delivery path can hold up. If those answers are weak, the next step is focused validation—not a throwaway research prototype.
+Northstar helps agents clarify a worthwhile product direction, learn from strong comparable products, do the implementation research, and carry useful work through critique, repair, and verification. It keeps the owner's quality standards and approval boundaries visible throughout.
 
-Once the direction is credible, the AI investigates implementation uncertainty and advances the product autonomously inside agreed bounds. It stops before the point of no return: production releases, destructive changes, spending, permission changes, and other external commitments require the contract's explicit approval.
+## Skills
 
-The skill combines goal-driven engineering (`GOAL.md` as the durable, verifiable unit of work) with consequence-aware authority routing (`AUTO`, `GUARD`, `COCREATE`, `CHALLENGE`, `HUMAN_ONLY`). See [SKILL.md](SKILL.md) and [references/goal-driven-engineering.md](references/goal-driven-engineering.md).
+- [Northstar](skills/northstar/SKILL.md): product direction, competitive comparisons, autonomous execution, critics, verification, and repository practices.
+- [Codex Subagents](skills/codex-subagents/SKILL.md): focused delegation, shared documentation, and clean handoffs.
 
-## Quick start
+[Install and use](docs/misc/install.md) · [中文说明](docs/misc/README.zh-CN.md)
 
-```powershell
-py -3 scripts/northstar_route.py --input assets/task-intake.json --output contract.json
-py -3 scripts/validate_contract.py --input contract.json
-py -3 -m unittest discover -s tests -v
-py -3 scripts/package_skill.py --output northstar.zip
-```
+## Project memory
 
-`northstar_route.py` turns task intake into a JSON collaboration contract. `validate_contract.py` checks approval gates, acceptance evidence, rollback information, silence handling, and bounded scope.
+- [North Star](docs/northstar/README.md): purpose, owner standards, decisions, and open assumptions.
+- [Goals](docs/goal/README.md): outcomes, progress, and remaining work.
+- [Evaluations](docs/evals/README.md): observed results, criticism, fixes, and limitations.
+- [Agent instructions](AGENTS.md): reading order and contribution practices.
 
-This is a decision and execution aid, not a substitute for customer evidence, professional judgment, or organizational controls.
-
-## Companion skill: Codex Subagents
-
-This repository also includes a standalone Codex subagent workflow at [`.agents/skills/codex-subagents/SKILL.md`](.agents/skills/codex-subagents/SKILL.md). Use `$codex-subagents` when parallel work has a concrete benefit; it defaults to one agent.
+Keep disposable artifacts in ignored `tmp/`. All agents share a 100 GB project artifact limit. Keep the root small and `docs/` limited to subdirectories; supporting docs go in `docs/misc/`. Keep documentation current and commits meaningful.

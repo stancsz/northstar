@@ -64,11 +64,24 @@ Give every delegate a brief that states:
 - **Outcome:** one concrete deliverable and its acceptance criteria.
 - **Scope:** allowed paths or systems, forbidden areas, and ownership boundaries.
 - **Context:** only the information and dependencies needed for that deliverable.
+- **Repository practices:** applicable root/nested `AGENTS.md`, relevant durable docs, a scoped `tmp/<task-or-agent>/` location, and responsibility for documentation updates.
 - **Verification:** observable checks and the command or method to run, if applicable.
 - **Side effects:** what may be changed or contacted; explicitly prohibit anything outside the user's authorization.
 - **Handoff:** where to report results and how to raise blockers.
 
 Workers report: **status; changed files/artifacts; verification and result; assumptions; blockers; next action.** Supervisors consolidate these into workstream status and distinguish verified evidence from claims or unresolved issues.
+
+## Documentation and repository hygiene
+
+Every delegate reads the applicable `AGENTS.md` and relevant project docs before editing. When using Northstar, share links to direction in `docs/northstar/`, the assigned `docs/goal/<goal>/GOAL.md`, and relevant `docs/evals/`. Keep durable findings in the repository as well as the handoff; assign one owner for shared docs and send proposed updates to that owner.
+
+Keep `docs/` limited to subdirectories. Use `docs/misc/` for documentation outside the direction, goal, and evaluation categories. Put indexes inside their category and update affected links.
+
+Keep loose scripts, downloads, debug output, temporary screenshots, and experiments under the assigned `tmp/` directory. Follow and maintain appropriate ignore rules; do not hide useful source or documentation assets with broad extension patterns. Promote evidence needed for lasting conclusions to a documented location. Never remove or overwrite another agent's scratch work, source changes, or notes.
+
+When using Northstar, the project has one shared 100 GB artifact limit across all agents, including ignored output, caches, downloads, and project-attributable copies. Report expected storage before large operations and actual growth afterward; include temporary extraction/build space. Coordinate with the orchestrator as total usage approaches 80 GB, and pause artifact creation that would exceed 100 GB. Do not move files elsewhere to evade accounting or remove another agent's data to free space.
+
+Before returning work, inspect status and diffs for unintended files, update docs in your write scope, and report any integration or cleanup still needed. Commit only when authorized; use a focused, meaningful message describing the change. The orchestrator integrates shared documentation and inspects the combined diff before delivery.
 
 ## Failure, retries, and final integration
 
