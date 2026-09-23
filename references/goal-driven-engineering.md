@@ -22,10 +22,20 @@ Use one active `GOAL.md` for a coherent outcome unless the user asks for paralle
 
 1. **Steward shapes the contract:** record North Star, target customer, problem, value thesis, supporting evidence and assumptions, outcome, source of truth, acceptance criteria, constraints, non-goals, and escalation conditions.
 2. **Builder executes:** inspect current reality, choose the highest-value next step, research implementation unknowns, implement a coherent slice, verify it, and record decisions and evidence in `GOAL.md`.
-3. **Builder verifies:** map each acceptance criterion to concrete evidence; include real integration/runtime or operational evidence when the claim requires it.
-4. **Steward closes:** accept, reject, split, or supersede the goal. Product intent, viability assumptions, acceptance, and authority cannot be weakened by the Builder to make a goal pass.
+3. **Critic challenges completion:** inspect the actual artifact and diff against the original intent, owner quality examples, and acceptance criteria. Identify substitutions, weakened requirements, and hidden work left for the user. Return actionable findings with impact and evidence.
+4. **Verifier checks:** exercise the real behavior and relevant failure cases, including integration/runtime or operational paths when the claim requires them. Use an independent reviewer for substantial work when available; otherwise perform a fresh verification pass and state the limitation.
+5. **Builder repairs:** fix blocking findings within the existing contract and submit the updated artifact for review again. Preserve finding history; update evidence after changes. Routine defects remain Builder work.
+6. **Steward closes:** compare the reviewed result with the original goal, owner standards, and reference product. Close when agreed behavior works and material findings are fixed. Report what was actually checked and any remaining limitations. Product intent, viability assumptions, acceptance, and authority cannot be weakened by the Builder to make a goal pass.
 
 Keep implementation detail below the goal contract. Do not create extra task lists or planning layers unless they solve a concrete coordination problem. Read [assets/GOAL.template.md](../assets/GOAL.template.md) when creating a durable goal.
+
+Keep review proportional and practical. Use the actual code, product, and concise notes in the goal. An engineering review should find and fix weaknesses, not become a separate reporting project.
+
+## Product reference and quality expectations
+
+Research a leading comparable product for the same customer and workflow. Record why it is the reference, the source/date, and the actual behaviors worth matching or improving. Compare UI/UX, look and feel, usefulness, task effectiveness, reliability, simplicity, and maintainability where observable. Refresh the comparison when the product direction changes or new evidence matters.
+
+Use concrete owner examples to explain acceptable quality and unacceptable shortcuts. Turn competitive gaps into useful work: a confusing checkout, missing recovery behavior, or an incomplete integration matters more than superficial feature counts. Test a stated 98% parity target against defined comparable tasks and measurements; do not fabricate a universal quality score. Keep unknown competitor internals and untested behavior explicit.
 
 ## Production-value execution
 

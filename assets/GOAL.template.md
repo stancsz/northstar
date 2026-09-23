@@ -31,6 +31,12 @@ Status: active
 
 - <Product, security, reliability, cost, or compatibility constraints>
 
+## Reference product and quality expectations
+
+- <Strongest relevant comparable product, why it is the reference, and sources/date>
+- <Owner examples of acceptable quality and unacceptable shortcuts>
+- <Concrete competitive gaps in the real workflow, UX, effectiveness, and maintainability>
+
 ## Non-goals
 
 - <Explicitly excluded scope; label any prototype as a bounded experiment>
@@ -57,3 +63,7 @@ Status: active
 ### Remaining gap
 
 - <Unmet acceptance criterion, production blocker, or none>
+
+### Critique and fixes
+
+- <Material quality finding, its fix, and how the corrected behavior was checked>
