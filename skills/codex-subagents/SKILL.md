@@ -34,7 +34,7 @@ See [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagen
 
 ## Roles and authority
 
-When working with [Northstar](../northstar/SKILL.md#ownership-north-star--goals--tasks), use **orchestrator → North Star, supervisor → one goal, worker → one task**. A workstream below means the supervisor's assigned goal. The orchestrator owns `docs/northstar/` and the goal index; the supervisor owns its `GOAL.md`, task coordination, integration, and evaluation coverage; workers own scoped deliverables and their evidence. The supervisor accepts tasks and recommends goal readiness. The orchestrator inspects the integrated result before accepting the goal within the user's mandate. Human product decisions and consequential authorization remain with the user.
+When working with [Northstar](../northstar/SKILL.md#ownership-north-star--goals--tasks), use **orchestrator → North Star, supervisor → one goal, worker → one task**. A workstream below means the supervisor's assigned goal. The orchestrator reads and maintains `docs/northstar/`; the supervisor owns `docs/goal/<goal>/GOAL.md`, its goal index entry, task coordination, integration, and evaluation coverage; each worker owns scoped deliverables and `docs/reports/<goal>/<task>.md`. The supervisor accepts tasks and recommends goal readiness. The orchestrator inspects the integrated result before accepting the goal within the user's mandate; the supervisor records that decision. Human product decisions and consequential authorization remain with the user.
 
 Critic and verifier are review assignments within this structure. Give reviewers direct access to original intent and actual artifacts, and let them report independently to the accepting supervisor or orchestrator. Assign repairs and recheck material findings; adding reviewers never transfers accountability for the goal.
 
@@ -71,21 +71,23 @@ Give every delegate a brief that states:
 - **Repository practices:** applicable root/nested `AGENTS.md`, relevant durable docs, a scoped `tmp/<task-or-agent>/` location, and responsibility for documentation updates.
 - **Verification:** observable checks and the command or method to run, if applicable.
 - **Side effects:** what may be changed or contacted; explicitly prohibit anything outside the user's authorization.
-- **Handoff:** where to report results and how to raise blockers.
+- **Handoff:** whom to report to, the assigned report path, and how to raise blockers. With Northstar, assign `docs/reports/<goal>/<task>.md` to the worker and link it from the supervisor's goal.
 
 Workers report: **status; changed files/artifacts; verification and result; assumptions; blockers; next action.** Supervisors consolidate these into workstream status and distinguish verified evidence from claims or unresolved issues.
 
+With Northstar, workers follow the [worker report practice](../northstar/SKILL.md#worker-reports-and-handoffs): write a durable Markdown report for completed, partial, or blocked work and send its link to the supervisor. Update that task's report after repairs. Supervisors read reports and inspect the artifacts, then record task acceptance or repair requests in `GOAL.md`. Workers propose shared direction/goal updates through their reports; they do not take over those documents. Give concurrent workers distinct report paths and coordinate goal-index edits through one owner.
+
 ## Documentation and repository hygiene
 
-Every delegate reads the applicable `AGENTS.md` and relevant project docs before editing. When using Northstar, share links to direction in `docs/northstar/`, the assigned `docs/goal/<goal>/GOAL.md`, and relevant `docs/evals/`. Keep durable findings in the repository as well as the handoff; assign one owner for shared docs and send proposed updates to that owner.
+Every delegate reads the applicable `AGENTS.md` and relevant project docs before editing. When using Northstar, share links to direction in `docs/northstar/`, the assigned `docs/goal/<goal>/GOAL.md`, relevant prior worker reports in `docs/reports/`, and `docs/evals/`. Keep durable findings in the repository as well as the handoff; assign one owner for shared docs and send proposed updates to that owner.
 
-Keep `docs/` limited to subdirectories. Use `docs/misc/` for documentation outside the direction, goal, and evaluation categories. Put indexes inside their category and update affected links.
+Keep `docs/` limited to subdirectories. Use `docs/misc/` for documentation outside the direction, goal, worker report, and evaluation categories. Put indexes inside their category and update affected links.
 
 Keep loose scripts, downloads, debug output, temporary screenshots, and experiments under the assigned `tmp/` directory. Follow and maintain appropriate ignore rules; do not hide useful source or documentation assets with broad extension patterns. Promote evidence needed for lasting conclusions to a documented location. Never remove or overwrite another agent's scratch work, source changes, or notes.
 
 When using Northstar, the project has one shared 100 GB artifact limit across all agents, including ignored output, caches, downloads, and project-attributable copies. Report expected storage before large operations and actual growth afterward; include temporary extraction/build space. Coordinate with the orchestrator as total usage approaches 80 GB, and pause artifact creation that would exceed 100 GB. Do not move files elsewhere to evade accounting or remove another agent's data to free space.
 
-Before returning work, inspect status and diffs for unintended files, update docs in your write scope, and report any integration or cleanup still needed. Commit only when authorized; use a focused, meaningful message describing the change. The orchestrator integrates shared documentation and inspects the combined diff before delivery.
+Before returning work, inspect status and diffs for unintended files, update docs in your write scope, and report any integration or cleanup still needed. Commit only when authorized; use a focused, meaningful message describing the change. Supervisors reconcile goal records with worker reports and evaluations; the orchestrator updates direction when needed and inspects the combined result before delivery.
 
 ## Failure, retries, and final integration
 

@@ -13,12 +13,15 @@ Northstar 帮助 AI 在开始时厘清客户、痛点、商业价值和生产方
 
 ## 项目文档
 
-- [docs/northstar/](../northstar/README.md)：项目方向、用户标准、决策和待验证假设。
-- [docs/goal/](../goal/README.md)：目标、进展和剩余工作。
+- [docs/northstar/](../northstar/README.md)：orchestrator 负责维护和使用，记录项目方向、用户标准、决策和待验证假设。
+- [docs/goal/](../goal/README.md)：supervisor 负责各自的 GOAL.md 和目标索引条目，分配任务、整合成果并记录验收。
+- [docs/reports/](../reports/README.md)：worker 交付实际成果后写任务报告，记录产物、检查结果、未完成事项及下一步；受阻或部分完成也要交接。
 - [docs/evals/](../evals/README.md)：实际观察、批评、修复和验证结果。
 - [AGENTS.md](../../AGENTS.md)：阅读顺序和协作规范。
 
-`docs/` 下只放子目录，不直接存放文件。安装说明、翻译和其他不属于方向、目标或评估的资料放在 `docs/misc/`。
+supervisor 阅读报告并检查实际成果，再决定接受任务或要求修复；orchestrator 对照 North Star 决定目标是否完成。报告本身不代表通过验收。
+
+`docs/` 下只放子目录，不直接存放文件。安装说明、翻译和其他不属于方向、目标、任务报告或评估的资料放在 `docs/misc/`。
 
 所有 agent 与 subagent 都要保持仓库整洁，临时文件放在被忽略的 `tmp/`，提交信息应具体、有意义。整个项目共享 **100 GB** 产物上限，包含被忽略的缓存、下载、临时文件及项目相关副本；在大规模操作前估计峰值空间并检查用量，接近 80 GB 时主动处理膨胀。
 

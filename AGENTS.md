@@ -5,14 +5,15 @@ Northstar is a Markdown skill collection. Keep engineering judgment, practices, 
 ## Start here
 
 1. Read [project direction](docs/northstar/README.md).
-2. Read the relevant [goal](docs/goal/README.md) and [evaluations](docs/evals/README.md).
+2. Read the relevant [goal](docs/goal/README.md), its [worker reports](docs/reports/README.md), and [evaluations](docs/evals/README.md).
 3. Read the skill being changed: [Northstar](skills/northstar/SKILL.md) or [Codex Subagents](skills/codex-subagents/SKILL.md).
 
 ## Layout and maintenance
 
 - `skills/<name>/SKILL.md` is the installable entrypoint. Supporting practices and templates are Markdown in that skill's directory.
-- `docs/northstar/` owns durable direction, owner standards, reference products, and decisions.
-- `docs/goal/<goal>/GOAL.md` owns the outcome and execution record; update the goal index and preserve stable paths.
+- The orchestrator owns and uses `docs/northstar/`: durable direction, owner standards, reference products, and decisions.
+- Each supervisor owns and uses its `docs/goal/<goal>/GOAL.md`: outcome, task assignments, execution and acceptance record; maintain its goal index entry and preserve stable paths.
+- Each worker produces scoped deliverables and writes `docs/reports/<goal>/<task>.md` for handoff, including partial or blocked work. Supervisors read reports and inspect artifacts before accepting tasks. Follow the [report practice](skills/northstar/SKILL.md#worker-reports-and-handoffs).
 - `docs/evals/` records what was inspected, observed results, fixes, and limitations. Link to goals and evaluated revisions.
 - `docs/misc/` holds other supporting documentation, including installation guides and translations.
 - `tmp/<task-or-agent>/` holds disposable artifacts and is ignored.
@@ -29,7 +30,7 @@ Stage intentional files only. Write focused commits with meaningful subjects and
 
 ## Agents, scratch work, and storage
 
-Give subagents the relevant instructions/docs, a write scope, a scoped scratch directory, and responsibility for updating or handing off durable findings. Assign one owner to shared docs. Preserve unrelated and other agents' changes.
+Give subagents the relevant instructions/docs, a write scope, a scoped scratch directory, and an assigned report path. Workers send proposed changes to direction or goals to the owning role. Supervisors record task decisions and the orchestrator's goal acceptance in `GOAL.md`. Assign one editor to shared indexes during concurrent work. Preserve unrelated and other agents' changes. One agent filling multiple roles follows the same document ownership and reporting practices.
 
 Keep loose artifacts in `tmp/`. Promote necessary evidence or reusable content to its proper location before linking it from durable docs. Maintain scoped ignore rules; do not hide documentation images or other legitimate assets with blanket extension ignores.
 

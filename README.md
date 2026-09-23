@@ -13,8 +13,9 @@ Northstar helps agents clarify a worthwhile product direction, learn from strong
 
 ## Project memory
 
-- [North Star](docs/northstar/README.md): purpose, owner standards, decisions, and open assumptions.
-- [Goals](docs/goal/README.md): outcomes, progress, and remaining work.
+- [North Star](docs/northstar/README.md): orchestrator-owned direction, owner standards, decisions, and open assumptions.
+- [Goals](docs/goal/README.md): supervisor-owned outcomes, task coordination, acceptance, and remaining work.
+- [Worker reports](docs/reports/README.md): worker-owned handoffs with deliverables, checks, gaps, and next actions.
 - [Evaluations](docs/evals/README.md): observed results, criticism, fixes, and limitations.
 - [Agent instructions](AGENTS.md): reading order and contribution practices.
 

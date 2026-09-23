@@ -7,8 +7,8 @@ Status: active
 ## Ownership and tasks
 
 - Orchestrator: <owns alignment with the North Star and final goal acceptance>
-- Supervisor: <owns this goal, its documentation, task acceptance, integration, and evaluation coverage; may be the same agent>
-- Tasks when delegation is useful: <bounded outcome, worker, write scope, acceptance, dependencies, status, and evidence link for each task>
+- Supervisor: <owns this goal and its index entry, task acceptance, integration, and evaluation coverage; may be the same agent>
+- Tasks: <bounded outcome, worker, write scope, acceptance, dependencies, status, and link to docs/reports/<goal>/<task>.md for each task>
 - Review: <who critiques quality and verifies behavior; disclose when the implementer also reviews>
 
 ## North Star
@@ -63,6 +63,10 @@ Status: active
 
 - <Record material discoveries and decisions, not every action.>
 
+### Worker handoffs
+
+- <Task report link, supervisor's acceptance or repair decision, and remaining integration work; keep detailed worker findings in the report>
+
 ### Validation and evidence
 
 - <Link to docs/evals/ results: evaluated revision/environment, checks actually run, observations, limitations, and durable evidence>
@@ -78,4 +82,4 @@ Status: active
 ### Acceptance
 
 - Supervisor recommendation: <ready or remaining work, with integrated evidence>
-- Orchestrator decision: <accepted or returned for repair, with reasons; include human acceptance when required>
+- Orchestrator decision, recorded by the supervisor: <accepted or returned for repair, with reasons; include human acceptance when required and update the goal index>

@@ -13,9 +13,9 @@ The target user is an owner or developer working with AI agents who needs initia
 - Treat a 98% parity ambition as a claim requiring defined criteria and evidence; do not manufacture an overall score.
 - Critics and verifiers use the owner's standards and inspect actual results. Fix shortcuts and recheck rather than merely listing defects.
 - Keep Northstar as Markdown engineering methods and practices under `skills/`. Avoid executable enforcement and machine-contract machinery.
-- Use `docs/northstar/`, `docs/goal/`, and `docs/evals/` as shared memory. Keep only subdirectories directly under `docs/`; other supporting documentation belongs in `docs/misc/`. Keep a useful `AGENTS.md`, scoped scratch work in `tmp/`, appropriate ignore rules, and meaningful commits.
+- Use `docs/northstar/`, `docs/goal/`, `docs/reports/`, and `docs/evals/` as shared memory. Keep only subdirectories directly under `docs/`; other supporting documentation belongs in `docs/misc/`. Keep a useful `AGENTS.md`, scoped scratch work in `tmp/`, appropriate ignore rules, and meaningful commits.
 - Keep total project artifacts below 100 GB across agents, including ignored and project-attributable working data.
-- Use explicit ownership: orchestrator owns the North Star and integrated product outcome; each supervisor owns one goal; each worker owns one task. Critics and verifiers provide independent review where available. See the [role boundaries](../../skills/northstar/SKILL.md#ownership-north-star--goals--tasks).
+- Use explicit ownership: the orchestrator owns and uses `docs/northstar/` and is accountable for the integrated product outcome; supervisors own and use their `docs/goal/<goal>/GOAL.md` and index entries; workers produce work and write `docs/reports/<goal>/<task>.md`. Supervisors read reports and inspect artifacts before task acceptance. Critics and verifiers provide independent review where available. See the [role boundaries](../../skills/northstar/SKILL.md#ownership-north-star--goals--tasks).
 
 ## Product assumptions and open questions
 
@@ -27,5 +27,6 @@ Goal-Driven Engineering supplies the goal-oriented practice adapted by Northstar
 
 - [Skills and use](../../README.md)
 - [Goals](../goal/README.md)
+- [Worker reports](../reports/README.md)
 - [Evaluations](../evals/README.md)
 - [Repository instructions](../../AGENTS.md)
