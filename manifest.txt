@@ -1,4 +1,6 @@
 SKILL.md
+.agents/skills/codex-subagents/SKILL.md
+.agents/skills/codex-subagents/agents/openai.yaml
 INSTALL.md
 README.md
 README.zh-CN.md

@@ -12,3 +12,7 @@ py -3 scripts/package_skill.py --output q4-collaboration-protocol.zip
 ```
 
 它是治理辅助工具，不替代组织控制、专业判断或法律义务。完整规则见 [SKILL.md](SKILL.md) 和 [references/protocol.md](references/protocol.md)。
+
+## 配套 Skill：Codex Subagents
+
+本仓库还包含一个可由 Codex 发现的独立 subagent 工作流 skill：[`.agents/skills/codex-subagents/SKILL.md`](.agents/skills/codex-subagents/SKILL.md)。适合并行委派时可用 `$codex-subagents` 调用；它默认由单个 agent 处理，只在确有并行收益时启用 subagents。

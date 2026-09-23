@@ -16,3 +16,7 @@ py -3 scripts/package_skill.py --output q4-collaboration-protocol.zip
 `q4_route.py` turns task intake into a JSON contract. `validate_contract.py` checks critical safety invariants, such as explicit approvals for GUARD and CHALLENGE, independent acceptance in AUTO, rollback information, no approval by silence, and child-boundary non-expansion.
 
 See [SKILL.md](SKILL.md) for the operating workflow and [references/protocol.md](references/protocol.md) for the complete policy. This is a governance aid, not a replacement for organizational controls, expert judgment, or legal obligations.
+
+## Companion skill: Codex Subagents
+
+This repository also includes a standalone, Codex-discoverable subagent workflow skill at [`.agents/skills/codex-subagents/SKILL.md`](.agents/skills/codex-subagents/SKILL.md). Invoke it as `$codex-subagents` when a task benefits from coordinated subagents. It defaults to one agent and keeps delegation on demand.
