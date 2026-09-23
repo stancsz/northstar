@@ -1,16 +1,29 @@
 #!/usr/bin/env python3
-"""Validate safety invariants in a Q4 collaboration contract."""
+"""Validate safety invariants in a Northstar collaboration contract."""
 import argparse
 import json
 import sys
 from pathlib import Path
 
-MODE_FOR_CLASSIFICATION = {
-    ("low", "low"): "AUTO",
-    ("high", "low"): "GUARD",
-    ("low", "high"): "COCREATE",
-    ("high", "high"): "CHALLENGE",
+HUMAN_DECISION_FLAGS = {
+    "ambiguous_goal", "ambiguous_acceptance", "implicit_context_or_value_judgment",
+    "reasonable_expert_disagreement",
 }
+
+def expected_mode(classification):
+    risk = classification.get("risk")
+    risk_reasons = classification.get("risk_reasons", [])
+    complexity_reasons = classification.get("complexity_reasons", [])
+    if "missing_classification_evidence" in risk_reasons or "missing_classification_evidence" in complexity_reasons:
+        return "CHALLENGE"
+    unresolved_human_decision = bool(HUMAN_DECISION_FLAGS.intersection(complexity_reasons))
+    if risk == "high" and unresolved_human_decision:
+        return "CHALLENGE"
+    if risk == "high":
+        return "GUARD"
+    if unresolved_human_decision:
+        return "COCREATE"
+    return "AUTO"
 
 def validate(document):
     errors = []
@@ -22,7 +35,7 @@ def validate(document):
     risk, complexity = classification.get("risk"), classification.get("complexity")
     if risk not in {"low", "high"} or complexity not in {"low", "high"}:
         errors.append("classification must contain low or high risk and complexity")
-    elif mode != "HUMAN_ONLY" and mode != MODE_FOR_CLASSIFICATION[(risk, complexity)]:
+    elif mode != "HUMAN_ONLY" and mode != expected_mode(classification):
         errors.append("mode does not match risk and complexity classification")
     if mode == "HUMAN_ONLY" and not classification.get("human_only_reasons"):
         errors.append("HUMAN_ONLY requires a recorded veto reason")

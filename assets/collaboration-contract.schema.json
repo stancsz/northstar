@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Q4 collaboration contract",
+  "title": "Northstar collaboration contract",
   "type": "object",
   "required": ["collaboration"],
   "properties": {

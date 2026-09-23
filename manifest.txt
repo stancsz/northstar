@@ -9,12 +9,13 @@ assets/task-intake.json
 assets/collaboration-contract.yaml
 assets/collaboration-contract.schema.json
 assets/goal-collaboration-block.md
+assets/GOAL.template.md
 references/protocol.md
 references/routing-rubric.md
 references/contract-schema.md
-references/gde-integration.md
+references/goal-driven-engineering.md
 references/examples.md
-scripts/q4_route.py
+scripts/northstar_route.py
 scripts/validate_contract.py
 scripts/package_skill.py
-tests/test_q4_route.py
+tests/test_northstar_route.py

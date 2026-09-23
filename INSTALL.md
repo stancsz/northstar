@@ -1,18 +1,18 @@
 # Install
 
-This repository provides the Q4 collaboration skill and a companion Codex subagents skill.
+This repository provides the Northstar skill and a companion Codex subagents skill.
 
-## Install the Q4 collaboration skill
+## Install the Northstar skill
 
-Copy this repository directory into your local skills directory with the folder name `q4-collaboration-protocol`.
+Copy this repository directory into your local skills directory with the folder name `northstar`.
 
 PowerShell:
 
 ```powershell
-Copy-Item -Recurse -Force . "$env:USERPROFILE\.agents\skills\q4-collaboration-protocol"
+Copy-Item -Recurse -Force . "$env:USERPROFILE\.agents\skills\northstar"
 ```
 
-Invoke it as `$q4-collaboration-protocol`, then give it a goal, project, or task to classify.
+Invoke it as `$northstar` when shaping a product direction or advancing a project. At project start, it challenges the customer/value/business thesis before implementation; once the direction is credible, it routes bounded execution and approval gates.
 
 ## Install Codex Subagents
 

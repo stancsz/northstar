@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Classify a task intake into a conservative Q4 collaboration contract."""
+"""Classify a task intake into a conservative Northstar collaboration contract."""
 import argparse
 import json
 from pathlib import Path
@@ -13,6 +13,10 @@ HIGH_RISK_FLAGS = (
 HIGH_COMPLEXITY_FLAGS = (
     "ambiguous_goal", "ambiguous_acceptance", "novel_condition", "multiple_dependencies",
     "implicit_context_or_value_judgment", "hard_to_verify", "reasonable_expert_disagreement",
+)
+HUMAN_DECISION_FLAGS = (
+    "ambiguous_goal", "ambiguous_acceptance", "implicit_context_or_value_judgment",
+    "reasonable_expert_disagreement",
 )
 
 AUTHORITY = {
@@ -33,16 +37,19 @@ def classify(data):
     veto_reasons = [key for key, value in veto.items() if value is True]
     risk_reasons = selected(risk, HIGH_RISK_FLAGS)
     complexity_reasons = selected(complexity, HIGH_COMPLEXITY_FLAGS)
+    human_decision_reasons = selected(complexity, HUMAN_DECISION_FLAGS)
     missing = not isinstance(risk, dict) or not isinstance(complexity, dict) or not risk or not complexity
     high_risk = bool(risk_reasons) or missing
     high_complexity = len(complexity_reasons) >= 2 or missing
     if veto_reasons:
         mode = "HUMAN_ONLY"
-    elif high_risk and high_complexity:
+    elif missing:
+        mode = "CHALLENGE"
+    elif high_risk and human_decision_reasons:
         mode = "CHALLENGE"
     elif high_risk:
         mode = "GUARD"
-    elif high_complexity:
+    elif human_decision_reasons:
         mode = "COCREATE"
     else:
         mode = "AUTO"

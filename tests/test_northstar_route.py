@@ -13,10 +13,10 @@ def load(name):
     module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
     return module
 
-route = load("q4_route")
+route = load("northstar_route")
 validator = load("validate_contract")
 
-class Q4RouteTests(unittest.TestCase):
+class NorthstarRouteTests(unittest.TestCase):
     def intake(self, risk=None, complexity=None, **extra):
         return {"task": "test", "risk": risk or {}, "complexity": complexity or {}, "rollback_available": True, "rollback_procedure": "revert", "recovery_point": "abc", **extra}
 
@@ -75,14 +75,14 @@ class Q4RouteTests(unittest.TestCase):
 
     def test_machine_schema_is_valid_json(self):
         schema = json.loads((ROOT / "assets" / "collaboration-contract.schema.json").read_text(encoding="utf-8"))
-        self.assertEqual(schema["title"], "Q4 collaboration contract")
+        self.assertEqual(schema["title"], "Northstar collaboration contract")
 
     def test_manifest_builds_portable_skill_zip(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "skill.zip"
             subprocess.run(["py", "-3", str(ROOT / "scripts" / "package_skill.py"), "--output", str(output)], check=True, capture_output=True, text=True)
             with zipfile.ZipFile(output) as archive:
-                self.assertIn("q4-collaboration-protocol/SKILL.md", archive.namelist())
-                self.assertIn("q4-collaboration-protocol/scripts/q4_route.py", archive.namelist())
+                self.assertIn("northstar/SKILL.md", archive.namelist())
+                self.assertIn("northstar/scripts/northstar_route.py", archive.namelist())
 
 if __name__ == "__main__": unittest.main()
