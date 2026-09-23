@@ -34,12 +34,16 @@ See [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagen
 
 ## Roles and authority
 
+When working with [Northstar](../northstar/SKILL.md#ownership-north-star--goals--tasks), use **orchestrator → North Star, supervisor → one goal, worker → one task**. A workstream below means the supervisor's assigned goal. The orchestrator owns `docs/northstar/` and the goal index; the supervisor owns its `GOAL.md`, task coordination, integration, and evaluation coverage; workers own scoped deliverables and their evidence. The supervisor accepts tasks and recommends goal readiness. The orchestrator inspects the integrated result before accepting the goal within the user's mandate. Human product decisions and consequential authorization remain with the user.
+
+Critic and verifier are review assignments within this structure. Give reviewers direct access to original intent and actual artifacts, and let them report independently to the accepting supervisor or orchestrator. Assign repairs and recheck material findings; adding reviewers never transfers accountability for the goal.
+
 ### Orchestrator
 
 - Owns the user's intent, scope, architecture, dependency decisions, team shape, and final result.
 - Assigns bounded workstreams to supervisors and may assign bounded tasks directly to workers.
 - Sets each delegate's allowed and forbidden paths or systems, acceptance criteria, verification, and side-effect limits.
-- Resolves cross-workstream conflicts, approves scope changes, and decides whether external or irreversible actions are authorized. Delegation never expands the user's authorization or the tools' actual permissions.
+- Resolves cross-workstream conflicts and approves scope changes only within the user's mandate. Checks whether external or irreversible actions are already authorized; obtains missing human authorization before execution. Delegation never expands the user's authorization or the tools' actual permissions.
 - Integrates the work, independently inspects material changes and evidence, completes final verification, and reports the result and remaining limitations.
 
 ### Supervisors

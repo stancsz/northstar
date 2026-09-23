@@ -4,5 +4,6 @@ Keep each goal at `docs/goal/<goal>/GOAL.md` and update its status in place. Lin
 
 | Goal | Status | Scope |
 | --- | --- | --- |
+| [Role ownership](role-ownership/GOAL.md) | Done | North Star, goal, task, review, and acceptance responsibilities |
 | [Markdown skills and repository practices](markdown-skills/GOAL.md) | Done | Markdown skills, organized docs, quality practices, repository hygiene, and shared storage guidance |
 | [Original Q4 collaboration protocol](q4-collaboration-protocol/GOAL.md) | Completed historical work | Preserved record of the earlier implementation; its script commands and checks describe that version only |

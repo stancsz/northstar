@@ -4,6 +4,13 @@ Location: docs/goal/<goal>/GOAL.md
 
 Status: active
 
+## Ownership and tasks
+
+- Orchestrator: <owns alignment with the North Star and final goal acceptance>
+- Supervisor: <owns this goal, its documentation, task acceptance, integration, and evaluation coverage; may be the same agent>
+- Tasks when delegation is useful: <bounded outcome, worker, write scope, acceptance, dependencies, status, and evidence link for each task>
+- Review: <who critiques quality and verifies behavior; disclose when the implementer also reviews>
+
 ## North Star
 
 - Direction and owner standards: <relative link to docs/northstar/>
@@ -44,9 +51,9 @@ Status: active
 ## Point of no return and escalation
 
 - Stop for explicit approval before: <release, destructive change, spending, permissions, external commitment>
-- Return to the Steward if: <product direction, customer, value, economics, scope, or acceptance must change>
+- Escalate to the orchestrator if: <goal scope, acceptance, or a cross-goal dependency must change>; the orchestrator takes decisions beyond the user's mandate to the human.
 
-## Builder execution record
+## Goal execution record
 
 ### Current approach
 
@@ -67,3 +74,8 @@ Status: active
 ### Critique and fixes
 
 - <Brief material findings and fixes, with links to their evaluation details>
+
+### Acceptance
+
+- Supervisor recommendation: <ready or remaining work, with integrated evidence>
+- Orchestrator decision: <accepted or returned for repair, with reasons; include human acceptance when required>

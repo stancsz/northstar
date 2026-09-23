@@ -1,6 +1,6 @@
 # Goal-driven engineering in Northstar
 
-Northstar incorporates the useful Goal-Driven Engineering operating model from [stancsz/goal-driven-engineering](https://github.com/stancsz/goal-driven-engineering): durable product intent sits above a self-contained `GOAL.md`; an agent owns the implementation path and evidence until the goal is proven complete. Product direction and acceptance belong to the Steward (the user or an explicitly authorized product owner). The Builder may choose and change implementation details autonomously within the agreed outcome and constraints. Northstar adds early discussion of business viability and explicit decisions before irreversible actions.
+Northstar incorporates the useful Goal-Driven Engineering operating model from [stancsz/goal-driven-engineering](https://github.com/stancsz/goal-driven-engineering): durable product intent sits above a self-contained `GOAL.md`; an agent owns the implementation path and evidence until the goal is proven complete. Northstar uses explicit operational ownership: **orchestrator owns the North Star, supervisor owns a goal, worker owns a task**. The human retains product intent and authorization; agents choose implementation details within that mandate. See [ownership and decision boundaries](../SKILL.md#ownership-north-star--goals--tasks). Northstar adds early discussion of business viability and explicit decisions before irreversible actions.
 
 ## Shape a viable goal before building
 
@@ -20,12 +20,12 @@ If the user explicitly has a non-commercial mission, replace revenue with a clea
 
 Use `docs/goal/<goal>/GOAL.md` for a coherent outcome, with one active goal unless the user asks for parallel goals. Track status in the file and link it from `docs/goal/README.md`; keeping the path stable preserves links from evaluations and commits. Make it self-contained enough that a fresh agent can continue from the repository and linked documentation.
 
-1. **Steward shapes the goal:** record North Star, target customer, problem, value thesis, supporting evidence and assumptions, outcome, source of truth, acceptance criteria, constraints, non-goals, and escalation conditions.
-2. **Builder executes:** inspect current reality, choose the highest-value next step, research implementation unknowns, implement a coherent slice, verify it, and record decisions and evidence in `GOAL.md`.
-3. **Critic challenges completion:** inspect the actual artifact and diff against the original intent, owner quality examples, and acceptance criteria. Identify substitutions, weakened requirements, and hidden work left for the user. Return actionable findings with impact and evidence.
-4. **Verifier checks:** exercise the real behavior and relevant failure cases, including integration/runtime or operational paths when the claim requires them. Use an independent reviewer for substantial work when available; otherwise perform a fresh verification pass and state the limitation.
-5. **Builder repairs:** fix blocking findings within the agreed scope and submit the updated artifact for review again. Preserve finding history; update evidence after changes. Routine defects remain Builder work.
-6. **Steward closes:** compare the reviewed result with the original goal, owner standards, and reference product. Close when agreed behavior works and material findings are fixed. Report what was actually checked and any remaining limitations. Product intent, viability assumptions, acceptance, and authority cannot be weakened by the Builder to make a goal pass.
+1. **Orchestrator shapes and assigns the goal:** connect the North Star, customer, value thesis, evidence and assumptions to an outcome, acceptance criteria, constraints, non-goals, and escalation conditions. Resolve missing human decisions and name the supervisor.
+2. **Supervisor plans; workers execute:** the supervisor maintains `GOAL.md`, assigns bounded tasks and write scopes, and tracks dependencies. Workers inspect reality, research implementation unknowns, implement coherent slices, check their work, and return evidence. The supervisor accepts task handoffs and integrates the result.
+3. **Critic challenges completion:** inspect the actual artifact and diff against the original intent, owner quality examples, and acceptance criteria. Identify substitutions, weakened requirements, and hidden work left for the user. Report actionable findings directly to the accepting supervisor or orchestrator.
+4. **Verifier checks:** exercise the real behavior and relevant failure cases, including integration/runtime or operational paths when the claim requires them. Use an independent reviewer for substantial work when available; otherwise perform a fresh verification pass and state the limitation. The supervisor ensures the goal's evidence covers the integrated outcome.
+5. **Workers repair; supervisor integrates:** fix blocking findings within the agreed scope and submit the updated artifact for review again. Preserve finding history and update evidence after changes. The supervisor owns integration repairs and recommends readiness only after material findings are resolved and rechecked.
+6. **Orchestrator accepts the goal:** inspect the integrated result and evidence against the original goal, owner standards, and reference product. Close when agreed behavior works and material findings are fixed, with human acceptance where required. Report what was actually checked and any remaining limitations. No agent may weaken product intent, viability assumptions, acceptance, or authority to make a goal pass.
 
 Keep implementation detail below the goal. Do not create extra task lists or planning layers unless they solve a concrete coordination problem. Use [the Markdown goal template](../templates/GOAL.md) when creating a durable goal.
 
@@ -59,8 +59,8 @@ Prefer the next step that unlocks a real user capability, validates a critical b
 
 Separate product uncertainty from implementation uncertainty:
 
-- **Product or business uncertainty** (customer, pain, value, positioning, willingness to pay, economics, durable constraints) must be surfaced to the Steward early. AI can gather evidence and recommend, but cannot invent the answer.
-- **Implementation uncertainty** (libraries, APIs, architecture within approved constraints, debugging, test design) is Builder work. Research and decide autonomously within the goal and permissions.
+- **Product or business uncertainty** (customer, pain, value, positioning, willingness to pay, economics, durable constraints) goes to the orchestrator early, and to the human when it needs an owner decision. AI can gather evidence and recommend, but cannot invent the answer.
+- **Implementation uncertainty** (libraries, APIs, architecture within approved constraints, debugging, test design) belongs to the worker for its task and the supervisor for goal integration. Research and decide autonomously within the goal and permissions.
 - **Point-of-no-return action** (release, destructive migration/deletion, spending, permission change, external commitment) depends on the user's authorization. Prepare and verify first, and obtain the required approval before crossing it.
 
 GDE's conceptual roles map to Northstar modes by decision rights, not by fixed persona: product intent and major value tradeoffs remain human-owned; reversible research and implementation are usually `AUTO`; high-impact execution is `GUARD`; high-impact unresolved product or architectural choices are `CHALLENGE`; human-sovereignty decisions use `HUMAN_ONLY`.
