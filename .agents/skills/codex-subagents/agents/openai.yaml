@@ -1,0 +1,3 @@
+interface:
+  display_name: "Codex Subagents"
+  short_description: "Coordinate on-demand subagents with clear roles and boundaries."
