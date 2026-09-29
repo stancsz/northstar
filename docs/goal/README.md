@@ -4,6 +4,7 @@ Each supervisor owns its `docs/goal/<goal>/GOAL.md` and index entry. Read the or
 
 | Goal | Status | Scope |
 | --- | --- | --- |
+| [Bilingual positioning and GitHub presentation](readme-positioning/GOAL.md) | Done | Outcome-led English/Chinese READMEs, delegation narrative and verified GitHub metadata |
 | [Healthy functional roles and independent acceptance](healthy-roles/GOAL.md) | Done | Functional separation, flexible process and standing commander authority with subdelegation |
 | [Dogfood Northstar on Northstar](dogfood-review/GOAL.md) | Done | Independent review and direction decision; matched real-task pilot proposed, not run |
 | [Central package and Codex Advisor migration](central-package/GOAL.md) | Done | Four distinct skills, one package/install flow, central coordination and Subroute advisor redirect |

@@ -5,6 +5,7 @@ Workers own `docs/reports/<goal>/<task>.md` and link their actual deliverables, 
 Supervisors assign distinct report paths, read reports and inspect the work, then record acceptance or repairs in the linked `GOAL.md`. Find reports through their goal's task entries. [Evaluations](../evals/README.md) record review conclusions and link supporting reports; disposable logs belong in `tmp/`.
 
 - [Role ownership: align reporting](role-ownership/align-reporting.md)
+- [Bilingual README positioning: independent review](readme-positioning/review.md)
 - [Skill learning and feedback: implementation](skill-feedback/implementation.md)
 - [Incremental delivery: delivery rules](incremental-delivery/delivery-rules.md)
 - [QA suite: implementation](qa-suite/implementation.md)
