@@ -8,9 +8,12 @@ The target user is an owner or developer working with AI agents who needs initia
 
 ## Confirmed owner expectations
 
+- Maximize useful accepted outcomes with the least elapsed time and total tokens, including rework. Lean first, functioning first: the leanest, cleanest product, no spaghetti code, maximum practical reuse, and top-class design that stays inexpensive to extend. Remove unnecessary machinery and duplication; keep wording as short as the task allows. Preserve readability and credible extension paths without speculative frameworks or unmeasured savings claims. See [design guidance](../../skills/northstar/SKILL.md#excellent-design-with-minimal-machinery).
+- Deliver a usable MVP quickly, then build on accepted work in small increments. Bound each delivery, reuse applicable evidence, and change approach when retries stop producing information. Long-term quality requirements remain visible without making every future feature a prerequisite for the current slice. See the [delivery rules](../../skills/northstar/SKILL.md#deliver-a-usable-mvp-then-improve-in-increments).
 - Challenge the customer, problem, commercial value, and production direction early. Research facts independently and ask for decisions the owner actually needs to make.
-- Study the strongest relevant equivalent product and compare real user journeys, UI/UX, look and feel, usefulness, effectiveness, simplicity, and maintainability.
-- Treat a 98% parity ambition as a claim requiring defined criteria and evidence; do not manufacture an overall score.
+- Use reference products to resolve specific design questions or evaluate a requested comparison. Name the workflows and observable criteria; do not impose default parity targets or invent overall quality percentages.
+- Write concise instructions that tell agents what to do, when to repeat work, when to ask, and when to finish. Express quality standards as inspectable behavior rather than slogans.
+- Recover stalled work using a persistent checkpoint and bounded investigation: count evidence-backed progress against the unmet criterion across agents and context changes. Validate recovery guidance with scoped execution trials, while distinguishing those trials from long-session reliability or enforced limits.
 - Critics and verifiers use the owner's standards and inspect actual results. Fix shortcuts and recheck rather than merely listing defects.
 - Keep Northstar as Markdown engineering methods and practices under `skills/`. Avoid executable enforcement and machine-contract machinery.
 - Use `docs/northstar/`, `docs/goal/`, `docs/reports/`, and `docs/evals/` as shared memory. Keep only subdirectories directly under `docs/`; other supporting documentation belongs in `docs/misc/`. Keep a useful `AGENTS.md`, scoped scratch work in `tmp/`, appropriate ignore rules, and meaningful commits.

@@ -1,85 +1,34 @@
-# Goal: <production-value outcome>
-
-Location: docs/goal/<goal>/GOAL.md
+# Goal: <one useful delivery>
 
 Status: active
 
+## Outcome and acceptance
+
+- User, workflow, and environment: <what becomes usable, and where>
+- Must pass: <observable criteria and required evidence>
+- Constraints: <quality, compatibility, security, explicit budget, and authorization boundaries>
+- Excluded or later: <scope that is not required for this delivery; preserve broader commitments>
+- Direction: <link to docs/northstar/ and relevant specifications>
+
 ## Ownership and tasks
 
-- Orchestrator: <owns alignment with the North Star and final goal acceptance>
-- Supervisor: <owns this goal and its index entry, task acceptance, integration, and evaluation coverage; may be the same agent>
-- Tasks: <bounded outcome, worker, write scope, acceptance, dependencies, status, and link to docs/reports/<goal>/<task>.md for each task>
-- Review: <who critiques quality and verifies behavior; disclose when the implementer also reviews>
+- Orchestrator: <direction and final acceptance>
+- Supervisor: <goal/index, integration, and task decisions; may be the same agent>
+- Tasks: <deliverable, worker, write scope, dependencies, status, and report link>
+- Review: <who inspects quality and verifies behavior; disclose non-independent review>
 
-## North Star
+## Execution record
 
-- Direction and owner standards: <relative link to docs/northstar/>
-- Contribution to that direction: <the customer/business value this goal advances>
-- Relevant assumptions and unknowns: <link durable research; record goal-specific details here>
+- Next unmet criterion and action: <continue here>
+- Material design decision, if needed: <simple implementation, expensive-to-reverse choice, credible extension path, and migration cost>
+- Evidence: <evaluation link, revision/environment, results, limitations; reuse checks that still apply>
+- Recovery checkpoint, when investigating: <unmet criterion; last verified state/current diff; attempts/results and ruled-out paths; remaining investigation window; next distinguishing check or unblock condition. Carry this forward across context/agent changes.>
+- Handoffs: <task report links and supervisor acceptance or repair decisions>
 
-## Outcome
+## Acceptance
 
-<A production-capable user or business outcome, not just an implementation activity.>
+- Supervisor recommendation: <ready or unmet criteria>
+- Orchestrator decision, recorded by supervisor: <accepted or returned, reason, required human acceptance; update goal index>
+- Delivery: <usable result, limitations, and next authorized increment>
 
-## Why this matters now
-
-<User value, business value, or validated risk this goal addresses.>
-
-## Source of truth
-
-<Links to product specs, customer evidence, architecture decisions, and relevant AGENTS.md instructions.>
-
-## Acceptance criteria
-
-- [ ] <Observable behavior or business/product signal>
-- [ ] <Verification evidence for the production path>
-
-## Constraints and invariants
-
-- <Product, security, reliability, cost, or compatibility constraints>
-- Total project artifacts stay below 100 GB across all agents; account for ignored files, scratch work, caches, and peak growth before large operations.
-
-## Reference product and quality expectations
-
-- <Link to the reference product research and owner standards in docs/northstar/>
-- <Concrete competitive gaps in the real workflow, UX, effectiveness, and maintainability>
-
-## Non-goals
-
-- <Explicitly excluded scope; label any prototype as a bounded experiment>
-
-## Point of no return and escalation
-
-- Stop for explicit approval before: <release, destructive change, spending, permissions, external commitment>
-- Escalate to the orchestrator if: <goal scope, acceptance, or a cross-goal dependency must change>; the orchestrator takes decisions beyond the user's mandate to the human.
-
-## Goal execution record
-
-### Current approach
-
-<Highest-value next step and why it advances the outcome.>
-
-### Progress and decisions
-
-- <Record material discoveries and decisions, not every action.>
-
-### Worker handoffs
-
-- <Task report link, supervisor's acceptance or repair decision, and remaining integration work; keep detailed worker findings in the report>
-
-### Validation and evidence
-
-- <Link to docs/evals/ results: evaluated revision/environment, checks actually run, observations, limitations, and durable evidence>
-
-### Remaining gap
-
-- <Unmet acceptance criterion, production blocker, and next action; or none>
-
-### Critique and fixes
-
-- <Brief material findings and fixes, with links to their evaluation details>
-
-### Acceptance
-
-- Supervisor recommendation: <ready or remaining work, with integrated evidence>
-- Orchestrator decision, recorded by the supervisor: <accepted or returned for repair, with reasons; include human acceptance when required and update the goal index>
+Keep this record short and update it in place. Follow the installed Northstar skill and applicable repository instructions, including the shared 100 GB artifact ceiling. Remove these template instructions when filling it out.

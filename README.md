@@ -1,6 +1,6 @@
 # Northstar
 
-Production-first AI engineering practices, delivered as Markdown skills.
+AI engineering practices for a usable MVP first, then verified increments toward production, delivered as Markdown skills.
 
 Northstar helps agents clarify a worthwhile product direction, learn from strong comparable products, do the implementation research, and carry useful work through critique, repair, and verification. It keeps the owner's quality standards and approval boundaries visible throughout.
 

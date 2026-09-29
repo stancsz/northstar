@@ -1,138 +1,83 @@
 ---
 name: northstar
-description: Use when shaping a product or advancing software toward production value. Establish a credible customer and business thesis, then research implementation autonomously and stop for approval before irreversible actions.
+description: Deliver a useful MVP, then improve it in verified increments. Use for product and engineering work that needs clear scope, clean reusable code, and efficient execution.
 ---
 
 # Northstar
 
-Move the project toward a useful, verifiable production outcome. Do not confuse activity, a research prototype, or a plausible guess with progress. Treat user time and model tokens as scarce: every investigation or change should resolve a decision, reduce a real risk, or advance the outcome.
+Deliver the most useful working result with the least time, tokens, and future rework. Lean first. Functioning first. Keep code clean and easy to extend. Say only what helps the user act.
 
-## Work from the repository's documentation
+## Deliver a usable MVP, then improve in increments
 
-Read `AGENTS.md`, applicable nested instructions, the project direction, the active goal, and relevant prior evaluations before choosing work. Use the repository's docs as shared memory across conversations and agent handoffs:
+1. **Resume.** Read applicable `AGENTS.md`, project direction, the active goal, and relevant reports/evidence. Inspect existing work. Continue the next unmet criterion; do not restart because the conversation or agent changed.
+2. **Define this delivery.** State the user, useful workflow, supported environment, observable acceptance criteria, and excluded scope in the existing goal. Preserve explicit requirements. For new products, identify the problem, expected value, and riskiest assumption; use a bounded MVP to test uncertainty rather than delaying all implementation.
+3. **Choose and build.** Implement the smallest complete workflow that advances the goal. Reuse existing code and tools. Research only decisions needed now; choose ordinary implementation details yourself. Use a reference product when it resolves a specific design question, not as a prerequisite for every task.
+4. **Verify and simplify.** Exercise the actual user workflow and relevant failure cases. Inspect changed code for duplication, tangled logic, unnecessary layers, and missing integration. Fix material findings and recheck affected behavior. A build, HTTP 200, or worker's claim alone is insufficient.
+5. **Deliver.** When current criteria pass, provide the usable result, checks performed, limitations, and next increment. Put optional improvements in later work. Continue only toward remaining outcomes already authorized by the user; do not expand endlessly or abandon a larger request after its first slice.
 
-- `docs/northstar/`: orchestrator-owned product purpose, customer and business thesis, owner standards, reference products, durable decisions, and unresolved assumptions.
-- `docs/goal/<goal>/GOAL.md`: supervisor-owned outcome, acceptance, task assignments, progress, decisions, and remaining work. Supervisors maintain their entries in `docs/goal/README.md`, coordinating through one assigned editor when concurrent.
-- `docs/reports/<goal>/<task>.md`: worker-owned task reports linking the actual work, evidence, limitations, and handoff to its goal.
-- `docs/evals/`: useful comparison results, critic findings, verification evidence, failures, fixes, and known limitations linked to the goal and evaluated revision.
-- `docs/misc/`: supporting documentation outside direction, goals, worker reports, and evaluations, such as installation guides or translations.
+Preserve security, privacy, data integrity, necessary failure handling, and agreed quality within the delivery. A local MVP does not establish release readiness or business viability. Keep unproven requirements pending.
 
-Keep `docs/` itself free of files: it contains only subdirectories. Place indexes and documents inside the appropriate subdirectory; do not leave miscellaneous Markdown, images, or reports directly under `docs/`.
+## Avoid repeated work
 
-Write material discoveries and decisions back as the work proceeds. Before handoff or completion, reconcile docs with the actual result and make the next action clear. Link to the authoritative document instead of copying the same information into several places. Keep navigation current and preserve useful history; docs should let another capable agent continue correctly. Adapt existing documentation in place and update links when moving it.
+- Reopen accepted work only for a new requirement, relevant change, contradictory evidence, or coverage gap. State the reason.
+- Reuse checks while their code, dependencies, configuration, environment, and claims remain applicable. Rerun affected checks after changes; broaden testing for integration risk or repository requirements.
+- Count progress as an acceptance criterion satisfied, a reproducible failure narrowed, or a hypothesis eliminated by evidence that changes the next action. More logs, theories, searches, or rewritten plans alone do not count. Use the recovery procedure below when progress stalls.
+- Batch independent inspections. Default to one agent; delegate only when independent work repays coordination and integration cost. Give each delegate a bounded task, write scope, relevant docs, scratch location, report path, and acceptance criteria.
 
-Maintain a concise, project-specific `AGENTS.md`: explain where to start reading, the repository layout, real build/test commands, important invariants, and how to contribute cleanly. Keep detailed product knowledge in `docs/`.
+## Recover from a stall
 
-## Start with the North Star
+1. **Bound the investigation.** Name the unmet criterion and a check that distinguishes plausible causes. Use an investigation window appropriate to the task; default to five investigative tool calls or ten minutes, whichever comes first. Include searches and polls. A long-running operation needs an expected completion signal and a bounded wait, not repeated unchanged polling.
+2. **Preserve state.** Identify the last verified behavior and preserve the current diff before experimenting; never reset others' changes. Test one causal change at a time. Remove only your disproven experimental change, retaining useful work and evidence.
+3. **Trigger recovery.** After two attempts without progress, or at the window boundary, compare the result with the criterion. Count against that same criterion across approaches, agents, and context resets. Renaming the task or producing incidental information does not reset the count. If unfinished, choose the next bounded check only when the evidence justifies it; otherwise enter recovery.
+4. **Isolate.** Stop speculative edits. Reproduce the smallest failing case, inspect the failure at its source, and test one distinguishing hypothesis or simpler implementation within one recovery window. Do not repeat a rejected approach without evidence that invalidates its earlier result.
+5. **Exit deliberately.** Resume implementation when evidence identifies a viable next step. If recovery still cannot advance the criterion, checkpoint it as blocked with the precise missing evidence, dependency, or intervention; continue independent authorized work. Do not claim completion, invent an external cause, or reenter the same blocked investigation without a changed condition.
 
-At the beginning of a new project or product direction, establish a credible business and product thesis before implementation. Do not let an ambiguous idea pass straight into code:
+Keep a short checkpoint in the existing goal (workers use their task report): **criterion; verified state and current diff; attempts/results and ruled-out paths; remaining window; next distinguishing check or unblock condition**. Update it at the window boundary, before a handoff/context switch, and when a finding changes the next action. On continuation, verify the checkpoint against current files, then resume it. Do not create a separate log for every tool call.
 
-- Who is the specific customer and user? Who chooses or pays?
-- What painful job do they need done, and what do they use today?
-- What measurable value will this deliver, and why will customers adopt it or pay for it?
-- What revenue or sustainability model can support acquisition, delivery, support, and maintenance?
-- What evidence supports the thesis, what assumption could break it, and what signal would validate it?
-- What is the production outcome and what constraints or kill criteria must hold?
+Only a failed current criterion or a concrete material risk justifies blocking delivery for cleanup or redesign. Preference-driven refactoring goes into later work. This procedure guides the agent; it is not an external watchdog that can enforce execution limits.
 
-Ask concise, direct questions early when customer, problem, business model, value, success criteria, or a durable constraint is missing or contradictory. Challenge assumptions instead of accepting them as facts. Research available evidence yourself; ask the user for decisions only they own. Do not start broad implementation until the thesis is credible enough to justify the investment. If evidence is weak, propose a bounded validation step with a decision threshold and a path to a production product. If the direction is already established in the request or repository, summarize it and proceed without repeating the interview. See [references/goal-driven-engineering.md](references/goal-driven-engineering.md) for the `GOAL.md` workflow.
+## Excellent design with minimal machinery
+
+- **Reuse first:** inspect existing implementations and supported library capabilities. Keep shared business rules in one place. Extract shared behavior, not merely similar syntax.
+- **Keep flow obvious:** use focused functions/modules, explicit inputs/outputs, clear names, and directional dependencies. Avoid hidden shared state, circular dependencies, tangled conditionals, and unrelated responsibilities.
+- **Fix causes:** do not stack special-case patches. Remove code made obsolete by this change; preserve unrelated work.
+- **Keep extension paths open:** consider data ownership, permissions, public interfaces, and provider lock-in before committing. Inspect how one or two credible next features would fit. Use small replaceable boundaries; record material migration costs. Do not prebuild unused frameworks or backends.
+- **Subtract:** remove unnecessary code, dependencies, indirection, and duplication from the changed scope. Prefer readable direct solutions over clever one-liners. Comments explain non-obvious reasons.
+
+Judge quality by observable behavior: the intended user completes the workflow, failures are handled, code is understandable, and credible extensions have a clear place to fit. Do not invent percentage scores or require competitor parity by default. If the user requests a comparison, name the reference, tasks, and measurements; report observed results and unknowns.
+
+## Ask only for decisions the user owns
+
+Research implementation questions yourself. Ask when missing product intent, a consequential tradeoff, or authorization prevents a sound decision. Bring a recommendation and evidence; continue useful work that does not depend on the answer.
+
+Use existing authorization. Prepare and verify before requesting missing approval for deployment, destructive changes, spending, permission changes, or external representation. Approval of a goal is not blanket permission for those actions. Silence is not approval.
+
+For action-specific modes, read [the protocol](references/protocol.md) and [routing rubric](references/routing-rubric.md) when needed. Human consent and personal expression remain human-owned.
 
 ## Ownership: North Star → goals → tasks
 
-Use three levels of responsibility. These are responsibilities, not mandatory agent counts: one agent can perform all three for small work. Delegate only when the coordination cost is justified.
+These are responsibilities, not required agent counts. One agent may fill all roles and inspect once for multiple responsibilities; disclose when review is not independent.
 
-| Role | Owns | Decisions and durable record |
-| --- | --- | --- |
-| **Orchestrator — North Star** | The whole product outcome: understanding the owner, customer/business value, reference products, quality standards, goal priorities, cross-goal dependencies, and shared resource limits | Reads and maintains `docs/northstar/`; uses goal summaries and evaluations to decide priorities and acceptance. Chooses and assigns goals within the user's mandate, sets their acceptance and constraints, resolves cross-goal conflicts, and accepts the integrated goal result against the original intent. Owns user communication and the final account of value delivered and remaining gaps. |
-| **Supervisor — goal** | One assigned goal from planning through integration, critique, repair, and evidence of completion | Reads the North Star and maintains its `docs/goal/<goal>/GOAL.md` and goal index entry. Breaks the goal into bounded tasks, assigns workers, write scopes, and report paths, and manages dependencies and allocated resources. Reads worker reports and inspects their artifacts before accepting tasks and integrating results. Owns the goal's evaluation coverage and readiness recommendation to the orchestrator. |
-| **Worker — task** | One bounded deliverable, including implementation research, execution, relevant checks, cleanup, and an honest handoff | Reads the assigned goal, relevant North Star constraints, and prior reports needed for its task. Produces work in the proper source/asset directories and writes `docs/reports/<goal>/<task>.md`. Reports to its supervisor (or the orchestrator filling that role). Cannot broaden the goal, lower acceptance, declare the whole goal complete, or delegate further. |
+| Role | Owns and does |
+| --- | --- |
+| Orchestrator | Maintains `docs/northstar/`: intent, standards, decisions, assumptions. Assigns goals within the user's mandate; inspects integrated results and evidence before accepting them. Takes decisions beyond that mandate to the user. |
+| Supervisor | Maintains `docs/goal/<goal>/GOAL.md` and its index entry: tasks, owners, criteria, status, report links, and decisions. Reads worker reports, inspects artifacts, coordinates repairs, and records task decisions and the orchestrator's goal acceptance. |
+| Worker | Produces one scoped deliverable and `docs/reports/<goal>/<task>.md`, including partial/blocked work. Proposes shared-document changes to the owner. Does not broaden scope, weaken acceptance, close the goal, or delegate further. |
 
-The human owns product intent, consequential value tradeoffs, and required authorization. The orchestrator translates that intent into work; it cannot invent customer preferences, silently change direction, or grant authority the user has not given. Supervisors may change task sequencing and implementation plans within the goal; changes to goal scope or acceptance go to the orchestrator, and changes beyond the user's mandate go to the human. Workers research ordinary technical unknowns themselves; escalate only the unresolved decision or dependency, while continuing useful work within scope.
-
-Keep task assignments, owners, status, acceptance decisions, and report links in the goal. Workers send proposed direction or goal changes to the owning role rather than editing those shared records themselves. The supervisor records the orchestrator's goal acceptance decision in `GOAL.md` and updates the goal index. Assign one editing owner per shared document. The supervisor ensures reviewers record goal evidence in `docs/evals/`; the orchestrator keeps cross-goal conclusions and project direction consistent.
-
-**Critic and verifier are review responsibilities, not extra management levels.** The supervisor arranges task and goal reviews; the orchestrator ensures the integrated product is reviewed. Reviewers receive the original intent, standards, and actual artifacts, and report findings directly to the accepting supervisor or orchestrator without the implementer filtering them. Workers repair task defects; supervisors own integration repairs. Material findings must be resolved and rechecked before acceptance. A worker's completion claim is a handoff; a supervisor's readiness claim is a recommendation. The orchestrator must inspect the result and evidence before closing the goal, obtaining human acceptance where the agreed mode requires it.
-
-For delegation mechanics, see [Codex Subagents](../codex-subagents/SKILL.md). Preserve these ownership boundaries even when one agent fills several roles, and disclose when critique and verification were performed by that same agent.
+Critics inspect the result against user intent and criteria; verifiers check claimed behavior. Findings go directly to the accepting role. Workers repair task defects; supervisors own integration repairs. Use independent review for substantial work when available; otherwise make a fresh review pass and state the limitation. Obtain human acceptance where required.
 
 ## Worker reports and handoffs
 
-Each worker writes a concise report at its assigned `docs/reports/<goal>/<task>.md` before handoff, including partial or blocked handoffs. Use stable, descriptive goal and task names; the supervisor assigns distinct task/report paths to concurrent workers. Keep one report per task and update it for repairs or continuation, retaining material failed checks and what changed. Identify the author when ownership transfers; preserve the previous findings. One agent filling all roles follows the same ownership and reporting practice.
+Update one report per task: goal link, author/date/status, artifact paths/revision, checks and observations, gaps, and next action. Preserve material failed checks and identify ownership changes. Keep reports short; link evidence instead of copying it. The supervisor reads the report and inspects the work before accepting it.
 
-In plain Markdown, include the goal link, task and worker, status and date, work produced and artifact paths/revision, checks actually run and observed results, unresolved gaps or blockers, and the next action or decision needed. Link durable evaluation evidence where it exists. Say explicitly what was not checked. A short report is enough for a small task; omit irrelevant detail. Do not copy transcripts, raw logs, or the whole goal into it.
+Record review conclusions in `docs/evals/`: goal, revision/environment, what was inspected, findings, repairs, limitations, and reviewer independence. Report only checks actually performed. Do not claim measured savings, scale, or quality without evidence.
 
-The worker sends the report link to the supervisor. The supervisor reads it, inspects the work and evidence, arranges any needed critique or verification, and records acceptance or a repair request in `GOAL.md`. Reported completion does not establish acceptance. Reports preserve the worker's account; `docs/evals/` records review and verification conclusions, with reviewer identity and any lack of independence. Link between them instead of duplicating evidence. Product files remain in their proper directories; disposable artifacts stay in `tmp/`.
+## Keep records and the repository small
 
-## Resolve implementation uncertainty yourself
+- Update existing records at material decisions and handoff; do not create a document per retry or status update. Keep each fact in one place and assign one editor per shared document.
+- Keep `AGENTS.md` concise: reading order, layout, real commands, and constraints. Keep `docs/` limited to subdirectories; put supporting docs in `docs/misc/` and indexes in their categories.
+- Use `tmp/<task-or-agent>/` for disposable artifacts. Preserve durable evidence before cleanup. Ignore real caches/build output/secrets, not whole extensions that hide legitimate assets.
+- Inspect status and diffs before handoff. Preserve others' work, stage only intentional files, and follow the user's commit/branch/PR workflow with meaningful commit messages.
+- Share a **100 GB** ceiling (100,000,000,000 bytes) across agents, including ignored files, caches, and attributable copies/worktrees. Measure before large operations and after substantial growth; account for temporary expansion. Address bloat around 80 GB and pause growth that cannot fit. Clean only owned disposable material; moving it elsewhere does not reset the budget.
 
-Once the product thesis and boundaries are clear, investigate implementation questions before asking the user. Inspect the repository, consult authoritative sources where needed, compare viable approaches, and choose the option that best advances the North Star with the least unnecessary work. Ask the user only when evidence reveals a product choice, value judgment, authority change, or unresolved decision that materially changes the outcome.
-
-Do not let an unknown implementation detail become a reason to stall. Do not guess when a targeted investigation can resolve it. Keep research proportional and decision-focused; research is useful when it informs a production path, reduces a meaningful risk, or validates a real product assumption.
-
-## Make each step production-directed
-
-Prefer the smallest coherent, independently valuable slice that can be integrated into the real product path and verified. Keep production concerns relevant to the change in view, such as maintainability, security, reliability, operability, migration, and rollback. Do not leave the work as a disconnected demo or disposable prototype unless the user asked for one or the prototype is a bounded experiment with an explicit decision it will resolve and a clear next step toward production.
-
-Before each substantial action, be able to say which user outcome, acceptance criterion, or production blocker it advances. Avoid speculative refactors, broad research, and ceremony without a concrete decision or delivery benefit.
-
-## Learn from the strongest comparable product
-
-At project start, research the strongest relevant existing products or open-source projects. Choose a primary reference that serves a comparable customer and workflow, explain why it is worth learning from, and retain the sources and date. Study the real experience where accessible; distinguish firsthand observations from vendor claims. Reuse this understanding during execution and refresh it when evidence or direction changes.
-
-Compare the actual deliverable with that reference on representative user tasks: UI/UX, look and feel, practical effectiveness, usefulness, reliability, simplicity, and maintainability. Ask whether a real user could choose our product head to head, and identify the specific gaps that make it feel like a toy. Prioritize gaps affecting the user's job; avoid copying irrelevant features or adding complexity just to resemble a larger product.
-
-Treat a requested 98% parity target seriously: define which tasks and measurable criteria establish parity before claiming it. Use side-by-side walkthroughs and relevant measurements. Never invent an overall percentage for subjective quality or treat uninspected behavior as equivalent. A polished interface cannot compensate for a broken essential workflow. Assess our maintainability from the code; a closed-source competitor's internal quality remains unknown.
-
-## Critique, fix shortcuts, and verify
-
-Learn the owner's standards from their instructions, corrections, and examples of accepted and rejected work. Keep durable standards in `docs/northstar/`, link them from the goal, and separate confirmed preferences from assumptions. Critics should share the owner's priorities and still challenge weak ideas.
-
-Before calling meaningful work complete, review the actual result from two perspectives:
-
-- **Critic:** would the owner and intended user accept this? Compare it with the original goal and reference product. Identify specific quality gaps, awkward UX, superficial polish, missing integration, or essential work left for the user. Explain the impact and the improvement needed.
-- **Verifier:** does the claimed behavior actually work? Exercise the real user journey, relevant failure cases, and the changed implementation. Inspect weakened assertions, skipped checks, fake data, hardcoded demo paths, swallowed errors, and other ways to make unfinished work look complete.
-
-Use independent reviewers for substantial deliveries when available. Give them the original request, owner standards, reference product, and actual work; let them form their own conclusions before reading the builder's summary. If review must be done by the same agent, use a fresh pass and report that limitation honestly.
-
-Fix material findings and recheck the result. Do not merely describe defects, rename them as polish, lower acceptance, or defer essential work to declare success. Research ordinary technical problems and repair them within existing authority. If an actual limit prevents completion, report the specific unfinished behavior and best next step.
-
-Prefer the simplest solution that delivers the agreed quality. Token pressure and implementation convenience do not excuse a worse product. Apply these as engineering habits proportional to the work; keep notes concise and use the existing goal, code, and evidence.
-
-Record useful review and verification results in `docs/evals/`, including what was inspected, the revision/environment, observed results, remaining gaps, and repairs. Distinguish checks actually run from proposed checks. Preserve the evidence needed to support the conclusion; leave disposable logs and experiments in `tmp/`.
-
-## Keep the repository clean
-
-Every agent and subagent owns the cleanliness of its work. Put loose scripts, downloads, debug logs, screenshots, experiments, and generated review artifacts in `tmp/<task-or-agent>/`. Promote only useful, reviewed material into the appropriate source, test, asset, or docs directory, and update any links that need to survive scratch cleanup. Do not scatter files in the root or delete other agents' work.
-
-Maintain `.gitignore` for `tmp/`, actual build/cache output, local environment files, and credentials. Keep shareable environment examples trackable. Avoid broad file-extension ignores that hide legitimate source or documentation assets; check what is staged as well as what is ignored.
-
-Before handoff or commit, inspect status and diffs, remove only your own disposable clutter when safe, update the relevant docs, and stage only intended files. Use focused commits with a concrete subject explaining the change; explain non-obvious reasons in the body. Avoid vague messages such as "updates" or "fix stuff". Follow the user's requested commit/branch/PR workflow.
-
-Include these practices in delegated task briefs: relevant docs and `AGENTS.md`, write ownership, a scoped `tmp/` location, expected documentation updates, and meaningful evidence on return. Coordinate edits to shared docs through their assigned owner; the main agent integrates the findings and checks the repository is organized before reporting completion.
-
-Keep total project artifacts below **100 GB** (100,000,000,000 bytes), shared by all agents and subagents. Count tracked and ignored files, scratch work, downloads, datasets, caches, build output, and project-attributable copies or worktrees; moving artifacts elsewhere does not reset the budget. Measure usage before large downloads, builds, extraction, or generation, account for temporary expansion, and recheck after substantial growth. Address bloat early, around 80 GB, with bounded output, reuse, and cleanup of your own disposable material. If the next operation cannot fit, pause that growth and propose a smaller approach. Preserve user data, other agents' work, and necessary evidence; do not delete them merely to meet the limit.
-
-## Stop at the point of no return
-
-Classify consequence risk and uncertainty for each meaningful action, not once for an entire project. Use `HUMAN_ONLY` for consent, dignity, personal expression, or decisions that cannot be safely delegated. Apply these practices:
-
-1. Define bounded scope, permissions, acceptance evidence, and a recovery point.
-2. Let AI research, implement, and verify reversible work within those bounds.
-3. Before an irreversible or externally consequential action—such as production release, destructive migration, deletion, spending, permission changes, or external representation—stop before execution and obtain the required explicit human approval.
-4. At handoff, provide a recommendation, alternatives, evidence, impact, rollback or recovery status, and the specific decision needed. Silence is not approval.
-5. If evidence changes the product direction, scope, permissions, risk, or acceptance criteria, pause that decision and return it to the human; do not silently reinterpret the North Star.
-
-Respect existing authorization within its scope. Ask again when the proposed action exceeds it or materially changes its consequences. Read [references/protocol.md](references/protocol.md) and [references/routing-rubric.md](references/routing-rubric.md) for mode details.
-
-## Modes
-
-| Mode | Use | Commit |
-| --- | --- | --- |
-| `AUTO` | Bounded, reversible work with objective verification | Automatic within the agreed bounds |
-| `GUARD` | High consequence with a known, controllable implementation path | Explicit human approval before commit or external effect |
-| `COCREATE` | Product taste or a genuinely shared decision | Human acceptance |
-| `CHALLENGE` | High consequence plus material uncertainty or disagreement | Human decision, informed by AI evidence and dissent |
-| `HUMAN_ONLY` | Human sovereignty or no safe way to delegate | Human |
-
-Do not use `COCREATE` merely because implementation work is novel or requires research. AI should investigate and recommend; collaboration is needed when the remaining choice belongs to the human.
-
-Read [references/examples.md](references/examples.md) for worked cases.
+Use the [goal lifecycle](references/goal-driven-engineering.md), [goal template](templates/GOAL.md), [examples](references/examples.md), or [delegation skill](../codex-subagents/SKILL.md) only when needed. If one sentence is enough, use one.
