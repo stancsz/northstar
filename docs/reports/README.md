@@ -8,3 +8,4 @@ Supervisors assign distinct report paths, read reports and inspect the work, the
 - [Incremental delivery: delivery rules](incremental-delivery/delivery-rules.md)
 - [QA suite: implementation](qa-suite/implementation.md)
 - [Coordinated delivery: implementation](coordinated-delivery/implementation.md), [orchestrator trial](coordinated-delivery/orchestrator-trial.md), [supervisor trial](coordinated-delivery/supervisor-trial.md), and [independent review](coordinated-delivery/independent-review.md)
+- [Bounded autonomy follow-up: trial](coordinated-delivery/autonomy-trial.md) and [review](coordinated-delivery/autonomy-review.md)

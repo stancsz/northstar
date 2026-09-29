@@ -34,13 +34,13 @@ See [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagen
 
 ## Roles and authority
 
-When working with [Northstar](../northstar/SKILL.md#ownership-north-star--goals--tasks), use **orchestrator → North Star, supervisor → one goal, worker → one task**. A workstream below means the supervisor's assigned goal. The orchestrator reads and maintains `docs/northstar/`; the supervisor owns `docs/goal/<goal>/GOAL.md`, its goal index entry, task coordination, integration, and evaluation coverage; each worker owns scoped deliverables and `docs/reports/<goal>/<task>.md`. The supervisor accepts tasks and recommends goal readiness. The orchestrator inspects the integrated result before accepting the goal within the user's mandate; the supervisor records that decision. Human product decisions and consequential authorization remain with the user.
+With [Northstar](../northstar/SKILL.md#ownership-north-star--goals--tasks), use **orchestrator → direction, supervisor → one goal, worker → one task**. Map these responsibilities to existing project records; Northstar's directory layout is optional unless the repository requires it. Supervisors own coordination, integration and task acceptance; workers own scoped deliverables and handoffs. The orchestrator inspects the integrated result before goal acceptance; the supervisor records that decision. Human product decisions and consequential authorization remain with the user.
 
 Critic and verifier are review assignments within this structure. Give reviewers direct access to original intent and actual artifacts, and let them report independently to the accepting supervisor or orchestrator. Assign repairs and recheck material findings; adding reviewers never transfers accountability for the goal.
 
 ### Orchestrator
 
-- Owns the user's intent, scope, architecture, dependency decisions, team shape, and final result.
+- Owns the user's intent, scope, cross-goal interfaces and tradeoffs, team shape, and integrated result. Delegate local design choices with the task.
 - Assigns bounded workstreams to supervisors and may assign bounded tasks directly to workers.
 - Sets each delegate's allowed and forbidden paths or systems, acceptance criteria, verification, and side-effect limits.
 - Resolves cross-workstream conflicts and approves scope changes only within the user's mandate. Checks whether external or irreversible actions are already authorized; obtains missing human authorization before execution. Delegation never expands the user's authorization or the tools' actual permissions.
@@ -50,40 +50,36 @@ Critic and verifier are review assignments within this structure. Give reviewers
 
 - Own one workstream assigned by the orchestrator. They clarify its task boundaries, track dependencies, and may assign its bounded tasks to workers when the orchestrator has authorized that delegation.
 - Keep worker write scopes disjoint, preserve shared changes, and review each handoff against its acceptance criteria.
-- Report status, evidence, blockers, risks, and any needed decision to the orchestrator. They may recommend a scope or architecture change but cannot approve it themselves.
+- Decide implementation and internal design within the assigned goal. Coordinate shared interface changes with affected owners within their existing authority; bring unresolved cross-goal tradeoffs or changes beyond the mandate to the orchestrator with evidence and a recommendation.
 - Do not grant permissions, expand the assigned workstream, authorize external side effects, or create another delegation layer.
 
 ### Workers
 
 - Complete exactly one assigned task within its stated scope, using only the available permissions and authorized side effects.
 - Do not spawn or delegate to other agents, change another worker's files or systems, broaden the objective, or commit, publish, deploy, or contact others unless explicitly authorized in the task and by the user.
-- Return a concise handoff with status, changed files or artifacts, verification evidence, assumptions, blockers, and next action. If blocked or the task no longer fits its scope, stop and report to the supervisor.
+- Choose implementation, internal refactoring, and checks within the task's bounds. If one part is blocked, report its precise dependency and continue independent assigned work. Return the artifact, evidence, remaining gaps, and next action.
 
-Authority flows down the hierarchy as bounded task instructions; findings and decisions flow up through the reporting chain. A worker reports to its assigned supervisor, and the supervisor reports to the orchestrator. When there is no supervisor, workers report directly to the orchestrator. Escalate urgent blockers or suspected permission violations immediately; do not use escalation to bypass a normal decision.
+Keep one accountable accepting role; workers may directly clarify interfaces with affected peers using authorized communication tools. Record material agreements once for the responsible supervisor. Peer agreement cannot expand authority or transfer write ownership by itself. Escalate unresolved conflicts, not every technical question; permission violations require immediate attention.
 
 ## Task brief and handoff
 
 When assigning a managing role, fill the [orchestrator brief](templates/orchestrator.md) or [supervisor brief](templates/supervisor.md). Load only the needed role. Use these alongside this skill, not as additional management layers. The assigning agent supplies known facts rather than sending placeholders or asking the user to repeat them.
 
-Give every delegate a brief that states:
+Give each delegate five things; link known context rather than copying it:
 
-- **Outcome:** one concrete deliverable and its acceptance criteria.
-- **Scope:** allowed paths or systems, forbidden areas, and ownership boundaries.
-- **Context:** only relevant information, dependencies and shared interface examples, current revision/environment, and applicable evidence or recovery checkpoint.
-- **Repository practices:** applicable root/nested `AGENTS.md`, relevant durable docs, a scoped `tmp/<task-or-agent>/` location, and responsibility for documentation updates.
-- **Verification:** observable checks and the command or method to run, if applicable.
-- **Side effects:** already-authorized actions, targets, limits, and the source of authorization; what requires a new decision. Pass existing authorization without enlarging it or making workers request it again.
-- **Handoff:** whom to report to, the assigned report path, and how to raise blockers. With Northstar, assign `docs/reports/<goal>/<task>.md` to the worker and link it from the supervisor's goal.
+- **Result:** the usable outcome and relevant goal/current state.
+- **Acceptance:** observable behavior and required evidence; let the worker choose ordinary checks.
+- **Autonomy:** owned paths, local design choices, already-authorized actions and source, explicit limits, and applicable repository instructions.
+- **Coordination:** dependencies/interface examples, affected owners, and changes requiring agreement or escalation.
+- **Handoff:** accepting role, integration owner, scratch/report paths, existing evidence and recovery checkpoint when relevant.
 
-Workers report: **status; changed files/artifacts; verification and result; assumptions; blockers; next action.** Supervisors consolidate these into workstream status and distinguish verified evidence from claims or unresolved issues.
-
-With Northstar, workers follow the [worker report practice](../northstar/SKILL.md#worker-reports-and-handoffs): write a durable Markdown report for completed, partial, or blocked work and send its link to the supervisor. Update that task's report after repairs. Supervisors read reports and inspect the artifacts, then record task acceptance or repair requests in `GOAL.md`. Workers propose shared direction/goal updates through their reports; they do not take over those documents. Give concurrent workers distinct report paths and coordinate goal-index edits through one owner.
+Reports cover completed, partial, or blocked work; follow Northstar's [handoff practice](../northstar/SKILL.md#worker-reports-and-handoffs). Keep them proportional: artifact, actual verification, remaining gap. Preserve meaningful failure history. Supervisors inspect the work and record one task decision in the goal; link evidence rather than copying it into a second report. Workers propose changes to shared direction through its owner.
 
 ## Coordinate to a working result
 
 1. **Schedule the next usable increment.** Identify the dependency that controls delivery and name its integration owner. Agree on shared inputs/outputs before splitting producers and consumers. Start only work that can proceed usefully now and be reviewed promptly; defer speculative parallel branches.
 2. **React to evidence.** On a handoff, failure, dependency change, or bounded wait expiry, inspect the changed artifact or check result. Use completion notifications or bounded waits, not repeated unchanged status requests. While waiting, advance independent work. Reports and agent activity alone do not establish progress.
-3. **Resolve at the lowest responsible level.** Supervisors decide ordinary implementation details within their goal. Orchestrators resolve cross-goal interfaces and scope tradeoffs within the user's mandate. Before escalating, inspect the problem and propose a remedy; do not forward a worker's uncertainty as a user approval request. Follow Northstar's [decision and authorization rules](../northstar/SKILL.md#ask-only-for-decisions-the-user-owns).
+3. **Resolve at the lowest responsible level.** Workers own local implementation choices; supervisors resolve goal-level dependencies; orchestrators resolve cross-goal tradeoffs. Before escalating, inspect the problem and propose a remedy. Apply Northstar's [proportionate process](../northstar/SKILL.md#match-process-to-the-work) and [authorization rules](../northstar/SKILL.md#ask-only-for-decisions-the-user-owns). Remove temporary oversight once its specific failure is resolved.
 4. **Intervene in stalled or overlapping work.** Identify whether the cause is implementation, missing evidence, a dependency, or tool/permission failure. Give one bounded correction with the failed criterion and next distinguishing check. After repeated failure, narrow, reassign, or take over using the existing recovery history. Stop or redirect duplicate work. Before transferring write ownership, confirm the old writer has stopped and inspect its diff; preserve useful partial work.
 5. **Integrate and accept.** Verify the combined user workflow in the intended environment, not just each worker's isolated checks. Reuse applicable evidence and target interface gaps or changed behavior. A false completion claim returns the task for a concrete repair; do not weaken criteria or tests. Preserve the best verified baseline. When current acceptance passes, deliver; while authorized outcomes remain actionable, continue without requiring a 'continue' prompt.
 
@@ -91,20 +87,10 @@ Keep task owner, write scope, dependency/interface, next action, evidence, and a
 
 ## Documentation and repository hygiene
 
-Every delegate reads the applicable `AGENTS.md` and relevant project docs before editing. When using Northstar, share links to direction in `docs/northstar/`, the assigned `docs/goal/<goal>/GOAL.md`, relevant prior worker reports in `docs/reports/`, and `docs/evals/`. Keep durable findings in the repository as well as the handoff; assign one owner for shared docs and send proposed updates to that owner.
-
-Keep `docs/` limited to subdirectories. Use `docs/misc/` for documentation outside the direction, goal, worker report, and evaluation categories. Put indexes inside their category and update affected links.
-
-Keep loose scripts, downloads, debug output, temporary screenshots, and experiments under the assigned `tmp/` directory. Follow and maintain appropriate ignore rules; do not hide useful source or documentation assets with broad extension patterns. Promote evidence needed for lasting conclusions to a documented location. Never remove or overwrite another agent's scratch work, source changes, or notes.
-
-When using Northstar, the project has one shared 100 GB artifact limit across all agents, including ignored output, caches, downloads, and project-attributable copies. Report expected storage before large operations and actual growth afterward; include temporary extraction/build space. Coordinate with the orchestrator as total usage approaches 80 GB, and pause artifact creation that would exceed 100 GB. Do not move files elsewhere to evade accounting or remove another agent's data to free space.
-
-Before returning work, inspect status and diffs for unintended files, update docs in your write scope, and report any integration or cleanup still needed. Commit only when authorized; use a focused, meaningful message describing the change. Supervisors reconcile goal records with worker reports and evaluations; the orchestrator updates direction when needed and inspects the combined result before delivery.
+Read applicable `AGENTS.md` and task-relevant direction, goal, reports, and evaluations before editing. Follow Northstar's [repository and storage rules](../northstar/SKILL.md#keep-records-and-the-repository-small): scoped scratch, durable evidence, one shared-document editor, protected user work, and the shared 100 GB ceiling. Update existing records at material decisions and handoff, not each tool call. Inspect status/diffs before returning work; commit only when authorized. Shared documentation is memory, not a second implementation task.
 
 ## Failure, retries, and final integration
 
 When using Northstar, apply its [delivery rules](../northstar/SKILL.md#deliver-a-usable-mvp-then-improve-in-increments) and [stall recovery procedure](../northstar/SKILL.md#recover-from-a-stall). Pass acceptance, deferred scope, artifacts, applicable evidence, and the current recovery checkpoint to delegates. Attempts and remaining investigation windows follow the unmet criterion across reassignment. Reviewers inspect evidence independently and rerun checks for a coverage gap or relevant change; a new agent is not a reason to repeat completed work or rejected approaches.
 
-If a delegate fails, times out, produces an incomplete result, or misses acceptance criteria, the supervisor or orchestrator identifies the specific gap and gives a bounded correction request. Retry only when there is a concrete correction path; keep attempts limited and proportional to task risk, cost, and time. After repeated failure, stop delegating that task and escalate it to the orchestrator with the failure history and any usable partial result. Do not silently switch tools, models, or execution environments when the user or task constraints specify one. If delegation is unavailable, the orchestrator may continue directly only when that respects the user's intent, permissions, and any tool constraints; otherwise report the blocker and request a decision.
-
-The orchestrator remains accountable for the complete outcome. Before declaring completion, inspect the integrated artifacts and relevant diffs, resolve conflicts, and verify the original acceptance criteria across workstreams. Do not treat a supervisor's review or a worker's claim as final verification. Clearly report what was completed, what was verified, and any remaining limitation.
+Apply the intervention step above when a delegate fails; stop reassigning the same failed approach without new evidence. Preserve specified tool/model/environment constraints. If delegation is unavailable, continue directly within authority or report the exact blocker. The accepting role owns the combined result: workers check their changes, supervisors inspect integration, and the orchestrator verifies goal coverage. Reuse valid checks across roles; rerun only for relevant change, contradictory evidence, or a coverage gap. Keep the original criteria and report remaining limitations.

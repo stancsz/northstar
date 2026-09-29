@@ -9,7 +9,7 @@ Deliver working, coherent, finished results. Inspect the actual artifact; do not
 
 ## Set the quality bar before building
 
-Read the request, current acceptance, owner examples, and existing design/code conventions. In the existing goal, state the main user journey, supported environments, critical failures, and evidence needed. For visible work, add a brief visual plan: information hierarchy, layout, type/spacing/color rules, responsive behavior, and required states. Reuse the product's design system. A few concrete decisions suffice; do not start a separate design project.
+Read the request, current acceptance, owner examples, and existing design/code conventions. Clarify the main journey, environments, critical failures and evidence in the existing task/review record, or the handoff for a small one-turn change. For visible work, add a brief visual plan: hierarchy, layout, type/spacing/color, responsive behavior and required states. Reuse existing decisions and the product's design system; do not start a separate design project or require a Northstar folder.
 
 If reviewing completed work without a plan, derive criteria from the request and established product. Label additional preferences as suggestions; do not invent requirements to fail it. A reference is useful when supplied or needed for a specific decision, not a mandatory competitor search.
 
@@ -44,7 +44,7 @@ Inspect evidence behind findings; reviewers do not need to invent defects. In an
 
 Do one scoped inspection, then targeted repair/rechecks. Broaden only for a new failure, relevant change, or concrete coverage gap. Keep the same finding and failed-attempt history across reviewers and handoffs. After two unproductive repair attempts, isolate the failing case within a bounded recovery window; if still blocked, preserve work and report the exact unblock condition. With Northstar, use its existing recovery checkpoint. Never waive a defect to meet the retry limit.
 
-Use the existing evaluation record (with Northstar, `docs/evals/`) for a concise result:
+Use the project's existing review/task record, or a concise handoff for a small one-turn change. `docs/evals/` is an optional fallback, not a required parallel record. Include:
 
 - **Scope:** artifact/revision, environment, journeys/viewports, and inspected lanes.
 - **Findings:** must-fix, suggestions, and unverified checks, each with evidence and disposition.

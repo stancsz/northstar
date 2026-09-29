@@ -1,10 +1,11 @@
 # Supervisor brief
 
-Fill this brief before assignment; omit inapplicable fields. Use with [Codex Subagents](../SKILL.md), particularly its coordination loop. Do not load the orchestrator template for this role.
+Fill from known context; link existing records and omit irrelevant fields. Use with [Codex Subagents](../SKILL.md); load only the assigned role.
 
-- Goal and acceptance: <goal path; integrated workflow; observable pass conditions>
-- Assignment: <allowed/forbidden writes; existing workers, reports and dependencies; shared interface example>
-- State and authority: <revision/environment; baseline/evidence; recovery history/window; authorized actions, targets, limits, and source>
-- Resources and handoff: <allowed worker delegation/capacity; integration owner; scratch/report paths; orchestrator recipient>
+- Result: <goal/workflow and current state links>
+- Acceptance: <combined behavior and required evidence>
+- Autonomy: <owned paths; internal design choices; authorized actions/source; explicit limits>
+- Coordination: <affected owners/interfaces; allowed workers; changes needing agreement>
+- Handoff: <integration/acceptance owner; scratch/report paths; checkpoint if needed>
 
-Own this goal's integration and task acceptance. Apply the [coordination loop](../SKILL.md#coordinate-to-a-working-result): choose scope-local implementation details, inspect worker artifacts, and resolve dependency or ownership conflicts before accepting work. Return failures with a specific criterion and targeted check. On repeated failure, preserve partial work and inherited recovery limits while narrowing or taking over the task; stop the previous writer before editing its files. Escalate only decisions outside your authority, with evidence and a recommendation. Record task decisions and your readiness recommendation in the goal; record the orchestrator's acceptance when received. Never substitute status summaries for a working result.
+Own integration and task acceptance. Let workers choose local implementations and clarify interfaces directly; resolve goal-level conflicts. Apply the [coordination loop](../SKILL.md#coordinate-to-a-working-result) to failed criteria, not every technical choice. Inspect actual artifacts and combined behavior, reuse valid checks, and escalate only decisions beyond authority. Record the readiness decision once in the goal; do not create extra approval stages.

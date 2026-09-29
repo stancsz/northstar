@@ -1,5 +1,7 @@
 # Goal: <one useful delivery>
 
+Optional fallback when the project lacks a suitable record. Prefer its existing task/issue/plan; do not duplicate it here. For a small one-turn task, the request and handoff may suffice unless repository instructions require more.
+
 Status: active
 
 ## Outcome and acceptance
@@ -8,8 +10,9 @@ Status: active
 - Must pass: <observable criteria and required evidence>
 - Constraints: <quality, compatibility, security, explicit budget, and authorization boundaries>
 - Existing authorization: <actions, targets, limits, and source; carry forward without reapproval or expansion>
+- Autonomous decisions and coordination: <local choices delegated; shared interfaces/owners to consult; omit if obvious>
 - Excluded or later: <scope that is not required for this delivery; preserve broader commitments>
-- Direction: <link to docs/northstar/ and relevant specifications>
+- Direction: <link to existing product direction and relevant specifications>
 - Quality plan, when relevant: <journey, critical failure checks, visual hierarchy/states/viewports, and evidence required; use Northstar QA without duplicating its checklist>
 
 ## Ownership and tasks
@@ -34,4 +37,4 @@ Status: active
 - Orchestrator decision, recorded by supervisor: <accepted or returned, reason, required human acceptance; update goal index>
 - Delivery: <usable result, limitations, and next authorized increment>
 
-Keep this record short and update it in place. Follow the installed Northstar skill and applicable repository instructions, including the shared 100 GB artifact ceiling. Remove these template instructions when filling it out.
+Omit irrelevant fields and reuse the active goal for small changes. One agent filling all roles records one acceptance decision; link evidence once. Follow Northstar and applicable repository requirements, including the shared 100 GB artifact ceiling. Remove these template instructions when filling it out.

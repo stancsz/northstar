@@ -2,10 +2,10 @@
 
 Choose the working mode from the actual consequences, unresolved decisions, and existing authorization. Implementation complexity calls for investigation; product direction and value tradeoffs may require the owner. Record only the boundaries useful to the work in the goal: scope, permissions, data access, recovery, and relevant cost or retry limits. Delegation may narrow these boundaries but cannot expand them.
 
-Use the [role ownership](../SKILL.md#ownership-north-star--goals--tasks) and [worker handoff](../SKILL.md#worker-reports-and-handoffs) practices for agent coordination. The orchestrator owns and uses `docs/northstar/`; supervisors own and use their `docs/goal/<goal>/GOAL.md`; workers produce deliverables and write `docs/reports/<goal>/<task>.md`. Supervisors inspect those reports and artifacts, record task decisions in the goal, and recommend goal readiness to the orchestrator. Modes govern the authority of each action across all three roles; they do not replace document ownership or human authorization.
+Use the [role ownership](../SKILL.md#ownership-north-star--goals--tasks) and [handoff](../SKILL.md#worker-reports-and-handoffs) practices in the project's existing records. Supervisors inspect artifacts and handoffs, record task decisions, and recommend readiness to the orchestrator. Modes describe action authority, not mandatory process stages or documents; use them only when they help resolve an actual decision.
 
 - `AUTO`: bounded, reversible work with objective independent verification. The AI researches, implements, and verifies without routine interruption.
-- `GUARD`: consequential work with a sufficiently clear direction. The AI prepares and verifies, and obtains explicit approval for the external or irreversible action within its scope.
+- `GUARD`: consequential work with a sufficiently clear direction. Prepare and verify; execute within existing explicit authorization or request the specific missing approval before the consequential action.
 - `COCREATE`: the product goal, acceptance, or value choice genuinely needs human judgment. Ask for the specific missing context or decision.
 - `CHALLENGE`: material uncertainty or a human-owned decision combined with high consequence. The AI gathers evidence and presents counterarguments and options; the human decides.
 - `HUMAN_ONLY`: consent, dignity, personal expression, or a decision with no safe delegation path. It overrides other routing.
