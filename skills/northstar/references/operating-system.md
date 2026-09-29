@@ -1,0 +1,71 @@
+# An operating system for projects and businesses
+
+Use this practice for sustained project delivery or business operations. Read the parts needed for the current trigger, not the whole reference at every turn. It joins [delivery and learning](../SKILL.md) with [delegation](../../codex-subagents/SKILL.md); it adds no mandatory management layer. The rules below are Northstar adaptations, not a claim that one management school is universally best.
+
+## Turn direction into today's work
+
+Before assignment, use the [functional profiles](../../codex-subagents/references/role-profiles.md) to cover the decisions actually needed: product/outcome, architecture/interfaces, implementation, independent QA, experience/taste, operations and domain expertise. They are functions across the existing hierarchy, not seven standing departments. Combine compatible work, but separate creation or operating decisions from their independent certification. Name the author, nonauthor reviewer and decision owner. Use the [agent-to-agent handoff practice](../../codex-subagents/references/agent-handoffs.md) when responsibility or artifacts move between agents.
+
+Keep one chain visible in existing records: **beneficiary and intended value → current outcome → limiting condition → owned action → acceptance evidence → operational result → learning**. Reject work that has no useful connection to that chain, unless it is another explicitly authorized obligation. An agent's autonomy means choosing methods, challenging assumptions and initiating remedies inside its mandate; it does not require claims about consciousness.
+
+- **Direction:** make the customer's or owner's problem, intended value, protected standards and authority clear. A proxy metric cannot replace the outcome. Record unknown demand/value as a hypothesis, not a business success.
+- **Commitment:** choose the next complete result, one accountable owner, available resources, dependencies, acceptance and stopping/review conditions. Limit work in progress to what can be finished and inspected. Compare competing commitments by expected value, urgency, downside and total effort; do not invent numeric ROI where data is missing.
+- **Execution:** let the closest competent owner choose the method and flag bad assumptions. Share actual interface/evidence changes with affected owners. The manager removes dependencies and makes decisions; the manager's job is not to rewrite every worker's output.
+- **Operations:** for a continuing business, define a bounded review period or event trigger and a responsible operator. Inspect relevant real signals such as customer demand/retention, promised delivery, quality/failure rate, backlog/capacity and realized revenue/cost. Select only signals that change decisions; show data source, period and unknowns. Decide continue, repair, reallocate, expand or stop within authority. Project completion does not establish adoption, profit or operating stability.
+- **Transfer:** before treating a delivered capability as operated, name who owns service, what signals reveal failure and how to recover/escalate. Obtain any required release or spending authority. The next operating period inherits lessons and unresolved obligations; it does not erase them.
+
+An agreed cadence describes when reviews are needed. It does not create a scheduler, promise unattended operation, or authorize customer contact, purchases or deployment.
+
+## Required ceremonies with useful outputs
+
+These are mandatory when their trigger occurs. Scale duration and attendance, not whether the responsibility exists. Async exchanges are valid meetings when participants actually contribute and the chair resolves the decision. Solo learning retrospectives remain required, but cannot replace independent testing, QA or taste judgment of one's own work; never invent reviewers or consensus.
+
+| Trigger | Who participates | Required outcome |
+| --- | --- | --- |
+| New outcome, changed mandate or consequential handoff | Owner and affected implementers | Alignment: intended effect, acceptance, responsibilities, authority, dependencies and next checkpoint. Reuse an adequate existing brief. |
+| Meaningful checkpoint, including failed checks and partial handoffs | Solo owner, or accepting owner with affected workers | [Learning review](../SKILL.md#learn-from-every-use): expected/observed, what to reuse/avoid, drift check, decision and next action. Every checkpoint gets a review; unchanged polls do not. |
+| Material disagreement persists after one direct evidence exchange, or threatens authority/acceptance immediately | Responsible superior chairs with disputing owners | [Decision meeting](#resolve-disagreement): real positions, evidence, selected action, reason, owner, check and reopening condition. |
+| Relevant competence is missing, or bounded recovery leaves a material knowledge gap | Owner and appropriate available specialist | [Expert consultation](#bring-in-expertise): an answer or explicit uncertainty, evidence, a discriminating check and owner's disposition. |
+| Agreed operating period ends, or a material business signal changes | Accountable operator and affected owners | Compare outcome with commitments/resources, resolve the present constraint, and set the next bounded commitment. Run checkpoint learning in the same review. |
+| Acceptance or transfer of responsibility | Delivering owner, nonauthor reviewer and accountable accepting owner; combine only compatible functions | Inspect actual integrated results, retain unmet criteria and lessons, and accept, repair or record a precise blocker. Missing independent review leaves acceptance unverified. |
+
+Use one compact decision record: **question/trigger; evidence and limits; actual positions; decision and reason; action owner; next check or deadline; reopening condition**. Existing handoffs can supply most of it. Combine overlapping ceremonies and retain one decision, not repeated minutes. A result of “no change” is valid with evidence and a next check. Remove duplicate status recitation, spectators and unnecessary approval steps; preserve decisions, dissent, review and learning.
+
+## Resolve disagreement
+
+1. **Make the disagreement useful.** Each involved agent states its recommendation, evidence, assumptions, benefit, downside, strongest reason for the other option and what evidence would change its view. Challenge the claim or approach, not the agent's rank or model. Do not manufacture opposition just to perform a debate.
+2. **Exchange once, then classify.** Peers attempt one direct reconciliation using the same current artifacts and requirements. A factual disagreement needs a distinguishing check; a legitimate tradeoff needs its decision owner; an authorization conflict needs the actual authority holder. Low-impact local choices stay with their owner. A preference without a failed criterion or material consequence is a suggestion, not a reason to block acceptance or convene an escalation.
+3. **Convene when unresolved.** The responsible superior holds a short decision meeting with the affected agents, hears each real position and restates the common outcome. Supervisor handles a goal; orchestrator handles cross-goal conflict. A solo owner reviews competing options itself. If an essential participant is unavailable, record the missing view and bound the wait; do not invent assent. Proceed only where current authority and evidence suffice, otherwise park the dependent part and continue independent work.
+4. **Decide and act.** The chair uses delegated authority to choose the best feasible option by expected useful value, full cost, time, downside and reversibility; it may make a bounded distinguishing check or obtain focused expertise within the remaining recovery/resources allowance. A difficult or consequential tradeoff does not automatically belong to the human. Make and execute an in-mandate decision rather than forwarding options or repeatedly seeking approval. If the choice exceeds its mandate, send the exact decision, recommendation and consequences to the appropriate owner. No unanimity requirement, voting away failed tests, or accepting a defect because a superior prefers it. Preserve material dissent and why the selected route is justified.
+5. **Close and reopen responsibly.** Assign the first action and judging check, then execute. Participants support a legitimate decision while continuing to report defects. Reopen for material new evidence, failed acceptance or an authority conflict, not repeated unchanged opinions. The meeting itself does not count as experimental progress or reset recovery.
+
+## Bring in expertise
+
+Consult an appropriate specialist when a material knowledge gap prevents a sound decision; do it earlier when the consequence makes trial-and-error inappropriate. After exhausted recovery, inspect whether such a gap remains and seek expertise if it can change the disposition. A routine dependency or already-known lack of authority calls for its owner, not an ornamental expert.
+
+Use the bundled [Codex Advisor](../../codex-advisor/SKILL.md) when an advice-only Codex consultation and its prerequisites fit the gap. Choose relevant competence and access to evidence, not a prestigious title or the strongest model automatically. Use an available specialist agent or an authoritative technical/source review; label which occurred. Expert input is advice until checked, and an agent is not a licensed professional merely because its prompt assigns that role. Contacting a real person, sharing private material or incurring new spend still requires applicable authority.
+
+Give a compact brief: **precise question; intended result and criterion; current artifact/evidence; attempts and rejected paths; available authority/resources and remaining recovery allowance; requested answer and discriminating check**. The expert returns a recommendation, supporting basis, uncertainty and the smallest useful next check. The accepting owner inspects it and decides; do not outsource accountability.
+
+Default to one bounded consultation for the current question. Fit it inside the existing investigation/recovery window when one remains. If recovery is exhausted, it is advisory to the immediate disposition: no extra implementation trial beyond the single alternative allowance. A new theory alone does not reopen investigation; a concrete changed condition must support a distinguishing check. If expertise is unavailable or inconclusive, preserve that uncertainty, stop the unsupported route, name the exact unblock condition and advance independent work. Do not cycle through experts for fresh retries.
+
+## Spend intelligence where it changes the outcome
+
+Use [capability and cost allocation](../../codex-subagents/SKILL.md#allocate-capability-and-cost) for teams and trials. Stronger reasoning can be valuable for framing, integration, consequential tradeoffs and difficult diagnosis. Bounded implementation should normally start with a capable lower-cost worker. Workers still reason, disagree, verify and report failure; a cheaper model is not permission to remove their initiative or weaken acceptance.
+
+Keep total accepted outcome, elapsed time, coordination, rework and resource use visible. Necessary ceremonies are part of that cost and part of the mechanism being tested. Do not claim efficiency from headcount, a cheaper model name or fewer expert calls alone.
+
+## Sources and what was distilled
+
+Checked 2026-09-29. This is a selective synthesis of public primary material, not an exhaustive ranking, the user's course notes or a reconstruction of their Stanford cohort. The mappings are design choices to evaluate in agents, not research findings about agent performance.
+
+| Source | Useful mechanism retained | Detail not transplanted |
+| --- | --- | --- |
+| [PMI: A framework for aligning strategy and execution](https://www.pmi.org/learning/library/framework-aligning-strategy-execution-9349), describing the Stanford Advanced Project Management Strategic Execution Framework | Connect strategy, selected projects and eventual operations; inspect alignment when allocating effort. | A six-domain taxonomy and an entire enterprise PMO are unnecessary for each task. This is a PMI-hosted program-related paper, not a retrieved Stanford student notebook. |
+| [Stanford Engineering: Conquering Complexity With Simple Rules](https://engineering.stanford.edu/news/conquering-complexity-simple-rules) | Define the outcome, find the bottleneck, use a few situated decision/coordination/stopping rules with local discretion. | Universal rules detached from context or a large checklist pretending to be simple. |
+| [Stanford GSB: Workplace Friction](https://www.gsb.stanford.edu/insights/workplace-friction-how-make-right-things-easier-wrong-things-harder) | Remove needless obstacles while preserving reflection and consequential checks; treat others' time as a resource. | The claim that all meetings, deliberation or friction should disappear. Inspected indexed official article/transcript; direct retrieval returned an error. |
+| [Stanford GSB: Do You Have a Contrarian on Your Team?](https://www.gsb.stanford.edu/insights/do-you-have-contrarian-your-team) | Make constructive minority evidence audible without turning disagreement into a power contest. | Forced contrarians or manufactured consensus. Inspected indexed official excerpts; direct retrieval returned 403. |
+| [Stanford University IT: Scope of Project Managers](https://uit.stanford.edu/service/project-managers-for-it-projects/project-manager-scope) | Coordinate issues, risks and decisions, verify support ownership and retain a retrospective. | Copying every institutional phase, report and committee. Checkpoint frequency here is our adaptation. |
+| [Cross-domain source map](operating-principles.md) | Shared intent/local initiative, focused effort, reversible decisions, small informative commitments, quality at source and honest learning. | Military ranks, authority expansion, fixed reserve formulas and investor loss tolerance. |
+
+These sources converge on parts of the design, not a universal consensus that this exact system is best. Keep, revise or remove a rule according to observed task outcomes and operating cost; preserve explicit owner requirements until the owner changes them.

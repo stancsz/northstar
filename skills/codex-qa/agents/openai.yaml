@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex QA"
+  short_description: "Inspect quality and verify functional and visual repairs"
+  default_prompt: "Use $codex-qa to inspect this deliverable against its acceptance criteria and verify material repairs."

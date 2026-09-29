@@ -1,0 +1,13 @@
+# Commander authority review
+
+Date: 2026-09-29. Independent reviewer selected model: `gpt-6-luna`, medium; usage/cost unavailable. [Goal and owner requirement](../../goal/healthy-roles/GOAL.md#standing-commander-authority-follow-up).
+
+**Verdict: READY.** I inspected the owner requirement and current primary-authored guidance in `docs/northstar/README.md`, `skills/northstar/SKILL.md`, its authority protocol, routing rubric and examples, Subagents roles/briefs/handoffs, and Codex QA.
+
+The mandate is consistent across entrypoints: product and consequential decisions within the stated outcome, workspace, resources and limits belong to the commander; subdelegated work inherits that authority. Configured Notion read/write and coordination proceed under the existing mandate without per-action permission requests. The connection grants capability, not a wider target. The commander compares value, full effort/cost, urgency, downside and reversibility, then acts with suitable evidence. Thus a value tradeoff inside the mandate is resolved by the commander, while explicit retained choices and genuinely out-of-grant actions remain owner decisions.
+
+Recovery guidance preserves attempt history across agents, contexts and task IDs; after exhaustion it requires a disposition and first action, allows only the stated bounded alternative trial, and forbids forwarding an unchanged blocker or resetting retries. Access failures require diagnosis, authorized recovery/equivalent routes and independent progress; one precise request is allowed only for an indispensable human-held fix. It expressly bars fabricated success and bypassing platform restrictions.
+
+I found no remaining rule reserving all consequential product choices to the human. “Actual product tradeoffs to their owner” in the learning review is the only broad phrasing; read with the explicit commander mandate and routing rules, “owner” means the accountable decision owner, so it does not contradict the grant. Human approval language in QA, taste and operations remains conditional on approval actually being required or on the decision being retained. Creator/reviewer separation remains explicit in Northstar, Subagents and QA.
+
+Scenario trace: working configured Notion → continue; valid delegated assignment → execute without second grant; in-mandate value fork → commander chooses and records evidence; exhausted route → choose disposition, preserve history; rejected access → diagnose and seek only indispensable human-held remediation; connected but out-of-scope request → escalate to actual owner. No live workspace/provider calls or behavioral trial were performed; this is documentation-scenario inspection only.

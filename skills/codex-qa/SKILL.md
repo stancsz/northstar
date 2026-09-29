@@ -1,11 +1,11 @@
 ---
-name: northstar-qa
-description: Plan and inspect delivery quality before handoff. Use for functional, rendered visual, accessibility, code-quality, and adversarial review of changed user workflows or artifacts; verify fixes with evidence and bounded effort.
+name: codex-qa
+description: Plan and inspect delivery quality before handoff. Use for functional, rendered visual, accessibility, code-quality and adversarial review; verify fixes with evidence and bounded effort. Part of the Northstar package.
 ---
 
-# Northstar QA
+# Codex QA
 
-Deliver working, coherent, finished results. Inspect the actual artifact; do not approve from the builder's summary, passing build, screenshot capture alone, or a filled checklist. Scale review to the changed surface and its consequences.
+Act as the independent acceptance-testing and quality function for working, coherent, finished results. Do not act as builder and QA or taste judge of the same deliverable. Builder development checks are inputs, not independent acceptance. Inspect the actual artifact; do not approve from the builder's summary, passing build, screenshot capture alone, or a filled checklist. Scale review to the changed surface and its consequences.
 
 ## Set the quality bar before building
 
@@ -15,7 +15,7 @@ If reviewing completed work without a plan, derive criteria from the request and
 
 ## Inspect relevant surfaces
 
-Choose the smallest set of checks covering acceptance and plausible regression risk. Reuse applicable evidence with its revision/environment; state why any lane is not applicable. Unavailable evidence is **unverified**, not a pass.
+Choose the smallest set of checks covering acceptance and plausible regression risk. Review a useful deliverable or coherent increment, not each internal action or file separately. Reuse the same eligible reviewer and applicable evidence with its revision/environment; one scoped verdict can serve multiple management roles. Expand only for a failed criterion, relevant change or coverage gap. Keep required checks before consequential dependent use; follow [proportionate process](../northstar/SKILL.md#match-process-to-the-work). Unavailable evidence is **unverified**, not a pass.
 
 For a routine change, start with one critical journey, its most relevant failure case, and usually 1–3 screenshots covering the changed surface and required layouts/states. Aim for a five-minute initial inspection including setup. These are planning defaults, not permission to skip acceptance: expand only for a specific requirement, observed failure, or coverage gap. At the time boundary, identify remaining checks and focus on them; do not restart the full review. Use existing tools and sessions where safe, combine functional actions with visual capture, and avoid redundant screenshot matrices.
 
@@ -30,7 +30,7 @@ For nonvisual work, omit visual inspection with a reason. For visible work, capt
 
 ## Challenge the result, then repair
 
-For substantial or consequential delivery, use an independent reviewer when available. Provide original intent, criteria, artifacts, and safe access; let the reviewer inspect before seeing the builder's conclusions. The reviewer reports directly to the accepting role. Without independence, make a separate review pass and disclose it; do not simulate multiple reviewers by renaming yourself.
+Assign a separate reviewer agent who has not authored the reviewed scope or owned the operational decisions being audited. Isolated review checks do not count as authorship. Provide original intent, criteria, artifacts, and safe access; let the reviewer inspect before seeing the builder's conclusions. The reviewer reports directly to the accepting role. If independent review is unavailable, keep the deliverable **UNVERIFIED** for acceptance and identify the needed reviewer/evidence. A new label, fresh context or self-review cannot remove the author conflict. QA and taste may share one uninvolved, capable reviewer; required human approval stays human. Apply the [functional separation rules](../codex-subagents/references/role-profiles.md).
 
 Every finding needs **location/state, expected versus observed result, user impact, and reproduction or evidence**. Separate:
 
@@ -38,17 +38,21 @@ Every finding needs **location/state, expected versus observed result, user impa
 - **Suggestion:** an optional enhancement or preference with no failed criterion/material impact. Record it for later; do not hold delivery hostage.
 - **Unverified:** a relevant check could not be performed. Name the missing evidence and its effect on readiness; do not silently turn it into a suggestion.
 
-Inspect evidence behind findings; reviewers do not need to invent defects. In an implementation task, repair must-fix findings and retest their reproduction plus affected behavior. In a review-only task, report without editing. Capture fresh visual evidence after visible repairs; a screenshot from an earlier revision is not proof of the fix.
+Inspect evidence behind findings; reviewers do not need to invent defects. The builder repairs must-fix findings; the independent reviewer rechecks their reproduction and affected behavior. QA owns its review probes and evidence, not product repairs. If explicitly reassigned to repair, it becomes a builder for that scope and a different reviewer must check it. Do not edit product files while assigned review-only. Capture fresh visual evidence after visible repairs; a screenshot from an earlier revision is not proof of the fix.
+
+Contain a material defect at its source: stop promoting or using the affected artifact as verified input, preserve the evidence, and notify its responsible owner through authorized channels. The implementation owner repairs and checks it before dependent work resumes; independent safe work can continue. A reviewer withholds acceptance and reports the finding, without taking over systems or stopping unrelated processes. Optional preferences do not trigger this containment.
 
 ## Finish without a review loop
 
-Do one scoped inspection, then targeted repair/rechecks. Broaden only for a new failure, relevant change, or concrete coverage gap. Keep the same finding and failed-attempt history across reviewers and handoffs. After two unproductive repair attempts, isolate the failing case within a bounded recovery window; if still blocked, preserve work and report the exact unblock condition. With Northstar, use its existing recovery checkpoint. Never waive a defect to meet the retry limit.
+Do one scoped inspection, then targeted repair/rechecks. Broaden only for a new failure, relevant change, or concrete coverage gap. Keep the same finding and failed-attempt history across reviewers and handoffs. After two unproductive repair attempts, isolate the failing case within one bounded recovery window. If it also fails, the implementing owner must [decide and act](../northstar/SKILL.md#decide-after-exhausted-recovery), preserving the finding and evidence in the existing checkpoint; a review-only agent sends the finding to that owner without taking over implementation. Never waive a defect to meet the retry limit or repeat the same review under a new reviewer.
 
 Use the project's existing review/task record, or a concise handoff for a small one-turn change. `docs/evals/` is an optional fallback, not a required parallel record. Include:
 
 - **Scope:** artifact/revision, environment, journeys/viewports, and inspected lanes.
 - **Findings:** must-fix, suggestions, and unverified checks, each with evidence and disposition.
 - **Verification:** screenshot links/previews with concrete visual observations; functional actions and their observed results, including the chosen failure case; repairs rechecked and reviewer independence. A bare "LGTM", "looks good", or "tests pass" is not a review result.
-- **Decision:** `READY` when current criteria are verified and must-fix findings are resolved; `NOT READY` for observed blockers; `UNVERIFIED` when required evidence is missing. Name remaining limitations. A scoped readiness decision is not release authorization or human acceptance.
+- **Decision:** `READY` when an independent reviewer verifies current criteria and material repairs; `NOT READY` for observed blockers; `UNVERIFIED` when required evidence is missing. Name remaining limitations. A scoped readiness decision is not release authorization or human acceptance.
 
 If both blockers and missing evidence exist, report NOT READY and retain the unverified list. Do not average lanes into a quality percentage. Preserve necessary evidence in a durable location, link instead of copying logs, and deliver once the agreed bar is met.
+
+Feed material findings, verified repairs and contradicted prior lessons into the same [checkpoint learning review](../northstar/SKILL.md#learn-from-every-use), with applicability and evidence. Check that the next action still serves current intent and unchanged acceptance; do not create a second retrospective or treat a lesson record as proof of readiness.

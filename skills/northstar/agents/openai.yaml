@@ -1,0 +1,4 @@
+interface:
+  display_name: "Northstar"
+  short_description: "Coordinate delivery, QA, subagents and expert advice"
+  default_prompt: "Use $northstar to deliver this outcome, selecting Codex QA, Codex Subagents or Codex Advisor when needed and preserving checkpoint learning."

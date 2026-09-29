@@ -2,7 +2,7 @@
 
 Date: 2026-09-29. Goal: [QA suite](../../goal/qa-suite/GOAL.md). Author: editing agent, also supervisor/orchestrator. Status: completed; acceptance in the goal.
 
-Added the single-file [Northstar QA skill](../../../skills/northstar-qa/SKILL.md) and integrated it with Northstar, the goal template, repository navigation, English installation guidance, and Chinese skill listing. The initializer ran in ignored scratch; only Markdown enters the skill collection. No runtime framework or generated reporting machinery was added.
+Added the single-file [Northstar QA skill](../../../skills/codex-qa/SKILL.md) and integrated it with Northstar, the goal template, repository navigation, English installation guidance, and Chinese skill listing. The initializer ran in ignored scratch; only Markdown enters the skill collection. No runtime framework or generated reporting machinery was added.
 
 The skill requires a brief quality plan, relevant functional/visual/adversarial/structural checks, concrete evidence, and material-defect repair/recheck. It separates review-only from implementation work, defects from preferences, and missing evidence from a pass. Review is bounded; existing Northstar checkpoints remain authoritative for stalls.
 

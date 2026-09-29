@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Subagents"
+  short_description: "Coordinate bounded agent tasks, decisions and handoffs"
+  default_prompt: "Use $codex-subagents to coordinate independent work with clear scope, authority, model allocation and integrated acceptance."

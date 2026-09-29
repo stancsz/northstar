@@ -1,15 +1,19 @@
 # Authority and handoff protocol
 
-Choose the working mode from the actual consequences, unresolved decisions, and existing authorization. Implementation complexity calls for investigation; product direction and value tradeoffs may require the owner. Record only the boundaries useful to the work in the goal: scope, permissions, data access, recovery, and relevant cost or retry limits. Delegation may narrow these boundaries but cannot expand them.
+Start with the [standing mandate](../SKILL.md#ask-only-for-decisions-the-user-owns), not an approval category. Record the owner's outcome, covered workspace/actions, resource limits, retained decisions and right to subdelegate once in the existing task/workspace. Derive them from actual instructions; do not make the owner fill a new form when the grant is already clear. A commander can delegate a subset of the authority received without another user round trip.
 
-Use the [role ownership](../SKILL.md#ownership-north-star--goals--tasks) and [handoff](../SKILL.md#worker-reports-and-handoffs) practices in the project's existing records. Supervisors inspect artifacts and handoffs, record task decisions, and recommend readiness to the orchestrator. Modes describe action authority, not mandatory process stages or documents; use them only when they help resolve an actual decision.
+## Commander owns the decision
 
-- `AUTO`: bounded, reversible work with objective independent verification. The AI researches, implements, and verifies without routine interruption.
-- `GUARD`: consequential work with a sufficiently clear direction. Prepare and verify; execute within existing explicit authorization or request the specific missing approval before the consequential action.
-- `COCREATE`: the product goal, acceptance, or value choice genuinely needs human judgment. Ask for the specific missing context or decision.
-- `CHALLENGE`: material uncertainty or a human-owned decision combined with high consequence. The AI gathers evidence and presents counterarguments and options; the human decides.
-- `HUMAN_ONLY`: consent, dignity, personal expression, or a decision with no safe delegation path. It overrides other routing.
+Give the worker the intended value, useful context, acceptance, authority, next action or viable approach, fallback/escalation trigger and evidence needed for handoff. The worker chooses local methods. When it cannot resolve an in-mandate issue, the commander inspects the failed criterion and chooses the best available route using useful value, full effort/cost, urgency, downside and reversibility. Focused expertise can inform that choice; it does not transfer accountability or create new retries.
 
-At a human handoff, say whether you need missing context, a product choice, approval for a consequential action, or human intervention. Explain the decision, recommendation, alternatives, supporting evidence, impact, and recovery where relevant. Include a deadline only when one actually matters. Keep the request proportional and never infer approval from silence.
+Consequential work receives proportionate inspection and a recovery plan where applicable. Consequence, uncertainty, an unfamiliar tool or a reviewer disagreement alone does not trigger human approval. Use existing authority and act. Keep explicit owner commitments and independent acceptance firm; changing method, staffing or priority is not permission to report a failed criterion as passed.
 
-The point of no return is action-specific. Prepare, research, and verify up to the boundary. Use authorization already given for that action and scope; request a decision when authorization is missing or the consequences materially change. Approval of an overall goal does not automatically authorize every external action.
+## Continue across agents and tools
+
+Carry the source and scope of the grant, artifact revision, original criteria, attempts and next decision through every handoff. Supervisors pass down inherited authority only within their assignment. Workers treat that valid grant as authority from the owner; they do not ask for a separate personal approval. New context, new agent and new transport task IDs do not reset authority or recovery history.
+
+For a configured project workspace such as Notion, perform covered reading, record creation/updates and task coordination through the existing connection. Do not request repeated access approval. A real tool rejection requires diagnosis, authorized recovery or an equivalent route; it does not revoke the user's mandate or permit bypassing the tool. Keep partial work and continue anything independent.
+
+## Human intervention is an exception
+
+Escalate only a decision expressly retained by the owner, an essential missing fact that cannot be reasonably resolved, work outside the actual grant, or a concrete credential/permission dependency only the human can fix. Prepare the useful work first. Give one specific question or unblock action with the commander's recommendation, affected result and evidence. Never send generic permission questions, a repeated blocker, or open-ended options when the commander can decide. Silence adds no authority; grants remain valid until changed, revoked or expired by their stated terms.

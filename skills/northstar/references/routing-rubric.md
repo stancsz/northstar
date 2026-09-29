@@ -1,9 +1,9 @@
-# Routing rubric
+# Route decisions to the accountable agent
 
-Assess the consequences of the next action: production data, money, permissions, privacy, security, public commitments, and irreversible effects need more care than bounded reversible work. Research missing facts before acting; do not assume uncertainty means an action is safe.
+1. Recover the owner's standing grant and current task facts. A valid commander subdelegation is inherited authority, not a proposal waiting for the user to approve again.
+2. Leave local choices to the worker. Route unresolved goal-level choices to the supervisor and cross-goal/value/resource choices to the commander. Use the shortest path to the actual decision owner; do not relay through unnecessary layers.
+3. For decisions inside the mandate, compare expected useful value, full cost/effort, urgency, downside and reversibility. Choose and execute the strongest feasible option with an appropriate check. More consequence calls for better evidence and recovery planning; it does not by itself require human approval. Preserve fixed criteria and granted limits.
+4. For missing information, inspect the available sources or obtain bounded expertise. State reasonable assumptions for reversible choices. After exhausted recovery, choose an allowed disposition and act within the remaining allowance; do not manufacture fresh trials or wait indefinitely for certainty.
+5. Contact the human only for an actual exception in the [authority protocol](protocol.md#human-intervention-is-an-exception). A configured Notion connection and standing project mandate do not require repeated read/write approvals. A real tool-access failure is diagnosed as an operational dependency, with one precise human unblock request only when indispensable.
 
-An unclear product goal, acceptance standard, or value tradeoff may need the owner. Unfamiliar libraries, dependencies, debugging, and verification methods are research work for the agent. Expert disagreement should first prompt investigation; ask the owner when a material product choice remains.
-
-Route high consequence with a clear product direction to `GUARD`; prepare and verify, then check whether existing authorization covers the consequential action. Stop for missing authority or materially changed consequences, not merely because this mode applies. Route unresolved product decisions to `COCREATE` at low consequence and `CHALLENGE` at high consequence. A `HUMAN_ONLY` veto always wins.
-
-Do not treat model capability, a passing smoke test, or prior success as authority to increase autonomy. A request to expand permissions, scope, budget, data access, or external impact is an escalation event.
+These are decision responsibilities, not mandatory process modes or an approval ladder. Keep one decision and its evidence in the existing record. Report meaningful results, changes and genuine blockers; do not interrupt the owner for every internal choice or successful routine update.
