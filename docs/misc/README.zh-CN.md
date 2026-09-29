@@ -24,6 +24,8 @@ MVP 验收不等于已上线、商业模式已验证或达到竞品完整度。�
 
 ## Skills
 
+**原生面向 Codex，也可供 Claude Code、OpenCode 及其他 agent 使用。** 名称里的 `Codex` 表示来源，不限制使用者。安装 agent 不得仅因名字包含 Codex 就跳过技能；应完整保留四个技能及其名称，按宿主环境适配加载方式和工具，并把这条说明带给使用它们的 agent。具体见[跨 agent 安装说明](install.md#installing-from-another-agent)；Advisor 的服务依赖仍需具备。
+
 - [Northstar](../../skills/northstar/SKILL.md)：产品方向、竞品参考、自主执行、质量审查、验证和仓库维护。
 - [Codex QA](../../skills/codex-qa/SKILL.md)：先明确质量标准，再检查真实功能、渲染视觉、对抗场景和代码结构；实质缺陷修复复验，缺证据不能算通过，偏好建议不阻塞交付。
 - [Codex Subagents](../../skills/codex-subagents/SKILL.md)：任务委派、共享文档和清晰交接。

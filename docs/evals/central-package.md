@@ -30,3 +30,7 @@ The user's clarification fixes the package boundary: central coordination and on
 Acceptance: primary accepts the four-skill source package and scoped Subroute migration after reviewing the actual detached installation, test outputs, byte comparisons and independent findings. No commit, push, installed-copy refresh or service deployment is included. Hosted new paths will reflect the migration only after publication.
 
 Final documentation check: 56 Markdown files, 321 local links and 85 heading links all resolved. Docs layout and exact nine-path Subroute scope passed; both diff whitespace checks passed.
+
+## Cross-agent installation note review
+
+2026-09-29 follow-up, base `bd41b18`: review only the requested installer/discovery clarification and host adaptation guidance. All four official skill frontmatter validations pass using `python -X utf8 -B`; the first attempt encountered the validator's Windows default cp1252 decoding on existing Unicode, resolved by selecting UTF-8 without changing that content. Local Markdown links and `git diff --check` pass. Advisor helpers are unchanged, so their offline regressions were not rerun. This establishes documentation and metadata consistency, not live Claude Code, OpenCode or other-host runtime compatibility. Independent findings are in the [portability review](../reports/central-package/portability-review.md).

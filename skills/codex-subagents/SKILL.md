@@ -1,9 +1,11 @@
 ---
 name: codex-subagents
-description: Coordinate complex work with orchestrators, supervisors and workers, explicit authority, bounded tasks and model capability allocation. Part of the Northstar package.
+description: Coordinate complex work with orchestrators, supervisors and workers, explicit authority, bounded tasks and model capability allocation. Part of the Northstar package. Codex-native and usable by other agents.
 ---
 
 # Codex subagents
+
+Use this skill in other agents too; the Codex name is not a usage restriction. Follow the bundled [host adaptation guidance](../northstar/SKILL.md#use-with-other-agents).
 
 Bundled Northstar skill. Contents: [team](#plan-the-team), [capability/cost](#allocate-capability-and-cost), [capacity](#configure-codex-thread-capacity-and-delegation-depth), [authority](#roles-and-authority), [briefs](#task-brief-and-handoff), [coordination](#coordinate-to-a-working-result), [records](#documentation-and-repository-hygiene), [recovery](#failure-retries-and-final-integration).
 

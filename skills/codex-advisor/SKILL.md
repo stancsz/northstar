@@ -1,11 +1,13 @@
 ---
 name: codex-advisor
-description: Use compact Sol or Astra advice to unblock a Codex task while keeping execution and verification with the current worker.
+description: Use compact Sol or Astra advice to unblock an agent task while keeping execution and verification with the current worker. Codex-native and usable by other agents with the configured advisor service.
 ---
 
 # Codex Advisor
 
-Use this skill when the current Codex worker has a concrete decision blocker that focused local investigation has not resolved. The advisor is a short-lived reviewer; the current worker retains task ownership, implementation and development checks; independent QA owns acceptance verification. Advice does not replace that verdict. Follow [Northstar's expert consultation practice](../northstar/references/operating-system.md#bring-in-expertise), including its recovery and alternative-trial limits.
+Use this skill in other agents too; the Codex name is not a usage restriction. Follow the bundled [host adaptation guidance](../northstar/SKILL.md#use-with-other-agents); the advisor service and reader prerequisites still apply.
+
+Use this skill when the current worker has a concrete decision blocker that focused local investigation has not resolved. The advisor is a short-lived reviewer; the current worker retains task ownership, implementation and development checks; independent QA owns acceptance verification. Advice does not replace that verdict. Follow [Northstar's expert consultation practice](../northstar/references/operating-system.md#bring-in-expertise), including its recovery and alternative-trial limits.
 
 Contents: [Choose whether to consult](#choose-whether-to-consult) · [Recovery limits](#keep-consultation-within-the-existing-recovery-boundary) · [Compact request](#make-a-compact-advice-request) · [Reader mode](#let-the-expert-independently-read-more) · [Resume ownership](#resume-worker-ownership)
 

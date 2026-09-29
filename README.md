@@ -8,6 +8,8 @@ Northstar connects intended value to owned work and inspected outcomes. Engineer
 
 Install all four skills together. Use `$northstar` as the central coordinator, or invoke a companion directly when you need its specific capability:
 
+**Codex-native, usable by other agents.** Claude Code, OpenCode and other agents can use these Markdown practices. `Codex` in a skill name identifies its origin, not an eligibility restriction. Installing agents must not skip a skill because of that name; follow the [host adaptation guidance](docs/misc/install.md#installing-from-another-agent).
+
 | Skill | Purpose |
 | --- | --- |
 | [northstar](skills/northstar/SKILL.md) | Direction, execution, recovery, ownership and checkpoint learning. |

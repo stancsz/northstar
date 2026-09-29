@@ -2,6 +2,14 @@
 
 The package has four distinct skills: [Northstar](../../skills/northstar/SKILL.md), [Codex QA](../../skills/codex-qa/SKILL.md), [Codex Subagents](../../skills/codex-subagents/SKILL.md) and [Codex Advisor](../../skills/codex-advisor/SKILL.md). Install them together as sibling directories so their relative links work. Northstar is the central coordinator; all four keep their own `SKILL.md` and can be invoked directly.
 
+## Installing from another agent
+
+**Installer instruction:** this package is native to Codex, but its Markdown practices are also intended for Claude Code, OpenCode and other agents. Do not reject or skip a skill because its name contains `Codex` or you are a different agent. Select skills by the work they support. Preserve the four skill names and sibling directories when installing.
+
+Use the receiving host's actual configured skill location and loading/invocation mechanism; the PowerShell paths and `$skill-name` examples below are Codex-oriented examples, not requirements for every host. If there is no native skill loader, read `northstar/SKILL.md` directly and load linked companions as needed. Tell the receiving agent that all four skills apply to it and point it to the bundled [host adaptation guidance](../../skills/northstar/SKILL.md#use-with-other-agents).
+
+Adapt host-specific tools to available equivalents. Advisor service/model routes and optional reader prerequisites still apply; a different executor does not supply those dependencies or change the configured backend. This is portable operating guidance, not a claim that every integration has been tested on every host.
+
 ## Install all four
 
 From this repository root in PowerShell:

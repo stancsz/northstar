@@ -11,3 +11,7 @@ Advisor migration inventory and implementation are by `advisor_inventory` using 
 No installed copies, running services, gateway routes, authentication, Git commits or remote branches are changed by this task. New hosted advisor URLs become available only when the source changes are published.
 
 Validation: a detached copy of all four skills retained byte-identical files, 94 package-local links and 61 heading links; all four metadata/UI prompts passed. The copied advisor CLI help and its copied regression suites passed: 24 Python tests and 2 Node tests, zero skipped. Primary independently checked source script hashes and Subroute's exact changed-path list. Source migration retains only a clear moved notice with archived text at the old advisor entrypoint. No gateway changes or live provider requests occurred.
+
+## Cross-agent note follow-up
+
+2026-09-29, base `bd41b18`, primary: added the owner's portability note to English/Chinese discovery and installation guidance, all four skill descriptions and entrypoints. Shared host adaptation guidance stays inside the installed bundle. Advisor UI copy now refers to the current worker without a Codex-only executor implication; actual service prerequisites remain. Four metadata validations and local links pass, with Python UTF-8 mode needed for the validator on Windows. No runtime edits or live cross-host tests. Learning: make eligibility clear before skill selection, then carry the same note into the installed instructions; a body-only note can be missed by an installer filtering names.

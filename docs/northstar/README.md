@@ -8,6 +8,8 @@ The target user is an owner or developer working with AI agents who needs initia
 
 ## Confirmed owner expectations
 
+- Keep the package native to Codex and usable by other agents, including Claude Code and OpenCode. Installation and discovery must explicitly say that `Codex` names do not restrict who may use the skills. Preserve names, adapt host capabilities, and keep service prerequisites honest. See [installation guidance](../misc/install.md#installing-from-another-agent).
+
 - Maximize useful accepted outcomes with the least elapsed time and total tokens, including rework. Lean first, functioning first: the leanest, cleanest product, no spaghetti code, maximum practical reuse, and top-class design that stays inexpensive to extend. Remove unnecessary machinery and duplication; keep wording as short as the task allows. Preserve readability and credible extension paths without speculative frameworks or unmeasured savings claims. See [design guidance](../../skills/northstar/SKILL.md#excellent-design-with-minimal-machinery).
 - Deliver a usable MVP quickly, then build on accepted work in small increments. Bound each delivery, reuse applicable evidence, and change approach when retries stop producing information. Long-term quality requirements remain visible without making every future feature a prerequisite for the current slice. See the [delivery rules](../../skills/northstar/SKILL.md#deliver-a-usable-mvp-then-improve-in-increments).
 - Challenge the customer, problem, commercial value, and production direction early. Research facts independently and ask for decisions the owner actually needs to make.

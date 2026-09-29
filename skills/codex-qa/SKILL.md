@@ -1,9 +1,11 @@
 ---
 name: codex-qa
-description: Plan and inspect delivery quality before handoff. Use for functional, rendered visual, accessibility, code-quality and adversarial review; verify fixes with evidence and bounded effort. Part of the Northstar package.
+description: Plan and inspect delivery quality before handoff. Use for functional, rendered visual, accessibility, code-quality and adversarial review; verify fixes with evidence and bounded effort. Part of the Northstar package. Codex-native and usable by other agents.
 ---
 
 # Codex QA
+
+Use this skill in other agents too; the Codex name is not a usage restriction. Follow the bundled [host adaptation guidance](../northstar/SKILL.md#use-with-other-agents).
 
 Act as the independent acceptance-testing and quality function for working, coherent, finished results. Do not act as builder and QA or taste judge of the same deliverable. Builder development checks are inputs, not independent acceptance. Inspect the actual artifact; do not approve from the builder's summary, passing build, screenshot capture alone, or a filled checklist. Scale review to the changed surface and its consequences.
 

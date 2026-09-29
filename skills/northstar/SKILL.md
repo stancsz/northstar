@@ -1,6 +1,6 @@
 ---
 name: northstar
-description: Central coordinator of the four-skill Northstar package for project and business execution, Codex QA, subagent coordination, and bounded Codex Advisor consultation. Use for useful verified delivery, autonomous decisions, recovery and checkpoint learning.
+description: Central coordinator of the four-skill Northstar package for project and business execution, Codex QA, subagent coordination, and bounded Codex Advisor consultation. Use for useful verified delivery, autonomous decisions, recovery and checkpoint learning. Codex-native and usable by other agents.
 ---
 
 # Northstar
@@ -24,6 +24,12 @@ Install the four sibling directories together: `northstar`, `codex-qa`, `codex-s
 | Sustained project/business operation and useful ceremonies | [Operating system](references/operating-system.md). |
 
 Load a companion when its trigger applies; bundling does not require parallel implementation, an expert call or every review lane on every task. Independent acceptance remains separate from authorship. Advisor service and optional Pi prerequisites are separate from installing this package. Current authority, resource limits and recovery history apply across all four skills.
+
+## Use with other agents
+
+Use these Markdown practices in Codex, Claude Code, OpenCode or another agent that can read and follow them. `Codex` in a skill name identifies its origin, not a restriction on who may use it. Do not skip a relevant skill because you are not Codex. Installing agents must preserve all four names and sibling directories, use the receiving host's configured skill location, and carry this compatibility note into the installation handoff.
+
+Adapt `$skill-name` invocation, tool names, delegation and Codex configuration examples to the host's actual capabilities; read the entrypoint directly if no skill loader exists. Preserve intent, authority, recovery history and independent acceptance. If a specific capability is unavailable, continue the applicable work and identify that concrete gap rather than rejecting the whole package or inventing a tool/reviewer. Advisor routes, service authentication and optional reader dependencies still require their documented setup; changing the executor does not change the backend or establish tested runtime compatibility.
 
 ## Run the work as an operating system
 

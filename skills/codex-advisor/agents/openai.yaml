@@ -1,4 +1,4 @@
 interface:
   display_name: "Codex Advisor"
-  short_description: "Use compact Sol or Astra advice to unblock a Codex task"
-  default_prompt: "Use $codex-advisor only when focused investigation leaves a material decision blocker. Keep this task with the current Codex worker; request compact advice within the existing recovery allowance, then verify and implement the chosen path yourself."
+  short_description: "Use compact Sol or Astra advice to unblock an agent task"
+  default_prompt: "Use $codex-advisor only when focused investigation leaves a material decision blocker. Keep this task with the current worker; request compact advice within the existing recovery allowance, then verify and implement the chosen path yourself."
