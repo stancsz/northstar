@@ -21,7 +21,10 @@ MVP 验收不等于已上线、商业模式已验证或达到竞品完整度。�
 ## Skills
 
 - [Northstar](../../skills/northstar/SKILL.md)：产品方向、竞品参考、自主执行、质量审查、验证和仓库维护。
+- [Northstar QA](../../skills/northstar-qa/SKILL.md)：先明确质量标准，再检查真实功能、渲染视觉、对抗场景和代码结构；实质缺陷修复复验，缺证据不能算通过，偏好建议不阻塞交付。
 - [Codex Subagents](../../skills/codex-subagents/SKILL.md)：任务委派、共享文档和清晰交接。
+
+管理者使用 [orchestrator 模板](../../skills/codex-subagents/templates/orchestrator.md) 或 [supervisor 模板](../../skills/codex-subagents/templates/supervisor.md)，只加载当前角色。由派活的 agent 填入已有授权及来源、目标、依赖接口、写入范围、集成人和恢复记录，不让用户重复交代。管理者负责解决问题并验收真实工作流；遇到停滞须诊断、调整或接手，不能只催进度和转述报告。已授权工作直接继续；只有真正缺失的用户决定才提问，工具强制权限限制需另行说明。
 
 [安装说明](install.md) · [English](../../README.md)
 

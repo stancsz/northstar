@@ -17,6 +17,8 @@ Deliver the most useful working result with the least time, tokens, and future r
 
 Preserve security, privacy, data integrity, necessary failure handling, and agreed quality within the delivery. A local MVP does not establish release readiness or business viability. Keep unproven requirements pending.
 
+For changed user workflows or visible artifacts, use [Northstar QA](../northstar-qa/SKILL.md) to set a brief quality plan and inspect functional, rendered visual, adversarial, and structural evidence before handoff. If the companion is unavailable, perform those relevant checks directly and disclose gaps; missing QA tooling never turns an unverified result into a pass.
+
 ## Avoid repeated work
 
 - Reopen accepted work only for a new requirement, relevant change, contradictory evidence, or coverage gap. State the reason.
@@ -48,9 +50,11 @@ Judge quality by observable behavior: the intended user completes the workflow, 
 
 ## Ask only for decisions the user owns
 
-Research implementation questions yourself. Ask when missing product intent, a consequential tradeoff, or authorization prevents a sound decision. Bring a recommendation and evidence; continue useful work that does not depend on the answer.
+Resolve ordinary implementation choices yourself. Before asking, check the current request, prior decisions, and existing authorization. Do not ask whether to start or continue work already requested. Ask only when missing product intent, a consequential tradeoff, or authorization prevents a sound decision; state the exact missing decision, its impact, and your recommendation. Continue useful work that does not depend on the answer.
 
 Use existing authorization. Prepare and verify before requesting missing approval for deployment, destructive changes, spending, permission changes, or external representation. Approval of a goal is not blanket permission for those actions. Silence is not approval.
+
+Carry the authorized actions, targets, limits, and their source through checkpoints and delegation; a new agent or context window does not invalidate them. Distinguish a missing user decision from a tool-enforced permission block. For the latter, name the rejected action and restriction; use an allowed equivalent when available, without bypassing controls or asking for broader access by default.
 
 For action-specific modes, read [the protocol](references/protocol.md) and [routing rubric](references/routing-rubric.md) when needed. Human consent and personal expression remain human-owned.
 
@@ -65,6 +69,8 @@ These are responsibilities, not required agent counts. One agent may fill all ro
 | Worker | Produces one scoped deliverable and `docs/reports/<goal>/<task>.md`, including partial/blocked work. Proposes shared-document changes to the owner. Does not broaden scope, weaken acceptance, close the goal, or delegate further. |
 
 Critics inspect the result against user intent and criteria; verifiers check claimed behavior. Findings go directly to the accepting role. Workers repair task defects; supervisors own integration repairs. Use independent review for substantial work when available; otherwise make a fresh review pass and state the limitation. Obtain human acceptance where required.
+
+For delegated work, use the [coordination loop](../codex-subagents/SKILL.md#coordinate-to-a-working-result) and load only the relevant [orchestrator](../codex-subagents/templates/orchestrator.md) or [supervisor](../codex-subagents/templates/supervisor.md) brief. Managers resolve dependencies and inspect integrated behavior; relaying status alone is not progress.
 
 ## Worker reports and handoffs
 

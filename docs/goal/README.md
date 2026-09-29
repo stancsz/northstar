@@ -4,6 +4,8 @@ Each supervisor owns its `docs/goal/<goal>/GOAL.md` and index entry. Read the or
 
 | Goal | Status | Scope |
 | --- | --- | --- |
+| [Coordinated delivery](coordinated-delivery/GOAL.md) | Done | Managing-role briefs, inherited authorization, dependency resolution, and integrated acceptance trials |
+| [QA suite](qa-suite/GOAL.md) | Done | Quality planning, functional/visual/adversarial inspection, bounded repair, and evidence-based readiness |
 | [Incremental delivery](incremental-delivery/GOAL.md) | Done | Bounded stall recovery and continuation checkpoints, tested with isolated agent trials |
 | [Role ownership](role-ownership/GOAL.md) | Done | North Star, goal, task, durable worker reports, review, and acceptance responsibilities |
 | [Markdown skills and repository practices](markdown-skills/GOAL.md) | Done | Markdown skills, organized docs, quality practices, repository hygiene, and shared storage guidance |

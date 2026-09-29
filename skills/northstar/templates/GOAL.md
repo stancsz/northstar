@@ -7,14 +7,17 @@ Status: active
 - User, workflow, and environment: <what becomes usable, and where>
 - Must pass: <observable criteria and required evidence>
 - Constraints: <quality, compatibility, security, explicit budget, and authorization boundaries>
+- Existing authorization: <actions, targets, limits, and source; carry forward without reapproval or expansion>
 - Excluded or later: <scope that is not required for this delivery; preserve broader commitments>
 - Direction: <link to docs/northstar/ and relevant specifications>
+- Quality plan, when relevant: <journey, critical failure checks, visual hierarchy/states/viewports, and evidence required; use Northstar QA without duplicating its checklist>
 
 ## Ownership and tasks
 
 - Orchestrator: <direction and final acceptance>
 - Supervisor: <goal/index, integration, and task decisions; may be the same agent>
-- Tasks: <deliverable, worker, write scope, dependencies, status, and report link>
+- Tasks: <deliverable, worker, write scope, dependency/interface, next action, status, and report link>
+- Critical dependency and integration owner: <what controls delivery; who verifies the combined workflow>
 - Review: <who inspects quality and verifies behavior; disclose non-independent review>
 
 ## Execution record

@@ -9,4 +9,6 @@ Identify the goal, evaluated revision or working-tree base, relevant environment
 - [Role ownership documentation review](role-ownership.md)
 - [Incremental delivery documentation review](incremental-delivery.md)
 - [Stall recovery forward trials](stall-recovery-trials.md)
+- [Northstar QA evaluation](qa-suite.md)
+- [Coordinated delivery review and trials](coordinated-delivery.md)
 - [Markdown skills restructure review](markdown-skills.md)

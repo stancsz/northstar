@@ -7,7 +7,8 @@ Northstar helps agents clarify a worthwhile product direction, learn from strong
 ## Skills
 
 - [Northstar](skills/northstar/SKILL.md): product direction, competitive comparisons, autonomous execution, critics, verification, and repository practices.
-- [Codex Subagents](skills/codex-subagents/SKILL.md): focused delegation, shared documentation, and clean handoffs.
+- [Northstar QA](skills/northstar-qa/SKILL.md): concise quality planning, functional and rendered visual inspection, adversarial checks, and verified repairs.
+- [Codex Subagents](skills/codex-subagents/SKILL.md): coordinated delivery, shared documentation, and clean handoffs, with ready-to-fill [orchestrator](skills/codex-subagents/templates/orchestrator.md) and [supervisor](skills/codex-subagents/templates/supervisor.md) briefs.
 
 [Install and use](docs/misc/install.md) · [中文说明](docs/misc/README.zh-CN.md)
 

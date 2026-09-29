@@ -63,19 +63,31 @@ Authority flows down the hierarchy as bounded task instructions; findings and de
 
 ## Task brief and handoff
 
+When assigning a managing role, fill the [orchestrator brief](templates/orchestrator.md) or [supervisor brief](templates/supervisor.md). Load only the needed role. Use these alongside this skill, not as additional management layers. The assigning agent supplies known facts rather than sending placeholders or asking the user to repeat them.
+
 Give every delegate a brief that states:
 
 - **Outcome:** one concrete deliverable and its acceptance criteria.
 - **Scope:** allowed paths or systems, forbidden areas, and ownership boundaries.
-- **Context:** only the information and dependencies needed for that deliverable.
+- **Context:** only relevant information, dependencies and shared interface examples, current revision/environment, and applicable evidence or recovery checkpoint.
 - **Repository practices:** applicable root/nested `AGENTS.md`, relevant durable docs, a scoped `tmp/<task-or-agent>/` location, and responsibility for documentation updates.
 - **Verification:** observable checks and the command or method to run, if applicable.
-- **Side effects:** what may be changed or contacted; explicitly prohibit anything outside the user's authorization.
+- **Side effects:** already-authorized actions, targets, limits, and the source of authorization; what requires a new decision. Pass existing authorization without enlarging it or making workers request it again.
 - **Handoff:** whom to report to, the assigned report path, and how to raise blockers. With Northstar, assign `docs/reports/<goal>/<task>.md` to the worker and link it from the supervisor's goal.
 
 Workers report: **status; changed files/artifacts; verification and result; assumptions; blockers; next action.** Supervisors consolidate these into workstream status and distinguish verified evidence from claims or unresolved issues.
 
 With Northstar, workers follow the [worker report practice](../northstar/SKILL.md#worker-reports-and-handoffs): write a durable Markdown report for completed, partial, or blocked work and send its link to the supervisor. Update that task's report after repairs. Supervisors read reports and inspect the artifacts, then record task acceptance or repair requests in `GOAL.md`. Workers propose shared direction/goal updates through their reports; they do not take over those documents. Give concurrent workers distinct report paths and coordinate goal-index edits through one owner.
+
+## Coordinate to a working result
+
+1. **Schedule the next usable increment.** Identify the dependency that controls delivery and name its integration owner. Agree on shared inputs/outputs before splitting producers and consumers. Start only work that can proceed usefully now and be reviewed promptly; defer speculative parallel branches.
+2. **React to evidence.** On a handoff, failure, dependency change, or bounded wait expiry, inspect the changed artifact or check result. Use completion notifications or bounded waits, not repeated unchanged status requests. While waiting, advance independent work. Reports and agent activity alone do not establish progress.
+3. **Resolve at the lowest responsible level.** Supervisors decide ordinary implementation details within their goal. Orchestrators resolve cross-goal interfaces and scope tradeoffs within the user's mandate. Before escalating, inspect the problem and propose a remedy; do not forward a worker's uncertainty as a user approval request. Follow Northstar's [decision and authorization rules](../northstar/SKILL.md#ask-only-for-decisions-the-user-owns).
+4. **Intervene in stalled or overlapping work.** Identify whether the cause is implementation, missing evidence, a dependency, or tool/permission failure. Give one bounded correction with the failed criterion and next distinguishing check. After repeated failure, narrow, reassign, or take over using the existing recovery history. Stop or redirect duplicate work. Before transferring write ownership, confirm the old writer has stopped and inspect its diff; preserve useful partial work.
+5. **Integrate and accept.** Verify the combined user workflow in the intended environment, not just each worker's isolated checks. Reuse applicable evidence and target interface gaps or changed behavior. A false completion claim returns the task for a concrete repair; do not weaken criteria or tests. Preserve the best verified baseline. When current acceptance passes, deliver; while authorized outcomes remain actionable, continue without requiring a 'continue' prompt.
+
+Keep task owner, write scope, dependency/interface, next action, evidence, and any blocker in the existing goal; update on material changes, not every poll. At a context change, restore this state and existing authorization before dispatching more work. If nothing can advance, report the exact unmet criterion and unblock condition. Instructions cannot enforce runtime timeouts or guarantee future compliance.
 
 ## Documentation and repository hygiene
 

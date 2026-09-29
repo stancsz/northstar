@@ -6,7 +6,7 @@ Northstar is a Markdown skill collection. Keep engineering judgment, practices, 
 
 1. Read [project direction](docs/northstar/README.md).
 2. Read the relevant [goal](docs/goal/README.md), its [worker reports](docs/reports/README.md), and [evaluations](docs/evals/README.md).
-3. Read the skill being changed: [Northstar](skills/northstar/SKILL.md) or [Codex Subagents](skills/codex-subagents/SKILL.md).
+3. Read the skill being changed: [Northstar](skills/northstar/SKILL.md), [Northstar QA](skills/northstar-qa/SKILL.md), or [Codex Subagents](skills/codex-subagents/SKILL.md).
 
 ## Layout and maintenance
 

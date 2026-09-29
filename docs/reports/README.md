@@ -6,3 +6,5 @@ Supervisors assign distinct report paths, read reports and inspect the work, the
 
 - [Role ownership: align reporting](role-ownership/align-reporting.md)
 - [Incremental delivery: delivery rules](incremental-delivery/delivery-rules.md)
+- [QA suite: implementation](qa-suite/implementation.md)
+- [Coordinated delivery: implementation](coordinated-delivery/implementation.md), [orchestrator trial](coordinated-delivery/orchestrator-trial.md), [supervisor trial](coordinated-delivery/supervisor-trial.md), and [independent review](coordinated-delivery/independent-review.md)
