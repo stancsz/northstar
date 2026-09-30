@@ -1,4 +1,6 @@
 import importlib.util
+import base64
+import hashlib
 import io
 from pathlib import Path
 import sys
@@ -79,7 +81,7 @@ def test_snapshot_limits_authority_and_keeps_current_edits(source_repo, tmp_path
         reader.snapshot_sources(source_repo, [".."], tmp_path / "bad")
 
 
-@pytest.mark.parametrize("mutation", ["escape", "invented_quote", "wrong_line", "oversized"])
+@pytest.mark.parametrize("mutation", ["escape", "invented_quote", "wrong_line", "oversized", "multiline_quote"])
 def test_reader_rejects_unverifiable_evidence(source_repo, mutation):
     reader = load_reader()
     data = json.loads(evidence())
@@ -89,10 +91,22 @@ def test_reader_rejects_unverifiable_evidence(source_repo, mutation):
         data["findings"][0]["quote"] = "retries = 9"
     elif mutation == "wrong_line":
         data["findings"][0]["line"] = 999
+    elif mutation == "multiline_quote":
+        data["findings"][0]["quote"] = "retries = 0\nnext_line"
     else:
         data["unknowns"] = "x" * 2001
     with pytest.raises(ValueError):
         reader.validate_evidence(json.dumps(data), source_repo)
+
+
+def test_reader_accepts_only_a_single_json_fence_without_relaxing_citations(source_repo):
+    reader = load_reader()
+    wrapped = "```json\n" + evidence() + "\n```"
+    assert json.loads(reader.validate_evidence(wrapped, source_repo)) == json.loads(evidence())
+    for bad in ("Explanation\n" + wrapped, wrapped + "\nMore prose",
+                wrapped + "\n" + wrapped, wrapped.replace("retries = 0", "retries = 9")):
+        with pytest.raises(ValueError):
+            reader.validate_evidence(bad, source_repo)
 
 
 @pytest.mark.parametrize("decision,worker_ok,expected_calls,status", [
@@ -244,3 +258,130 @@ def test_real_cli_unicode_and_incomplete_response_boundary(finish, content, exit
     else:
         assert receipt["status"] == "unavailable"
         assert "advice" not in receipt
+
+
+def test_cli_delivers_actual_images_with_text_and_safe_receipts(tmp_path):
+    sent = []
+    image = tmp_path / "view.png"
+    data = (ROOT / "docs/evals/assets/qa-suite/A-narrow-viewport.png").read_bytes()
+    image.write_bytes(data)
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_POST(self):
+            sent.append(json.loads(self.rfile.read(int(self.headers["Content-Length"]))))
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"model": "image-test-stub", "usage": {"total_tokens": 7},
+                "choices": [{"finish_reason": "stop", "message": {
+                    "content": "Verdict: fixture.\nNext: inspect.\nRisk: none"}}]}).encode())
+
+        def log_message(self, *args):
+            pass
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    environment = dict(os.environ)
+    environment.pop("EXPERTS_API_KEY", None)
+    try:
+        result = subprocess.run([sys.executable, "-B", str(CALLER), "--question", "Inspect both views.",
+            "--image", str(image), "--image", str(image),
+            "--base-url", f"http://127.0.0.1:{server.server_port}/v1"],
+            env=environment, capture_output=True, timeout=10)
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+    assert result.returncode == 0, result.stderr
+    assert len(sent) == 1
+    assert sent[0]["model"] == "codex-gpt-6.1-sol-advisor"
+    blocks = sent[0]["messages"][-1]["content"]
+    assert blocks[0] == {"type": "text", "text": "Inspect both views."}
+    images = [block["image_url"] for block in blocks if block["type"] == "image_url"]
+    assert len(images) == 2
+    assert all(base64.b64decode(item["url"].split(",", 1)[1]) == data for item in images)
+    assert all(item["detail"] == "high" for item in images)
+    receipt = json.loads(result.stdout)
+    assert len(receipt["images"]) == 2
+    assert receipt["images"][0]["sha256"] == hashlib.sha256(data).hexdigest()
+    assert b"base64," not in result.stdout
+    assert receipt["usage"]["total_tokens"] == 7
+
+
+@pytest.mark.parametrize("bad", ["invalid", "missing", "oversized", "too_many", "total_bytes"])
+def test_image_preflight_stops_before_provider(tmp_path, monkeypatch, bad):
+    caller = load_caller()
+    image = tmp_path / "view.png"
+    image.write_bytes(b"\x89PNG\r\n\x1a\nfixture")
+    paths = [image]
+    if bad == "invalid":
+        image.write_text("not an image")
+    elif bad == "missing":
+        paths = [tmp_path / "missing.png"]
+    elif bad == "oversized":
+        monkeypatch.setattr(caller, "MAX_IMAGE_BYTES", 4)
+    elif bad == "too_many":
+        paths *= caller.MAX_IMAGES + 1
+    else:
+        monkeypatch.setattr(caller, "MAX_TOTAL_IMAGE_BYTES", image.stat().st_size)
+        paths *= 2
+    monkeypatch.setattr(caller, "parse_args", lambda: SimpleNamespace(
+        model="sol", question="Inspect", input_file=None, timeout_seconds=1,
+        reader_scope=[], reader_root=None, image=paths, image_detail="high"))
+    monkeypatch.setattr(caller, "urlopen", lambda *a, **kw: pytest.fail("Invalid image spent a provider call"))
+    assert caller.main() == 1
+
+
+def test_reader_keeps_image_pixels_on_followup_and_dispatches_its_own_question(
+        source_repo, monkeypatch):
+    caller, reader = load_caller(), load_reader()
+    parts, _ = caller.prepare_images([ROOT / "docs/evals/assets/qa-suite/A-narrow-viewport.png"])
+    requests, questions = [], []
+    monkeypatch.setattr(reader, "pi_package", lambda: source_repo)
+
+    def pi(package, snapshot, question, model, **kwargs):
+        if not kwargs.get("preflight"):
+            questions.append(question)
+            assert not list(snapshot.rglob("*.png"))
+        return {"status": "ok", "evidence": evidence()}
+
+    monkeypatch.setattr(reader, "run_pi", pi)
+    detailed_advice = "Verdict: Visible defect.\nNext: " + "Specific repair. " * 120 + "\nRisk: none"
+
+    def upstream(request, **kwargs):
+        requests.append(json.loads(request.data))
+        answer = json.dumps({"read": ["What does the approved source say about retries?"]}) if len(requests) == 1 else json.dumps({"advice": detailed_advice})
+        return io.StringIO(json.dumps({"model": "fixture", "usage": {"total_tokens": 1},
+            "choices": [{"finish_reason": "stop", "message": {"content": answer}}]}))
+
+    monkeypatch.setattr(caller, "urlopen", upstream)
+    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1,
+        reader_root=source_repo, reader_scope=["src"], reader_model="current", image_parts=parts)
+    result = reader.run_with_reader(args, "Inspect the screenshot and check source if needed.",
+                                    caller.consult, caller.VISUAL_INSTRUCTION)
+    assert result["status"] == "ok", result
+    assert result["advice"] == detailed_advice
+    assert len(requests) == 2 and len(questions) == 1
+    for request in requests:
+        blocks = request["messages"][-1]["content"]
+        assert blocks[-1] == parts[-1]
+        assert request["messages"][0]["content"].count("One JSON object only") == 1
+    assert "retries = 0" in requests[1]["messages"][-1]["content"][0]["text"]
+
+
+def test_attaching_images_preserves_original_user_blocks():
+    caller = load_caller()
+    messages = [{"role": "user", "content": [{"type": "text", "text": "original"}]}]
+    parts = [{"type": "image_url", "image_url": {"url": "data:image/png;base64,fixture", "detail": "high"}}]
+    attached = caller.with_images(messages, parts)
+    assert attached[0]["content"] == [*messages[0]["content"], *parts]
+    assert len(messages[0]["content"]) == 1
+
+
+def test_caller_rejects_astra_instead_of_spending_or_falling_back():
+    result = subprocess.run([sys.executable, "-B", str(CALLER), "--model", "astra", "--question", "test"],
+                            capture_output=True, timeout=10)
+    assert result.returncode == 2
+    assert b"invalid choice" in result.stderr
+    assert load_caller().MODEL_ALIASES == {"sol": "codex-gpt-6.1-sol-advisor"}

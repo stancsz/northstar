@@ -19,5 +19,6 @@ Identify the goal, evaluated revision or working-tree base, relevant environment
 - [Project and business operating system: lower-tier trials and review](operating-system.md)
 
 - [Four-skill package and Codex Advisor migration](central-package.md)
+- [Advisor image delivery and compact capability escalation](advisor-images.md)
 - [Dogfood review and team direction decision](dogfood-review.md)
 - [Healthy functional roles and independent acceptance](healthy-roles.md)

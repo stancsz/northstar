@@ -1,5 +1,17 @@
 # Four-skill package and advisor migration evaluation
 
+## Mandatory visual Advisor follow-up
+
+Historical initial documentation-only result. The subsequent owner clarification requires caller functionality; the [caller image-delivery evaluation](advisor-images.md) supersedes the text-only limitation in this entry.
+
+2026-09-30, base `0b751ab` plus scoped working edits. [Goal](../goal/central-package/GOAL.md#mandatory-visual-advisor-follow-up), [implementation](../reports/central-package/advisor-migration.md#mandatory-visual-advisor-follow-up), [independent review](../reports/central-package/visual-advisor-review.md). Primary authors the instructions and runs development checks; the separate reviewer authors its verdict. This entry evaluates documentation, not live visual-advisor behavior.
+
+The user's correction makes visual expertise mandatory before aesthetic decisions and through screenshot-directed repair. Reviewed scenarios include small-model routine UI styling, illegible detail requiring advisor-selected original-resolution crops, more than two feedback calls, repaired-state reinspection, unavailable image transport, purely nonvisual work and advisor coauthorship versus independent acceptance. Three changed skill frontmatter validations and `git diff --check` pass. Integrated inspection checked 26 Markdown files, 268 local links, 118 heading links and four sibling installation/metadata paths; no missing targets remained. Primary inspected and accepted the separate nonauthor READY documentation verdict. Existing caller/reader implementation is unchanged, so offline caller regressions are not rerun; no image-capable provider or visual-quality trial occurred.
+
+**Skill learning:** ordinary blocker-only triggers and compact call ceilings can prevent the owner's required visual supervision. Put the visual exception in discovery and central/QA routing as well as the Advisor body; preserve recovery and acceptance separation. Source inspection of text payloads and binary exclusions prevents treating paths as image evidence. Apply this lesson when visual feedback is required; it does not expand ordinary nonvisual consultation. Next action: future visual-task owners establish image delivery and retain image-backed feedback/recheck evidence; this increment accepts documentation only.
+
+## Historical package evaluation
+
 Date: 2026-09-29. [Goal](../goal/central-package/GOAL.md). [Implementation](../reports/central-package/implementation.md). Northstar base `265c9db` plus prior working edits; Subroute source `c7080695ffc0e0605a114899df42a166cdaf1309`, initially clean.
 
 ## Acceptance and method

@@ -1,0 +1,142 @@
+{
+  "status": "ok",
+  "expert_calls": [
+    {
+      "status": "ok",
+      "usage": {
+        "completion_tokens": 47,
+        "prompt_tokens": 910,
+        "total_tokens": 957
+      },
+      "model": "codex-gpt-6.1-sol-advisor",
+      "advice": "{\"read\":[\"In skills/codex-advisor/scripts/ask_expert.py, what default value is configured for the --image-detail argument? Report the relevant argument declaration and any directly associated help text.\"]}",
+      "advice_words": 22,
+      "request_id": "chatcmpl-codex-advisor-11bd52afb683",
+      "elapsed_seconds": 5.785
+    },
+    {
+      "status": "ok",
+      "usage": {
+        "completion_tokens": 263,
+        "prompt_tokens": 1128,
+        "total_tokens": 1391
+      },
+      "model": "codex-gpt-6.1-sol-advisor",
+      "advice": "{\"advice\":\"Verdict: Retain the current image-detail default. Validated evidence at skills/codex-advisor/scripts/ask_expert.py:71 declares --image-detail with choices auto, low, and high, and default=\\\"high\\\".\\nNext: 1. Fix narrow-viewport overflow first. In the 390-pixel-wide screenshot, the card starts at x≈16 but its right edge is not visible; the input starts at x≈41 and also extends past the right edge. Make the card fit within equal viewport gutters, and constrain the input to the card’s available content width, including padding and borders. Remove or override any minimum or fixed widths causing overflow. 2. Preserve the readable heading, description, and label spacing; they fit visibly and do not need a typography redesign. 3. After the width repair, capture the same viewport with the entire card and input right borders visible. Check narrower widths for clipping and horizontal overflow before adjusting the large blank area below the field.\\nRisk: This screenshot establishes visible right-edge clipping, not its exact CSS cause or whether controls exist offscreen. The source citation establishes the argument default only; it does not prove runtime image handling, resizing behavior, or that the visual repair has passed verification.\"}",
+      "advice_words": 180,
+      "request_id": "chatcmpl-codex-advisor-7d15032d7399",
+      "elapsed_seconds": 24.459
+    }
+  ],
+  "reader_rounds": [
+    {
+      "status": "ok",
+      "harness": "pi",
+      "harness_version": "0.73.1",
+      "base_url": "http://localhost:4000/v1",
+      "requested_model": "current",
+      "calls": [
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790783058-87R8fy5zdpc4kgxf5AAX",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 1165,
+            "output": 60,
+            "cacheRead": 128,
+            "cacheWrite": 0,
+            "totalTokens": 1353
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790783061-F4RDd3yzXNWSDnNgS2mA",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 48,
+            "output": 31,
+            "cacheRead": 1280,
+            "cacheWrite": 0,
+            "totalTokens": 1359
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790783063-7Vz5wYKd3ubiUtDVj6ZE",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 99,
+            "output": 59,
+            "cacheRead": 1280,
+            "cacheWrite": 0,
+            "totalTokens": 1438
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790783065-qfBiG6lfMd4m6k15qU5c",
+          "stop_reason": "stop",
+          "usage": {
+            "input": 634,
+            "output": 278,
+            "cacheRead": 128,
+            "cacheWrite": 0,
+            "totalTokens": 1040
+          }
+        }
+      ],
+      "tool_calls": 3,
+      "tool_events": [
+        {
+          "tool": "ls",
+          "error": false
+        },
+        {
+          "tool": "ls",
+          "error": false
+        },
+        {
+          "tool": "grep",
+          "error": false
+        }
+      ],
+      "usage_complete": true,
+      "cost": null,
+      "limits": {
+        "calls": 4,
+        "tools": 8,
+        "seconds": 90,
+        "outputTokens": 1200
+      },
+      "evidence": "{\"findings\":[{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":71,\"quote\":\"parser.add_argument(\\\"--image-detail\\\", choices=(\\\"auto\\\", \\\"low\\\", \\\"high\\\"), default=\\\"high\\\")\",\"fact\":\"Default value for --image-detail is \\\"high\\\"; choices restricted to auto, low, high.\"}],\"unknowns\":\"No associated help= text was returned by grep for \\\"image-detail\\\"; whether a separate help string exists on surrounding lines is not confirmed by the single-line match.\"}",
+      "elapsed_seconds": 15.36
+    }
+  ],
+  "snapshot": {
+    "files": {
+      "skills/codex-advisor/scripts/ask_expert.py": "e67509f66fe40d09acb35868920faf606460df911066c788493e1f8224a0a845"
+    },
+    "bytes": 10448,
+    "excluded_files": 0,
+    "scope": [
+      "skills/codex-advisor/scripts/ask_expert.py"
+    ],
+    "untracked_files": "excluded"
+  },
+  "advice": "Verdict: Retain the current image-detail default. Validated evidence at skills/codex-advisor/scripts/ask_expert.py:71 declares --image-detail with choices auto, low, and high, and default=\"high\".\nNext: 1. Fix narrow-viewport overflow first. In the 390-pixel-wide screenshot, the card starts at x≈16 but its right edge is not visible; the input starts at x≈41 and also extends past the right edge. Make the card fit within equal viewport gutters, and constrain the input to the card’s available content width, including padding and borders. Remove or override any minimum or fixed widths causing overflow. 2. Preserve the readable heading, description, and label spacing; they fit visibly and do not need a typography redesign. 3. After the width repair, capture the same viewport with the entire card and input right borders visible. Check narrower widths for clipping and horizontal overflow before adjusting the large blank area below the field.\nRisk: This screenshot establishes visible right-edge clipping, not its exact CSS cause or whether controls exist offscreen. The source citation establishes the argument default only; it does not prove runtime image handling, resizing behavior, or that the visual repair has passed verification.",
+  "images": [
+    {
+      "image": 1,
+      "path": "D:\\github\\northstar\\docs\\evals\\assets\\qa-suite\\A-narrow-viewport.png",
+      "mime_type": "image/png",
+      "bytes": 10647,
+      "sha256": "3752689e6eacb5d2aee0d41bc9c82e5d297ae83d7d6375dd2321a7d5292597b7",
+      "detail": "high"
+    }
+  ],
+  "packet_chars": 468
+}

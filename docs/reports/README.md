@@ -15,5 +15,8 @@ Supervisors assign distinct report paths, read reports and inspect the work, the
 - [Project and business operating system: implementation and lower-tier handoffs](operating-system/implementation.md)
 
 - [Central package implementation](central-package/implementation.md), [Codex Advisor migration](central-package/advisor-migration.md), [independent package review](central-package/package-review.md), [publication review](central-package/release-review.md), and [cross-agent installation review](central-package/portability-review.md)
+- [Mandatory visual Advisor review](central-package/visual-advisor-review.md)
+- [Caller image delivery: backend handoff](central-package/advisor-image-backend.md) and [independent integration review](central-package/advisor-image-review.md)
+- [Luna capability-trigger primary research](central-package/capability-trigger-research.md)
 - [Dogfood review: product](dogfood-review/product.md), [usability and economics](dogfood-review/usability.md), and [adversarial QA](dogfood-review/qa.md)
 - [Healthy roles: profiles](healthy-roles/profiles.md), [A2A source analysis](healthy-roles/a2a.md), [integration](healthy-roles/integration.md), [agent scenarios](healthy-roles/scenarios.md), [independent QA](healthy-roles/qa.md), [flexibility review](healthy-roles/flexibility-review.md), and [commander authority review](healthy-roles/commander-review.md)

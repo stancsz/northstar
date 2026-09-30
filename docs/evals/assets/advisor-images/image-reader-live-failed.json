@@ -1,0 +1,141 @@
+{
+  "status": "unavailable",
+  "expert_calls": [
+    {
+      "status": "ok",
+      "usage": {
+        "completion_tokens": 87,
+        "prompt_tokens": 883,
+        "total_tokens": 970
+      },
+      "model": "codex-sol-advisor",
+      "advice": "{\"read\":[\"In skills/codex-advisor/scripts/ask_expert.py, trace how attached image files become request image content. Are the image bytes resized or otherwise transformed before submission, and what image detail setting is used by default? Cite the relevant functions, defaults, and any conditions or counterexamples.\"]}",
+      "advice_words": 40,
+      "request_id": "chatcmpl-codex-advisor-713ccfb92c05",
+      "elapsed_seconds": 6.944
+    }
+  ],
+  "reader_rounds": [
+    {
+      "status": "ok",
+      "harness": "pi",
+      "harness_version": "0.73.1",
+      "base_url": "http://localhost:4000/v1",
+      "requested_model": "current",
+      "calls": [
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781509-HVUbt3NoEQhpjp2rP0a8",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 1096,
+            "output": 152,
+            "cacheRead": 128,
+            "cacheWrite": 0,
+            "totalTokens": 1376
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781511-urRYI5CLql5zCWkOj0jD",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 756,
+            "output": 127,
+            "cacheRead": 1224,
+            "cacheWrite": 0,
+            "totalTokens": 2107
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781513-8TXFQmmkOuLQPmh7ASam",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 1802,
+            "output": 129,
+            "cacheRead": 1980,
+            "cacheWrite": 0,
+            "totalTokens": 3911
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781514-StR2mJcZT45cQh821M3H",
+          "stop_reason": "stop",
+          "usage": {
+            "input": 3106,
+            "output": 466,
+            "cacheRead": 418,
+            "cacheWrite": 0,
+            "totalTokens": 3990
+          }
+        }
+      ],
+      "tool_calls": 6,
+      "tool_events": [
+        {
+          "tool": "ls",
+          "error": false
+        },
+        {
+          "tool": "grep",
+          "error": false
+        },
+        {
+          "tool": "read",
+          "error": false
+        },
+        {
+          "tool": "read",
+          "error": false
+        },
+        {
+          "tool": "read",
+          "error": false
+        },
+        {
+          "tool": "grep",
+          "error": false
+        }
+      ],
+      "usage_complete": true,
+      "cost": null,
+      "limits": {
+        "calls": 4,
+        "tools": 8,
+        "seconds": 90,
+        "outputTokens": 1200
+      },
+      "evidence": "{\"findings\":[{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":72,\"quote\":\"parser.add_argument(\\\"--image-detail\\\", choices=(\\\"auto\\\", \\\"low\\\", \\\"high\\\"), default=\\\"high\\\")\",\"fact\":\"Default image-detail sent to the model is \\\"high\\\"; CLI also accepts \\\"auto\\\" or \\\"low\\\".\"},{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":110,\"quote\":\"with path.open(\\\"rb\\\") as stream:\\n            data = stream.read(MAX_IMAGE_BYTES + 1)\",\"fact\":\"Image bytes are read raw from disk; no decode/resize/thumbnail step is applied.\"},{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":128,\"quote\":\"\\\"url\\\": f\\\"data:{mime};base64,{base64.b64encode(data).decode('ascii')}\\\",\\n                \\\"detail\\\": detail,\",\"fact\":\"Raw bytes are base64-embedded as a data: URL with the sniffed MIME and the chosen detail; only size/count caps and MIME sniff gate the payload.\"}],\"unknowns\":\"No counterexamples found locally; cannot prove the upstream API server does not additionally downscale. Resize/transform keyword search returned no matches, so any pixel modification is absent in this script.\"}",
+      "elapsed_seconds": 11.57
+    }
+  ],
+  "snapshot": {
+    "files": {
+      "skills/codex-advisor/scripts/ask_expert.py": "13dfd5ba7e03e20ed78c4c7711a3991f1a6e5cfc3c0a48d89f48f1eebb7cef27"
+    },
+    "bytes": 10480,
+    "excluded_files": 0,
+    "scope": [
+      "skills/codex-advisor/scripts/ask_expert.py"
+    ],
+    "untracked_files": "excluded"
+  },
+  "error": "Pi citation does not match its source line.",
+  "images": [
+    {
+      "image": 1,
+      "path": "D:\\github\\northstar\\docs\\evals\\assets\\qa-suite\\A-narrow-viewport.png",
+      "mime_type": "image/png",
+      "bytes": 10647,
+      "sha256": "3752689e6eacb5d2aee0d41bc9c82e5d297ae83d7d6375dd2321a7d5292597b7",
+      "detail": "high"
+    }
+  ],
+  "packet_chars": 344
+}

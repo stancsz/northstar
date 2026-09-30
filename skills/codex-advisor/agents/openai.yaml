@@ -1,4 +1,4 @@
 interface:
   display_name: "Codex Advisor"
-  short_description: "Use compact Sol or Astra advice to unblock an agent task"
-  default_prompt: "Use $codex-advisor only when focused investigation leaves a material decision blocker. Keep this task with the current worker; request compact advice within the existing recovery allowance, then verify and implement the chosen path yourself."
+  short_description: "Use GPT-6.1 Sol for compact risk advice and image feedback"
+  default_prompt: "Use $codex-advisor with GPT-6.1 Sol only, early and frequently when its Luna/workhorse risk tags apply. Send compact facts and actual screenshots with --image; fulfill requested views and recheck repairs. Enable scoped reading for Advisor-directed investigation. No Astra or model fallback; preserve authority, recovery and independent acceptance."

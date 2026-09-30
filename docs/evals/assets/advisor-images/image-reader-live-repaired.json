@@ -1,0 +1,129 @@
+{
+  "status": "unavailable",
+  "expert_calls": [
+    {
+      "status": "ok",
+      "usage": {
+        "completion_tokens": 76,
+        "prompt_tokens": 883,
+        "total_tokens": 959
+      },
+      "model": "codex-sol-advisor",
+      "advice": "{\"read\":[\"In skills/codex-advisor/scripts/ask_expert.py, are attached image bytes resized before submission, and what image detail is used by default? For each fact, give a short single-line citation with the relevant line number(s); note any conditions or counterevidence.\"]}",
+      "advice_words": 35,
+      "request_id": "chatcmpl-codex-advisor-595234460c7f",
+      "elapsed_seconds": 5.665
+    }
+  ],
+  "reader_rounds": [
+    {
+      "status": "ok",
+      "harness": "pi",
+      "harness_version": "0.73.1",
+      "base_url": "http://localhost:4000/v1",
+      "requested_model": "current",
+      "calls": [
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781639-8DIDj4ozgoKFI0NyXsff",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 1141,
+            "output": 74,
+            "cacheRead": 128,
+            "cacheWrite": 0,
+            "totalTokens": 1343
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781641-Fq1VY36mUkkapGRGBe7D",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 65,
+            "output": 50,
+            "cacheRead": 1269,
+            "cacheWrite": 0,
+            "totalTokens": 1384
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781642-Hh7a1NxLYnczpuAJuVfw",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 70,
+            "output": 54,
+            "cacheRead": 1334,
+            "cacheWrite": 0,
+            "totalTokens": 1458
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781643-d8Peo3x2IdEIJxpqRCSk",
+          "stop_reason": "stop",
+          "usage": {
+            "input": 299,
+            "output": 336,
+            "cacheRead": 467,
+            "cacheWrite": 0,
+            "totalTokens": 1102
+          }
+        }
+      ],
+      "tool_calls": 3,
+      "tool_events": [
+        {
+          "tool": "ls",
+          "error": false
+        },
+        {
+          "tool": "ls",
+          "error": false
+        },
+        {
+          "tool": "ls",
+          "error": false
+        }
+      ],
+      "usage_complete": true,
+      "cost": null,
+      "limits": {
+        "calls": 4,
+        "tools": 8,
+        "seconds": 90,
+        "outputTokens": 1200
+      },
+      "evidence": "```json\n{\"findings\":[],\"unknowns\":\"No substantive reads of skills/codex-advisor/scripts/ask_expert.py were completed before the reader budget was exhausted; only the directory listing (skills/codex-advisor/scripts/) was observed. Whether attached image bytes are resized and the default image_detail value are therefore unproven from this snapshot.\"}\n```",
+      "elapsed_seconds": 9.85
+    }
+  ],
+  "snapshot": {
+    "files": {
+      "skills/codex-advisor/scripts/ask_expert.py": "13dfd5ba7e03e20ed78c4c7711a3991f1a6e5cfc3c0a48d89f48f1eebb7cef27"
+    },
+    "bytes": 10480,
+    "excluded_files": 0,
+    "scope": [
+      "skills/codex-advisor/scripts/ask_expert.py"
+    ],
+    "untracked_files": "excluded"
+  },
+  "error": "Expecting value: line 1 column 1 (char 0)",
+  "images": [
+    {
+      "image": 1,
+      "path": "D:\\github\\northstar\\docs\\evals\\assets\\qa-suite\\A-narrow-viewport.png",
+      "mime_type": "image/png",
+      "bytes": 10647,
+      "sha256": "3752689e6eacb5d2aee0d41bc9c82e5d297ae83d7d6375dd2321a7d5292597b7",
+      "detail": "high"
+    }
+  ],
+  "packet_chars": 336
+}

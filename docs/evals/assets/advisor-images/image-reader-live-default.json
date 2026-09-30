@@ -1,0 +1,142 @@
+{
+  "status": "ok",
+  "expert_calls": [
+    {
+      "status": "ok",
+      "usage": {
+        "completion_tokens": 58,
+        "prompt_tokens": 904,
+        "total_tokens": 962
+      },
+      "model": "codex-sol-advisor",
+      "advice": "{\"read\":[\"In skills/codex-advisor/scripts/ask_expert.py, what is the configured default for --image-detail? Cite one short source line and note any nearby evidence that the default differs.\"]}",
+      "advice_words": 23,
+      "request_id": "chatcmpl-codex-advisor-0e2d4510079e",
+      "elapsed_seconds": 8.038
+    },
+    {
+      "status": "ok",
+      "usage": {
+        "completion_tokens": 283,
+        "prompt_tokens": 1172,
+        "total_tokens": 1455
+      },
+      "model": "codex-sol-advisor",
+      "advice": "{\"advice\":\"Verdict: Retain the caller’s `high` image-detail default. The source sets `--image-detail` with `default=\\\"high\\\"` (skills/codex-advisor/scripts/ask_expert.py:72). In the 390px-wide screenshot, the card’s right border and the display-name field run past the visible right edge; that is the visual defect to address.\\nNext: Make the card and its input fit within the narrow viewport while preserving the visible left margin and internal padding. Check the right border, input edge, and focus state at this width after the layout change. The large blank area below the field is secondary; assess it only once the horizontal clipping is fixed.\\nRisk: This screenshot does not establish the cause of the overflow or verify how the layout behaves at runtime.\"}",
+      "advice_words": 111,
+      "request_id": "chatcmpl-codex-advisor-23250b3cedaf",
+      "elapsed_seconds": 16.16
+    }
+  ],
+  "reader_rounds": [
+    {
+      "status": "ok",
+      "harness": "pi",
+      "harness_version": "0.73.1",
+      "base_url": "http://localhost:4000/v1",
+      "requested_model": "current",
+      "calls": [
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790782096-gygrlxwQ9LzCQOwsX3ZD",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 1167,
+            "output": 88,
+            "cacheRead": 128,
+            "cacheWrite": 0,
+            "totalTokens": 1383
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790782097-6z5p7XKM2nj69sM53AsN",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 1322,
+            "output": 115,
+            "cacheRead": 1295,
+            "cacheWrite": 0,
+            "totalTokens": 2732
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790782099-VdwBS3D0fnayv4Aaqqvi",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 140,
+            "output": 79,
+            "cacheRead": 2617,
+            "cacheWrite": 0,
+            "totalTokens": 2836
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790782100-5oumsllkD2N6SyAecpFh",
+          "stop_reason": "stop",
+          "usage": {
+            "input": 2090,
+            "output": 236,
+            "cacheRead": 509,
+            "cacheWrite": 0,
+            "totalTokens": 2835
+          }
+        }
+      ],
+      "tool_calls": 3,
+      "tool_events": [
+        {
+          "tool": "read",
+          "error": false
+        },
+        {
+          "tool": "grep",
+          "error": false
+        },
+        {
+          "tool": "read",
+          "error": false
+        }
+      ],
+      "usage_complete": true,
+      "cost": null,
+      "limits": {
+        "calls": 4,
+        "tools": 8,
+        "seconds": 90,
+        "outputTokens": 1200
+      },
+      "evidence": "{\"findings\":[{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":72,\"quote\":\"parser.add_argument(\\\"--image-detail\\\", choices=(\\\"auto\\\", \\\"low\\\", \\\"high\\\"), default=\\\"high\\\")\",\"fact\":\"--image-detail default is \\\"high\\\"; accepted choices are auto/low/high.\"},{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":213,\"quote\":\"args.image_parts, images = prepare_images(args.image, args.image_detail)\",\"fact\":\"Default flows into prepare_images unchanged; no override detected at this site.\"}],\"unknowns\":\"No nearby evidence of a differing value; env var or caller defaults in prepare_images/expert_reader not read in this pass.\"}",
+      "elapsed_seconds": 18.59
+    }
+  ],
+  "snapshot": {
+    "files": {
+      "skills/codex-advisor/scripts/ask_expert.py": "13dfd5ba7e03e20ed78c4c7711a3991f1a6e5cfc3c0a48d89f48f1eebb7cef27"
+    },
+    "bytes": 10480,
+    "excluded_files": 0,
+    "scope": [
+      "skills/codex-advisor/scripts/ask_expert.py"
+    ],
+    "untracked_files": "excluded"
+  },
+  "advice": "Verdict: Retain the caller’s `high` image-detail default. The source sets `--image-detail` with `default=\"high\"` (skills/codex-advisor/scripts/ask_expert.py:72). In the 390px-wide screenshot, the card’s right border and the display-name field run past the visible right edge; that is the visual defect to address.\nNext: Make the card and its input fit within the narrow viewport while preserving the visible left margin and internal padding. Check the right border, input edge, and focus state at this width after the layout change. The large blank area below the field is secondary; assess it only once the horizontal clipping is fixed.\nRisk: This screenshot does not establish the cause of the overflow or verify how the layout behaves at runtime.",
+  "images": [
+    {
+      "image": 1,
+      "path": "D:\\github\\northstar\\docs\\evals\\assets\\qa-suite\\A-narrow-viewport.png",
+      "mime_type": "image/png",
+      "bytes": 10647,
+      "sha256": "3752689e6eacb5d2aee0d41bc9c82e5d297ae83d7d6375dd2321a7d5292597b7",
+      "detail": "high"
+    }
+  ],
+  "packet_chars": 408
+}

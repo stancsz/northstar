@@ -1,0 +1,211 @@
+{
+  "status": "unavailable",
+  "expert_calls": [
+    {
+      "status": "ok",
+      "usage": {
+        "completion_tokens": 88,
+        "prompt_tokens": 873,
+        "total_tokens": 961
+      },
+      "model": "codex-sol-advisor",
+      "advice": "{\"read\":[\"In skills/codex-advisor/scripts/ask_expert.py, does the approved caller resize attached images, and what detail value does it use by default? For each finding, provide a short quote from one numbered source line; also note any nearby counterevidence or qualification.\"]}",
+      "advice_words": 37,
+      "request_id": "chatcmpl-codex-advisor-59d361821ff5",
+      "elapsed_seconds": 6.141
+    },
+    {
+      "status": "ok",
+      "usage": {
+        "completion_tokens": 103,
+        "prompt_tokens": 1185,
+        "total_tokens": 1288
+      },
+      "model": "codex-sol-advisor",
+      "advice": "{\"read\":[\"In skills/codex-advisor/scripts/ask_expert.py, does the caller resize attached image pixels before sending them, and what is the default --image-detail value? For each answer, give a short quote from one numbered source line. Note any nearby qualification or counterevidence.\"]}",
+      "advice_words": 37,
+      "request_id": "chatcmpl-codex-advisor-d687a94f7596",
+      "elapsed_seconds": 7.478
+    }
+  ],
+  "reader_rounds": [
+    {
+      "status": "ok",
+      "harness": "pi",
+      "harness_version": "0.73.1",
+      "base_url": "http://localhost:4000/v1",
+      "requested_model": "current",
+      "calls": [
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781961-qBDahGiHijRWWtbl3aIC",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 1182,
+            "output": 105,
+            "cacheRead": 128,
+            "cacheWrite": 0,
+            "totalTokens": 1415
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781963-MCM1it5J4gPVac2mmH4H",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 1298,
+            "output": 119,
+            "cacheRead": 1310,
+            "cacheWrite": 0,
+            "totalTokens": 2727
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781965-17m23fnd5PcXgDuCg9lN",
+          "stop_reason": "stop",
+          "usage": {
+            "input": 1362,
+            "output": 335,
+            "cacheRead": 2608,
+            "cacheWrite": 0,
+            "totalTokens": 4305
+          }
+        }
+      ],
+      "tool_calls": 2,
+      "tool_events": [
+        {
+          "tool": "read",
+          "error": false
+        },
+        {
+          "tool": "read",
+          "error": false
+        }
+      ],
+      "usage_complete": true,
+      "cost": null,
+      "limits": {
+        "calls": 4,
+        "tools": 8,
+        "seconds": 90,
+        "outputTokens": 1200
+      },
+      "evidence": "{\"findings\":[{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":111,\"quote\":\"data = stream.read(MAX_IMAGE_BYTES + 1)\",\"fact\":\"Caller reads raw image bytes; no decode/resize step exists in prepare_images.\"},{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":128,\"quote\":\"\\\"url\\\": f\\\"data:{mime};base64,{base64.b64encode(data).decode('ascii')}\\\"\",\"fact\":\"Original bytes are base64-encoded as-is and forwarded to the API; pixels are not transformed.\"},{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":72,\"quote\":\"parser.add_argument(\\\"--image-detail\\\", choices=(\\\"auto\\\", \\\"low\\\", \\\"high\\\"), default=\\\"high\\\")\",\"fact\":\"Approved --image-detail default is \\\"high\\\"; only the literal string is forwarded (line 129).\"}],\"unknowns\":\"None: no PIL/decimate call exists in this file, so caller-side resizing is unproven anywhere else.\"}",
+      "elapsed_seconds": 9.96
+    },
+    {
+      "status": "ok",
+      "harness": "pi",
+      "harness_version": "0.73.1",
+      "base_url": "http://localhost:4000/v1",
+      "requested_model": "current",
+      "calls": [
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781978-ESUW9nJYVrnMDmfffsgC",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 1184,
+            "output": 64,
+            "cacheRead": 128,
+            "cacheWrite": 0,
+            "totalTokens": 1376
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781979-tLLoTzZOTe7pI06jhQFi",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 35,
+            "output": 41,
+            "cacheRead": 1312,
+            "cacheWrite": 0,
+            "totalTokens": 1388
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781980-UZgPE74J6kDYUvYoGxU6",
+          "stop_reason": "toolUse",
+          "usage": {
+            "input": 51,
+            "output": 37,
+            "cacheRead": 1347,
+            "cacheWrite": 0,
+            "totalTokens": 1435
+          }
+        },
+        {
+          "model": null,
+          "requested_model": "current",
+          "response_id": "gen-1790781981-fv6P4oJAqqxiRgvlnuWY",
+          "stop_reason": "stop",
+          "usage": {
+            "input": 1479,
+            "output": 926,
+            "cacheRead": 508,
+            "cacheWrite": 0,
+            "totalTokens": 2913
+          }
+        }
+      ],
+      "tool_calls": 3,
+      "tool_events": [
+        {
+          "tool": "ls",
+          "error": false
+        },
+        {
+          "tool": "ls",
+          "error": false
+        },
+        {
+          "tool": "read",
+          "error": false
+        }
+      ],
+      "usage_complete": true,
+      "cost": null,
+      "limits": {
+        "calls": 4,
+        "tools": 8,
+        "seconds": 90,
+        "outputTokens": 1200
+      },
+      "evidence": "{\"findings\":[{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":72,\"quote\":\"parser.add_argument(\\\"--image-detail\\\", choices=(\\\"auto\\\", \\\"low\\\", \\\"high\\\"), default=\\\"high\\\")\",\"fact\":\"--image-detail default is \\\"high\\\"; choices limited to auto/low/high.\"},{\"file\":\"skills/codex-advisor/scripts/ask_expert.py\",\"line\":71,\"quote\":\"--image\\\", type=Path, action=\\\"append\\\", default=[], help=\\\"Attach an actual local PNG/JPEG/WebP/GIF; repeat for views/crops.\\\"\",\"fact\":\"--image accepts raw local PNG/JPEG/WebP/GIF paths; no resize/processing mentioned in the visible argparse block.\"}],\"unknowns\":\"Read was truncated at line 99 of ~9.6KB file. The image-encoding/sending logic (likely after line 99) was not observed, and no Pillow/PIL import or resize call appears in lines 1-99. Whether the caller resizes pixels before sending remains unproven from the evidence read.\"}",
+      "elapsed_seconds": 13.7
+    }
+  ],
+  "snapshot": {
+    "files": {
+      "skills/codex-advisor/scripts/ask_expert.py": "13dfd5ba7e03e20ed78c4c7711a3991f1a6e5cfc3c0a48d89f48f1eebb7cef27"
+    },
+    "bytes": 10480,
+    "excluded_files": 0,
+    "scope": [
+      "skills/codex-advisor/scripts/ask_expert.py"
+    ],
+    "untracked_files": "excluded"
+  },
+  "error": "Pi citation does not match its source line.",
+  "images": [
+    {
+      "image": 1,
+      "path": "D:\\github\\northstar\\docs\\evals\\assets\\qa-suite\\A-narrow-viewport.png",
+      "mime_type": "image/png",
+      "bytes": 10647,
+      "sha256": "3752689e6eacb5d2aee0d41bc9c82e5d297ae83d7d6375dd2321a7d5292597b7",
+      "detail": "high"
+    }
+  ],
+  "packet_chars": 286
+}

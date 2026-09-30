@@ -95,7 +95,7 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 | [**Northstar**](../../skills/northstar/SKILL.md) | 方向、授权、交付、恢复与学习。 | 希望一个目标被持续推进到经过检查的成果。 |
 | [**Codex Subagents**](../../skills/codex-subagents/SKILL.md) | 任务边界、角色、模型分配、协调与交接。 | 需要委派、集成或独立评审分工。 |
 | [**Codex QA**](../../skills/codex-qa/SKILL.md) | 功能、视觉、对抗与结构审查。 | 需要知道实际交付是否达标。 |
-| [**Codex Advisor**](../../skills/codex-advisor/SKILL.md) | 对未决问题提供有界、仅建议性质的专家咨询。 | 一个具体知识缺口值得咨询专家。 |
+| [**Codex Advisor**](../../skills/codex-advisor/SKILL.md) | 固定只用 GPT-6.1 Sol；对能力短板尽早提供 compact 指导，看实际图片，指导修整并复查。 | 已标注的 Luna/workhorse 风险、任何视觉判断，或普通任务中的具体知识缺口。 |
 
 `$northstar` 是总入口，其他技能也可直接调用。四个一起安装，按需加载。小改动可以只有一位构建者和一位独立 reviewer；确有协调需要时才增加主管。
 
@@ -107,13 +107,13 @@ flowchart TD
     Q -->|需要修复| B
     Q -->|验收证据| N
     N --> D[验收交付与下一承诺]
-    N -. 具体知识缺口 .-> A[Codex Advisor]
+    N -. 能力短板、图片或知识缺口 .-> A[Codex Advisor]
     A -. 建议 .-> N
     D --> L[检查点学习]
     L --> N
 ```
 
-核心工作方法以 Markdown 提供。包内另附 Advisor 调用器和可选 reader；[Advisor 服务](install.md#advisor-prerequisites)需单独配置，安装不会启动服务或发起模型调用。执行、协调和 QA 无需该服务即可使用。
+核心工作方法以 Markdown 提供。包内另附 Advisor 调用器和可选 reader；[Advisor 服务](install.md#advisor-prerequisites)需单独配置，安装不会启动服务或发起模型调用。非视觉执行、协调和 QA 无需该服务即可使用。美术、看图和审美工作必须完成 [Advisor 截图指导与修后复查](../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance)：调用时主动用 `--image` 附上图片，看不清就提供多个原分辨率切片，由 Advisor 决定细看哪里；它要求的查看内容必须满足。需要独立调查源码时启用 reader mode，由 Advisor 自己决定是否派 Pi reader、问什么；初始截图由执行者主动提供。
 
 ## 从项目交付，延伸到持续经营
 

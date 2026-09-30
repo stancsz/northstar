@@ -94,7 +94,7 @@ The design adapts ideas from mission command, reversible decision-making, lean d
 | [**Northstar**](skills/northstar/SKILL.md) | Direction, authority, delivery, recovery, and learning. | You want an outcome carried through to inspected delivery. |
 | [**Codex Subagents**](skills/codex-subagents/SKILL.md) | Scope, roles, capability allocation, coordination, and handoffs. | Work needs delegation, integration, or review separation. |
 | [**Codex QA**](skills/codex-qa/SKILL.md) | Functional, visual, adversarial, and structural review. | You need to know whether the actual result meets the bar. |
-| [**Codex Advisor**](skills/codex-advisor/SKILL.md) | Bounded, advice-only consultation on an unresolved decision. | A concrete knowledge gap warrants expert input. |
+| [**Codex Advisor**](skills/codex-advisor/SKILL.md) | GPT-6.1 Sol only: compact guidance on capability risks and image-backed repair feedback. | A documented Luna/workhorse risk, any visual judgment, or a concrete ordinary knowledge gap. |
 
 Use `$northstar` as the central entry point; each companion is also directly invocable. Install all four, load what the task needs. A small change can use one builder and one independent reviewer; supervisors exist when coordination warrants them.
 
@@ -106,13 +106,13 @@ flowchart TD
     Q -->|Repair needed| B
     Q -->|Evidence| N
     N --> D[Accepted delivery and next commitment]
-    N -. Concrete knowledge gap .-> A[Codex Advisor]
+    N -. Capability risks, images or knowledge gap .-> A[Codex Advisor]
     A -. Advice .-> N
     D --> L[Checkpoint learning]
     L --> N
 ```
 
-Core practices are Markdown. The bundle also includes the Advisor caller and optional reader; [Advisor service setup](docs/misc/install.md#advisor-prerequisites) is separate. Installing the package does not start services or make provider calls. Execution, coordination, and QA can be used without that service.
+Core practices are Markdown. The bundle also includes the Advisor caller and optional reader; [Advisor service setup](docs/misc/install.md#advisor-prerequisites) is separate. Installing the package does not start services or make provider calls. Nonvisual execution, coordination, and QA can be used without that service. Art, image inspection and aesthetic work require [Advisor's screenshot and repair loop](skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance): proactively attach images with `--image`, and enable scoped reader mode when the Advisor may need to investigate source evidence independently.
 
 ## Built for delivery—and the work after delivery
 

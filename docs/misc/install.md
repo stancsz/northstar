@@ -32,7 +32,7 @@ Use your host's configured skills directory if different, such as `.codex/skills
 - `$northstar`: give the desired outcome. It applies execution/recovery/learning and loads companions when their triggers apply.
 - `$codex-qa`: inspect an artifact and its actual workflow, classify findings and verify repairs.
 - `$codex-subagents`: coordinate worthwhile independent workstreams with explicit scope, authority and handoffs.
-- `$codex-advisor`: obtain compact advice for a concrete unresolved decision after bounded local evidence. The current executor retains implementation and verification ownership.
+- `$codex-advisor`: consult early and frequently when [capability-risk tags](../../skills/codex-advisor/references/capability-triggers.md) apply; attach real images for visual direction. For ordinary work without a tag, consult on a concrete unresolved decision after local evidence. The current executor retains implementation and verification ownership.
 
 Existing task and repository requirements remain binding. Reuse the target project's records and authorization; these skills do not require Northstar's repository layout. Direct invocation of a companion does not grant additional authority or reset recovery history.
 
@@ -46,7 +46,11 @@ Reload updated skills or start a new chat because active chats may retain earlie
 
 Ordinary compact consultation requires Python 3.10+ and the already-configured Subroute `experts` service at `http://127.0.0.1:4040/v1`, with Codex service authentication managed there. [Subroute setup](https://github.com/stancsz/subroute) remains the service's source of truth. Copying the skills does not deploy the service, supply credentials or grant spending/data-transmission authority.
 
-Optional [expert-directed reading](../../skills/codex-advisor/references/reader.md) additionally requires its documented Node/Pi/Git/ripgrep setup and the separate worker gateway at `http://localhost:4000/v1`. Do not silently use that worker route as the expert route. Core execution, QA and coordination do not require these services.
+Advisor is fixed to **GPT-6.1 Sol only**. Caller `--model sol` sends the versioned alias `codex-gpt-6.1-sol-advisor`; the dedicated service must expose that alias mapped to `codex-advisor/gpt-6.1-sol`. Astra and older Sol aliases are removed from this dedicated endpoint. An older service fails visibly; do not substitute another model or the worker gateway.
+
+Optional [expert-directed reading](../../skills/codex-advisor/references/reader.md) additionally requires its documented Node/Pi/Git/ripgrep setup and the separate worker gateway at `http://localhost:4000/v1`. Do not silently use that worker route as the expert route. Nonvisual execution, QA and coordination do not require these services.
+
+[Mandatory visual consultation](../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance) uses repeatable `--image` arguments to send actual image bytes to the dedicated Advisor endpoint. The Subroute backend must include image-input support; an older text-only backend rejects these requests visibly. Optional Pi reading stays text-only: the Advisor sees attached screenshots and can dispatch Pi for source evidence. Missing image access leaves required visual consultation unverified.
 
 Resolve `scripts/ask_expert.py` under the installed Codex Advisor directory shown by your skill loader. For the installation above:
 

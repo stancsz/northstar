@@ -1,0 +1,23 @@
+{
+  "model": "codex-gpt-6.1-sol-advisor",
+  "advice": "Verdict: The visible heading is “Profile settings” and the field label is “Display name.” In this 390-pixel-wide screenshot, the card starts 16 pixels from the left, but its right border and the input’s right edge extend beyond the image; the narrow layout is visibly clipped.\nNext: First make the card fit within the viewport with consistent left/right gutters, accounting for padding and borders. Then constrain the input to the card’s available content width and remove any minimum or fixed width causing overflow. Preserve the readable left alignment. Recheck at the same 390-pixel width and at 320 pixels: provide full-width screenshots showing both card borders and the complete input outline, and confirm there is no horizontal scrolling.\nRisk: The clipped right side prevents assessing the full card and input bounds; no offscreen controls are evidenced, and no implementation or runtime verification is established.",
+  "advice_words": 142,
+  "usage": {
+    "completion_tokens": 183,
+    "prompt_tokens": 668,
+    "total_tokens": 851
+  },
+  "request_id": "chatcmpl-codex-advisor-dc05ce70d92b",
+  "elapsed_seconds": 14.553,
+  "images": [
+    {
+      "image": 1,
+      "path": "D:\\github\\northstar\\docs\\evals\\assets\\qa-suite\\A-narrow-viewport.png",
+      "mime_type": "image/png",
+      "bytes": 10647,
+      "sha256": "3752689e6eacb5d2aee0d41bc9c82e5d297ae83d7d6375dd2321a7d5292597b7",
+      "detail": "high"
+    }
+  ],
+  "packet_chars": 202
+}

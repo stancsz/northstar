@@ -1,0 +1,23 @@
+{
+  "model": "codex-sol-advisor",
+  "advice": "Verdict: The heading is “Profile settings” and the visible form label is “Display name.” No submit control appears in the screenshot. The card and input extend past the screenshot’s right edge, so their right borders are not visible.\nNext: Prioritize fitting the card and input within the narrow viewport while retaining side padding; check their widths and box sizing, then capture the full narrow-width page again to show both right borders and any content below.\nRisk: The pixels do not show whether a submit control exists outside this screenshot or whether the page scrolls horizontally.",
+  "advice_words": 95,
+  "usage": {
+    "completion_tokens": 302,
+    "prompt_tokens": 671,
+    "total_tokens": 973
+  },
+  "request_id": "chatcmpl-codex-advisor-2823b78d213e",
+  "elapsed_seconds": 18.349,
+  "images": [
+    {
+      "image": 1,
+      "path": "D:\\github\\northstar\\docs\\evals\\assets\\qa-suite\\A-narrow-viewport.png",
+      "mime_type": "image/png",
+      "bytes": 10647,
+      "sha256": "3752689e6eacb5d2aee0d41bc9c82e5d297ae83d7d6375dd2321a7d5292597b7",
+      "detail": "high"
+    }
+  ],
+  "packet_chars": 226
+}

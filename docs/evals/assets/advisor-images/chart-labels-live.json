@@ -1,0 +1,47 @@
+{
+  "model": "codex-sol-advisor",
+  "advice": "Verdict: The labels are readable. For GPT-6 Luna / GPT-6 Sol / GPT-6.1 Sol, respectively: Broken Search Tool failure is 28.67% / 4.92% / 2.08%; Coding Deception failure is 2.81% / 1.30% / 1.50%; Respecting Warnings (“fails to stop”) is 42.4% / 64.4% / 23.5%. Lower is better for all three. Luna is better than Sol on Respecting Warnings only.\nNext: Report auto-review separately: Luna shows 0.3% attempted but unsuccessful bypass and 0% successful bypass; Sol and GPT-6.1 Sol each show 0.0% attempts and 0% successes. Keep these chart results distinct from the other metrics, and do not extrapolate to production rates.\nRisk: none.",
+  "advice_words": 104,
+  "usage": {
+    "completion_tokens": 382,
+    "prompt_tokens": 7151,
+    "total_tokens": 7533
+  },
+  "request_id": "chatcmpl-codex-advisor-d768ddabe7b3",
+  "elapsed_seconds": 21.279,
+  "images": [
+    {
+      "image": 1,
+      "path": "D:\\github\\northstar\\tmp\\advisor-images\\research\\page-13.png",
+      "mime_type": "image/png",
+      "bytes": 119813,
+      "sha256": "49155c200b9309e2cf32e3cc3ba3da5d82926a96a0962dcc17e05836ae163701",
+      "detail": "high"
+    },
+    {
+      "image": 2,
+      "path": "D:\\github\\northstar\\tmp\\advisor-images\\research\\page-14.png",
+      "mime_type": "image/png",
+      "bytes": 167497,
+      "sha256": "d50c9eab553f640acf8203c11b9bedc8ca00448cc7cd2f3165f95880323256dc",
+      "detail": "high"
+    },
+    {
+      "image": 3,
+      "path": "D:\\github\\northstar\\tmp\\advisor-images\\research\\page-16.png",
+      "mime_type": "image/png",
+      "bytes": 78691,
+      "sha256": "e8ff31eee6cdd15da76a0205c318323aa6f51a3e22d303076fcef7ead8df8988",
+      "detail": "high"
+    },
+    {
+      "image": 4,
+      "path": "D:\\github\\northstar\\tmp\\advisor-images\\research\\page-17.png",
+      "mime_type": "image/png",
+      "bytes": 162928,
+      "sha256": "10343745a1196a003913ef297e575b72fb1f3cc6cae2f75792f7f023d242bfc4",
+      "detail": "high"
+    }
+  ],
+  "packet_chars": 493
+}

@@ -15,3 +15,11 @@ Goal: [central package](../../goal/central-package/GOAL.md). Status: complete fo
 - `node --test tests/test_pi_reader.mjs`: **2 passed**, including the native Pi reader line-number check. `TEMP`/`TMP` pointed at the same scoped scratch directory. The existing Pi package was used; no dependency was installed.
 - Whitespace scan on the assigned Markdown, YAML and test files found no trailing whitespace. Script hashes were compared with Subroute source. No paid/live provider call or service startup occurred.
 - The local tests verify caller and reader boundaries only. They do not establish live expert or gateway availability, provider quality, cost savings, deployment behavior, or human acceptance. Northstar install integration and Subroute redirect/source removal remain with the primary owner.
+
+## Mandatory visual Advisor follow-up
+
+Historical documentation-only result; the later caller image-delivery increment supersedes its transport limitation. See the [current goal](../../goal/central-package/GOAL.md#caller-image-delivery-and-advisor-directed-reading).
+
+2026-09-30, base `0b751ab`, primary implementation; separate nonauthor documentation review READY, inspected and accepted by primary. Added the mandatory art/image/aesthetic consultation loop in [Codex Advisor](../../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance), with discoverable metadata and Northstar/QA routing. Advisor receives actual images, chooses further inspection, directs concrete repairs and sees repaired views. Ordinary blocker prerequisites and call ceilings cannot truncate required visual feedback; authority, resource and no-progress recovery limits still apply. Advisor direction cannot self-certify the resulting design.
+
+Source inspection confirms `ask_expert.py` accepts only text and the Pi snapshot excludes binary images. The skill requires an authorized image-capable channel and leaves visual consultation unverified if none exists; no runtime/image-transport support was added. No service, provider, installed-copy or Git publication change. Development validation and the independent verdict will be linked from the [evaluation](../../evals/central-package.md#mandatory-visual-advisor-follow-up).
