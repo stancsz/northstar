@@ -12,6 +12,7 @@ Use this skill from Codex when the user asks to have Claude Code do work, or whe
 - Delegate only when a bounded Claude Code task can improve speed, independent review, or focused expertise enough to justify startup, coordination, integration, and model cost.
 - Keep simple, sequential, tightly coupled, or one-file work with the current agent unless the user specifically requests Claude Code.
 - Check that `claude` is available and inspect its local version/help when the invocation depends on specific CLI options. Do not read or print credentials, tokens, or full provider settings.
+- If Claude Code is configured to use a local or custom API base URL, verify that the endpoint advertises the requested Claude model before dispatch. If it does not, stop that route. Never send a key or token configured for one host to a different host; use an existing valid authentication path for the chosen provider.
 - If the CLI or an accessible model is unavailable, report the exact failure and continue directly where useful. Do not change global Claude configuration or cycle through model guesses without authorization and new evidence.
 
 ## Give Claude Code a bounded assignment

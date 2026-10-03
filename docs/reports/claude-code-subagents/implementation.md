@@ -12,4 +12,6 @@ Earlier Claude Code use attempts, before correcting the skill's intended host, s
 - `--model sonnet` resolved to the same unavailable configured model.
 - Explicit `--model claude-haiku-4-5` returned the same model availability error. A retry with a task-local settings file overriding only `ANTHROPIC_MODEL` and the Sonnet default returned that Haiku error too.
 
-No actual delegated work, skill discovery, or reviewer verdict is claimed. Reopen runtime evaluation when Claude Code can use an accessible model through its configured provider. Temporary settings and error capture are in ignored `tmp/claude-code-subagents/`.
+Follow-up diagnosis: the configured `ANTHROPIC_BASE_URL` targets `127.0.0.1:4000`. A read-only `GET /v1/models` returned no Claude model IDs, explaining why the configured Sonnet and Haiku requests fail on that route. A process-only direct Anthropic test with user settings excluded reported `Not logged in`; a second test with a temporary official-endpoint override and blank credential environment variables also reported `Not logged in`. No saved provider/auth configuration was changed and no gateway credential was sent to Anthropic.
+
+No successful delegated work, skill discovery by Claude Code, or independent verdict is claimed. To complete the runtime criterion, Claude Code needs either valid first-party Anthropic authentication for the official endpoint or a Claude model exposed by the configured gateway. Temporary settings and outputs are in ignored `tmp/claude-code-subagents/`.
