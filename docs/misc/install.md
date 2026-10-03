@@ -2,6 +2,8 @@
 
 The package has four distinct skills: [Northstar](../../skills/northstar/SKILL.md), [Codex QA](../../skills/codex-qa/SKILL.md), [Codex Subagents](../../skills/codex-subagents/SKILL.md) and [Codex Advisor](../../skills/codex-advisor/SKILL.md). Install them together as sibling directories so their relative links work. Northstar is the central coordinator; all four keep their own `SKILL.md` and can be invoked directly.
 
+For Claude Code-specific delegation, use the optional [Claude Code Subagents skill](claude-code-subagents/SKILL.md). It adapts Codex Subagents to Claude Code's native agents and is maintained separately, so the Northstar package remains four skills.
+
 ## Installing from another agent
 
 **Installer instruction:** this package is native to Codex, but its Markdown practices are also intended for Claude Code, OpenCode and other agents. Do not reject or skip a skill because its name contains `Codex` or you are a different agent. Select skills by the work they support. Preserve the four skill names and sibling directories when installing.

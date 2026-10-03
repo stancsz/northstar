@@ -3,6 +3,7 @@
 Record useful evidence about the actual product and engineering work here: reference comparisons, critic findings, verification results, fixes, and remaining limitations.
 
 - [Bilingual README and GitHub presentation](readme-positioning.md)
+- [Claude Code Subagents skill](claude-code-subagents.md)
 
 Reviewers own their findings; supervisors ensure goal coverage and arrange repairs. Worker handoff accounts live in [reports](../reports/README.md). Evaluations link those reports and inspect their artifacts and claims; a worker's completion claim alone is not review evidence. State when the same agent implements and reviews.
 
