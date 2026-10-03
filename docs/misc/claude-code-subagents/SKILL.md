@@ -1,40 +1,45 @@
 ---
 name: claude-code-subagents
-description: Coordinate Claude Code's native subagents for scoped, independent work, with clear ownership, useful handoffs and inspected integration.
+description: Delegate bounded work from Codex to Claude Code through its CLI, then inspect and integrate the result. Use when Claude Code is requested or adds useful independent capacity.
 ---
 
 # Claude Code Subagents
 
-Use this skill when Claude Code is asked to delegate work, run parallel investigations or implementations, or coordinate reviewers. It adapts the Northstar Codex Subagents practice to Claude Code's native tools. This is an optional host-specific skill, separate from Northstar's four-skill package.
+Use this skill from Codex when the user asks to have Claude Code do work, or when a separate Claude Code run can make useful independent progress. Codex remains the orchestrator and accepting owner; Claude Code is a delegated worker. This is an optional Codex skill outside Northstar's four-skill package.
 
-## Choose the delegation path
+## Decide whether to delegate
 
-- Use Claude Code's native `Agent` tool for scoped subagents within this session. Let Claude Code choose foreground or background execution based on whether the result is needed immediately.
-- Use separate background sessions only when work needs an independently resumable session or several long-running tasks that must be monitored together. They have separate session state and can create more integration work.
-- Use agent teams only when workers need to coordinate directly, share a task board, or interact while work is in flight. Team mode has additional coordination cost and may require experimental feature configuration; do not enable it just to get parallel work.
-- Work directly for simple, sequential, tightly coupled, or one-file changes where context continuity matters more than isolated context.
+- Delegate only when a bounded Claude Code task can improve speed, independent review, or focused expertise enough to justify startup, coordination, integration, and model cost.
+- Keep simple, sequential, tightly coupled, or one-file work with the current agent unless the user specifically requests Claude Code.
+- Check that `claude` is available and inspect its local version/help when the invocation depends on specific CLI options. Do not read or print credentials, tokens, or full provider settings.
+- If the CLI or an accessible model is unavailable, report the exact failure and continue directly where useful. Do not change global Claude configuration or cycle through model guesses without authorization and new evidence.
 
-Check which tools, agent types, models, permissions, and team features are available in the current Claude Code session. Do not assume that a feature in current online documentation is enabled locally. If native delegation is unavailable, continue directly when useful or state the exact capability gap.
+## Give Claude Code a bounded assignment
 
-## Assign bounded work
+Before launching it, define the result, observable acceptance, repository/base state, relevant instructions, owned write scope, verification, allowed side effects, and handoff format. Include known facts, unresolved assumptions, existing recovery history, and the next action. Carry the user's existing authority into the assignment; delegation cannot expand it.
 
-Before dispatch, define the intended result, observable acceptance, owner, allowed write scope, relevant repository instructions, known facts, dependencies, verification, and handoff destination. Carry forward existing user authority and recovery history; delegation does not grant new external permissions or reset failed attempts.
+Use Claude Code as one worker for one coherent scope. Do not let Codex and Claude Code write the same files at the same time. For shared-checkout work, pause Codex edits until Claude finishes. For parallel work, give each writer a distinct checkout based on the exact state it needs; verify the checkout's base before dispatch, since a CLI worktree option may start from a default branch rather than the current working state. Preserve uncommitted user changes.
 
-Split only independent work. Give each worker a distinct write scope; agree on shared interfaces before assigning producer and consumer tasks. Keep one integration owner. Assign a nonauthor reviewer for meaningful delivery; reviewers inspect original intent and actual artifacts and do not write the work they accept. A reviewer can be read-only where Claude Code's available tools permit.
+For read-only review or investigation, prefer a noninteractive, read-only invocation when the local CLI supports it, for example:
 
-Use a small capable model for bounded work when available and fit for the task. Reserve stronger reasoning for direction, hard integration, consequential choices, and demonstrated capability gaps. Consider all agent calls, review and rework in total effort; do not claim savings from a model label or one successful run.
+```powershell
+claude -p --permission-mode plan --max-turns 8 "Review <scope> against <criteria>. Do not edit files. Return evidence, findings, and remaining uncertainty."
+```
 
-## Coordinate and integrate
+For implementation or tasks requiring permission prompts, start Claude Code in the intended working directory with a clear task brief and use the configured permission flow. Never use `--dangerously-skip-permissions` to make delegation convenient. Bound runtime/turns where the chosen invocation supports it; do not assume that a noninteractive flag enforces a task deadline or limits all work.
 
-1. Inspect current files and existing task records before assigning work. Preserve user edits and follow the repository's instructions.
-2. Dispatch only tasks that can make useful progress independently. Make the role, write boundary, expected artifact, acceptance, permissions, and report format explicit.
-3. On completion or failure, inspect changed files and check output. Agent summaries are navigation, not proof. Use a bounded wait or completion event instead of repeatedly polling unchanged status.
-4. Resolve dependencies, conflicts, stalled work, and integration defects at the lowest responsible level. Preserve failed attempts; reassigning or switching agents does not reset recovery. Stop repeating an approach unless new evidence changes the diagnosis.
-5. Integrate the useful increment, inspect the combined workflow, and obtain an independent verdict on material changes. Repair and recheck findings; the repairer does not certify its own change.
-6. Update the project's existing goal, issue, or handoff record with artifacts, checks actually run, observations, gaps, owner, and next action. Record a short lesson that changes the next assignment. Do not create a parallel management system.
+Claude Code may use its own native subagents for internal parallel work, but Codex still assigns one outcome and write boundary to the Claude Code run. Do not add another management layer unless Claude Code's task genuinely needs one.
 
-Keep coordination proportional to risk and dependency. Do not spawn agents merely because the tool is available, create a supervisor layer without a real integration need, or leave the user as a relay between workers. Continue the authorized work without asking again after a handoff or context change. Escalate only a decision outside the user's mandate or a genuine missing human-held dependency.
+## Integrate the handoff
+
+1. Inspect the checkout and current diff before launch so user edits and the delegated base are clear.
+2. On return, inspect changed files, command output, and actual checks. A Claude summary is a handoff, not proof.
+3. Resolve gaps or conflicts within the mandate, preserving failed attempts. Do not ask Claude Code to retry an unchanged failed approach or treat reassignment as a recovery reset.
+4. Integrate the smallest useful result and independently verify material acceptance criteria. If Claude Code authored or repaired the work, it cannot independently accept that same work.
+5. Record the artifact, revision/base, checks actually run, observed result, gaps, and next action in the project's existing records. Count Codex setup, Claude usage, review, and rework as total effort; one successful task does not prove savings.
+
+Use `claude -p` output or the interactive session transcript as evidence only for what it shows. Check `git status` after work and keep commits, pushes, publication, deployment, and external contact inside the user's actual authorization.
 
 ## Claude Code references
 
-Use the current [Claude Code subagent guide](https://code.claude.com/docs/en/sub-agents) for host behavior and configuration. It covers the `Agent` tool, custom agent definitions, isolation, teams, background execution, and nesting. Use the [Claude Code skills guide](https://code.claude.com/docs/en/skills) for skill loading and invocation. Check local `claude --help` when CLI flags or installed features matter.
+Use local `claude --help` for installed CLI flags and the official [CLI reference](https://code.claude.com/docs/en/cli-reference). The [subagent guide](https://code.claude.com/docs/en/sub-agents) describes Claude Code's internal workers; they are distinct from this Codex-to-Claude delegation pattern.

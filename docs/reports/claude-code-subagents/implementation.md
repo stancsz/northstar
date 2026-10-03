@@ -1,15 +1,15 @@
 # Claude Code Subagents implementation handoff
 
-Status: source and installation complete; Claude Code execution blocked before skill invocation
+Status: Codex skill source and personal installation complete; delegated Claude Code run blocked by model access
 
-Deliverable: [Claude Code Subagents skill](../../misc/claude-code-subagents/SKILL.md), maintained outside Northstar's four-skill package.
+Deliverable: [Claude Code Subagents Codex skill](../../misc/claude-code-subagents/SKILL.md), maintained outside Northstar's four-skill package.
 
-Installed at `C:\Users\stanc\.claude\skills\claude-code-subagents\SKILL.md`; source and installed file hashes match. Claude Code version: `2.1.251`. The skill directs its independent review to a native read-only subagent, in plan mode, without file edits.
+Installed at `~/.codex/skills/claude-code-subagents/SKILL.md`; SHA-256 matches the source (`C0D418BBB0E51E93E8820EBF39AB6EEC41A81C948AB57AFDB2ECF0EC6C75DA6B`). The skill makes Codex the orchestrator and Claude Code a bounded CLI worker.
 
-Execution attempts stopped before any skill invocation or agent dispatch:
+Earlier Claude Code use attempts, before correcting the skill's intended host, stopped before any skill invocation or agent dispatch:
 
 - Default model selected `claude-sonnet-5`; CLI reported that it did not exist or was unavailable to this account.
 - `--model sonnet` resolved to the same unavailable configured model.
 - Explicit `--model claude-haiku-4-5` returned the same model availability error. A retry with a task-local settings file overriding only `ANTHROPIC_MODEL` and the Sonnet default returned that Haiku error too.
 
-No actual reviewer verdict or skill discovery is claimed. Reopen the execution criterion when Claude Code can use an accessible model through its configured provider. The temporary settings and error capture are in ignored `tmp/claude-code-subagents/`.
+No actual delegated work, skill discovery, or reviewer verdict is claimed. Reopen runtime evaluation when Claude Code can use an accessible model through its configured provider. Temporary settings and error capture are in ignored `tmp/claude-code-subagents/`.

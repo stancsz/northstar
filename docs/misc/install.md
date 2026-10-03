@@ -2,7 +2,15 @@
 
 The package has four distinct skills: [Northstar](../../skills/northstar/SKILL.md), [Codex QA](../../skills/codex-qa/SKILL.md), [Codex Subagents](../../skills/codex-subagents/SKILL.md) and [Codex Advisor](../../skills/codex-advisor/SKILL.md). Install them together as sibling directories so their relative links work. Northstar is the central coordinator; all four keep their own `SKILL.md` and can be invoked directly.
 
-For Claude Code-specific delegation, use the optional [Claude Code Subagents skill](claude-code-subagents/SKILL.md). It adapts Codex Subagents to Claude Code's native agents and is maintained separately, so the Northstar package remains four skills.
+To delegate work from Codex to Claude Code, install the optional [Claude Code Subagents Codex skill](claude-code-subagents/SKILL.md). It is maintained separately, so the Northstar package remains four skills. From this repository root in PowerShell:
+
+```powershell
+$claudeCodeSkill = Join-Path $env:USERPROFILE '.codex\skills\claude-code-subagents'
+New-Item -ItemType Directory -Force $claudeCodeSkill | Out-Null
+Copy-Item '.\docs\misc\claude-code-subagents\SKILL.md' (Join-Path $claudeCodeSkill 'SKILL.md') -Force
+```
+
+Invoke it in Codex as `$claude-code-subagents`. It launches work through the available Claude Code CLI; it does not install or configure Claude Code itself.
 
 ## Installing from another agent
 
