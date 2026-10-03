@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [switch] $Install,
-    [switch] $Uninstall
+    [switch] $Uninstall,
+    [switch] $Background
 )
 
 Set-StrictMode -Version Latest
@@ -26,23 +27,25 @@ function Install-HealthCheck {
     }
 
     $powerShellPath = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-    $arguments = '-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "{0}"' -f $scriptPath
+    $arguments = '-WindowStyle Hidden -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "{0}" -Background' -f $scriptPath
     $action = New-ScheduledTaskAction -Execute $powerShellPath -Argument $arguments
 
-    # A one-time trigger with a long repetition window gives Task Scheduler's
-    # supported interval parameters while keeping the action in the signed-in
-    # desktop session without requiring a stored password.
-    $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) `
-        -RepetitionInterval (New-TimeSpan -Minutes 10) `
-        -RepetitionDuration (New-TimeSpan -Days 9999)
+    # Run one hidden worker in the signed-in desktop session so checks do not
+    # create a new console window every minute.
+    $trigger = New-ScheduledTaskTrigger -AtLogOn -User "$env:USERDOMAIN\$env:USERNAME"
 
     $principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Interactive -RunLevel Limited
-    $settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 2)
+    $settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -StartWhenAvailable `
+        -ExecutionTimeLimit ([TimeSpan]::Zero) -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
     $task = New-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -Settings $settings
 
+    if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
+        Stop-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+    }
     Register-ScheduledTask -TaskName $taskName -InputObject $task -Force | Out-Null
-    Write-HealthLog "Installed scheduled task '$taskName' for $scriptPath (every 10 minutes while this user is signed in)."
-    Write-Output "Installed '$taskName'. It checks every 10 minutes while you are signed in."
+    Start-ScheduledTask -TaskName $taskName
+    Write-HealthLog "Installed hidden background task '$taskName' for $scriptPath (checks every 1 minute while this user is signed in)."
+    Write-Output "Installed and started hidden '$taskName'. It checks every 1 minute while you are signed in."
 }
 
 function Uninstall-HealthCheck {
@@ -91,15 +94,31 @@ function Invoke-HealthCheck {
     }
 }
 
+function Start-HealthCheckLoop {
+    while ($true) {
+        try {
+            Invoke-HealthCheck
+        }
+        catch {
+            Write-HealthLog "ERROR: Health-check cycle failed: $($_.Exception.Message)"
+        }
+
+        Start-Sleep -Seconds 60
+    }
+}
+
 try {
-    if ($Install -and $Uninstall) {
-        throw 'Choose either -Install or -Uninstall, not both.'
+    if (($Install -and ($Uninstall -or $Background)) -or ($Uninstall -and $Background)) {
+        throw 'Choose only one of -Install, -Uninstall, or -Background.'
     }
     elseif ($Install) {
         Install-HealthCheck
     }
     elseif ($Uninstall) {
         Uninstall-HealthCheck
+    }
+    elseif ($Background) {
+        Start-HealthCheckLoop
     }
     else {
         Invoke-HealthCheck

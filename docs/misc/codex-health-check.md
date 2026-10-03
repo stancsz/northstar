@@ -10,7 +10,7 @@ From the repository root in PowerShell, run:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\scripts\windows\codex-health-check.ps1" -Install
 ```
 
-The script registers **Codex Desktop Health Check** in Task Scheduler. It runs every 10 minutes in the current user's interactive session and does not require a stored password or administrator privileges. The user must be signed in for Windows to launch a desktop app. If the repository moves, run the install command again from its new path; this updates the task action.
+The script registers **Codex Desktop Health Check** in Task Scheduler as one hidden, long-running PowerShell process. It starts when the current user signs in and checks every 1 minute in that user's interactive session. It does not require a stored password or administrator privileges. If the repository moves, run the install command again from its new path; this updates and restarts the task.
 
 To check once without installing the task, omit `-Install`. To remove the task, run the same command with `-Uninstall`.
 
