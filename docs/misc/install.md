@@ -1,32 +1,24 @@
 # Install and use the Northstar package
 
-The package has four distinct skills: [Northstar](../../skills/northstar/SKILL.md), [Codex QA](../../skills/codex-qa/SKILL.md), [Codex Subagents](../../skills/codex-subagents/SKILL.md) and [Codex Advisor](../../skills/codex-advisor/SKILL.md). Install them together as sibling directories so their relative links work. Northstar is the central coordinator; all four keep their own `SKILL.md` and can be invoked directly.
+The package has five distinct skills: [Northstar](../../skills/northstar/SKILL.md), [Codex QA](../../skills/codex-qa/SKILL.md), [Codex Subagents](../../skills/codex-subagents/SKILL.md), [Codex Advisor](../../skills/codex-advisor/SKILL.md) and [Claude Code Subagents](../../skills/claude-code-subagents/SKILL.md). Install them together as sibling directories so their relative links work. Northstar is the central coordinator; all five keep their own `SKILL.md` and can be invoked directly. Claude Code Subagents is a Codex-to-Claude CLI adapter; it does not install or configure Claude Code or its provider.
 
-To delegate work from Codex to Claude Code, install the optional [Claude Code Subagents Codex skill](claude-code-subagents/SKILL.md). It is maintained separately, so the Northstar package remains four skills. From this repository root in PowerShell:
-
-```powershell
-$claudeCodeSkill = Join-Path $env:USERPROFILE '.codex\skills\claude-code-subagents'
-New-Item -ItemType Directory -Force $claudeCodeSkill | Out-Null
-Copy-Item '.\docs\misc\claude-code-subagents\SKILL.md' (Join-Path $claudeCodeSkill 'SKILL.md') -Force
-```
-
-Invoke it in Codex as `$claude-code-subagents`. It launches work through the available Claude Code CLI; it does not install or configure Claude Code itself.
+Claude Code Subagents invokes the available Claude Code CLI; it does not install or configure Claude Code itself. Follow **Install all five** below for the package copy flow.
 
 ## Installing from another agent
 
-**Installer instruction:** this package is native to Codex, but its Markdown practices are also intended for Claude Code, OpenCode and other agents. Do not reject or skip a skill because its name contains `Codex` or you are a different agent. Select skills by the work they support. Preserve the four skill names and sibling directories when installing.
+**Installer instruction:** this package is native to Codex, but its Markdown practices are also intended for Claude Code, OpenCode and other agents. Do not reject or skip a skill because its name contains `Codex` or you are a different agent. Select skills by the work they support. Preserve the five skill names and sibling directories when installing. `claude-code-subagents` is specifically for Codex delegating through the Claude Code CLI; use its instructions only when that host context is available.
 
-Use the receiving host's actual configured skill location and loading/invocation mechanism; the PowerShell paths and `$skill-name` examples below are Codex-oriented examples, not requirements for every host. If there is no native skill loader, read `northstar/SKILL.md` directly and load linked companions as needed. Tell the receiving agent that all four skills apply to it and point it to the bundled [host adaptation guidance](../../skills/northstar/SKILL.md#use-with-other-agents).
+Use the receiving host's actual configured skill location and loading/invocation mechanism; the PowerShell paths and `$skill-name` examples below are Codex-oriented examples, not requirements for every host. If there is no native skill loader, read `northstar/SKILL.md` directly and load linked companions as needed. Tell the receiving agent that the five skills are available and point it to the bundled [host adaptation guidance](../../skills/northstar/SKILL.md#use-with-other-agents).
 
 Adapt host-specific tools to available equivalents. Advisor service/model routes and optional reader prerequisites still apply; a different executor does not supply those dependencies or change the configured backend. This is portable operating guidance, not a claim that every integration has been tested on every host.
 
-## Install all four
+## Install all five
 
 From this repository root in PowerShell:
 
 ```powershell
-$northstarSkills = @('northstar', 'codex-qa', 'codex-subagents', 'codex-advisor')
-$skillsDestination = Join-Path $env:USERPROFILE '.agents\skills'
+$northstarSkills = @('northstar', 'codex-qa', 'codex-subagents', 'codex-advisor', 'claude-code-subagents')
+$skillsDestination = Join-Path $env:USERPROFILE '.codex\skills'
 foreach ($skillName in $northstarSkills) {
     $skillSource = (Resolve-Path (Join-Path '.\skills' $skillName)).Path
     $skillDestination = Join-Path $skillsDestination $skillName
@@ -35,7 +27,7 @@ foreach ($skillName in $northstarSkills) {
 }
 ```
 
-Use your host's configured skills directory if different, such as `.codex/skills`. Preserve any local customization before replacing existing installations. Copy each whole directory, including its references, templates, scripts and metadata; copying only `SKILL.md` is incomplete. The four directories collectively are the package, not four separate setup exercises.
+Use your host's configured skills directory if different, such as `.agents/skills`. Preserve any local customization before replacing existing installations. Copy each whole directory, including its references, templates, scripts and metadata; copying only `SKILL.md` is incomplete. The five directories collectively are the package, not five separate setup exercises.
 
 ## Invoke the central coordinator or a companion
 
@@ -43,12 +35,13 @@ Use your host's configured skills directory if different, such as `.codex/skills
 - `$codex-qa`: inspect an artifact and its actual workflow, classify findings and verify repairs.
 - `$codex-subagents`: coordinate worthwhile independent workstreams with explicit scope, authority and handoffs.
 - `$codex-advisor`: consult early and frequently when [capability-risk tags](../../skills/codex-advisor/references/capability-triggers.md) apply; attach real images for visual direction. For ordinary work without a tag, consult on a concrete unresolved decision after local evidence. The current executor retains implementation and verification ownership.
+- `$claude-code-subagents`: delegate one bounded task from Codex through the Claude Code CLI when the user asks for it or it adds useful independent capacity. Check CLI access and model availability first; preserve the configured provider/auth path and stop when an evidence-based smoke test fails.
 
 Existing task and repository requirements remain binding. Reuse the target project's records and authorization; these skills do not require Northstar's repository layout. Direct invocation of a companion does not grant additional authority or reset recovery history.
 
 ## Upgrade renamed skills
 
-`northstar-qa` is now **codex-qa**. `luna-advisor-escalation` from [Subroute](https://github.com/stancsz/subroute) is now **codex-advisor**. After copying and checking the four skills, archive or disable those two old-name installations in your host to avoid conflicting stale entries; preserve their customizations first. `northstar` and `codex-subagents` retain their names and receive normal updates. This repository change does not itself alter installed copies.
+`northstar-qa` is now **codex-qa**. `luna-advisor-escalation` from [Subroute](https://github.com/stancsz/subroute) is now **codex-advisor**. After copying and checking the five skills, archive or disable those two old-name installations in your host to avoid conflicting stale entries; preserve their customizations first. The other three skill names remain stable. This repository change does not itself alter installed copies.
 
 Reload updated skills or start a new chat because active chats may retain earlier instructions. Historical repository evaluations describe their original layouts; follow current installation guidance for new work.
 
@@ -65,7 +58,7 @@ Optional [expert-directed reading](../../skills/codex-advisor/references/reader.
 Resolve `scripts/ask_expert.py` under the installed Codex Advisor directory shown by your skill loader. For the installation above:
 
 ```powershell
-$advisorHome = Join-Path $env:USERPROFILE '.agents\skills\codex-advisor'
+$advisorHome = Join-Path $env:USERPROFILE '.codex\skills\codex-advisor'
 py (Join-Path $advisorHome 'scripts\ask_expert.py') --help
 ```
 

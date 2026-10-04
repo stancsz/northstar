@@ -2,12 +2,12 @@
 
 ### 把目标交给 AI 团队，把决策权放到一线，把结果交给验收。
 
-**一套让 AI 承接授权、组织协作、对交付负责的工作体系，以四个协同的 Markdown Skills 提供。** Northstar 把你的意图连接到明确的责任人、自主决策、独立验收，以及能带进下一次任务的经验。
+**一套让 AI 承接授权、组织协作、对交付负责的工作体系，以五个协同的 Markdown Skills 提供。** Northstar 把你的意图连接到明确的责任人、自主决策、独立验收，以及能带进下一次任务的经验。
 
 [English](../../README.md) · [安装使用](install.md) · [管理思想如何落地](#把管理思想变成-agent-的具体动作) · [已有验证](#已经验证了什么)
 
 ![形式：Markdown Skills](https://img.shields.io/badge/format-Markdown_skills-2563eb)
-![四个协同技能](https://img.shields.io/badge/package-4_coordinated_skills-0f766e)
+![五个协同技能](https://img.shields.io/badge/package-5_coordinated_skills-0f766e)
 [![MIT 许可证](https://img.shields.io/badge/license-MIT-475569)](../../LICENSE)
 
 面向希望把一件有价值的事交出去的创业者、开发者和业务负责人，让日常判断有归属，让你能把注意力留给方向。
@@ -35,7 +35,7 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 
 ## 从一件真实的事开始
 
-按[安装说明](install.md)一次安装四个并列技能，然后给 agent 一个有明确边界的目标。例如：
+按[安装说明](install.md)一次安装五个并列技能，然后给 agent 一个有明确边界的目标。例如：
 
 ```text
 用 $northstar 为这个项目交付一个可用的 CSV 导入流程。
@@ -52,7 +52,7 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 
 预期工作链条：检查项目 → 确定最小完整交付 → 实现 → 独立验证 → 修复 → 交付证据与经验。这是使用示例，不是一项已经跑完的性能测试。
 
-**原生面向 Codex，也可供其他 agent 使用。** Claude Code、OpenCode 等可以读取这些 Markdown 实践。保留四个技能的名称和目录，按宿主适配调用方式与工具；名称里的 `Codex` 表示来源，不限制使用者。[跨 agent 安装与依赖说明 →](install.md#installing-from-another-agent)
+**原生面向 Codex，也可供其他 agent 使用。** Claude Code、OpenCode 等可以读取这些 Markdown 实践。保留五个技能的名称和目录，按宿主适配调用方式与工具；名称里的 `Codex` 表示来源，不限制使用者。Claude Code Subagents 专用于 Codex 通过 Claude Code CLI 委派任务。[跨 agent 安装与依赖说明 →](install.md#installing-from-another-agent)
 
 ## 把管理思想变成 agent 的具体动作
 
@@ -88,7 +88,7 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 
 这套设计吸收了任务式指挥、可逆决策、精益交付、源头质量控制，以及战略到执行对齐的思想。具体保留了什么、类比到哪里为止，见[跨领域来源映射](../../skills/northstar/references/operating-principles.md)与[运作体系的设计依据](../../skills/northstar/references/operating-system.md#sources-and-what-was-distilled)。这些是设计来源，不代表相关机构背书，也不能代替 agent 效果验证。
 
-## 四个技能，一套协同方式
+## 五个技能，一套协同方式
 
 | 技能 | 承担什么 | 什么时候直接调用 |
 | --- | --- | --- |
@@ -96,8 +96,9 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 | [**Codex Subagents**](../../skills/codex-subagents/SKILL.md) | 任务边界、角色、模型分配、协调与交接。 | 需要委派、集成或独立评审分工。 |
 | [**Codex QA**](../../skills/codex-qa/SKILL.md) | 功能、视觉、对抗与结构审查。 | 需要知道实际交付是否达标。 |
 | [**Codex Advisor**](../../skills/codex-advisor/SKILL.md) | 固定只用 GPT-6.1 Sol；对能力短板尽早提供 compact 指导，看实际图片，指导修整并复查。 | 已标注的 Luna/workhorse 风险、任何视觉判断，或普通任务中的具体知识缺口。 |
+| [**Claude Code Subagents**](../../skills/claude-code-subagents/SKILL.md) | 通过 Claude Code CLI 委派有边界的工作，并检查、整合交接结果。 | 用户指定 Claude Code，或它能提供有用的独立执行能力。 |
 
-`$northstar` 是总入口，其他技能也可直接调用。四个一起安装，按需加载。小改动可以只有一位构建者和一位独立 reviewer；确有协调需要时才增加主管。
+`$northstar` 是总入口，其他技能也可直接调用。五个一起安装，按需加载。小改动可以只有一位构建者和一位独立 reviewer；确有协调需要时才增加主管。
 
 ```mermaid
 flowchart TD

@@ -1,16 +1,16 @@
 # Working on Northstar
 
-Northstar packages four coordinated skills: Northstar, Codex QA, Codex Subagents and Codex Advisor. Keep engineering judgment, practices, and useful documentation at the center of changes.
+Northstar packages five coordinated skills: Northstar, Codex QA, Codex Subagents, Codex Advisor and Claude Code Subagents. Keep engineering judgment, practices, and useful documentation at the center of changes.
 
 ## Start here
 
 1. Read [project direction](docs/northstar/README.md).
 2. Read the relevant [goal](docs/goal/README.md), its [worker reports](docs/reports/README.md), and [evaluations](docs/evals/README.md).
-3. Read the central skill and relevant companion skill: [Northstar](skills/northstar/SKILL.md), [Codex QA](skills/codex-qa/SKILL.md), [Codex Subagents](skills/codex-subagents/SKILL.md), or [Codex Advisor](skills/codex-advisor/SKILL.md).
+3. Read the central skill and relevant companion skill: [Northstar](skills/northstar/SKILL.md), [Codex QA](skills/codex-qa/SKILL.md), [Codex Subagents](skills/codex-subagents/SKILL.md), [Codex Advisor](skills/codex-advisor/SKILL.md), or [Claude Code Subagents](skills/claude-code-subagents/SKILL.md).
 
 ## Layout and maintenance
 
-- `skills/<name>/SKILL.md` defines one of the four installable skills: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`. Install all four sibling directories together. Northstar is the central coordinator; companions can also be invoked directly.
+- `skills/<name>/SKILL.md` defines one of the five installable skills: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`, `claude-code-subagents`. Install all five sibling directories together. Northstar is the central coordinator; companions can also be invoked directly. Claude Code Subagents is the Codex-to-Claude CLI adapter.
 - `skills/codex-advisor/scripts/` contains the migrated Codex Advisor caller and optional reader adapter. Their focused regressions live in `tests/`; the gateway/service implementation stays in Subroute.
 - The orchestrator owns and uses `docs/northstar/`: durable direction, owner standards, reference products, and decisions.
 - Each supervisor owns and uses its `docs/goal/<goal>/GOAL.md`: outcome, task assignments, execution and acceptance record; maintain its goal index entry and preserve stable paths.

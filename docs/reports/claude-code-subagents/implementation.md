@@ -1,8 +1,8 @@
 # Claude Code Subagents implementation handoff
 
-Status: Codex skill source and personal installation complete; delegated Claude Code run blocked by model access
+Status: Codex skill source, five-skill package integration and personal installation complete; delegated Claude Code run blocked by model access
 
-Deliverable: [Claude Code Subagents Codex skill](../../misc/claude-code-subagents/SKILL.md), maintained outside Northstar's four-skill package.
+Deliverable: [Claude Code Subagents Codex skill](../../../skills/claude-code-subagents/SKILL.md), now maintained as the fifth sibling in Northstar's package. The prior personal installation remains at `~/.codex/skills/claude-code-subagents/SKILL.md`.
 
 Installed at `~/.codex/skills/claude-code-subagents/SKILL.md`; SHA-256 matches the source (`C0D418BBB0E51E93E8820EBF39AB6EEC41A81C948AB57AFDB2ECF0EC6C75DA6B`). The skill makes Codex the orchestrator and Claude Code a bounded CLI worker.
 
@@ -15,3 +15,9 @@ Earlier Claude Code use attempts, before correcting the skill's intended host, s
 Follow-up diagnosis: the configured `ANTHROPIC_BASE_URL` targets `127.0.0.1:4000`. A read-only `GET /v1/models` returned no Claude model IDs, explaining why the configured Sonnet and Haiku requests fail on that route. A process-only direct Anthropic test with user settings excluded reported `Not logged in`; a second test with a temporary official-endpoint override and blank credential environment variables also reported `Not logged in`. No saved provider/auth configuration was changed and no gateway credential was sent to Anthropic.
 
 No successful delegated work, skill discovery by Claude Code, or independent verdict is claimed. To complete the runtime criterion, Claude Code needs either valid first-party Anthropic authentication for the official endpoint or a Claude model exposed by the configured gateway. Temporary settings and outputs are in ignored `tmp/claude-code-subagents/`.
+
+## Package integration follow-up (2026-10-03)
+
+Following the owner's direction, moved the canonical entrypoint into `skills/claude-code-subagents/SKILL.md` as the fifth packaged skill. Updated the English and Chinese READMEs, installation guide, central skill routing, repository direction, contributor instructions, goal index and this handoff. The prior `docs/misc/claude-code-subagents/SKILL.md` entrypoint was removed to leave one canonical source. The skill's delegation guidance is unchanged; its package-boundary sentence now identifies it as the fifth sibling. The personal installation was refreshed from the canonical source.
+
+Package-path, local-link and content checks plus `git diff --check` are recorded in [the evaluation follow-up](../../evals/claude-code-subagents.md#package-integration-follow-up-2026-10-03). Runtime delegation remains blocked by the documented provider/auth dependency; packaging does not establish Claude CLI operation.

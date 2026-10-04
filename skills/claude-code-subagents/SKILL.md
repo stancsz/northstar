@@ -5,7 +5,7 @@ description: Delegate bounded work from Codex to Claude Code through its CLI, th
 
 # Claude Code Subagents
 
-Use this skill from Codex when the user asks to have Claude Code do work, or when a separate Claude Code run can make useful independent progress. Codex remains the orchestrator and accepting owner; Claude Code is a delegated worker. This is an optional Codex skill outside Northstar's four-skill package.
+Use this skill from Codex when the user asks to have Claude Code do work, or when a separate Claude Code run can make useful independent progress. Codex remains the orchestrator and accepting owner; Claude Code is a delegated worker. This is the host-specific fifth skill in Northstar's package.
 
 ## Decide whether to delegate
 

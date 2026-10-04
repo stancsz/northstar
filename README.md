@@ -2,12 +2,12 @@
 
 ### Give your AI team a mission. Let it own the decisions. Inspect the result.
 
-**An operating system for delegated AI work, delivered as four coordinated Markdown skills.** Northstar connects your intent to an accountable team: clear authority, local initiative, independent acceptance, and learning that carries into the next assignment.
+**An operating system for delegated AI work, delivered as five coordinated Markdown skills.** Northstar connects your intent to an accountable team: clear authority, local initiative, independent acceptance, and learning that carries into the next assignment.
 
 [中文](docs/misc/README.zh-CN.md) · [Install](docs/misc/install.md) · [How it works](#the-management-ideas-made-executable) · [Evidence](#what-has-actually-been-checked)
 
 ![Format: Markdown skills](https://img.shields.io/badge/format-Markdown_skills-2563eb)
-![Four coordinated skills](https://img.shields.io/badge/package-4_coordinated_skills-0f766e)
+![Five coordinated skills](https://img.shields.io/badge/package-5_coordinated_skills-0f766e)
 [![License: MIT](https://img.shields.io/badge/license-MIT-475569)](LICENSE)
 
 Built for founders, developers, and operators who want to delegate a meaningful outcome—and stop being the routing layer for every decision.
@@ -33,7 +33,7 @@ These are inspectable working rules. Their effectiveness depends on the executin
 
 ## Try it on one real outcome
 
-Install all four sibling skills from this repository using the [installation guide](docs/misc/install.md). Then give the agent a bounded outcome, for example:
+Install all five sibling skills from this repository using the [installation guide](docs/misc/install.md). Then give the agent a bounded outcome, for example:
 
 ```text
 Use $northstar to deliver a working CSV import flow in this project.
@@ -51,7 +51,7 @@ Return the working result, verification evidence, and remaining limits.
 
 The intended workflow: inspect the project → choose the smallest complete delivery → implement → independently verify → repair → hand off evidence and lessons. This is a usage example, not a reported benchmark.
 
-**Codex-native. Usable by other agents.** Claude Code, OpenCode, and other agents can read these practices too. Preserve all four skill names and directories; adapt invocation and tools to the host. `Codex` in a name identifies its origin, not who may use it. [Host adaptation and prerequisites →](docs/misc/install.md#installing-from-another-agent)
+**Codex-native. Usable by other agents.** Claude Code, OpenCode, and other agents can read these practices too. Preserve all five skill names and directories; adapt invocation and tools to the host. `Codex` in a name identifies its origin, not who may use it. Claude Code Subagents specifically delegates from Codex to the Claude Code CLI. [Host adaptation and prerequisites →](docs/misc/install.md#installing-from-another-agent)
 
 ## The management ideas, made executable
 
@@ -87,7 +87,7 @@ This is a project learning loop stored in ordinary records. It does not retrain 
 
 The design adapts ideas from mission command, reversible decision-making, lean delivery, quality at the source, and strategy-to-execution management. Read the [source mapping](skills/northstar/references/operating-principles.md) and [operating-system rationale](skills/northstar/references/operating-system.md#sources-and-what-was-distilled) for what was retained and where the analogy ends. These are design influences, not institutional endorsements or proof of agent performance.
 
-## Four skills. One coherent way of working.
+## Five skills. One coherent way of working.
 
 | Skill | Responsibility | Use directly when… |
 | --- | --- | --- |
@@ -95,8 +95,9 @@ The design adapts ideas from mission command, reversible decision-making, lean d
 | [**Codex Subagents**](skills/codex-subagents/SKILL.md) | Scope, roles, capability allocation, coordination, and handoffs. | Work needs delegation, integration, or review separation. |
 | [**Codex QA**](skills/codex-qa/SKILL.md) | Functional, visual, adversarial, and structural review. | You need to know whether the actual result meets the bar. |
 | [**Codex Advisor**](skills/codex-advisor/SKILL.md) | GPT-6.1 Sol only: compact guidance on capability risks and image-backed repair feedback. | A documented Luna/workhorse risk, any visual judgment, or a concrete ordinary knowledge gap. |
+| [**Claude Code Subagents**](skills/claude-code-subagents/SKILL.md) | Delegate bounded work from Codex to Claude Code through its CLI, then inspect and integrate the result. | You request Claude Code or it adds useful independent capacity. |
 
-Use `$northstar` as the central entry point; each companion is also directly invocable. Install all four, load what the task needs. A small change can use one builder and one independent reviewer; supervisors exist when coordination warrants them.
+Use `$northstar` as the central entry point; each companion is also directly invocable. Install all five, load what the task needs. A small change can use one builder and one independent reviewer; supervisors exist when coordination warrants them.
 
 ```mermaid
 flowchart TD
@@ -132,7 +133,8 @@ The repository contains inspectable practices and scoped evaluations:
 | [Stall-recovery trials](docs/evals/stall-recovery-trials.md) | Limited execution evidence for specific recovery cases. |
 | [Roles and authority review](docs/evals/healthy-roles.md) | Role-conflict scenarios, independent acceptance rules, and scoped inspection of commander authority. |
 | [Northstar reviewing Northstar](docs/evals/dogfood-review.md) | An actual multi-agent review and decision workflow, with disagreements and limits recorded. |
-| [Four-skill package evaluation](docs/evals/central-package.md) | Packaging, installation-path inspection, and offline Advisor regressions. |
+| [Central package migration evaluation](docs/evals/central-package.md) | Historical four-skill packaging, installation-path inspection, and offline Advisor regressions. |
+| [Claude Code Subagents evaluation](docs/evals/claude-code-subagents.md) | Personal skill use limits and five-skill package integration. |
 
 **Still to prove:** comparative real-task gains, less owner intervention, total cost savings, sustained business results, and broad host integration. The [matched-task pilot](docs/northstar/next-proof.md) is proposed, not completed. This package guides behavior; it is not a runtime enforcement engine or a guarantee of autonomy.
 
