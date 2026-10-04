@@ -1,6 +1,6 @@
 # Goal: Claude Code Subagents skill
 
-Status: fifth package skill created and installed; Claude Code use blocked by model access
+Status: fifth package skill created and installed; end-to-end run blocked because the configured gateway rejects its API key (401)
 
 ## Outcome
 
@@ -22,4 +22,4 @@ Preserve unrelated working-tree changes. Do not change Claude's provider/model c
 
 Primary owns the source skill, package and personal Codex installs, invoking Claude Code, evidence, indexes, and integration. [Implementation report](../../reports/claude-code-subagents/implementation.md); [evaluation](../../evals/claude-code-subagents.md).
 
-The initial version was mistakenly installed as a Claude Code skill. The corrected Codex-oriented source and installation supersede it. Claude Code CLI `2.1.251` reported its configured `claude-sonnet-5` and explicit `claude-haiku-4-5` models unavailable before the delegated task began. Preserve runtime use as unverified; reopen when the configured provider can serve an accessible model.
+The initial version was mistakenly installed as a Claude Code skill. The corrected Codex-oriented source and installation supersede it. Earlier Claude Code CLI `2.1.251` attempts reported unavailable models on a prior route. On 2026-10-03, the current CLI accepted the configured model and flags but its read-only smoke request failed with `401 API key is not authorized for this gateway`. Do not change the configured endpoint or auth path. Preserve end-to-end delegation as unverified; reopen after the gateway accepts the configured API key or the owner supplies a working configured route.
