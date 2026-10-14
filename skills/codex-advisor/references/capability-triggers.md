@@ -2,7 +2,7 @@
 
 Use with [Codex Advisor](../SKILL.md). Checked 2026-09-30. This register guides early compact consultation for Luna and other workers facing the same risks. It is not an exhaustive model diagnosis or a production failure forecast.
 
-All consultations use **GPT-6.1 Sol only**, including visual follow-ups and reader rounds. Older Sol/Astra benchmark results below are comparison evidence, not selectable Advisor routes or escalation branches.
+All consultations use **GPT-6.1 Sol** for the final advice. Complex text decisions may use the skill's optional Gemini 3.8 Flash council review first. Visual follow-ups and reader rounds remain Sol-only. Older Sol/Astra benchmark results below are comparison evidence, not selectable Advisor routes or escalation branches.
 
 **Consult when a listed situation first becomes relevant, before relying on the worker's judgment.** Do not require a failed implementation first. Mark the applicable tag in the existing handoff, send the smallest decision-changing evidence and one question, then execute and verify the recommended check. Consult again when a distinct risk arises, evidence materially changes, a recommended check fails, or the Advisor requests detail. Unchanged reassurance calls and automatic retries add no evidence. Task-wide one/two-call defaults must not prevent required guidance; existing authority, resource and no-progress limits still apply. Routine work with no trigger follows the skill's ordinary path.
 

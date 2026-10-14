@@ -169,6 +169,64 @@ def test_incomplete_expert_is_not_advice(monkeypatch):
         caller.consult(args, [])
 
 
+def test_council_calls_gemini_then_sol_with_own_verdict(monkeypatch):
+    caller = load_caller()
+    requests = []
+    def upstream(request, **kwargs):
+        body = json.loads(request.data)
+        requests.append(body)
+        answer = "Gemini concern: check the timeout." if len(requests) == 1 else (
+            "Own verdict: Keep the bounded route.\n"
+            "Gemini review: Agree on timeout evidence, but no broad rewrite.\n"
+            "Next: Probe cancellation.\nRisk: orphaned work."
+        )
+        return io.StringIO(json.dumps({"model": body["model"], "usage": {"total_tokens": 9},
+            "choices": [{"finish_reason": "stop", "message": {"content": answer}}]}))
+    monkeypatch.setattr(caller, "urlopen", upstream)
+    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
+    result = caller.consult_council(args, "Original decision packet.")
+    assert [request["model"] for request in requests] == [
+        "gemini-3.8-flash-advisor", "codex-gpt-6.1-sol-advisor"]
+    assert "Original decision packet." in requests[0]["messages"][-1]["content"]
+    assert "Gemini concern" not in requests[0]["messages"][-1]["content"]
+    assert "Gemini concern" in requests[1]["messages"][-1]["content"]
+    assert "Own verdict" in requests[1]["messages"][0]["content"]
+    assert len(result["council"]) == 2
+    assert result["council"][0]["usage"]["total_tokens"] == 9
+
+
+def test_council_stops_if_gemini_does_not_complete(monkeypatch):
+    caller = load_caller()
+    calls = []
+    def upstream(request, **kwargs):
+        calls.append(json.loads(request.data)["model"])
+        return io.StringIO(json.dumps({"choices": [{"finish_reason": "length",
+            "message": {"content": "partial"}}]}))
+    monkeypatch.setattr(caller, "urlopen", upstream)
+    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
+    with pytest.raises(RuntimeError, match="completed"):
+        caller.consult_council(args, "Original decision packet.")
+    assert calls == ["gemini-3.8-flash-advisor"]
+
+
+def test_council_retains_gemini_usage_if_sol_fails(monkeypatch):
+    caller = load_caller()
+    calls = []
+    def upstream(request, **kwargs):
+        model = json.loads(request.data)["model"]
+        calls.append(model)
+        finish = "stop" if len(calls) == 1 else "length"
+        return io.StringIO(json.dumps({"model": model, "usage": {"total_tokens": 17},
+            "choices": [{"finish_reason": finish, "message": {"content": "review"}}]}))
+    monkeypatch.setattr(caller, "urlopen", upstream)
+    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
+    result = caller.consult_council(args, "Original decision packet.")
+    assert result["status"] == "unavailable"
+    assert "advice" not in result
+    assert result["council"][0]["usage"]["total_tokens"] == 17
+    assert calls == ["gemini-3.8-flash-advisor", "codex-gpt-6.1-sol-advisor"]
+
+
 @pytest.mark.parametrize("batches,expected_expert,expected_pi", [
     ([["q1", "q2", "q3"]], 2, 3),
     ([["q1"], ["q2", "q3"]], 3, 3),
