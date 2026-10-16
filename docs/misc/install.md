@@ -29,6 +29,23 @@ foreach ($skillName in $northstarSkills) {
 
 Use your host's configured skills directory if different, such as `.agents/skills`. Preserve any local customization before replacing existing installations. Copy each whole directory, including its references, templates, scripts and metadata; copying only `SKILL.md` is incomplete. The five directories collectively are the package, not five separate setup exercises.
 
+## Add global Codex instructions
+
+Installing skills makes their workflows available; it does not change Codex's hidden system prompt or make every workflow run automatically. To have Codex consider the Advisor and delegates across projects, add a personal global `AGENTS.md`: `~/.codex/AGENTS.md` on macOS/Linux or `$env:USERPROFILE\.codex\AGENTS.md` on Windows. Create the `.codex` directory if needed, then append the guidance below to that file without replacing your existing instructions. Codex reads this as persistent user-level guidance; repository `AGENTS.md` files can add project-specific rules.
+
+```markdown
+## Proactively use Codex Advisor and delegates
+
+At the start of every nontrivial task, check whether Codex Advisor, Codex subagents, or Claude Code Subagents could materially improve the decision, speed, or quality. Read and follow the applicable installed skill before use. Keep the primary agent accountable for the outcome and verify delegated work.
+
+- For a substantive advisory question in Northstar Console's Discuss/Talk workflow, use the installed Codex Advisor council by default: Gemini gives an independent first review, then GPT-6.1 Sol gives its own verdict and assesses Gemini's view. Keep their conclusions attributable; this is not a vote or independent acceptance. Use the bundled caller and exact configured routes from the skill.
+- For other substantive decisions, consult the Advisor when a documented capability-risk trigger applies or its answer could change the next action. Prefer council when an independent Gemini view could materially improve that decision. Do not spend calls on routine implementation, trivial questions, or generic reassurance.
+- Council mode cannot include image attachments or Pi reader mode in the same invocation. For visual work, follow the skill's image-backed Sol review and do not imply Gemini inspected pixels. If council is unavailable or incompatible with a required path, state why and continue with the supported route.
+- Before substantial work, assess whether a bounded Codex subagent or Claude Code assignment would add useful independent review or parallel progress. Delegate when likely benefit justifies coordination and cost; use distinct write scopes and preserve independent acceptance. Check availability and follow the corresponding skill. If unavailable or not useful, proceed directly and state a material limitation when relevant.
+```
+
+The bundled `codex-advisor` skill explains the Gemini-then-Sol council route and its limits. The `codex-subagents` and `claude-code-subagents` skills describe when and how to delegate. This global instruction guides Codex; it does not install the expert service, configure Claude Code, or add Advisor calls to the Console application's runtime.
+
 ## Invoke the central coordinator or a companion
 
 - `$northstar`: give the desired outcome. It applies execution/recovery/learning and loads companions when their triggers apply.
