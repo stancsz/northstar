@@ -1,6 +1,6 @@
 # Goal: Resolve open issues and verify useful skill behavior
 
-Date: 2026-10-21. Status: implementation independently accepted for publication. Base: `293f230dfcf1f5db360ce17901e4a594fc66e451` plus preserved pre-existing edits.
+Date: 2026-10-21. Status: implementation independently accepted; publication recorded in [PR #6](https://github.com/stancsz/northstar/pull/6). Base: `293f230dfcf1f5db360ce17901e4a594fc66e451` plus preserved pre-existing edits.
 
 ## Outcome and acceptance
 
@@ -26,13 +26,15 @@ Scratch: `tmp/issues-20261021/`; initial status, full baseline patch and tracked
 - Initial checkpoint required council evidence, issue implementation and behavioral checks; the following results supersede that pending state.
 
 - Both council invocations completed after the one corrected auth setup. [Evaluation](../../evals/issue-maturity.md) preserves model-specific views and 9,292 reported successful provider tokens; full cost remains unknown. Council selected compact receipt guidance and later the narrow existing Gemini 4 compatibility update as a release dependency. No service/global changes.
-- All issue guidance is implemented. Six frozen cold cases met bounded criteria; a seventh discovered artifact/readiness ambiguity, which primary repaired and a nonauthor rechecked. Seeded fixture defects were repaired separately and independently verified. Offline caller/reader checks passed (38 Python, two Node). Next unmet criterion: PR creation/merge and verified issue closure.
+- All issue guidance is implemented. Six frozen cold cases met bounded criteria; a seventh discovered artifact/readiness ambiguity, which primary repaired and a nonauthor rechecked. Seeded fixture defects were repaired separately and independently verified. Offline caller/reader checks passed (38 Python, two Node). At PR preparation, the remaining publication checks were merge and verified issue closure; the linked PR and issue events record their actual state.
 
 ## Acceptance and publication
 
 The independent [release review](../../reports/issue-maturity/review.md) inspected the 29-path staged payload, actual probe artifacts, full/detached link closure and exact source fingerprints, then reran 38 Python and two Node tests against staged source. No material blockers remained; scoped READY. Primary inspected its evidence and accepts the implementation without claiming comparative effectiveness. This applies the artifact-scoped judging lesson from probe 7.
 
 User authorization covers creating and merging the PR and closing #3–#5 only after merge. GitHub's associated PR merge event and issue closing references record the actual publication transition; local READY alone is not shipment. Unrelated baseline work stays unstaged and unchanged.
+
+Publication record: [PR #6](https://github.com/stancsz/northstar/pull/6), prepared from accepted implementation commit `538e80cc4bf38eeb4962f56eb81e3bcb2280b49a`, with closing references to all three issues. This record-only follow-up adds traceability without changing reviewed source or repeating its tests. The PR's merged commit and linked issue state, verified by the publishing agent, are authoritative for shipment.
 
 ## Learning checkpoint
 

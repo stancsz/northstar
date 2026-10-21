@@ -2,6 +2,8 @@
 
 Date: 2026-10-21. [Goal](../goal/issue-maturity/GOAL.md); [implementation](../reports/issue-maturity/implementation.md); [independent acceptance](../reports/issue-maturity/review.md). Base `293f230`, with intentional issue changes and a narrowly adopted existing council-route update. Other dirty work is excluded from publication.
 
+Publication and issue transitions: [PR #6](https://github.com/stancsz/northstar/pull/6), prepared after independent readiness, contains the implementation and this evidence. Its merge/linked closing events record actual shipping; this local evaluation does not treat PR creation as merge or issue closure.
+
 ## Issue coverage and source boundary
 
 Open-issue intake found [#3](https://github.com/stancsz/northstar/issues/3), [#4](https://github.com/stancsz/northstar/issues/4) and [#5](https://github.com/stancsz/northstar/issues/5); each had no comments. #3 already had detailed learning and feedback instructions plus historical evidence; this release adds current behavioral probes rather than claiming to have newly authored that baseline. #4's reported old installation-root default was absent from current source; the fix makes exclusion and denial recovery explicit. #5 now has an optional bridge, a custom profile and ordered structural, evidence/privacy and adversarial review, with separate implementation acceptance.
