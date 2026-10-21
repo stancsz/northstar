@@ -1,0 +1,48 @@
+{
+  "base": "293f230dfcf1f5db360ce17901e4a594fc66e451",
+  "initial_cold_source_sha256": {
+    "northstar/SKILL.md": "adbedebdcb012aeaf0a4d883838d99f5d3ce785ac1b2755162a445c44d848f56",
+    "northstar/references/goal-driven-engineering.md": "2f3195b97f645261284069c5d6c292b3922e964d6a8329f245e373bf42575d54",
+    "northstar/references/skill-feedback.md": "cb3a83a2ec4be409f308b66bd90eb215ffe2ee6727e6ca5ce083781b433d8365",
+    "codex-qa/SKILL.md": "8cdc040a28a8ac56dee0cd63c331c0b6298c0a324dd4d5ad464163d620c116d0",
+    "codex-qa/references/spec-review.md": "0be9b06d50c09e7ae092e507766f719ecdbc06b554b287b059280142bd45fbab",
+    "codex-qa/references/skill-effectiveness.md": "5e39c79da351be86feafcd1869244adb12793b3471e088223c6383483509980f",
+    "codex-qa/templates/spec-profile.md": "e42b5e06baba1937b946db46eb5ed21fc0a448ec25412e4c0e7f350138292d8d",
+    "northstar/references/spec-kit.md": "dfb30d7bfdc64abdffd324c096d20c3e8d78b69acc833480909ff6714f1d2ca6",
+    "codex-advisor/scripts/ask_expert.py": "b1c865bfb8ef4a11ba52ed5d8409b4d94d510ae0e10eda283984f1e86cac8124"
+  },
+  "after_spec_scope_repair_sha256": {
+    "northstar/SKILL.md": "adbedebdcb012aeaf0a4d883838d99f5d3ce785ac1b2755162a445c44d848f56",
+    "northstar/references/goal-driven-engineering.md": "2f3195b97f645261284069c5d6c292b3922e964d6a8329f245e373bf42575d54",
+    "northstar/references/skill-feedback.md": "cb3a83a2ec4be409f308b66bd90eb215ffe2ee6727e6ca5ce083781b433d8365",
+    "codex-qa/SKILL.md": "8cdc040a28a8ac56dee0cd63c331c0b6298c0a324dd4d5ad464163d620c116d0",
+    "codex-qa/references/spec-review.md": "45a248562488741bb55ac50f7bfeb9d77f5709e0623d8b5d3b0e0e69a2a32733",
+    "codex-qa/references/skill-effectiveness.md": "5e39c79da351be86feafcd1869244adb12793b3471e088223c6383483509980f",
+    "codex-qa/templates/spec-profile.md": "e42b5e06baba1937b946db46eb5ed21fc0a448ec25412e4c0e7f350138292d8d",
+    "northstar/references/spec-kit.md": "dfb30d7bfdc64abdffd324c096d20c3e8d78b69acc833480909ff6714f1d2ca6",
+    "codex-advisor/scripts/ask_expert.py": "b1c865bfb8ef4a11ba52ed5d8409b4d94d510ae0e10eda283984f1e86cac8124"
+  },
+  "staged_release_sha256": {
+    "northstar/SKILL.md": "3612938521109acfd4e7c1ee8deb98408492ae0a1b40a8ac42d7eac715b43edc",
+    "northstar/references/goal-driven-engineering.md": "337ee39fcc551908d72632ec7273ddf1aabecbf33ad0ed01d8e31128ce0393a4",
+    "northstar/references/skill-feedback.md": "9cae3c5456fd7ab6381977a3119cf9e0e0bf883b547bd2fd3528b9f27bfbb4b2",
+    "codex-qa/SKILL.md": "f7dabf52a1431b8d7fda373c27bcb098833648799adcca1e9409d62b95b5b94c",
+    "codex-qa/references/spec-review.md": "45a248562488741bb55ac50f7bfeb9d77f5709e0623d8b5d3b0e0e69a2a32733",
+    "codex-qa/references/skill-effectiveness.md": "5e39c79da351be86feafcd1869244adb12793b3471e088223c6383483509980f",
+    "codex-qa/templates/spec-profile.md": "e42b5e06baba1937b946db46eb5ed21fc0a448ec25412e4c0e7f350138292d8d",
+    "northstar/references/spec-kit.md": "dfb30d7bfdc64abdffd324c096d20c3e8d78b69acc833480909ff6714f1d2ca6",
+    "codex-advisor/scripts/ask_expert.py": "66d1c6e4d0cd4a4c68dcbbff330adb28e1700e958f7430c5e7edff5b449a39f4"
+  },
+  "staged_vs_trial_normalized_equal": {
+    "northstar/SKILL.md": false,
+    "northstar/references/goal-driven-engineering.md": true,
+    "northstar/references/skill-feedback.md": true,
+    "codex-qa/SKILL.md": true,
+    "codex-qa/references/spec-review.md": true,
+    "codex-qa/references/skill-effectiveness.md": true,
+    "codex-qa/templates/spec-profile.md": true,
+    "northstar/references/spec-kit.md": true,
+    "codex-advisor/scripts/ask_expert.py": true
+  },
+  "scope_note": "Initial and repaired trial snapshots include pre-existing optional Windows routing in northstar/SKILL.md, intentionally excluded from release. All other listed source content is equivalent after LF normalization; staged hashes identify exact released bytes. Advisory caller installed/working bytes are equal; staged normalized content is compared separately."
+}

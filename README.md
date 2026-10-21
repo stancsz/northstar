@@ -124,6 +124,8 @@ Core practices are Markdown. The bundle also includes the Advisor caller and opt
 
 Reuse your repository's issues, plans, and records. Northstar's own documentation layout is an example, not an installation requirement. Ongoing operation still requires the host's tools and scheduling; a Markdown skill alone cannot run unattended.
 
+For [GitHub Spec Kit or spec-driven work](skills/northstar/references/spec-kit.md), keep the project's artifacts and review the spec in three independent passes: structure, evidence/privacy, then adversarial FR/SC scrutiny. Verify the implementation separately. Existing schemas remain authoritative; the optional eight-section profile is a Northstar customization.
+
 ## What has actually been checked
 
 The repository contains inspectable practices and scoped evaluations:
@@ -131,6 +133,7 @@ The repository contains inspectable practices and scoped evaluations:
 | Evidence | What it supports |
 | --- | --- |
 | [Stall-recovery trials](docs/evals/stall-recovery-trials.md) | Limited execution evidence for specific recovery cases. |
+| [Issue revisions and skill-behavior probes](docs/evals/issue-maturity.md) | Project-owned goals, spec-driven QA, and bounded fresh-context probes with explicit simulation and effectiveness limits. |
 | [Roles and authority review](docs/evals/healthy-roles.md) | Role-conflict scenarios, independent acceptance rules, and scoped inspection of commander authority. |
 | [Northstar reviewing Northstar](docs/evals/dogfood-review.md) | An actual multi-agent review and decision workflow, with disagreements and limits recorded. |
 | [Central package migration evaluation](docs/evals/central-package.md) | Historical four-skill packaging, installation-path inspection, and offline Advisor regressions. |

@@ -8,6 +8,8 @@ The target user is an owner or developer working with AI agents who needs initia
 
 ## Confirmed owner expectations
 
+- Keep canonical project state outside skill installation trees and preserve existing project conventions through write-denial recovery. For requested spec-driven work, use the [Spec Kit bridge](../../skills/northstar/references/spec-kit.md) and three ordered nonauthor passes; distinguish custom profiles, spec readiness and actual implementation evidence. Evaluate changed skill behavior with [bounded receipts](../../skills/codex-qa/references/skill-effectiveness.md), preserving unknowns rather than claiming general effectiveness from a few probes. See the [issue delivery goal](../goal/issue-maturity/GOAL.md).
+
 - Keep the package native to Codex and usable by other agents, including Claude Code and OpenCode. Installation and discovery must explicitly say that `Codex` names do not restrict who may use the skills. Preserve names, adapt host capabilities, and keep service prerequisites honest. See [installation guidance](../misc/install.md#installing-from-another-agent).
 
 - Maximize useful accepted outcomes with the least elapsed time and total tokens, including rework. Lean first, functioning first: the leanest, cleanest product, no spaghetti code, maximum practical reuse, and top-class design that stays inexpensive to extend. Remove unnecessary machinery and duplication; keep wording as short as the task allows. Preserve readability and credible extension paths without speculative frameworks or unmeasured savings claims. See [design guidance](../../skills/northstar/SKILL.md#excellent-design-with-minimal-machinery).

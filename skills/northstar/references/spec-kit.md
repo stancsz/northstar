@@ -1,0 +1,19 @@
+# Use Northstar with GitHub Spec Kit
+
+Use this bridge when the project uses [GitHub Spec Kit](https://github.com/github/spec-kit), requests spec-driven delivery, or explicitly requests its three-pass review. Ordinary small changes keep the [direct delivery path](../SKILL.md#deliver-a-usable-mvp-then-improve-in-increments). This is a Markdown integration, not a CLI extension or an installed dependency.
+
+## Keep the project's artifacts authoritative
+
+Inspect the project's installed version, instructions, constitution, templates and feature folder first. Common artifacts include `.specify/memory/constitution.md` and `specs/<feature>/spec.md`, `plan.md`, `tasks.md`, and `checklists/`; use actual paths and commands rather than creating this layout by assumption. Retain the existing [project-owned goal](goal-driven-engineering.md); link the feature artifacts instead of copying them into a second goal or Northstar index.
+
+The [upstream README](https://github.com/github/spec-kit/blob/dc2cec4f568d0f6e2cdfb8571c69116bc55c1aaf/README.md) and [spec template](https://github.com/github/spec-kit/blob/dc2cec4f568d0f6e2cdfb8571c69116bc55c1aaf/templates/spec-template.md), inspected 2026-10-21, distinguish requirements and measurable outcomes. Exact commands and layouts vary by version and project customization. Eight sections, KE/A/Q identifiers, per-claim citations and constitution Articles IV/IX belong to a custom profile when adopted; they are not universal upstream requirements. Read the actual constitution's privacy and independence rules; never invent article contents.
+
+## Carry one feature through acceptance
+
+1. **Specify.** The author records the intended workflow, source-backed requirements, measurable success criteria, constraints and unresolved questions in the project's spec. Use its schema, or explicitly adopt the optional [eight-section profile](../../codex-qa/templates/spec-profile.md). Identify source versions and separate owner requirements from assumptions. Leave genuine unknowns visible.
+2. **Review before dependent work.** Give a nonauthor the original intent, constitution, spec, sources and applicable checklist. Run [three ordered passes](../../codex-qa/references/spec-review.md): structure; evidence and privacy; adversarial scrutiny. One eligible reviewer may run all three. Record findings in the feature's existing review record, link unresolved questions from its question section, and withhold spec acceptance for material open findings or missing required evidence.
+3. **Plan and implement.** Once the spec is ready, connect each required behavior and success criterion to tasks and observable checks in existing plan/tasks/test records. Builders choose methods and run development checks. A command reporting completion does not establish acceptance; preserve unresolved spec findings when planning independent work.
+4. **Verify the result.** An independent reviewer executes the primary workflow and relevant failure cases against the same requirement IDs and real output. A spec review cannot establish that the implementation works. Record evidence, repair/recheck material failures and use Codex QA's READY / NOT READY / UNVERIFIED decisions for the inspected scope.
+5. **Continue and learn.** Preserve revision, findings, lessons, remaining criteria and recovery history in those records. A changed requirement reopens affected passes and downstream checks; an unchanged file needs no ceremonial full rerun. Do not weaken a success criterion to fit the implementation.
+
+When Spec Kit or a source is unavailable, use the existing Markdown artifacts for work that can proceed and name the missing integration evidence. Do not claim CLI execution, extension compatibility, source verification or acceptance from document inspection alone.

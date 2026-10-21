@@ -7,7 +7,7 @@ description: Consult GPT-6.1 Sol early and frequently on documented Luna/workhor
 
 Use this skill in other agents too; the Codex name is not a usage restriction. Follow the bundled [host adaptation guidance](../northstar/SKILL.md#use-with-other-agents); the advisor service and reader prerequisites still apply.
 
-**Default Advisor is GPT-6.1 Sol.** The caller's `--model sol` choice targets the versioned `codex-gpt-6.1-sol-advisor` route. For a complex text decision where a second perspective could change the next action, `--council` makes one independent Gemini 3.8 Flash call first, then one GPT-6.1 Sol call with both the original packet and Gemini's review. Sol must give its own verdict and explain agreement or disagreement. This is not a model vote or independent acceptance. No Astra, older Sol, worker-model substitution or model fallback. If a selected call fails, report it as unavailable; do not silently replace it. Pi remains a separately scoped source reader.
+**Default Advisor is GPT-6.1 Sol.** The caller's `--model sol` choice targets the versioned `codex-gpt-6.1-sol-advisor` route. For a complex text decision where a second perspective could change the next action, `--council` makes one independent Gemini 4 Argon call first, then one GPT-6.1 Sol call with both the original packet and Gemini's review. Sol must give its own verdict and explain agreement or disagreement. This is not a model vote or independent acceptance. No Astra, older Sol, worker-model substitution or model fallback. If a selected call fails, report it as unavailable; do not silently replace it. Pi remains a separately scoped source reader.
 
 Use this skill whenever the [capability-risk register](references/capability-triggers.md) applies, for any art, image inspection or aesthetic decision, and when focused local investigation leaves a concrete decision blocker. Consult early and frequently on relevant Luna/workhorse weaknesses; do not wait for repeated failure. Visual work requires active advisor direction. The current worker retains task ownership, implementation and development checks; independent QA owns acceptance verification. Advice does not replace that verdict. Follow [Northstar's expert consultation practice](../northstar/references/operating-system.md#bring-in-expertise), including its recovery and alternative-trial limits.
 
@@ -61,7 +61,7 @@ Outside capability-risk and visual triggers, one Sol consultation is the default
 
 ## Make a compact advice request
 
-The dedicated expert API is `http://127.0.0.1:4040/v1`, separate from the worker gateway on port 4000. The skill uses `codex-gpt-6.1-sol-advisor` for Sol and, only in council mode, `gemini-3.8-flash-advisor` for Gemini Subscription at low reasoning effort. The versioned Sol alias intentionally fails on an older service rather than silently using older Sol. Do not substitute an executor alias or silently fall back to port 4000.
+The dedicated expert API is `http://127.0.0.1:4040/v1`, separate from the worker gateway on port 4000. The skill uses `codex-gpt-6.1-sol-advisor` for Sol and, only in council mode, `gemini-4-argon-advisor` for Gemini Subscription at low reasoning effort. The versioned Sol alias intentionally fails on an older service rather than silently using older Sol. Do not substitute an executor alias or silently fall back to port 4000.
 
 Write a high-density packet, normally under 4,000 characters and never over 6,000. Keep only information that could change the recommendation:
 

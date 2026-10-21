@@ -4,6 +4,7 @@ Each supervisor owns its `docs/goal/<goal>/GOAL.md` and index entry. Read the or
 
 | Goal | Status | Scope |
 | --- | --- | --- |
+| [Open issue revisions and skill evidence](issue-maturity/GOAL.md) | Independently verified for publication | Issues #3–#5, council-directed maturity, cold probes and independently reviewed PR delivery |
 | [Bilingual positioning and GitHub presentation](readme-positioning/GOAL.md) | Done | Outcome-led English/Chinese READMEs, delegation narrative and verified GitHub metadata |
 | [Healthy functional roles and independent acceptance](healthy-roles/GOAL.md) | Done | Functional separation, flexible process and standing commander authority with subdelegation |
 | [Dogfood Northstar on Northstar](dogfood-review/GOAL.md) | Done | Independent review and direction decision; matched real-task pilot proposed, not run |
