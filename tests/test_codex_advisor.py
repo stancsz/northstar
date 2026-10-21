@@ -186,7 +186,7 @@ def test_council_calls_gemini_then_sol_with_own_verdict(monkeypatch):
     args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
     result = caller.consult_council(args, "Original decision packet.")
     assert [request["model"] for request in requests] == [
-        "gemini-3.8-flash-advisor", "codex-gpt-6.1-sol-advisor"]
+        "gemini-4-argon-advisor", "codex-gpt-6.1-sol-advisor"]
     assert "Original decision packet." in requests[0]["messages"][-1]["content"]
     assert "Gemini concern" not in requests[0]["messages"][-1]["content"]
     assert "Gemini concern" in requests[1]["messages"][-1]["content"]
@@ -206,7 +206,7 @@ def test_council_stops_if_gemini_does_not_complete(monkeypatch):
     args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
     with pytest.raises(RuntimeError, match="completed"):
         caller.consult_council(args, "Original decision packet.")
-    assert calls == ["gemini-3.8-flash-advisor"]
+    assert calls == ["gemini-4-argon-advisor"]
 
 
 def test_council_retains_gemini_usage_if_sol_fails(monkeypatch):
@@ -224,7 +224,7 @@ def test_council_retains_gemini_usage_if_sol_fails(monkeypatch):
     assert result["status"] == "unavailable"
     assert "advice" not in result
     assert result["council"][0]["usage"]["total_tokens"] == 17
-    assert calls == ["gemini-3.8-flash-advisor", "codex-gpt-6.1-sol-advisor"]
+    assert calls == ["gemini-4-argon-advisor", "codex-gpt-6.1-sol-advisor"]
 
 
 @pytest.mark.parametrize("batches,expected_expert,expected_pi", [

@@ -52,6 +52,8 @@ Preserve security, privacy, data integrity, necessary failure handling, and agre
 
 For changed user workflows or visible artifacts, use [Codex QA](../codex-qa/SKILL.md) to set a brief quality plan and inspect functional, rendered visual, adversarial, and structural evidence before handoff. Codex QA ships in this package; unavailable evidence or tooling remains an explicit gap, never a pass.
 
+For a project using GitHub Spec Kit or requesting spec-driven delivery, follow the [Spec Kit bridge](references/spec-kit.md): preserve its artifacts and schema, run three ordered nonauthor spec-review passes, and verify the implementation separately against the same requirements. Keep this optional for ordinary work.
+
 ## Match process to the work
 
 Protect the user's outcome, acceptance, data, explicit budgets, authorization, and active ownership boundaries. Within those boundaries, choose implementation, internal structure, debugging order, and verification methods without permission. Coordinate shared interface changes with affected owners; escalate unresolved cross-goal tradeoffs or missing user authority.
@@ -132,6 +134,8 @@ A tool authentication/access failure is an operational dependency, not a reason 
 Before interrupting the owner, identify the exact missing fact or decision, check existing records and the delegated mandate, and try a useful authorized resolution. If it remains truly owner-only, bring the smallest concrete question with a recommendation and consequence; otherwise decide and report the result at the next useful checkpoint. Use already-granted authority for covered deployments, spending or external actions; their consequence calls for appropriate evidence, not automatic reapproval. Silence supplies no new grant. Follow [the authority protocol](references/protocol.md) and [decision routing](references/routing-rubric.md) for actual boundary questions.
 
 ## Ownership: North Star → goals → tasks
+
+Keep canonical goals in project-owned records, never in a skill installation tree. Prefer existing conventions; use the [goal storage and denial guidance](references/goal-driven-engineering.md#define-the-goal) when a stale pointer or write restriction interferes. A sandbox failure does not justify a competing canonical goal or an unverified write claim.
 
 Reporting responsibilities are separate from [functional profiles](../codex-subagents/references/role-profiles.md): product/outcomes, architecture, building/integration, independent QA, experience/taste, operations and domain expertise. Activate needed functions and combine compatible work, never creation and independent certification of the same deliverable. Renaming the author or clearing its context does not remove that conflict.
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Codex Advisor"
   short_description: "Use GPT-6.1 Sol for compact risk advice and image feedback"
-  default_prompt: "Use $codex-advisor with GPT-6.1 Sol by default. For complex text decisions where a second perspective could change the next action, use --council for one independent Gemini 3.8 Flash review followed by Sol's own verdict and critique. Send actual screenshots for visual work; use scoped reading when needed. Preserve authority, recovery and independent acceptance."
+  default_prompt: "Use $codex-advisor with GPT-6.1 Sol by default. For complex text decisions where a second perspective could change the next action, use --council for one independent Gemini 4 Argon review followed by Sol's own verdict and critique. Send actual screenshots for visual work; use scoped reading when needed. Preserve authority, recovery and independent acceptance."

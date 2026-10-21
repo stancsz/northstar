@@ -1,6 +1,6 @@
 # Goal: <one useful delivery>
 
-Optional fallback when the project lacks a suitable record. Prefer its existing task/issue/plan; do not duplicate it here. For a small one-turn task, the request and handoff may suffice unless repository instructions require more.
+Optional fallback at `<project-root>/docs/goal/<goal>/GOAL.md` when the project lacks a suitable record. Prefer its existing task/issue/plan; do not duplicate it here. Never put project state inside a skill installation tree. Follow [project ownership and write-denial recovery](../references/goal-driven-engineering.md#keep-goal-state-project-owned); preserve an established canonical location if access is denied. For a small one-turn task, the request and handoff may suffice unless repository instructions require more.
 
 Status: active
 

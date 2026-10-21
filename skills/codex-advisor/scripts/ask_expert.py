@@ -23,7 +23,7 @@ MAX_TOTAL_IMAGE_BYTES = 20_000_000
 MODEL_ALIASES = {
     "sol": "codex-gpt-6.1-sol-advisor",
 }
-GEMINI_ADVISOR_MODEL = "gemini-3.8-flash-advisor"
+GEMINI_ADVISOR_MODEL = "gemini-4-argon-advisor"
 MAX_GEMINI_REVIEW_CHARS = 1_200
 ADVISOR_INSTRUCTION = """You are a compact decision advisor, not the task executor.
 Every token must change the worker's next decision. Do not repeat the packet, explain

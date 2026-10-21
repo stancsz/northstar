@@ -125,6 +125,8 @@ flowchart TD
 
 优先使用项目已有的 issue、计划和记录。Northstar 自己的目录结构只是示例，不是安装前提。持续运营仍需要宿主提供工具与调度；Markdown 技能本身不能无人值守运行。
 
+使用 [GitHub Spec Kit 或规格驱动开发](../../skills/northstar/references/spec-kit.md)时，保留项目原有产物，由非作者依次检查结构、证据与隐私、FR/SC 对抗性边界，再单独验证实现。现有模板优先；可选八节模板属于 Northstar 定制，不是上游通用要求。
+
 ## 已经验证了什么
 
 仓库提供可以直接检查的实践规则与有限范围的评估：
@@ -132,6 +134,7 @@ flowchart TD
 | 证据 | 能支持什么 |
 | --- | --- |
 | [停滞恢复试验](../evals/stall-recovery-trials.md) | 特定恢复案例的有限执行证据。 |
+| [Issue 修订与技能行为探测](../evals/issue-maturity.md) | 项目内目标、规格驱动 QA 和冷上下文案例；明确区分模拟结果与效果证据。 |
 | [角色与授权评审](../evals/healthy-roles.md) | 角色冲突场景、独立验收规则，以及对指挥官授权的限定范围审查。 |
 | [Northstar 评审 Northstar](../evals/dogfood-review.md) | 实际发生的多 agent 评审与决策流程，包含分歧和限制记录。 |
 | [四技能包评估](../evals/central-package.md) | 打包、安装路径检查和 Advisor 离线回归。 |
