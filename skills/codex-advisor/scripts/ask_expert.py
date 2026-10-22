@@ -88,7 +88,7 @@ def parse_args() -> argparse.Namespace:
                         help="Enable expert-directed Pi reading within this Git repository.")
     parser.add_argument("--reader-scope", action="append", default=[],
                         help="Approved relative source directory/file; repeat as needed.")
-    parser.add_argument("--reader-model", default="current",
+    parser.add_argument("--reader-model", default="default",
                         help="Alias requested from localhost:4000; gateway policy still applies.")
     return parser.parse_args()
 

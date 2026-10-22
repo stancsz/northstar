@@ -131,7 +131,7 @@ def test_expert_controls_read_without_luna_history_or_retries(
         questions.append(question)
         return {"status": "ok" if worker_ok else "unavailable", "evidence": evidence()}
     monkeypatch.setattr(reader, "run_pi", pi)
-    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="current")
+    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="default")
     result = reader.run_with_reader(args, "Luna hypothesis: broken retries.", consult, "Be concise.")
     assert result["status"] == status
     assert len(calls) == expected_calls
@@ -153,7 +153,7 @@ def test_bad_reader_citation_stops_before_paid_followup(source_repo, monkeypatch
     def consult(*args):
         calls.append(args)
         return {"advice": '{"read":"Inspect retries"}', "usage": {"total_tokens": 10}}
-    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="current")
+    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="default")
     result = reader.run_with_reader(args, "packet", consult, "instruction")
     assert result["status"] == "unavailable"
     assert len(calls) == 1
@@ -246,7 +246,7 @@ def test_total_three_expert_three_pi_budget(source_repo, monkeypatch, batches, e
         calls.append(messages)
         answer = json.dumps({"read": batches[index]}) if index < len(batches) else "Verdict: enough.\nNext: Test.\nRisk: none"
         return {"advice": answer, "usage": {"total_tokens": 10}}
-    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="current")
+    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="default")
     result = reader.run_with_reader(args, "packet", consult, "final")
     assert result["status"] == "ok"
     assert len(calls) == expected_expert
@@ -261,7 +261,7 @@ def test_invalid_or_repeat_batch_spends_no_pi_calls(source_repo, monkeypatch, ba
         assert kwargs.get("preflight"), "no inference allowed for invalid batch"
         return {"status": "ok"}
     monkeypatch.setattr(reader, "run_pi", pi)
-    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="current")
+    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="default")
     result = reader.run_with_reader(args, "packet", lambda *a: {"advice": json.dumps({"read": batch})}, "final")
     assert result["status"] == "unavailable"
     assert len(result["expert_calls"]) == 1
@@ -273,7 +273,7 @@ def test_preflight_failure_does_not_spend_expert_tokens(source_repo, monkeypatch
     monkeypatch.setattr(reader, "run_pi", lambda *a, **kw: {"status": "unavailable"})
     def consult(*args):
         pytest.fail("Expert should not be called")
-    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="current")
+    args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="default")
     result = reader.run_with_reader(args, "packet", consult, "instruction")
     assert result["status"] == "unavailable"
     assert result["expert_calls"] == []
@@ -415,7 +415,7 @@ def test_reader_keeps_image_pixels_on_followup_and_dispatches_its_own_question(
 
     monkeypatch.setattr(caller, "urlopen", upstream)
     args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1,
-        reader_root=source_repo, reader_scope=["src"], reader_model="current", image_parts=parts)
+        reader_root=source_repo, reader_scope=["src"], reader_model="default", image_parts=parts)
     result = reader.run_with_reader(args, "Inspect the screenshot and check source if needed.",
                                     caller.consult, caller.VISUAL_INSTRUCTION)
     assert result["status"] == "ok", result
