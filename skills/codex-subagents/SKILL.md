@@ -26,6 +26,39 @@ Use the [functional profiles](references/role-profiles.md) to cover product/outc
 
 Choose models by task difficulty, consequence and observed capability. Default to a capable lower-cost model for bounded execution; reserve stronger reasoning for direction, difficult integration, consequential decisions or a specific specialist gap. Respect the user's specified models and actual runtime availability. More capable models may be needed for some worker tasks; explain the evidence rather than silently making every worker the strongest model.
 
+Route each Codex subagent's primary model inference through the local LiteLLM API at `http://localhost:4000/v1` by default; this applies to the worker itself, not just its supporting tools. Use model ID `default` as a gateway alias for the currently saved routing-desk target regardless of alias/force/off mode. This does not pin subagents to Luna or another fixed model; LiteLLM chooses the configured target. If no target is saved, the gateway applies its own configured initial-target fallback. Before relying on a newly configured client/protocol, make one bounded read-only smoke request and confirm the unique response; a catalog listing or open port is insufficient. Preserve explicit per-task model/provider constraints, credential boundaries and client protocol requirements. Do not change saved global settings or send credentials to a different host. If the Codex runtime cannot use the local route, or it is unavailable, state the concrete limitation and surface any authorized fallback; do not silently change providers. This does not change the Advisor's own route or allow an advisor to perform implementation or acceptance.
+
+For local Codex CLI workers, use a dedicated profile so the child process has an explicit gateway endpoint and never inherits or changes the primary Codex provider. Create `%USERPROFILE%\.codex\subroute-subagents.config.toml` with this profile, and provide `GATEWAY_MASTER_KEY` through the process environment:
+
+```toml
+model = "default"
+model_provider = "subroute"
+model_catalog_json = 'C:\Users\<user>\.codex\subroute-subagents-models.json'
+
+[model_providers.subroute]
+name = "Subroute local LiteLLM"
+base_url = "http://localhost:4000/v1"
+env_key = "GATEWAY_MASTER_KEY"
+wire_api = "responses"
+requires_openai_auth = false
+```
+
+The current Codex CLI expects its own `{"models":[...]}` catalog schema, while LiteLLM returns OpenAI's `{"data":[...]}` schema. Generate a profile-local compatible catalog from the installed CLI's bundled catalog, append a compatible bundled model entry with `slug` and `display_name` changed to `default`; this is CLI metadata only, while LiteLLM routes to the saved target, and point `model_catalog_json` to that file. Regenerate it after CLI upgrades. Do not copy a model catalog or prompt metadata from another Codex version.
+
+```powershell
+$catalogPath = Join-Path $env:USERPROFILE '.codex\subroute-subagents-models.json'
+$bundled = codex debug models --bundled | ConvertFrom-Json
+$template = $bundled.models | Select-Object -First 1
+$default = $template | ConvertTo-Json -Depth 30 | ConvertFrom-Json
+$default.slug = 'default'
+$default.display_name = 'default'
+[ordered]@{ models = @($bundled.models) + @($default) } |
+    ConvertTo-Json -Depth 30 |
+    Set-Content -LiteralPath $catalogPath -Encoding utf8
+```
+
+Run a bounded child assignment from its intended repository directory with `codex exec --profile subroute-subagents --ephemeral --skip-git-repo-check --sandbox read-only "<assignment>"`; choose the sandbox and permissions to match the task's authorized write scope. Keep the prompt self-contained and capture the child's output as a handoff. The installed Codex CLI's native `spawn_agent` path may reject the custom `default` model before dispatch; a successful parent request does not prove that native child path works. If that occurs, use the explicit profile-backed CLI worker only when it satisfies the task's acceptance criteria, and report that the native spawn path remains unavailable. Never substitute a platform-hosted model or claim it used port 4000.
+
 Give workers enough context and authority to solve the task and challenge a flawed brief. Their handoff should identify a failed criterion and evidence of the gap. Improve an ambiguous brief, access or task boundary before treating every failure as a model problem. Escalate a genuine capability gap through [Codex Advisor](../codex-advisor/SKILL.md) when its setup fits, another authorized bounded expert consultation, or stronger worker assignment; preserve scope, rejected paths and all recovery counts. Unavailable model selection must be disclosed, not presented as a cheaper-model run.
 
 For an effectiveness trial, record actual model/role, reasoning effort when exposed, task/criteria, accepted and rejected outcomes, wall time, attempts, interventions and expert use. Include commander, workers, consultation, review and rework in any total token/cost comparison. Use runtime usage and current applicable rates when available; label missing usage/cost unknown. No invented estimates presented as measured savings. Compare matched tasks with unchanged acceptance and comparable starting conditions before claiming efficiency. A single mixed-capability run supports feasibility only; all-strong-model success cannot validate economical execution. Manager takeover counts as rescue, not worker success.

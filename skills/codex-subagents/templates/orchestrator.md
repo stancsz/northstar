@@ -6,6 +6,7 @@ Fill from known context; link existing records and omit irrelevant fields. Use w
 - Acceptance: <observable workflow and evidence; deferred scope>
 - Functions and separation: <needed [profiles](../references/role-profiles.md); creators, nonauthor QA/taste reviewer, artifact/revision and decision owner; incompatible assignments>
 - Guidance: <intended value, relevant facts, next action/approach, fallback or escalation trigger; enough for the worker to act without returning to the human>
+  - Inference: <primary route is local LiteLLM at http://localhost:4000/v1, model `default` follows the saved target and does not pin a model; smoke result; protocol/auth constraints; surface any fallback>
 - Autonomy: <authorized decisions/actions, targets and source; protected boundaries; explicit limits>
 - Coordination: <critical dependencies, affected owners/interfaces; allowed delegation>
 - Handoff: <integration/acceptance owner; scratch/report paths; checkpoint and applicable lessons/rejected paths>
