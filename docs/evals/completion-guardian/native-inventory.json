@@ -1,0 +1,27 @@
+{
+  "scope": "Actual native0.154.0 inventory and per-server quoted/dotted disable; fake model verdict only after verified preflight. No MCP server launched, live model/provider call, credentials or global config change.",
+  "scriptSha256": "6e1c39f5119e80ff57e6e90a0c2576766e73e34e0b91e787ee3670e82f74f5fa",
+  "nativeSha256": "be96b992178b1e467c225800da0d65f2c86d5eba1ef0b14632f65db381cbdfde",
+  "inventories": [
+    {
+      "qa \"quoted\" name": true,
+      "qa.guard.dotted": true,
+      "qa_guard_already_disabled": false,
+      "qa_guard_plain": true
+    },
+    {
+      "qa \"quoted\" name": false,
+      "qa.guard.dotted": false,
+      "qa_guard_already_disabled": false,
+      "qa_guard_plain": false
+    }
+  ],
+  "standInModelLaunches": 1,
+  "seconds": 0.4795236999998451,
+  "errorClass": null,
+  "passed": true,
+  "disabledOverrides": [],
+  "remainingStateFiles": [],
+  "semanticDecisionTested": false,
+  "actualHookActivationTested": false
+}

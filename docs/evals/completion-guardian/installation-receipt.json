@@ -1,0 +1,212 @@
+{
+  "dateLocal": "2026-10-21",
+  "name": "Don\u2019t Stop Early",
+  "slug": "dont-stop-early",
+  "scope": "Explicitly requested global Codex hook installation; synthetic native lifecycle and two real reviewer calls, independently operated; no product-delivery acceptance",
+  "source": {
+    "SKILL.md": "c29bb82bc8de892a4676990eff2b3feb76738726c3c5c8ac51eb5caca0177818",
+    "references/stop-hook.md": "6e5a9805ab81cfb4a9e5efa3e8103381846236c6eab741525261de5652df1b96",
+    "scripts/guard_stop.py": "123eb23e51a5efbb8ac3be7eab84639536d21a7a019e7dbbd5f8d3cd328dcc79"
+  },
+  "tests": {
+    "count": 58,
+    "primarySeconds": 5.73,
+    "authorSeconds": 6.0,
+    "kind": "offline focused regressions"
+  },
+  "nativeLifecycle": {
+    "nativeVersion": "0.163.0-alpha.11",
+    "nativeSha256": "00c0f1e4099246fddcd67ec620ca8ed50827c7d70e113b7224f7a2933cf2d67c",
+    "checks": {
+      "exactEvents": true,
+      "bound": true,
+      "active": true,
+      "requestContinuation": true,
+      "lastMessages": true,
+      "trusted": true,
+      "noError": true
+    },
+    "pass": true,
+    "requests": 2,
+    "events": [
+      "UserPromptSubmit",
+      "Stop",
+      "Stop"
+    ],
+    "trust": "Exact returned definitions reviewed through normal hooks/list and config/batchWrite",
+    "receiptSha256": "5927dac0e08cf4cc3562fdcada558239c763131712f605f2f51567235b4de4c5"
+  },
+  "realReviewerIntegration": {
+    "parentTransport": "dummy loopback Responses; actual native lifecycle",
+    "reviewerVersion": "0.154.0",
+    "modelRequested": "gpt-6-astra",
+    "account": "existing configured account; no auth copying, creation or account switch",
+    "calls": 2,
+    "checks": {
+      "events": true,
+      "bound": true,
+      "active": true,
+      "continuation": true,
+      "modelVerdicts": true,
+      "blockThenAllow": true,
+      "childContainment": true,
+      "noError": true,
+      "budget": true
+    },
+    "pass": true,
+    "verdicts": [
+      {
+        "disposition": "continue",
+        "reason": "The delivered guide differs from the approved source, and the required delivery comparison receipt is missing.",
+        "next_action": "Within the executor\u2019s actual permissions, copy current source.md to delivery/guide.md, verify exact equality, and record fresh results in delivery-check.json.",
+        "evidence": "source.md contains approved support-cyan-83@demo.invalid, revision moss-61; delivery/guide.md contains retired-ochre-12@demo.invalid, revision cedar-29. source-check.json reports sourceOnly=true and deliveredCompared=false. delivery-check.json is missing. request.md and GOAL.md require current delivered text and fresh exact comparison.",
+        "reopening_condition": ""
+      },
+      {
+        "disposition": "complete",
+        "reason": "The delivered guide matches the current approved source, and the required delivery comparison receipt exists.",
+        "next_action": "",
+        "evidence": "Checked request.md and GOAL.md acceptance requirements. source.md and delivery/guide.md both contain support-cyan-83@demo.invalid, revision moss-61; independent case-sensitive UTF-8 text comparison passed (65 characters each). delivery-check.json records equal=true using Exact UTF8 comparison. Byte/hash verification was unavailable under constrained PowerShell; required text equality was verified.",
+        "reopening_condition": ""
+      }
+    ],
+    "repairActor": "QA harness, not native executor",
+    "sameOwnerTurnBudget": 2,
+    "childLaunches": [
+      {
+        "kind": "child-launch",
+        "mode": "inventory",
+        "childMarker": "1",
+        "hookDisabled": true,
+        "readOnly": false,
+        "ephemeral": false,
+        "operatorModel": null
+      },
+      {
+        "kind": "child-launch",
+        "mode": "inventory",
+        "childMarker": "1",
+        "hookDisabled": true,
+        "readOnly": false,
+        "ephemeral": false,
+        "operatorModel": null
+      },
+      {
+        "kind": "child-launch",
+        "mode": "exec",
+        "childMarker": "1",
+        "hookDisabled": true,
+        "readOnly": true,
+        "ephemeral": true,
+        "operatorModel": "gpt-6-astra"
+      },
+      {
+        "kind": "child-launch",
+        "mode": "inventory",
+        "childMarker": "1",
+        "hookDisabled": true,
+        "readOnly": false,
+        "ephemeral": false,
+        "operatorModel": null
+      },
+      {
+        "kind": "child-launch",
+        "mode": "inventory",
+        "childMarker": "1",
+        "hookDisabled": true,
+        "readOnly": false,
+        "ephemeral": false,
+        "operatorModel": null
+      },
+      {
+        "kind": "child-launch",
+        "mode": "exec",
+        "childMarker": "1",
+        "hookDisabled": true,
+        "readOnly": true,
+        "ephemeral": true,
+        "operatorModel": "gpt-6-astra"
+      }
+    ],
+    "fixtureInitialHashes": {
+      "request.md": "59c17fb41d097ffa55af119e0645eb072ac5e5db1f4c82526f8647e77578aa1b",
+      "GOAL.md": "a4ba65c68fef9d857eb6e2b2d6192b561abb4056814df6c70e87bc265731966a",
+      "AGENTS.md": "cc71cc4f757eea71ae11e2726924dec7b2dcbcb9f13217ad7b420d29bbfaaca3",
+      "source.md": "1379bb6846784e6bddcca6e444616729c8e36d5dc74bdf374cf14999e9fd5e06",
+      "delivery/guide.md": "1bd683d0ad4993f9fb97b0bdd3acb95d0f8efc272a265bada782cfa226fe5b22",
+      "source-check.json": "ba63e2b1d802bd67008dc4fb101fee3d3881f8c84de120fdf049e3053c12650e"
+    },
+    "receiptSha256": "60414937d583ee045a756adc78521503b5ac64299f40c8edca90adad2f4466b3"
+  },
+  "globalInstallation": {
+    "installedDirectory": "C:\\Users\\stanc\\.codex\\skills\\dont-stop-early",
+    "hookConfiguration": "C:\\Users\\stanc\\.codex\\hooks.json",
+    "backup": "C:\\Users\\stanc\\.codex\\backups\\dont-stop-early-20261022T013706Z",
+    "unrelatedConfigValuesPreserved": true,
+    "preexistingHookStatePreserved": true,
+    "sourceMatchesFrozen": true,
+    "reviewBudgetPerOwnerTurn": 6,
+    "reviewDeadlineSeconds": 45,
+    "exactInstalledCommandCaptureSmoke": {
+      "exactInstalledCommand": true,
+      "selectedShell": "Windows PowerShell",
+      "capturePassed": true,
+      "modelCalls": 0,
+      "globalStateEntry": "Clearly labeled synthetic install smoke; distinct session and turn; no actual user request",
+      "parentNativeLifecycleProvenSeparately": true
+    },
+    "readback": [
+      {
+        "cwd": "D:/github/northstar",
+        "errors": [],
+        "warnings": [],
+        "hooks": [
+          {
+            "eventName": "userPromptSubmit",
+            "source": "user",
+            "enabled": true,
+            "currentHash": "sha256:6705f8b033490f7d0a565b06c694a32899bac046ad493feb69ec56fdae9fa7e0",
+            "trustStatus": "trusted"
+          },
+          {
+            "eventName": "stop",
+            "source": "user",
+            "enabled": true,
+            "currentHash": "sha256:5fe579f703e95e2af4ef162d7a22507eea17f0554e5b8a305a7dbd9537eec936",
+            "trustStatus": "trusted"
+          }
+        ]
+      },
+      {
+        "cwd": "C:/Users/stanc/github/liquor-ordering-poc",
+        "errors": [],
+        "warnings": [],
+        "hooks": [
+          {
+            "eventName": "userPromptSubmit",
+            "source": "user",
+            "enabled": true,
+            "currentHash": "sha256:6705f8b033490f7d0a565b06c694a32899bac046ad493feb69ec56fdae9fa7e0",
+            "trustStatus": "trusted"
+          },
+          {
+            "eventName": "stop",
+            "source": "user",
+            "enabled": true,
+            "currentHash": "sha256:5fe579f703e95e2af4ef162d7a22507eea17f0554e5b8a305a7dbd9537eec936",
+            "trustStatus": "trusted"
+          }
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "Fresh supported native app-server readback is not proof the already-running desktop chat reloaded.",
+    "Needs a new captured owner request; no transcript/attachment reconstruction.",
+    "Original and two recent bounded requests can omit older restrictions; missing or mismatched context fails visibly.",
+    "Guard is advisory, can fail open or exhaust its budget, and creates no new host privileges.",
+    "Real test repair was performed by the QA harness, not the native parent executor.",
+    "Served reviewer model identity, token usage and total task cost not established.",
+    "The liquor-app production/sellability goal remains unfinished."
+  ]
+}

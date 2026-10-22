@@ -1,0 +1,20 @@
+{
+  "scope": "One actual direct adapter invocation using existing configured native CLI/account/provider, not a trusted host hook. No model override, new credential, customer data or raw transcript.",
+  "scriptSha256": "6e1c39f5119e80ff57e6e90a0c2576766e73e34e0b91e787ee3670e82f74f5fa",
+  "nativeSha256": "be96b992178b1e467c225800da0d65f2c86d5eba1ef0b14632f65db381cbdfde",
+  "reviewBudget": 1,
+  "timeoutSeconds": 45,
+  "attempts": 1,
+  "exitCode": 0,
+  "seconds": 5.776641000000382,
+  "output": {
+    "systemMessage": "Completion Guardian: reviewer failure. No valid completion verdict. The guard fails open; preserve unfinished work and check reviewer/state availability. Diagnostic output was not disclosed."
+  },
+  "stdoutIsSingleJson": true,
+  "guardStderr": "",
+  "beforeMatchesFrozenBaseline": true,
+  "afterMatchesFrozenBaseline": true,
+  "lookupEvidence": "To be independently judged against frozen expected criteria; no raw CLI/tool trace retained.",
+  "actualModelAndTokenUsage": "Not exposed by the adapter; unknown",
+  "limitations": "A continuation decision cannot prove executor action or real Stop-hook invocation. Failures will not be retried or switched to another model."
+}

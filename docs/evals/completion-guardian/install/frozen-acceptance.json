@@ -1,0 +1,28 @@
+{
+  "scope": "Independent acceptance of renamed skill and requested actual Codex installation; QA writes only scoped report/scratch. Freeze precedes renamed/global-mode candidate inspection.",
+  "nameStatus": "Primary assumption Don't Stop Early / dont-stop-early; actual owner name/scope choice must supersede if received.",
+  "native": "C:/Users/stanc/AppData/Local/OpenAI/Codex/bin/6257d9e8f63c0f2b/codex.exe",
+  "nativeExpectedVersion": "0.163.0-alpha.11",
+  "baseline": {
+    "environment": "Fresh owned CODEX_HOME, profile and workspace; benign hook only; synthetic loopback Responses; no inference, credentials or global changes.",
+    "trust": "Use only supported normal review/trust route verified against actual native protocol/source. Inspect exact hook command/enabled/trusted state before execution. No forged hashes, dangerous trust bypass or invented API.",
+    "events": "Actual UserPromptSubmit for original synthetic owner request, first Stop block, actual continuation and subsequent Stop allow. Count actual stub invocations, not merely hook registration or host final output.",
+    "bindings": "Record received event/session/turn/cwd fields. Derive source-supported owner/continuation turn-ID relation before executing and freeze that expectation separately; verify actual exact binding without treating generated continuation text as a new owner grant.",
+    "continuation": "Second actual loopback request must contain the specific hook continuation reason. Initial and continued final responses must be distinct, with supported final_answer message phase where required.",
+    "output": "Valid structured block/allow, newline-delimited hook records, explicit missing-log vs parser-error vs host hook-error status. Registered/trusted alone is not dispatch proof.",
+    "limits": "20–30 seconds, at most4 loopback requests; no variant/retry without concrete causal evidence; preserve prior0.154 zero-stub history."
+  },
+  "candidate": {
+    "identity": "Inspect frozen renamed skill/global mode/adapter/tests and actual package/install paths. Preserve unrelated work and original app goal.",
+    "context": "Owner intent/authority captured from actual current UserPromptSubmit, bound to correct session/turn and continuation chain. No raw transcript/customer/credential collection, stale cross-turn context, generated continuation promoted to owner scope or cross-session contamination.",
+    "control": "Explicit resource/no-progress budget, no recursive guardian/reviewer, safe structured configuration/failure outputs, supported native MCP disable verification, default model preserved except exact operator selection; no fallback/provider/account drift.",
+    "stop": "Explicit human stop/Interrupt wins; real completion, genuine denied/exhausted route and productive no-diff investigation remain distinct. Guard failure/budget is not goal completion.",
+    "rename": "Current routing/install references and tests use confirmed final name without losing required skill resources; historical names remain labelled history."
+  },
+  "modelBackedIntegration": {
+    "authorization": "Not authorized by this freeze. Wait for primary go-ahead after baseline and candidate review; do not ask human for routine scoped permission.",
+    "case": "One actual native-hook integration using existing configured account and explicit operator gpt-6-astra, synthetic data only. Must prove lookup/content-specific decision plus actual native continuation, context binding/isolation, bounded count and no recursion; retain failures and exact identities.",
+    "limits": "Do not infer installation, executor repair, general reliability or all-case judgment from one integration. No extra provider/model attempts without new authorization/causal evidence."
+  },
+  "installation": "Primary owns actual user/global profile installation after verification. QA performs no shipping or real-profile edits. Acceptance must inspect actual installed identities/registration and intended scope rather than source-copy claims."
+}

@@ -1,0 +1,14 @@
+{
+  "scope": "Independent read-only inspection of actual installed files/hooks and parsed config preservation; fresh-host readback receipt inspected, no own host/profile mutation",
+  "installedHashes": {
+    "SKILL.md": "c29bb82bc8de892a4676990eff2b3feb76738726c3c5c8ac51eb5caca0177818",
+    "references/stop-hook.md": "6e5a9805ab81cfb4a9e5efa3e8103381846236c6eab741525261de5652df1b96",
+    "scripts/guard_stop.py": "123eb23e51a5efbb8ac3be7eab84639536d21a7a019e7dbbd5f8d3cd328dcc79"
+  },
+  "exactTwoHookCommandsMatchTrustedReadback": true,
+  "trustedEnabledTwoProjects": true,
+  "parsedConfigIdenticalAfterRemovingOnlyTwoNewTrustKeys": true,
+  "actualHookConfigMatchesProposed": true,
+  "existingDesktopChatReloadVerified": false,
+  "pass": true
+}

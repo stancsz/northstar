@@ -1,0 +1,33 @@
+{
+  "name": "Task Completion Review",
+  "slug": "task-completion-review",
+  "dateLocal": "2026-10-21",
+  "scope": "Explicitly authorized final-name migration, local update and scoped remote publication",
+  "files": {
+    "SKILL.md": "7161235dbc3e647fa9639d8151095882278aee571ce80864457accf1d32598d0",
+    "references/stop-hook.md": "e45c70987b7181fe83824421904f0cdd3f0e496ff848c63d30ac120a47e92bab",
+    "scripts/guard_stop.py": "052ce869b2046cd23eb3a216cf1fa63f59d7d8e7c38df7b18ee32f1325fbf11c"
+  },
+  "testsSha256": "b16bc50ae4bfe6587da416ff845d3f85016c90702b9c249511f06f829d059e05",
+  "offlineChecks": 58,
+  "primaryTestSeconds": 5.66,
+  "behaviorChange": "Only visible labels and resource paths; one reference note explains migration",
+  "localInstallation": {
+    "sourceMatchesRepository": true,
+    "oldDiscoveryDirectoryAbsent": true,
+    "oldInstallationArchivedOutsideSkills": true,
+    "normalChangedDefinitionTrust": "Enabled/trusted native API readback in Northstar and liquor-app cwd",
+    "exactInstalledCommandCaptureSmoke": true,
+    "unrelatedConfigPreserved": true,
+    "existingStateDirectoryPreserved": true,
+    "recursionMarkerPreserved": true,
+    "reviewerModelAccountProviderBudgetsUnchanged": true
+  },
+  "newModelCalls": 0,
+  "limits": [
+    "Historical model/native receipts apply to the pre-rename candidate and retain their exact identities.",
+    "Already-open desktop chat reload/dispatch remains unverified; reload Codex and capture a new owner request.",
+    "This does not complete the separate product-delivery trial."
+  ],
+  "publication": "Scoped main-branch publication; unrelated dirty files/hunks and local .claude copies excluded. Commit/remote identity verified after push in the handoff."
+}

@@ -1,0 +1,755 @@
+{
+  "time": "2026-10-22T01:36:44.075Z",
+  "scope": "Actual0.163 native app-server; owned normal review/trust; dummy loopback Responses only; no model judgment/credentials/global changes",
+  "root": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z",
+  "native": "C:/Users/stanc/AppData/Local/OpenAI/Codex/bin/6257d9e8f63c0f2b/codex.exe",
+  "nativeSha256": "00c0f1e4099246fddcd67ec620ca8ed50827c7d70e113b7224f7a2933cf2d67c",
+  "args": [
+    "app-server",
+    "--listen",
+    "stdio://"
+  ],
+  "command": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -EncodedCommand JgAgACcAQwA6AFwAUAByAG8AZwByAGEAbQAgAEYAaQBsAGUAcwBcAG4AbwBkAGUAagBzAFwAbgBvAGQAZQAuAGUAeABlACcAIAAnAEQAOgBcAGcAaQB0AGgAdQBiAFwAbgBvAHIAdABoAHMAdABhAHIAXAB0AG0AcABcAHMAdABvAHAALQBoAG8AbwBrAC0AaQBuAHMAdABhAGwAbABcAHEAYQBcAGIAYQBzAGUAbABpAG4AZQAtADIAMAAyADYALQAxADAALQAyADIAVAAwADEALQAzADYALQA0ADIALQAzADEAOABaAFwAcwB0AHUAYgAuAG0AagBzACcA",
+  "stage": "complete",
+  "error": null,
+  "timedOut": false,
+  "beforeTrust": {
+    "data": [
+      {
+        "cwd": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\workspace",
+        "hooks": [
+          {
+            "key": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml:user_prompt_submit:0:0",
+            "eventName": "userPromptSubmit",
+            "handlerType": "command",
+            "command": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -EncodedCommand JgAgACcAQwA6AFwAUAByAG8AZwByAGEAbQAgAEYAaQBsAGUAcwBcAG4AbwBkAGUAagBzAFwAbgBvAGQAZQAuAGUAeABlACcAIAAnAEQAOgBcAGcAaQB0AGgAdQBiAFwAbgBvAHIAdABoAHMAdABhAHIAXAB0AG0AcABcAHMAdABvAHAALQBoAG8AbwBrAC0AaQBuAHMAdABhAGwAbABcAHEAYQBcAGIAYQBzAGUAbABpAG4AZQAtADIAMAAyADYALQAxADAALQAyADIAVAAwADEALQAzADYALQA0ADIALQAzADEAOABaAFwAcwB0AHUAYgAuAG0AagBzACcA",
+            "async": false,
+            "matcher": null,
+            "timeoutSec": 5,
+            "statusMessage": null,
+            "additionalContextLimit": null,
+            "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+            "source": "user",
+            "pluginId": null,
+            "displayOrder": 0,
+            "enabled": true,
+            "isManaged": false,
+            "currentHash": "sha256:680eeeae6e94160bc929e16357b462d19db09ae6096fd89b28e3237a7d2966bf",
+            "trustStatus": "untrusted"
+          },
+          {
+            "key": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml:stop:0:0",
+            "eventName": "stop",
+            "handlerType": "command",
+            "command": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -EncodedCommand JgAgACcAQwA6AFwAUAByAG8AZwByAGEAbQAgAEYAaQBsAGUAcwBcAG4AbwBkAGUAagBzAFwAbgBvAGQAZQAuAGUAeABlACcAIAAnAEQAOgBcAGcAaQB0AGgAdQBiAFwAbgBvAHIAdABoAHMAdABhAHIAXAB0AG0AcABcAHMAdABvAHAALQBoAG8AbwBrAC0AaQBuAHMAdABhAGwAbABcAHEAYQBcAGIAYQBzAGUAbABpAG4AZQAtADIAMAAyADYALQAxADAALQAyADIAVAAwADEALQAzADYALQA0ADIALQAzADEAOABaAFwAcwB0AHUAYgAuAG0AagBzACcA",
+            "async": false,
+            "matcher": null,
+            "timeoutSec": 5,
+            "statusMessage": null,
+            "additionalContextLimit": null,
+            "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+            "source": "user",
+            "pluginId": null,
+            "displayOrder": 1,
+            "enabled": true,
+            "isManaged": false,
+            "currentHash": "sha256:7e588992c5abe3a051b28e975d45e65cf300b13eb3a67e2fe14c8565325942a9",
+            "trustStatus": "untrusted"
+          }
+        ],
+        "warnings": [],
+        "errors": []
+      }
+    ]
+  },
+  "afterTrust": {
+    "data": [
+      {
+        "cwd": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\workspace",
+        "hooks": [
+          {
+            "key": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml:user_prompt_submit:0:0",
+            "eventName": "userPromptSubmit",
+            "handlerType": "command",
+            "command": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -EncodedCommand JgAgACcAQwA6AFwAUAByAG8AZwByAGEAbQAgAEYAaQBsAGUAcwBcAG4AbwBkAGUAagBzAFwAbgBvAGQAZQAuAGUAeABlACcAIAAnAEQAOgBcAGcAaQB0AGgAdQBiAFwAbgBvAHIAdABoAHMAdABhAHIAXAB0AG0AcABcAHMAdABvAHAALQBoAG8AbwBrAC0AaQBuAHMAdABhAGwAbABcAHEAYQBcAGIAYQBzAGUAbABpAG4AZQAtADIAMAAyADYALQAxADAALQAyADIAVAAwADEALQAzADYALQA0ADIALQAzADEAOABaAFwAcwB0AHUAYgAuAG0AagBzACcA",
+            "async": false,
+            "matcher": null,
+            "timeoutSec": 5,
+            "statusMessage": null,
+            "additionalContextLimit": null,
+            "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+            "source": "user",
+            "pluginId": null,
+            "displayOrder": 0,
+            "enabled": true,
+            "isManaged": false,
+            "currentHash": "sha256:680eeeae6e94160bc929e16357b462d19db09ae6096fd89b28e3237a7d2966bf",
+            "trustStatus": "trusted"
+          },
+          {
+            "key": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml:stop:0:0",
+            "eventName": "stop",
+            "handlerType": "command",
+            "command": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -EncodedCommand JgAgACcAQwA6AFwAUAByAG8AZwByAGEAbQAgAEYAaQBsAGUAcwBcAG4AbwBkAGUAagBzAFwAbgBvAGQAZQAuAGUAeABlACcAIAAnAEQAOgBcAGcAaQB0AGgAdQBiAFwAbgBvAHIAdABoAHMAdABhAHIAXAB0AG0AcABcAHMAdABvAHAALQBoAG8AbwBrAC0AaQBuAHMAdABhAGwAbABcAHEAYQBcAGIAYQBzAGUAbABpAG4AZQAtADIAMAAyADYALQAxADAALQAyADIAVAAwADEALQAzADYALQA0ADIALQAzADEAOABaAFwAcwB0AHUAYgAuAG0AagBzACcA",
+            "async": false,
+            "matcher": null,
+            "timeoutSec": 5,
+            "statusMessage": null,
+            "additionalContextLimit": null,
+            "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+            "source": "user",
+            "pluginId": null,
+            "displayOrder": 1,
+            "enabled": true,
+            "isManaged": false,
+            "currentHash": "sha256:7e588992c5abe3a051b28e975d45e65cf300b13eb3a67e2fe14c8565325942a9",
+            "trustStatus": "trusted"
+          }
+        ],
+        "warnings": [],
+        "errors": []
+      }
+    ]
+  },
+  "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+  "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/v1/responses",
+      "bytes": 36669,
+      "hasContinuation": false
+    },
+    {
+      "method": "POST",
+      "path": "/v1/responses",
+      "bytes": 37163,
+      "hasContinuation": true
+    }
+  ],
+  "events": [
+    {
+      "event": "UserPromptSubmit",
+      "session": "01a16140-da4f-7a03-a42a-63b37f439478",
+      "turn": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+      "cwd": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\workspace",
+      "active": null,
+      "prompt": "Synthetic owner request QA_OWNER_PROMPT. Return QA_INITIAL_FINAL without tools.",
+      "last": null
+    },
+    {
+      "event": "Stop",
+      "session": "01a16140-da4f-7a03-a42a-63b37f439478",
+      "turn": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+      "cwd": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\workspace",
+      "active": false,
+      "prompt": null,
+      "last": "QA_INITIAL_FINAL"
+    },
+    {
+      "event": "Stop",
+      "session": "01a16140-da4f-7a03-a42a-63b37f439478",
+      "turn": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+      "cwd": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\workspace",
+      "active": true,
+      "prompt": null,
+      "last": "QA_CONTINUED_FINAL"
+    }
+  ],
+  "hookLogMissing": false,
+  "hookLogParseError": null,
+  "checks": {
+    "exactEvents": true,
+    "bound": true,
+    "active": true,
+    "requestContinuation": true,
+    "lastMessages": true,
+    "trusted": true,
+    "noError": true
+  },
+  "pass": true,
+  "rpc": [
+    {
+      "id": 1,
+      "method": "initialize"
+    },
+    {
+      "id": 2,
+      "method": "hooks/list"
+    },
+    {
+      "id": 3,
+      "method": "config/batchWrite"
+    },
+    {
+      "id": 4,
+      "method": "hooks/list"
+    },
+    {
+      "id": 5,
+      "method": "thread/start"
+    },
+    {
+      "id": 6,
+      "method": "turn/start"
+    }
+  ],
+  "notifications": [
+    {
+      "method": "remoteControl/status/changed",
+      "params": {
+        "status": "disabled",
+        "serverName": "DESKTOP-AO7CHMG",
+        "installationId": "5843cf99-7e05-4d82-936a-22836c277e18",
+        "environmentId": null
+      },
+      "emittedAtMs": 1792633002534
+    },
+    {
+      "method": "warning",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "message": "Under-development features enabled: skip_host_skill_discovery. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml."
+      },
+      "emittedAtMs": 1792633002680
+    },
+    {
+      "method": "thread/started",
+      "params": {
+        "thread": {
+          "id": "01a16140-da4f-7a03-a42a-63b37f439478",
+          "environments": [
+            {
+              "environmentId": "local",
+              "cwd": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\workspace",
+              "runtimeWorkspaceRoots": [
+                "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\workspace"
+              ]
+            }
+          ],
+          "extra": null,
+          "sessionId": "01a16140-da4f-7a03-a42a-63b37f439478",
+          "forkedFromId": null,
+          "parentThreadId": null,
+          "preview": "",
+          "ephemeral": true,
+          "section": null,
+          "sectionEnteredAt": null,
+          "projectId": null,
+          "historyMode": "paginated",
+          "modelProvider": "qa_loopback",
+          "model": "qa-hook-model",
+          "reasoningEffort": null,
+          "createdAt": 1792633002,
+          "updatedAt": 1792633002,
+          "recencyAt": 1792633002,
+          "status": {
+            "type": "idle"
+          },
+          "path": null,
+          "cwd": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\workspace",
+          "cliVersion": "0.163.0-alpha.11",
+          "originator": "independent_native_qa",
+          "source": "vscode",
+          "canAcceptDirectInput": true,
+          "threadSource": null,
+          "agentNickname": null,
+          "agentRole": null,
+          "gitInfo": null,
+          "name": null,
+          "daybreakEnabled": null,
+          "turns": []
+        }
+      },
+      "emittedAtMs": 1792633002680
+    },
+    {
+      "method": "warning",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "message": "Model metadata for `qa-hook-model` not found. Defaulting to fallback metadata; this can degrade performance and cause issues."
+      },
+      "emittedAtMs": 1792633002690
+    },
+    {
+      "method": "thread/status/changed",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "status": {
+          "type": "active",
+          "activeFlags": []
+        }
+      },
+      "emittedAtMs": 1792633002704
+    },
+    {
+      "method": "turn/started",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turn": {
+          "id": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+          "rootTurnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+          "items": [],
+          "itemsView": "notLoaded",
+          "status": "inProgress",
+          "error": null,
+          "startedAt": 1792633002,
+          "completedAt": null,
+          "durationMs": null
+        }
+      },
+      "emittedAtMs": 1792633002704
+    },
+    {
+      "method": "hook/started",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "run": {
+          "id": "user-prompt-submit:0:D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "eventName": "userPromptSubmit",
+          "handlerType": "command",
+          "executionMode": "sync",
+          "scope": "turn",
+          "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "source": "user",
+          "displayOrder": 0,
+          "status": "running",
+          "statusMessage": null,
+          "startedAt": 1792633002,
+          "completedAt": null,
+          "durationMs": null,
+          "entries": []
+        }
+      },
+      "emittedAtMs": 1792633002720
+    },
+    {
+      "method": "hook/completed",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "run": {
+          "id": "user-prompt-submit:0:D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "eventName": "userPromptSubmit",
+          "handlerType": "command",
+          "executionMode": "sync",
+          "scope": "turn",
+          "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "source": "user",
+          "displayOrder": 0,
+          "status": "completed",
+          "statusMessage": null,
+          "startedAt": 1792633002,
+          "completedAt": 1792633003,
+          "durationMs": 471,
+          "entries": []
+        }
+      },
+      "emittedAtMs": 1792633003178
+    },
+    {
+      "method": "item/started",
+      "params": {
+        "item": {
+          "type": "userMessage",
+          "id": "01a16140-dca9-7853-82f1-1753bb3ebaf7",
+          "clientId": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Synthetic owner request QA_OWNER_PROMPT. Return QA_INITIAL_FINAL without tools.",
+              "text_elements": []
+            }
+          ]
+        },
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "startedAtMs": 1792633003177
+      },
+      "emittedAtMs": 1792633003178
+    },
+    {
+      "method": "item/completed",
+      "params": {
+        "item": {
+          "type": "userMessage",
+          "id": "01a16140-dca9-7853-82f1-1753bb3ebaf7",
+          "clientId": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Synthetic owner request QA_OWNER_PROMPT. Return QA_INITIAL_FINAL without tools.",
+              "text_elements": []
+            }
+          ]
+        },
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "completedAtMs": 1792633003177
+      },
+      "emittedAtMs": 1792633003178
+    },
+    {
+      "method": "item/started",
+      "params": {
+        "item": {
+          "type": "agentMessage",
+          "id": "qa_message_1",
+          "text": "",
+          "phase": "final_answer",
+          "memoryCitation": null,
+          "delivery": null,
+          "questions": null
+        },
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "startedAtMs": 1792633003187
+      },
+      "emittedAtMs": 1792633003187
+    },
+    {
+      "method": "item/agentMessage/delta",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "itemId": "qa_message_1",
+        "delta": "QA_INITIAL_FINAL"
+      },
+      "emittedAtMs": 1792633003187
+    },
+    {
+      "method": "item/completed",
+      "params": {
+        "item": {
+          "type": "agentMessage",
+          "id": "qa_message_1",
+          "text": "QA_INITIAL_FINAL",
+          "phase": "final_answer",
+          "memoryCitation": null,
+          "delivery": null,
+          "questions": null
+        },
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "completedAtMs": 1792633003187
+      },
+      "emittedAtMs": 1792633003187
+    },
+    {
+      "method": "thread/tokenUsage/updated",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "tokenUsage": {
+          "total": {
+            "totalTokens": 2,
+            "inputTokens": 1,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 1,
+            "reasoningOutputTokens": 0
+          },
+          "last": {
+            "totalTokens": 2,
+            "inputTokens": 1,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 1,
+            "reasoningOutputTokens": 0
+          },
+          "modelContextWindow": 258400
+        }
+      },
+      "emittedAtMs": 1792633003187
+    },
+    {
+      "method": "account/rateLimits/updated",
+      "params": {
+        "rateLimits": {
+          "limitId": "codex",
+          "limitName": null,
+          "normalModelSlug": null,
+          "primary": null,
+          "secondary": null,
+          "credits": null,
+          "individualLimit": null,
+          "spendControlReached": null,
+          "planType": null,
+          "rateLimitReachedType": null
+        }
+      },
+      "emittedAtMs": 1792633003187
+    },
+    {
+      "method": "hook/started",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "run": {
+          "id": "stop:1:D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "eventName": "stop",
+          "handlerType": "command",
+          "executionMode": "sync",
+          "scope": "turn",
+          "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "source": "user",
+          "displayOrder": 1,
+          "status": "running",
+          "statusMessage": null,
+          "startedAt": 1792633003,
+          "completedAt": null,
+          "durationMs": null,
+          "entries": []
+        }
+      },
+      "emittedAtMs": 1792633003187
+    },
+    {
+      "method": "hook/completed",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "run": {
+          "id": "stop:1:D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "eventName": "stop",
+          "handlerType": "command",
+          "executionMode": "sync",
+          "scope": "turn",
+          "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "source": "user",
+          "displayOrder": 1,
+          "status": "blocked",
+          "statusMessage": null,
+          "startedAt": 1792633003,
+          "completedAt": 1792633003,
+          "durationMs": 445,
+          "entries": [
+            {
+              "kind": "feedback",
+              "text": "QA_NEW_NATIVE_CONTINUATION_SENTINEL"
+            }
+          ]
+        }
+      },
+      "emittedAtMs": 1792633003633
+    },
+    {
+      "method": "item/started",
+      "params": {
+        "item": {
+          "type": "hookPrompt",
+          "id": "msg_01a16140-de71-7180-bedf-40c73da1b694",
+          "fragments": [
+            {
+              "text": "QA_NEW_NATIVE_CONTINUATION_SENTINEL",
+              "hookRunId": "stop:1:D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml"
+            }
+          ]
+        },
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "startedAtMs": 1792633003633
+      },
+      "emittedAtMs": 1792633003633
+    },
+    {
+      "method": "item/completed",
+      "params": {
+        "item": {
+          "type": "hookPrompt",
+          "id": "msg_01a16140-de71-7180-bedf-40c73da1b694",
+          "fragments": [
+            {
+              "text": "QA_NEW_NATIVE_CONTINUATION_SENTINEL",
+              "hookRunId": "stop:1:D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml"
+            }
+          ]
+        },
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "completedAtMs": 1792633003633
+      },
+      "emittedAtMs": 1792633003633
+    },
+    {
+      "method": "item/started",
+      "params": {
+        "item": {
+          "type": "agentMessage",
+          "id": "qa_message_2",
+          "text": "",
+          "phase": "final_answer",
+          "memoryCitation": null,
+          "delivery": null,
+          "questions": null
+        },
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "startedAtMs": 1792633003638
+      },
+      "emittedAtMs": 1792633003638
+    },
+    {
+      "method": "item/agentMessage/delta",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "itemId": "qa_message_2",
+        "delta": "QA_CONTINUED_FINAL"
+      },
+      "emittedAtMs": 1792633003638
+    },
+    {
+      "method": "item/completed",
+      "params": {
+        "item": {
+          "type": "agentMessage",
+          "id": "qa_message_2",
+          "text": "QA_CONTINUED_FINAL",
+          "phase": "final_answer",
+          "memoryCitation": null,
+          "delivery": null,
+          "questions": null
+        },
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "completedAtMs": 1792633003639
+      },
+      "emittedAtMs": 1792633003639
+    },
+    {
+      "method": "thread/tokenUsage/updated",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "tokenUsage": {
+          "total": {
+            "totalTokens": 4,
+            "inputTokens": 2,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 2,
+            "reasoningOutputTokens": 0
+          },
+          "last": {
+            "totalTokens": 2,
+            "inputTokens": 1,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 1,
+            "reasoningOutputTokens": 0
+          },
+          "modelContextWindow": 258400
+        }
+      },
+      "emittedAtMs": 1792633003639
+    },
+    {
+      "method": "account/rateLimits/updated",
+      "params": {
+        "rateLimits": {
+          "limitId": "codex",
+          "limitName": null,
+          "normalModelSlug": null,
+          "primary": null,
+          "secondary": null,
+          "credits": null,
+          "individualLimit": null,
+          "spendControlReached": null,
+          "planType": null,
+          "rateLimitReachedType": null
+        }
+      },
+      "emittedAtMs": 1792633003639
+    },
+    {
+      "method": "hook/started",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "run": {
+          "id": "stop:1:D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "eventName": "stop",
+          "handlerType": "command",
+          "executionMode": "sync",
+          "scope": "turn",
+          "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "source": "user",
+          "displayOrder": 1,
+          "status": "running",
+          "statusMessage": null,
+          "startedAt": 1792633003,
+          "completedAt": null,
+          "durationMs": null,
+          "entries": []
+        }
+      },
+      "emittedAtMs": 1792633003643
+    },
+    {
+      "method": "hook/completed",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+        "run": {
+          "id": "stop:1:D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "eventName": "stop",
+          "handlerType": "command",
+          "executionMode": "sync",
+          "scope": "turn",
+          "sourcePath": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\baseline-2026-10-22T01-36-42-318Z\\home\\config.toml",
+          "source": "user",
+          "displayOrder": 1,
+          "status": "completed",
+          "statusMessage": null,
+          "startedAt": 1792633003,
+          "completedAt": 1792633004,
+          "durationMs": 425,
+          "entries": []
+        }
+      },
+      "emittedAtMs": 1792633004064
+    },
+    {
+      "method": "thread/status/changed",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "status": {
+          "type": "idle"
+        }
+      },
+      "emittedAtMs": 1792633004064
+    },
+    {
+      "method": "turn/completed",
+      "params": {
+        "threadId": "01a16140-da4f-7a03-a42a-63b37f439478",
+        "turn": {
+          "id": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+          "rootTurnId": "01a16140-dab9-7c11-addf-9ac35c0338ab",
+          "items": [
+            {
+              "type": "agentMessage",
+              "id": "qa_message_2",
+              "text": "QA_CONTINUED_FINAL",
+              "phase": "final_answer",
+              "memoryCitation": null,
+              "delivery": null,
+              "questions": null
+            }
+          ],
+          "itemsView": "summary",
+          "status": "completed",
+          "error": null,
+          "startedAt": 1792633002,
+          "completedAt": 1792633004,
+          "durationMs": 1373
+        }
+      },
+      "emittedAtMs": 1792633004064
+    }
+  ],
+  "warnings": [],
+  "stderr": ""
+}

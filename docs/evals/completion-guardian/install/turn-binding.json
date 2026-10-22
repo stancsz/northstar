@@ -1,0 +1,6 @@
+{
+  "frozenBeforeExecution": true,
+  "sourceCommit": "5425d3e625daa58eea3ad1de27c087eb3b2ffbd3",
+  "expectation": "One UserPromptSubmit and two Stop calls have the same exact session_id, turn_id and cwd. First Stop stop_hook_active=false; blocked continuation stays within current turn, second Stop stop_hook_active=true. Generated hook continuation must not become a new UserPromptSubmit owner prompt.",
+  "source": ["hook_runtime.rs:448-458 binds Stop session_id=sess.session_id and turn_id=turn_context.sub_id", "hook_runtime.rs:684-696 binds UserPromptSubmit to the same session and turn", "session-turn.rs:720-754 records hook continuation in current turn, sets stop_hook_active=true then continues sampling loop"]
+}

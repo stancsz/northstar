@@ -1,6 +1,6 @@
 ---
 name: northstar
-description: Central coordinator of the five-skill Northstar package for project and business execution, Codex QA, subagent coordination, Codex Advisor consultation, and bounded Codex-to-Claude delegation. Use for useful verified delivery, autonomous decisions, recovery and checkpoint learning. Codex-native and usable by other agents.
+description: Central coordinator of the six-skill Northstar package for project and business execution, Codex QA, subagent coordination, Codex Advisor consultation, and bounded Codex-to-Claude delegation. Use for useful verified delivery, autonomous decisions, recovery and checkpoint learning. Codex-native and usable by other agents.
 ---
 
 # Northstar
@@ -11,9 +11,9 @@ Default to one implementation owner and relevant development checks. Use a separ
 
 **Keep the self-learning loop active:** before acting, retrieve applicable experience; at every meaningful checkpoint, compare intent with evidence, retain what worked, rule out what failed, and choose the next action. Follow [checkpoint learning](#learn-from-every-use) for solo and delegated work. Recording a lesson without using it does not close the loop.
 
-## Five skills, one coordinated package
+## Six skills, one coordinated package
 
-Install the five sibling directories together: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor` and `claude-code-subagents`. Use `$northstar` as the central coordinator; the four companion skills remain directly invocable. Resolve their paths relative to this file and load only the needed skill.
+Install the six sibling directories together: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`, `claude-code-subagents` and `task-completion-review`. Use `$northstar` as the central coordinator; the five companion skills remain directly invocable. Resolve their paths relative to this file and load only the needed skill.
 
 | Need | Load |
 | --- | --- |
@@ -22,13 +22,14 @@ Install the five sibling directories together: `northstar`, `codex-qa`, `codex-s
 | Functional role assignment, independent review and team coordination | [Codex Subagents](../codex-subagents/SKILL.md), [role profiles](../codex-subagents/references/role-profiles.md), and the relevant [orchestrator](../codex-subagents/templates/orchestrator.md) or [supervisor](../codex-subagents/templates/supervisor.md) brief. |
 | A documented Luna/workhorse capability risk, any art/image/aesthetic decision, or a concrete ordinary expert blocker | [Codex Advisor](../codex-advisor/SKILL.md): [early compact risk consultations](../codex-advisor/SKILL.md#consult-early-and-frequently-on-capability-risks) and [image-backed repair](../codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance); optional [expert-directed reader](../codex-advisor/references/reader.md) for source evidence. |
 | The user asks for Claude Code or a separate Claude run can add useful independent capacity | [Claude Code Subagents](../claude-code-subagents/SKILL.md): delegate one bounded task through the Claude CLI and inspect its handoff. |
+| Auditing a proposed finish or premature stop, including an opt-in Stop hook | [Task Completion Review](../task-completion-review/SKILL.md): inspect the full outcome, use inherited authority, resolve available information and direct the next concrete action. |
 | Sustained project/business operation and useful ceremonies | [Operating system](references/operating-system.md). |
 
-Load a companion when its trigger applies; bundling does not require parallel implementation, an expert call or every review lane on every task. Independent acceptance remains separate from authorship. Advisor service, optional Pi and Claude CLI/provider prerequisites are separate from installing this package. Current authority, resource limits and recovery history apply across all five skills.
+Load a companion when its trigger applies; bundling does not require parallel implementation, an expert call or every review lane on every task. Independent acceptance remains separate from authorship. Advisor service, optional Pi and Claude CLI/provider prerequisites are separate from installing this package. Current authority, resource limits and recovery history apply across all six skills.
 
 ## Use with other agents
 
-Use these Markdown practices in Codex, Claude Code, OpenCode or another agent that can read and follow them. `Codex` in a skill name identifies its origin, not a restriction on who may use it. Do not skip a relevant skill because you are not Codex. Installing agents must preserve all five names and sibling directories, use the receiving host's configured skill location, and carry this compatibility note into the installation handoff. `claude-code-subagents` specifically describes Codex delegating to Claude Code and requires the Codex CLI invocation context.
+Use these Markdown practices in Codex, Claude Code, OpenCode or another agent that can read and follow them. `Codex` in a skill name identifies its origin, not a restriction on who may use it. Do not skip a relevant skill because you are not Codex. Installing agents must preserve all six names and sibling directories, use the receiving host's configured skill location, and carry this compatibility note into the installation handoff. `claude-code-subagents` specifically describes Codex delegating to Claude Code and requires the Codex CLI invocation context.
 
 Adapt `$skill-name` invocation, tool names, delegation and Codex configuration examples to the host's actual capabilities; read the entrypoint directly if no skill loader exists. Preserve intent, authority, recovery history and independent acceptance. If a specific capability is unavailable, continue the applicable work and identify that concrete gap rather than rejecting the whole package or inventing a tool/reviewer. Advisor routes, service authentication and optional reader dependencies still require their documented setup; changing the executor does not change the backend or establish tested runtime compatibility.
 
@@ -47,6 +48,8 @@ Seek [expertise](references/operating-system.md#bring-in-expertise) when a mater
 3. **Choose and build.** Implement the smallest complete workflow that advances the goal. Reuse existing code and tools. Research only decisions needed now; choose ordinary implementation details yourself. Use a reference product when it resolves a specific design question, not as a prerequisite for every task.
 4. **Verify and simplify.** Builders run development checks and repair defects. An independent reviewer owns acceptance testing and QA, exercises the actual workflow and relevant failures, and inspects structure and experience where applicable. Recheck repaired scope through a nonauthor. A build, HTTP 200, or worker's claim alone is insufficient.
 5. **Deliver.** When current criteria pass, provide the usable result, checks performed, limitations, and next increment. Close the checkpoint learning loop below, including partial or blocked handoffs. Put optional improvements in later work. Continue only toward remaining outcomes already authorized by the user; do not expand endlessly or abandon a larger request after its first slice.
+
+For substantive work, apply [Task Completion Review](../task-completion-review/SKILL.md) when deciding to finish, wait or escalate. Reuse existing QA and current evidence rather than creating another acceptance chain. Exercise covered next actions without another owner approval; hook automation is optional.
 
 Preserve security, privacy, data integrity, necessary failure handling, and agreed quality within the delivery. A local MVP does not establish release readiness or business viability. Keep unproven requirements pending.
 

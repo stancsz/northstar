@@ -1,0 +1,26 @@
+{
+  "scope": "One final primary CLI error-class diagnostic; raw child output stays in memory and is discarded",
+  "purpose": "Distinguish authentication, schema, argument, permission and transport failures after observed reviewer-exit1",
+  "totalDeclaredReviewBudget": 3,
+  "priorReviewsCarried": 2,
+  "newAttempts": 1,
+  "originalFrozenTrialPreserved": true,
+  "sourceSha256": "fd0457374ed502662e6b04f2360c12eba257ed9d5de461e2c763d4272e595409",
+  "modelOrAccountOverride": false,
+  "diagnosticOnlyJsonEventOutput": true,
+  "seconds": 5.859007200000633,
+  "output": {
+    "systemMessage": "Completion Guardian: reviewer failure [reviewer-exit (exit 1)]. No completion verdict; preserve unfinished work. Check the existing native executable for unavailable-native/reviewer-launch, CLI execution for reviewer-exit, or structured-answer support for answer failures. Raw diagnostics withheld."
+  },
+  "observed": {
+    "exitCode": 1,
+    "fixedErrorClasses": [
+      "model-unavailable"
+    ],
+    "httpStatuses": [
+      "400"
+    ],
+    "rawLogsPrintedOrRetained": false
+  },
+  "fixturesMatchFrozenBaselineAfter": true
+}

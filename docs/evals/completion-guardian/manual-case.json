@@ -1,0 +1,18 @@
+{
+  "scope": "One fresh-context manual Completion Guardian invocation; not CLI transport, Stop-hook activation or broad reliability proof",
+  "agent": "/root/guardian_manual_trial",
+  "method": "Primary supplied only the current skill path, trusted brief and stop-event paths, read-only artifact inspection mandate and the five-field response schema. Expected/baseline/result records were excluded. This file transcribes the child agent's final output; it is not a host execution trace.",
+  "skillSha256": "5148ffb9fdf9463ad63bd46cae73a034092816852aa311eadbdfc9bf414dd646",
+  "verdict": {
+    "disposition": "continue",
+    "reason": "The source is corrected, but the required delivered guide remains stale and does not match it.",
+    "next_action": "The executor should use the existing local grant to update delivery/guide.md from guide.md, then verify that their current text matches.",
+    "evidence": "Inspected request.md, guide.md, delivery/guide.md and source-check.md. The request requires corrected delivery and a current text comparison. guide.md contains support@demo.invalid and revision amber-47; delivery/guide.md contains retired@demo.invalid and revision cedar-12. source-check.md explicitly covers only the source.",
+    "reopening_condition": "Completion can be reconsidered after delivery/guide.md contains the corrected current guide and a fresh comparison confirms matching text."
+  },
+  "limits": [
+    "A separate reviewer must compare this output to the pre-frozen case and verify fixture hashes.",
+    "One synthetic case does not prove sustained execution, actual executor repair, general permission judgment or production delivery.",
+    "The configured CLI reviewer trial failed separately; this result does not replace or relabel that failed attempt."
+  ]
+}

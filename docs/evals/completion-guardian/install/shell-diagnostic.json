@@ -1,0 +1,101 @@
+{
+  "scope": "EXPLICIT DIRECT COMMAND DIAGNOSIS AFTER native baseline receipt; same command/env/cwd, synthetic event. Any QA_DIRECT_ONLY log rows are direct probes, never native hook dispatch.",
+  "output": [
+    {
+      "shell": "cmd",
+      "exe": "C:\\WINDOWS\\system32\\cmd.exe",
+      "args": [
+        "/C",
+        "\"C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -EncodedCommand JgAgACcAQwA6AFwAUAByAG8AZwByAGEAbQAgAEYAaQBsAGUAcwBcAG4AbwBkAGUAagBzAFwAbgBvAGQAZQAuAGUAeABlACcAIAAnAEQAOgBcAGcAaQB0AGgAdQBiAFwAbgBvAHIAdABoAHMAdABhAHIAXAB0AG0AcABcAHMAdABvAHAALQBoAG8AbwBrAC0AaQBuAHMAdABhAGwAbABcAHEAYQBcAGIAYQBzAGUAbABpAG4AZQAtADIAMAAyADYALQAxADAALQAyADIAVAAwADEALQAzADQALQA1ADcALQA2ADEANgBaAFwAcwB0AHUAYgAuAG0AagBzACcA\""
+      ],
+      "exit": 0,
+      "error": null,
+      "stdout": "{\"decision\":\"block\",\"reason\":\"QA_NEW_NATIVE_CONTINUATION_SENTINEL\"}",
+      "stderr": ""
+    },
+    {
+      "shell": "powershell",
+      "exe": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -EncodedCommand JgAgACcAQwA6AFwAUAByAG8AZwByAGEAbQAgAEYAaQBsAGUAcwBcAG4AbwBkAGUAagBzAFwAbgBvAGQAZQAuAGUAeABlACcAIAAnAEQAOgBcAGcAaQB0AGgAdQBiAFwAbgBvAHIAdABoAHMAdABhAHIAXAB0AG0AcABcAHMAdABvAHAALQBoAG8AbwBrAC0AaQBuAHMAdABhAGwAbABcAHEAYQBcAGIAYQBzAGUAbABpAG4AZQAtADIAMAAyADYALQAxADAALQAyADIAVAAwADEALQAzADQALQA1ADcALQA2ADEANgBaAFwAcwB0AHUAYgAuAG0AagBzACcA"
+      ],
+      "exit": 0,
+      "error": null,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "shell": "powershell-newline",
+      "exe": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -EncodedCommand JgAgACcAQwA6AFwAUAByAG8AZwByAGEAbQAgAEYAaQBsAGUAcwBcAG4AbwBkAGUAagBzAFwAbgBvAGQAZQAuAGUAeABlACcAIAAnAEQAOgBcAGcAaQB0AGgAdQBiAFwAbgBvAHIAdABoAHMAdABhAHIAXAB0AG0AcABcAHMAdABvAHAALQBoAG8AbwBrAC0AaQBuAHMAdABhAGwAbABcAHEAYQBcAGIAYQBzAGUAbABpAG4AZQAtADIAMAAyADYALQAxADAALQAyADIAVAAwADEALQAzADQALQA1ADcALQA2ADEANgBaAFwAcwB0AHUAYgAuAG0AagBzACcA"
+      ],
+      "exit": 0,
+      "error": null,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "shell": "powershell-nativepy",
+      "exe": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "C:/WINDOWS/py.exe -3 -c \"print('QA_PY_RAN')\""
+      ],
+      "exit": 0,
+      "error": null,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "shell": "powershell-constant",
+      "exe": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "Write-Output QA_CONSTANT"
+      ],
+      "exit": 0,
+      "error": null,
+      "stdout": "QA_CONSTANT\r\n",
+      "stderr": ""
+    },
+    {
+      "shell": "powershell-constant-noinput",
+      "exe": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "Write-Output QA_CONSTANT"
+      ],
+      "exit": 0,
+      "error": null,
+      "stdout": "QA_CONSTANT\r\n",
+      "stderr": ""
+    },
+    {
+      "shell": "powershell-pathext",
+      "exe": "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "C:\\WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -EncodedCommand JgAgACcAQwA6AFwAUAByAG8AZwByAGEAbQAgAEYAaQBsAGUAcwBcAG4AbwBkAGUAagBzAFwAbgBvAGQAZQAuAGUAeABlACcAIAAnAEQAOgBcAGcAaQB0AGgAdQBiAFwAbgBvAHIAdABoAHMAdABhAHIAXAB0AG0AcABcAHMAdABvAHAALQBoAG8AbwBrAC0AaQBuAHMAdABhAGwAbABcAHEAYQBcAGIAYQBzAGUAbABpAG4AZQAtADIAMAAyADYALQAxADAALQAyADIAVAAwADEALQAzADQALQA1ADcALQA2ADEANgBaAFwAcwB0AHUAYgAuAG0AagBzACcA"
+      ],
+      "exit": 0,
+      "error": null,
+      "stdout": "{\"decision\":\"block\",\"reason\":\"QA_NEW_NATIVE_CONTINUATION_SENTINEL\"}",
+      "stderr": ""
+    }
+  ]
+}

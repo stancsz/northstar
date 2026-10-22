@@ -1,0 +1,13 @@
+{
+  "model": "codex-gpt-6.1-sol-advisor",
+  "advice": "Verdict: This is justified, not authorization drift: an explicit operator-selected, invocation-local model override fits the covered reversible mandate, but this advice is not independent acceptance.\nNext: Offline-test that --model passes exactly one chosen model, omission preserves configuration, and the child cannot reselect; record gpt-6-astra and the cache-based rationale without claiming entitlement; run one frozen-criteria reviewer trial capped at 45 seconds, retaining prior failures and reporting reviewer results separately from unverified automatic Stop invocation.\nRisk: Stop after that trial on timeout, authentication/entitlement failure, or failed criteria; do not retry another model, change provider/account/global settings, obtain credentials, or declare overall Guardian acceptance.",
+  "advice_words": 100,
+  "usage": {
+    "completion_tokens": 146,
+    "prompt_tokens": 492,
+    "total_tokens": 638
+  },
+  "request_id": "chatcmpl-codex-advisor-e4f2dfc3d525",
+  "elapsed_seconds": 7.129,
+  "packet_chars": 2005
+}

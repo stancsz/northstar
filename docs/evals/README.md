@@ -3,6 +3,7 @@
 Record useful evidence about the actual product and engineering work here: reference comparisons, critic findings, verification results, fixes, and remaining limitations.
 
 - [Bilingual README and GitHub presentation](readme-positioning.md)
+- [Task Completion Review: manual behavior, adapter checks and open runtime gaps](completion-guardian/README.md)
 - [Open issues, council decisions and skill-behavior probes](issue-maturity.md)
 - [Claude Code Subagents skill](claude-code-subagents.md)
 

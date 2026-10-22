@@ -1,0 +1,25 @@
+{
+  "scope": "One new direct adapter candidate using explicit operator-selected gpt-6-astra with existing provider/account; no automatic fallback, host hook, new credential, customer data or raw transcript.",
+  "scriptSha256": "a911d997f685d9e6edd0fb89ebfe6f63d1474ec654944a5e3454adb26d075fec",
+  "nativeSha256": "be96b992178b1e467c225800da0d65f2c86d5eba1ef0b14632f65db381cbdfde",
+  "operatorModel": "gpt-6-astra",
+  "priorReviewCountCarried": 3,
+  "totalDeclaredReviewBudget": 4,
+  "candidateReviewBudget": 1,
+  "timeoutSeconds": 45,
+  "candidateAttempts": 1,
+  "providerOrAccountOverride": false,
+  "exitCode": 0,
+  "seconds": 12.52476630000092,
+  "output": {
+    "decision": "block",
+    "reason": "Completion Guardian: continue. The source guide is corrected, but delivery remains stale and does not satisfy the original request. Next: Update delivery/guide.md from the current guide.md, then verify that both files contain identical text and support@demo.invalid.. Evidence: Inspected request.md, guide.md, delivery/guide.md, and source-check.md. Source contains support@demo.invalid and revision amber-47; delivery contains retired@demo.invalid and revision cedar-12. source-check.md explicitly covers only the source.. Preserve the owner's scope, limits and actual host permissions."
+  },
+  "stdoutIsSingleJson": true,
+  "guardStderr": "",
+  "beforeMatchesFrozenBaseline": true,
+  "afterMatchesFrozenBaseline": true,
+  "lookupEvidence": "To be independently judged against frozen expected criteria; no raw CLI/tool trace retained.",
+  "actualModelAndTokenUsage": "Operator requested gpt-6-astra; actual returned model/tokens/cost are not exposed by the adapter",
+  "limitations": "A continuation decision cannot prove executor action or real Stop-hook invocation. Failures will not be retried or switched to another model."
+}

@@ -5,6 +5,7 @@ Workers own `docs/reports/<goal>/<task>.md` and link their actual deliverables, 
 Supervisors assign distinct report paths, read reports and inspect the work, then record acceptance or repairs in the linked `GOAL.md`. Find reports through their goal's task entries. [Evaluations](../evals/README.md) record review conclusions and link supporting reports; disposable logs belong in `tmp/`.
 
 - [Role ownership: align reporting](role-ownership/align-reporting.md)
+- [Task Completion Review: implementation](completion-guardian/implementation.md), [earlier independent acceptance](completion-guardian/review.md) and [installation review](completion-guardian/install-review.md); see the [goal](../goal/completion-guardian/GOAL.md).
 - [Issue revisions: goal storage](issue-maturity/goal-storage.md), [integration](issue-maturity/implementation.md), and [independent acceptance](issue-maturity/review.md)
 - [Claude Code Subagents skill: implementation and use](claude-code-subagents/implementation.md)
 - [Bilingual README positioning: independent review](readme-positioning/review.md)

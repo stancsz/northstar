@@ -1,0 +1,18 @@
+{
+  "scope": "One primary phase-diagnostic follow-up using the changed safe-phase adapter; original frozen one-attempt trial remains failed and unmodified",
+  "purpose": "Locate the failed reviewer stage rather than silently reset or rescore the original trial",
+  "scriptSha256": "fd0457374ed502662e6b04f2360c12eba257ed9d5de461e2c763d4272e595409",
+  "totalDeclaredReviewBudget": 2,
+  "priorReviewCountCarried": 1,
+  "newAttempts": 1,
+  "timeoutSeconds": 45,
+  "seconds": 5.993261100000382,
+  "exitCode": 0,
+  "output": {
+    "systemMessage": "Completion Guardian: reviewer failure [reviewer-exit (exit 1)]. No completion verdict; preserve unfinished work. Check the existing native executable for unavailable-native/reviewer-launch, CLI execution for reviewer-exit, or structured-answer support for answer failures. Raw diagnostics withheld."
+  },
+  "guardStderrEmpty": true,
+  "fixturesMatchFrozenBaselineAfter": true,
+  "originalStateUnchanged": true,
+  "modelOrAccountOverride": false
+}

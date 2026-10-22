@@ -1,0 +1,13 @@
+{
+  "model": "codex-gpt-6.1-sol-advisor",
+  "advice": "Verdict: The same-helper global adapter is justified within the install mandate and skills-only constraint; a mandatory per-project brief adds friction without solving lifecycle integration.\nNext: Confirm the descriptive name and scope, defaulting to all-projects if unanswered; add optional event mode while preserving direct mode and unrelated configuration. Bind captured instructions, cwd, and review state to session/owner-turn; treat captured text as untrusted context, preserve route/evidence across continuations and prompts, reset budget only for a genuine new owner turn, disable reviewer-child hooks, and let native interruption win. Through native hooks/list and exact-command/key/currentHash review, install using config/batchWrite and reload; require one native block\u2192continuation\u2192allow probe demonstrating context isolation, budget persistence, and no recursion, then one model-backed integration.\nRisk: Missing, mismatched, or insufficient bounded/redacted context must visibly fail\u2014not approve completion; never persist raw transcripts, attachments, or secrets, and restrict artifact lookup to the current repository\u2019s explicitly designated review artifacts.",
+  "advice_words": 144,
+  "usage": {
+    "completion_tokens": 352,
+    "prompt_tokens": 632,
+    "total_tokens": 984
+  },
+  "request_id": "chatcmpl-codex-advisor-7015c6a69b7f",
+  "elapsed_seconds": 10.398,
+  "packet_chars": 2631
+}

@@ -1,0 +1,27 @@
+{
+  "scope": "Independent current-candidate protocol/state test with injected reviewer only, not model semantics or host hook dispatch",
+  "checks": [
+    "two sessions/projects isolated",
+    "synthetic password redacted before reviewer",
+    "duplicate UserPromptSubmit does not renew1-review budget",
+    "already-active Stop hits actual cap without reviewer",
+    "mismatched cwd fails before reviewer",
+    "child marker capture/Stop skipped",
+    "Interrupt skipped"
+  ],
+  "seen": [
+    {
+      "repo": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\context-probe\\project-a",
+      "A": true,
+      "B": false,
+      "secretRedacted": true
+    },
+    {
+      "repo": "D:\\github\\northstar\\tmp\\stop-hook-install\\qa\\context-probe\\project-b",
+      "A": false,
+      "B": true,
+      "secretRedacted": true
+    }
+  ],
+  "pass": true
+}
