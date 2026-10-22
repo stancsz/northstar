@@ -3,11 +3,11 @@
 Fill from known context; link existing records and omit irrelevant fields. Use with bundled [Codex Subagents](../SKILL.md); load only the assigned role.
 
 - Result: <current increment and intended effect; direction/goal and state links>
-- Acceptance: <observable workflow and evidence; deferred scope>
+- Acceptance: <observable workflow and evidence; deferred scope; keep pass criteria explicit in the prompt>
 - Functions and separation: <needed [profiles](../references/role-profiles.md); creators, nonauthor QA/taste reviewer, artifact/revision and decision owner; incompatible assignments>
-- Guidance: <intended value, relevant facts, next action/approach, fallback or escalation trigger; enough for the worker to act without returning to the human>
+- Guidance: <intended value; must-know facts needed now; next action; fallback or escalation trigger. Link supporting background; do not paste unrelated history or rely on a link for essential instructions.>
   - Inference: <primary route is local LiteLLM at http://localhost:4000/v1, model `default` follows the saved target and does not pin a model; smoke result; protocol/auth constraints; surface any fallback>
-- Autonomy: <authorized decisions/actions, targets and source; protected boundaries; explicit limits>
+- Autonomy: <authorized decisions/actions, targets and source; protected boundaries; explicit scope/authority limits in the prompt>
 - Coordination: <critical dependencies, affected owners/interfaces; allowed delegation>
 - Handoff: <integration/acceptance owner; scratch/report paths; checkpoint and applicable lessons/rejected paths>
 
