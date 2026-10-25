@@ -244,7 +244,7 @@ def test_reader_accepts_only_a_single_json_fence_without_relaxing_citations(sour
     ('not JSON', True, 1, "unavailable"),
     ('{"read":"question", "advice":"ambiguous"}', True, 1, "unavailable"),
 ])
-def test_expert_controls_read_without_luna_history_or_retries(
+def test_expert_controls_read_without_vendor_specific_history_or_retries(
         source_repo, monkeypatch, decision, worker_ok, expected_calls, status):
     reader = load_reader()
     monkeypatch.setattr(reader, "pi_package", lambda: source_repo)
@@ -260,7 +260,7 @@ def test_expert_controls_read_without_luna_history_or_retries(
         return {"status": "ok" if worker_ok else "unavailable", "evidence": evidence()}
     monkeypatch.setattr(reader, "run_pi", pi)
     args = SimpleNamespace(reader_root=source_repo, reader_scope=["src"], reader_model="default")
-    result = reader.run_with_reader(args, "Luna hypothesis: broken retries.", consult, "Be concise.")
+    result = reader.run_with_reader(args, "Selected-route hypothesis: broken retries.", consult, "Be concise.")
     assert result["status"] == status
     assert len(calls) == expected_calls
     assert len(result["expert_calls"]) == expected_calls
