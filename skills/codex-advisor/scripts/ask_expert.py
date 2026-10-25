@@ -89,8 +89,8 @@ def parse_args() -> argparse.Namespace:
     source.add_argument("--question")
     parser.add_argument(
         "--base-url",
-        default=os.environ.get("EXPERTS_BASE_URL", "http://127.0.0.1:4040/v1"),
-        help="Expert API base URL. Defaults to the local loopback service.",
+        default=os.environ.get("EXPERTS_BASE_URL", "http://127.0.0.1:4000/v1"),
+        help="Subroute API base URL. Defaults to the shared local gateway.",
     )
     parser.add_argument("--timeout-seconds", type=float, default=75.0)
     parser.add_argument("--image", type=Path, action="append", default=[],
@@ -199,8 +199,11 @@ def expert_api_key(base_url: str) -> str | None:
     if "EXPERTS_API_KEY" in os.environ:
         return os.environ["EXPERTS_API_KEY"] or None
     endpoint = urlsplit(base_url)
-    if (endpoint.scheme == "http" and endpoint.hostname in ("127.0.0.1", "localhost", "::1")
-            and endpoint.port == 4040 and endpoint.username is None and endpoint.password is None):
+    local = (endpoint.scheme == "http" and endpoint.hostname in ("127.0.0.1", "localhost", "::1")
+             and endpoint.username is None and endpoint.password is None)
+    if local and endpoint.port == 4000:
+        return os.environ.get("GATEWAY_MASTER_KEY") or None
+    if local and endpoint.port == 4040:
         return windows_user_api_key()
     return None
 
@@ -235,8 +238,8 @@ def call_model(args: argparse.Namespace, model: str, messages: list[dict], *, im
         if exc.code == 401:
             raise RuntimeError(
                 "Expert API returned HTTP 401: service authentication failed. "
-                "Set EXPERTS_API_KEY to match the experts service key "
-                "(Windows user environment is also read for the default local service). "
+                "Set EXPERTS_API_KEY, or GATEWAY_MASTER_KEY for the local Subroute gateway "
+                "(Windows user environment is read for the optional experts endpoint). "
                 "No retry was made."
             ) from exc
         raise RuntimeError(f"Expert API returned HTTP {exc.code}: {detail}") from exc

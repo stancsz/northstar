@@ -68,13 +68,15 @@ For optional use across projects, its [event mode](../../skills/task-completion-
 
 ## Advisor prerequisites
 
-Ordinary compact consultation requires Python 3.10+ and the already-configured Subroute `experts` service at `http://127.0.0.1:4040/v1`, with Codex service authentication managed there. [Subroute setup](https://github.com/stancsz/subroute) remains the service's source of truth. Copying the skills does not deploy the service, supply credentials or grant spending/data-transmission authority.
+Ordinary compact consultation requires Python 3.10+ and an already-configured Subroute-compatible endpoint. The caller defaults to the shared gateway at `http://127.0.0.1:4000/v1`; set `EXPERTS_BASE_URL` to another compatible endpoint when needed. [Subroute setup](https://github.com/stancsz/subroute) remains the service's source of truth. Copying the skills does not deploy the service, supply credentials or grant spending/data-transmission authority.
 
-Advisor is fixed to **GPT-6.1 Sol only**. Caller `--model sol` sends the versioned alias `codex-gpt-6.1-sol-advisor`; the dedicated service must expose that alias mapped to `codex-advisor/gpt-6.1-sol`. Astra and older Sol aliases are removed from this dedicated endpoint. An older service fails visibly; do not substitute another model or the worker gateway.
+For the shared local gateway, the caller reads `GATEWAY_MASTER_KEY`; `EXPERTS_API_KEY` explicitly overrides it. The optional dedicated experts endpoint at port 4040 uses its own key; set `EXPERTS_API_KEY` and `EXPERTS_BASE_URL` for that endpoint. On Windows, the caller can read a saved user `EXPERTS_API_KEY` for the local 4040 endpoint. See the [authentication behavior](../../skills/codex-advisor/SKILL.md#make-a-compact-advice-request). HTTP 401 requires correcting the service key, not disabling authentication.
+
+Advisor model selection is endpoint-agnostic: pass any model ID or alias exposed by the configured endpoint with `--model` or `NORTHSTAR_ADVISOR_MODEL`. Set a separate `--council-model` or `NORTHSTAR_COUNCIL_MODEL` for Council; the two selections must be distinct. The endpoint decides which models are available and how aliases route. Failed selections remain visible; the caller does not substitute a model or silently change endpoints.
 
 Optional [expert-directed reading](../../skills/codex-advisor/references/reader.md) additionally requires its documented Node/Pi/Git/ripgrep setup and the separate worker gateway at `http://localhost:4000/v1`. Do not silently use that worker route as the expert route. Nonvisual execution, QA and coordination do not require these services.
 
-[Mandatory visual consultation](../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance) uses repeatable `--image` arguments to send actual image bytes to the dedicated Advisor endpoint. The Subroute backend must include image-input support; an older text-only backend rejects these requests visibly. Optional Pi reading stays text-only: the Advisor sees attached screenshots and can dispatch Pi for source evidence. Missing image access leaves required visual consultation unverified.
+[Mandatory visual consultation](../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance) uses repeatable `--image` arguments to send actual image bytes to the configured Advisor endpoint. The Subroute backend must include image-input support; a text-only backend rejects these requests visibly. Optional Pi reading stays text-only: the Advisor sees attached screenshots and can dispatch Pi for source evidence. Missing image access leaves required visual consultation unverified.
 
 Resolve `scripts/ask_expert.py` under the installed Codex Advisor directory shown by your skill loader. For the installation above:
 

@@ -57,20 +57,23 @@ def test_unconfigured_windows_user_key_is_optional(monkeypatch):
     assert caller.windows_user_api_key() is None
 
 
-@pytest.mark.parametrize("url,allowed", [
-    ("http://127.0.0.1:4040/v1", True), ("http://LOCALHOST:4040/v1/", True),
-    ("http://[::1]:4040/v1", True), ("http://127.0.0.1:4000/v1", False),
-    ("http://localhost/v1", False), ("https://localhost:4040/v1", False),
-    ("http://example.com:4040/v1", False), ("http://192.168.1.2:4040/v1", False),
-    ("http://user@localhost:4040/v1", False),
+@pytest.mark.parametrize("url,expected,windows_reads", [
+    ("http://127.0.0.1:4040/v1", "user-key", 1),
+    ("http://LOCALHOST:4040/v1/", "user-key", 1),
+    ("http://[::1]:4040/v1", "user-key", 1),
+    ("http://127.0.0.1:4000/v1", "gateway-key", 0),
+    ("http://localhost/v1", None, 0), ("https://localhost:4040/v1", None, 0),
+    ("http://example.com:4040/v1", None, 0), ("http://192.168.1.2:4040/v1", None, 0),
+    ("http://user@localhost:4040/v1", None, 0),
 ])
-def test_user_key_fallback_is_limited_to_default_local_origin(monkeypatch, url, allowed):
+def test_local_key_fallback_uses_endpoint_credentials_without_leaking(monkeypatch, url, expected, windows_reads):
     caller = load_caller()
     monkeypatch.delenv("EXPERTS_API_KEY", raising=False)
+    monkeypatch.setenv("GATEWAY_MASTER_KEY", "gateway-key")
     calls = []
     monkeypatch.setattr(caller, "windows_user_api_key", lambda: calls.append(1) or "user-key")
-    assert caller.expert_api_key(url) == ("user-key" if allowed else None)
-    assert len(calls) == int(allowed)
+    assert caller.expert_api_key(url) == expected
+    assert len(calls) == windows_reads
 
 
 @pytest.mark.parametrize("key", ["process-key", ""])

@@ -98,7 +98,7 @@ The design adapts ideas from mission command, reversible decision-making, lean d
 | [**Northstar**](skills/northstar/SKILL.md) | Direction, authority, delivery, recovery, and learning. | You want an outcome carried through to inspected delivery. |
 | [**Codex Subagents**](skills/codex-subagents/SKILL.md) | Scope, roles, capability allocation, coordination, and handoffs. | Work needs delegation, integration, or review separation. |
 | [**Codex QA**](skills/codex-qa/SKILL.md) | Functional, visual, adversarial, and structural review. | You need to know whether the actual result meets the bar. |
-| [**Codex Advisor**](skills/codex-advisor/SKILL.md) | GPT-6.1 Sol only: compact guidance on capability risks and image-backed repair feedback. | A documented Luna/workhorse risk, any visual judgment, or a concrete ordinary knowledge gap. |
+| [**Codex Advisor**](skills/codex-advisor/SKILL.md) | Configurable Subroute model for compact capability-risk and image-backed repair advice. | A documented capability risk, any visual judgment, or a concrete ordinary knowledge gap. |
 | [**Claude Code Subagents**](skills/claude-code-subagents/SKILL.md) | Delegate bounded work from Codex to Claude Code through its CLI, then inspect and integrate the result. | You request Claude Code or it adds useful independent capacity. |
 | [**Task Completion Review**](skills/task-completion-review/SKILL.md) | Review a proposed finish, find missing information and direct authorized next work; optional Stop-hook adapter. | An agent claims completion or wants to stop while requirements may remain. |
 
