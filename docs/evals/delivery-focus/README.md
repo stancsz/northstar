@@ -143,4 +143,6 @@ Two Console-native live smokes still failed to return a useful result: an explic
 
 A local prompt-boundary inspection measured the configured skill at 16,665 bytes, embedded exactly once in a 17,756-byte dispatch prompt. The offline request exposed 33 tool definitions, but the live event payload was not retained, so this does not identify what caused output truncation. There is no evidence here that duplicate skill embedding caused the live failure; no prompt or output-limit change is justified.
 
+An offline CLI capture that added only `features.plugins=false` reduced the serialized tool list from 33 to 31 and still completed a synthetic marker, but it emitted an `item.completed` error event whose contents were not retained. This is not a clean runtime pass and does not explain the live output truncation; it does not justify disabling plugins by default.
+
 This is one bounded implementation/protocol exercise, not accepted useful project work or a matched comparison. The high reviewer usage is a concrete overhead observation; its cause is unknown, and this reviewer did not change the final acceptance decision. Prefer the cheaper local capture before delegating a factual CLI-serialization question. Do not infer general savings or a prompt defect from this case. The Northstar effectiveness goal remains active.
