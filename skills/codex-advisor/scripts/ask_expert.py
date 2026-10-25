@@ -315,7 +315,7 @@ def main() -> int:
     if getattr(args, "council", False) and not args.council_model:
         raise SystemExit("--council requires --council-model or NORTHSTAR_COUNCIL_MODEL.")
     if getattr(args, "council", False) and args.council_model == args.model:
-        raise SystemExit("--council-model must differ from --model to provide an independent perspective.")
+        raise SystemExit("--council-model must differ from --model; distinct selections do not prove distinct upstream models.")
     packet = read_packet(args)
     try:
         args.image_parts, images = prepare_images(args.image, args.image_detail)

@@ -157,7 +157,7 @@ def normalize(arguments) -> list:
     return normalized
 
 
-def expected_arguments(working_directory, sandbox="read-only", overrides=(), extra=()) -> list:
+def expected_arguments(working_directory, sandbox="read-only", overrides=(), extra=(), model=None) -> list:
     arguments = [
         "exec",
         "--json",
@@ -172,6 +172,8 @@ def expected_arguments(working_directory, sandbox="read-only", overrides=(), ext
         "-c",
         BASE_URL_OVERRIDE,
     ]
+    if model is not None:
+        arguments.extend(["--model", model])
     for override in overrides:
         arguments.extend(["-c", override])
     arguments.extend(extra)
@@ -189,6 +191,7 @@ def run_helper(
     observed=False,
     disable_plugins=False,
     skip_host_skill_discovery=False,
+    model=None,
     setup=(),
     location=None,
 ):
@@ -204,6 +207,8 @@ def run_helper(
     ]
     if sandbox is not None:
         invocation.append(f"-Sandbox {ps_literal(sandbox)}")
+    if model is not None:
+        invocation.append(f"-Model {ps_literal(model)}")
     if observed:
         invocation.append("-UseObservedSubrouteSettings")
     if disable_plugins:
@@ -394,6 +399,35 @@ def test_default_invocation_keeps_the_documented_arguments_unchanged(workspace):
     assert arguments.count(SKILL_DISCOVERY_ENABLE_FLAG) == 0, "the enable flag must stay opt-in"
     assert arguments.count(SKILL_DISCOVERY_FEATURE) == 0, "the feature must stay opt-in"
     assert arguments.count("-c") == 1
+
+
+def test_any_supported_model_id_or_alias_can_override_the_profile_default(workspace):
+    selected = "provider/model-with-slashes"
+    payload = run_helper(
+        workspace["root"],
+        name="explicit-model",
+        working_directory=workspace["project"],
+        model=selected,
+        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
+    )
+    assert payload["error"] is None, payload["error"]
+    arguments = payload["invocations"][0]["arguments"]
+    assert arguments.count("--model") == 1
+    assert normalize(arguments) == expected_arguments(workspace["project"], model=selected)
+
+
+def test_explicit_blank_model_selection_fails_before_launch(workspace):
+    payload = run_helper(
+        workspace["root"],
+        name="blank-model",
+        working_directory=workspace["project"],
+        model="   ",
+        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
+    )
+    assert payload["error"]["message"] == (
+        "Model must not be empty or whitespace-only: provide a model ID or alias supported by the configured endpoint."
+    )
+    assert payload["invocations"] == []
 
 
 def test_skip_host_skill_discovery_adds_the_enable_flag_exactly_once(workspace):
