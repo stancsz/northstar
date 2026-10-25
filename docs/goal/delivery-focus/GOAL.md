@@ -36,7 +36,7 @@ Using the current workflow on this request exposed the root-context conflict and
 
 Earlier local CLI tool/function preflight evidence is in the [dispatch report](../../reports/dispatch-context/current-cli-native-tool-gate.md). A successful bounded CLI edit or text-only review does not establish every client/protocol tool path.
 
-A new direct Responses function-call preflight for a read-only skill review timed out although authenticated `/v1/models` returned the configured aliases. No child was dispatched; the sanitized receipt is in ignored `tmp/active-cli-review-20261024/preflight.json`. This leaves child tool-routing evidence open and is not a skill behavior result.
+A direct Responses function-call preflight for a read-only skill review initially timed out; the sanitized receipt is in ignored `tmp/active-cli-review-20261024/preflight.json`. A later corrected function/result roundtrip passed, followed by a helper-mediated CLI-native read smoke and an independent read-only review of the committed instruction changes. The reviewer passed with no source contradiction or file changes. Its reported usage was 229,901 input tokens (81,920 cached), 3,278 output and 1,894 reasoning tokens. This proves one exact read-only review path and source acceptance, not repeated reliability, economical delegation or product delivery; high usage remains material evidence, and the cause is unassigned.
 
 ## Remaining work
 
