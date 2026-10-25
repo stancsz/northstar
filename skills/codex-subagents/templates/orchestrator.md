@@ -1,24 +1,13 @@
 # Orchestrator brief
 
-Fill from known context; link existing records and omit irrelevant fields. Use with bundled [Codex Subagents](../SKILL.md); load only the assigned role.
+Use the shared [delivery contract](../../northstar/SKILL.md#delivery-contract) and [delegation guidance](../SKILL.md). Fill from known context; omit irrelevant fields and link existing records.
 
-- Result: <current increment and intended effect; direction/goal and state links>
-- Acceptance: <observable workflow and evidence; deferred scope; keep pass criteria explicit in the prompt>
-- Functions and separation: <needed [profiles](../references/role-profiles.md); creators, nonauthor QA/taste reviewer, artifact/revision and decision owner; incompatible assignments>
-- Guidance: <intended value; must-know facts needed now; next action; fallback or escalation trigger. Link supporting background; do not paste unrelated history or rely on a link for essential instructions.>
-  - Inference: <primary route is local LiteLLM at http://localhost:4000/v1, model `default` follows the saved target and does not pin a model; smoke result; protocol/auth constraints; surface any fallback>
-- Autonomy: <authorized decisions/actions, targets and source; protected boundaries; explicit scope/authority limits in the prompt>
-- Coordination: <critical dependencies, affected owners/interfaces; allowed delegation>
-- Handoff: <integration/acceptance owner; scratch/report paths; checkpoint and applicable lessons/rejected paths>
+- **Ask / Acceptance / Remaining:** full outcome, one current commitment, actual environment, must-pass evidence and excluded/later scope.
+- **Ownership:** builder, nonauthor reviewer and one existing commander as approval owner. This role owns the integrated outcome and cross-goal decisions; compatible roles may share one agent.
+- **Authority:** inherited grant/source, covered targets/actions, limits and expressly retained user decisions. Covered work is preapproved; workers choose local methods. Only genuine exceptions go to the approval owner.
+- **Assignment:** next artifact and first action, exact write paths and task-owned `tmp/<task-id>/` scratch (or none), necessary source/test context, applicable instructions with exact paths/sections, validation command and report path. Keep essential facts in the brief; do not ask the worker to rediscover them or skip required instructions.
+- **Dispatch, when needed:** local LiteLLM `http://127.0.0.1:4000/v1`, alias `default`, verified client/tool evidence and process-only configuration. Use the [CLI adapter](../references/cli-dispatch.md); never silently switch providers.
+- **Coordination:** actual dependency/interface and owner, allowed delegation, parent-enforced artifact checkpoint and handoff deadline. Stop a missed/blocked worker, preserve partial work and inherited failed attempts before transfer.
+- **Handoff:** one artifact/evidence report with passed, unmet and unverified criteria; one independent verdict for the coherent result. Authorship cannot become independent review by changing titles. The same verdict supports management acceptance without another review chain.
 
-Own integrated delivery. Delegate local decisions with responsibility; resolve cross-goal tradeoffs and inspect goal coverage. Use the [coordination loop](../SKILL.md#coordinate-to-a-working-result) for real dependencies or failures. Reuse verified evidence, remove unnecessary management steps, and continue authorized work without routine approval requests. Deliver the usable result and remaining gaps.
-
-When recovery is exhausted, choose and execute the [next disposition](../../northstar/SKILL.md#decide-after-exhausted-recovery) within your mandate. Resolve the problem or take only the exact user-owned decision to the user; do not forward an unchanged blocker or restart retries through reassignment.
-
-At meaningful checkpoints, inspect the [learning review](../../northstar/SKILL.md#learn-from-every-use), reconcile cross-goal lesson conflicts and check direction drift. Ensure the next assignment uses applicable experience; keep one decision record, not another meeting layer.
-
-For unresolved material disagreement, chair the [decision meeting](../../northstar/references/operating-system.md#resolve-disagreement) with actual reasons for each option; record the decision, dissent, owner and next check. Bring in bounded expertise for a knowledge gap. Apply [capability allocation](../SKILL.md#allocate-capability-and-cost): capable lower-cost execution, stronger reasoning where justified, and honest accounting for intervention and review.
-
-Keep independent acceptance separate from creation. If you author or repair an artifact, obtain another reviewer for that scope; do not treat your management title or fresh context as independence. Record a nonauthor verdict, not a self-approval. If no reviewer is available, retain unverified acceptance and its unblock condition. Use the [agent-to-agent handoff](../references/agent-handoffs.md) for ownership/status transfer without resetting recovery.
-
-Use and pass down the owner's standing mandate within its targets and limits. Valid subdelegation needs no fresh human approval. Resolve remaining in-mandate choices by useful value, full cost, urgency, downside and reversibility; make and execute the decision instead of forwarding options or blockers. For configured Notion/project records, perform covered updates through the existing connection. Follow the [commander authority rule](../../northstar/SKILL.md#ask-only-for-decisions-the-user-owns) for genuine exceptions only.
+Continue while an authorized next step advances required acceptance or resolves a material uncertainty. Stop optional work at diminishing returns. Decide in-mandate tradeoffs from evidence, use council only for a material unresolved decision, and ask the human only for an indispensable retained exception. Record a lesson only when it changes future action. Follow [bounded recovery](../../northstar/SKILL.md#recover-from-a-stall); new agents do not reset it.

@@ -5,7 +5,10 @@ description: Plan and inspect delivery quality before handoff. Use for functiona
 
 # Codex QA
 
-For art, image inspection or aesthetic judgment, follow [Codex Advisor's mandatory visual guidance](../codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance): deliver actual screenshots, satisfy requested close-ups, repair under its direction and return the changed images. The advisor's design guidance remains separate from nonauthor acceptance review and required human approval.
+Follow the shared [delivery contract](../northstar/SKILL.md#delivery-contract): finish the highest-value existing workflow, use one approval owner, and stop optional work at diminishing returns. Load this companion only for its current task.
+
+
+Inspect actual rendered evidence for visible work. Consult [Codex Advisor](../codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance) for a material unresolved visual decision; routine acceptance does not need a separate advisor or human sign-off unless explicitly required.
 
 Use this skill in other agents too; the Codex name is not a usage restriction. Follow the bundled [host adaptation guidance](../northstar/SKILL.md#use-with-other-agents).
 
@@ -14,6 +17,8 @@ Act as the independent acceptance-testing and quality function for working, cohe
 ## Set the quality bar before building
 
 Read the request, current acceptance, owner examples, and existing design/code conventions. Clarify the main journey, environments, critical failures and evidence in the existing task/review record, or the handoff for a small one-turn change. For visible work, add a brief visual plan: hierarchy, layout, type/spacing/color, responsive behavior and required states. Reuse existing decisions and the product's design system; do not start a separate design project or require a Northstar folder.
+
+For final delivery, reconcile the full owner outcome and authorized scope changes against the review scope. Identify omitted required journeys or release obligations before accepting; accumulated component passes do not prove the integrated promised result. Reuse valid evidence, inspect uncovered effects in the intended environment and keep missing evidence unverified. For explicitly local-only work, judge that endpoint without inventing a release project.
 
 If reviewing completed work without a plan, derive criteria from the request and established product. Label additional preferences as suggestions; do not invent requirements to fail it. A reference is useful when supplied or needed for a specific decision, not a mandatory competitor search.
 
@@ -36,7 +41,7 @@ For nonvisual work, omit visual inspection with a reason. For visible work, capt
 
 ## Challenge the result, then repair
 
-Assign a separate reviewer agent who has not authored the reviewed scope or owned the operational decisions being audited. Isolated review checks do not count as authorship. Provide original intent, criteria, artifacts, and safe access; let the reviewer inspect before seeing the builder's conclusions. The reviewer reports directly to the accepting role. If independent review is unavailable, keep the deliverable **UNVERIFIED** for acceptance and identify the needed reviewer/evidence. A new label, fresh context or self-review cannot remove the author conflict. QA and taste may share one uninvolved, capable reviewer; required human approval stays human. Apply the [functional separation rules](../codex-subagents/references/role-profiles.md).
+Assign a separate reviewer agent who has not authored the reviewed scope or owned the operational decisions being audited. Isolated review checks do not count as authorship. Provide original intent, criteria, artifacts, and safe access; let the reviewer inspect before seeing the builder's conclusions. The reviewer reports directly to the accepting role. If independent review is unavailable, keep the deliverable **UNVERIFIED** for acceptance and identify the needed reviewer/evidence. A new label, fresh context or self-review cannot remove the author conflict. QA and taste may share one uninvolved, capable reviewer; only expressly retained human decisions require human approval. Apply the [functional separation rules](../codex-subagents/references/role-profiles.md).
 
 Every finding needs **location/state, expected versus observed result, user impact, and reproduction or evidence**. Separate:
 
@@ -50,14 +55,14 @@ Contain a material defect at its source: stop promoting or using the affected ar
 
 ## Finish without a review loop
 
-Do one scoped inspection, then targeted repair/rechecks. Broaden only for a new failure, relevant change, or concrete coverage gap. Keep the same finding and failed-attempt history across reviewers and handoffs. After two unproductive repair attempts, isolate the failing case within one bounded recovery window. If it also fails, the implementing owner must [decide and act](../northstar/SKILL.md#decide-after-exhausted-recovery), preserving the finding and evidence in the existing checkpoint; a review-only agent sends the finding to that owner without taking over implementation. Never waive a defect to meet the retry limit or repeat the same review under a new reviewer.
+Do one scoped inspection, then targeted repair/rechecks. Stop optional critique and polish at diminishing returns; unmet required criteria remain blockers or unverified, never silently waived. Broaden only for a new failure, relevant change, or concrete coverage gap. Keep the same finding and failed-attempt history across reviewers and handoffs. After two unproductive repair attempts, isolate the failing case within one bounded recovery window. If it also fails, the implementing owner must [decide and act](../northstar/SKILL.md#decide-after-exhausted-recovery), preserving the finding and evidence in the existing checkpoint; a review-only agent sends the finding to that owner without taking over implementation. Never waive a defect to meet the retry limit or repeat the same review under a new reviewer.
 
 Use the project's existing review/task record, or a concise handoff for a small one-turn change. `docs/evals/` is an optional fallback, not a required parallel record. Include:
 
 - **Scope:** artifact/revision, environment, journeys/viewports, and inspected lanes.
 - **Findings:** must-fix, suggestions, and unverified checks, each with evidence and disposition.
 - **Verification:** screenshot links/previews with concrete visual observations; functional actions and their observed results, including the chosen failure case; repairs rechecked and reviewer independence. A bare "LGTM", "looks good", or "tests pass" is not a review result.
-- **Decision:** `READY` when an independent reviewer verifies current criteria and material repairs; `NOT READY` for observed blockers; `UNVERIFIED` when required evidence is missing. Name remaining limitations. A scoped readiness decision is not release authorization or human acceptance.
+- **Decision:** name the reviewed endpoint and whether the verdict covers an increment or the full owner outcome. Use `READY` when independent evidence covers that scope and material repairs; `NOT READY` for observed blockers; `UNVERIFIED` for missing required evidence. Name uncovered owner requirements; an increment's readiness cannot close them. Readiness is not release authorization or human acceptance.
 
 If both blockers and missing evidence exist, report NOT READY and retain the unverified list. Do not average lanes into a quality percentage. Preserve necessary evidence in a durable location, link instead of copying logs, and deliver once the agreed bar is met.
 
