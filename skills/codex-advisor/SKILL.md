@@ -5,7 +5,7 @@ description: Consult GPT-6.1 Sol for material uncertainty, relevant capability r
 
 # Codex Advisor
 
-Follow the shared [delivery contract](../northstar/SKILL.md#delivery-contract): finish the highest-value existing workflow, use one approval owner, and stop optional work at diminishing returns. Load this companion only for its current task.
+Follow Northstar's [delivery contract](../northstar/SKILL.md#delivery-contract). Load this companion only for its advisory function.
 
 
 Use this skill in other agents too; the Codex name is not a usage restriction. Follow the bundled [host adaptation guidance](../northstar/SKILL.md#use-with-other-agents); the advisor service and reader prerequisites still apply.

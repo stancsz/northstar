@@ -5,7 +5,7 @@ description: Plan and inspect delivery quality before handoff. Use for functiona
 
 # Codex QA
 
-Follow the shared [delivery contract](../northstar/SKILL.md#delivery-contract): finish the highest-value existing workflow, use one approval owner, and stop optional work at diminishing returns. Load this companion only for its current task.
+Follow Northstar's [delivery contract](../northstar/SKILL.md#delivery-contract). Load this companion only for its acceptance-testing function.
 
 
 Inspect actual rendered evidence for visible work. Consult [Codex Advisor](../codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance) for a material unresolved visual decision; routine acceptance does not need a separate advisor or human sign-off unless explicitly required.

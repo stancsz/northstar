@@ -5,7 +5,7 @@ description: Review whether ongoing assigned work should finish, continue, wait,
 
 # Task Completion Review
 
-Follow the shared [delivery contract](../northstar/SKILL.md#delivery-contract): finish the highest-value existing workflow, use one approval owner, and stop optional work at diminishing returns. Load this companion only for its current task.
+Follow Northstar's [delivery contract](../northstar/SKILL.md#delivery-contract). Load this companion only for its finish/continue/wait/escalate decision.
 
 
 Keep working while useful authorized steps remain toward the owner's actual outcome. Stop optional work at diminishing returns; required unmet outcomes remain explicit until complete, stopped by the user or blocked by a verified dependency/resource limit. Use the existing goal and evidence; do not create another work ledger. A guardian review is not independent product QA or proof that every requirement passed.
