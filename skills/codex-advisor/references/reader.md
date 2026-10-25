@@ -14,7 +14,7 @@ $skillDirectories += Join-Path (Join-Path $env:USERPROFILE '.codex\skills') 'cod
 $codexAdvisor = $skillDirectories | Where-Object { Test-Path (Join-Path $_ 'SKILL.md') } | Select-Object -First 1
 if (-not $codexAdvisor) { throw 'Set $codexAdvisor to this installation''s codex-advisor directory.' }
 $codexAdvisor = (Resolve-Path $codexAdvisor).Path
-py (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model default --input-file .\advisor-packet.txt --reader-root . --reader-scope src --reader-scope tests
+python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --input-file .\advisor-packet.txt --reader-root . --reader-scope src --reader-scope tests
 ```
 
 Select task-relevant source directories broad enough to find counterevidence, not only files supporting the worker's hypothesis. Scopes authorize transmission of source excerpts through the worker gateway. Do not include confidential or credential-bearing sources without authority. No worker context is sent to Pi.

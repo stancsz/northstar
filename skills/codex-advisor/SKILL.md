@@ -18,7 +18,7 @@ Contents: [Capability risks](#consult-early-and-frequently-on-capability-risks) 
 
 ## Consult early and frequently on capability risks
 
-Use the [risk register](references/capability-triggers.md) as evidence of possible limitations, not a mandatory consultation list. Identify the concrete decision, consequence and missing evidence. Resolve a routine factual question locally; consult before committing when a relevant capability gap makes that insufficient. Group overlapping risks into one packet.
+Use the [risk register](references/capability-triggers.md) for task-level conditions that may change the next action, not as a diagnosis of the selected model or a mandatory consultation list. Identify the concrete decision, consequence and missing evidence. Resolve a routine factual question locally; consult before committing when a relevant capability gap makes that insufficient. Group overlapping risks into one packet.
 
 Reconsult only for a distinct material decision, changed evidence or a failed recommendation whose repair needs expert judgment. Retain prior advice and failed receipts. A new risk tag does not reset recovery. Stop when the decision is supported; no reassurance calls or hidden model fallback.
 
@@ -74,7 +74,7 @@ $skillDirectories += Join-Path (Join-Path $env:USERPROFILE '.codex\skills') 'cod
 $codexAdvisor = $skillDirectories | Where-Object { Test-Path (Join-Path $_ 'SKILL.md') } | Select-Object -First 1
 if (-not $codexAdvisor) { throw 'Set $codexAdvisor to this installation''s codex-advisor directory.' }
 $codexAdvisor = (Resolve-Path $codexAdvisor).Path
-python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model default --input-file .\advisor-packet.txt
+python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --input-file .\advisor-packet.txt
 ```
 
 For a complex text decision with a concrete reason for an independent second view, add `--council` and select a distinct configured route with `--council-model <route>`. The council model receives the packet without the primary's opinion; the primary receives the packet plus the council's bounded review and gives its own verdict. A successful receipt includes both returned model IDs and provider usage. The caller makes at most one call to each selected route, with no retry or fallback; council failure stops before the primary call. Council mode cannot be combined with image attachments or Pi reader mode; use the primary configured route's image-backed path for visual decisions.
@@ -82,7 +82,7 @@ For a complex text decision with a concrete reason for an independent second vie
 For visual advice, attach the overall view and useful details proactively. The text packet supplies criteria, revision/state, reference roles and the next decision; image bytes are separate from its character budget:
 
 ```powershell
-python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model default --input-file .\advisor-packet.txt --image .\current.png --image .\detail.png
+python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --input-file .\advisor-packet.txt --image .\current.png --image .\detail.png
 ```
 
 Supported files are PNG, JPEG, WebP and GIF, with at most eight images, 10 MB per file and 20 MB total per call; split further requested views into calls. Bytes are preserved without resizing, with `--image-detail high` by default (`auto`/`low` also available). High detail requests provider inspection quality; it does not guarantee every fine feature is readable. The receipt records attachment paths, types, byte counts and hashes without echoing pixels. Visual advice asks for concrete observations, fixes and requested views under 4,000 characters, rather than the ordinary 160-word target. An attachment receipt proves what was sent; only image-backed feedback establishes what was inspected.
