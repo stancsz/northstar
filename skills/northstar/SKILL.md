@@ -27,7 +27,7 @@ This is the shared default for all six skills, their references and templates. C
 4. **Verify and repair.** Check changed behavior and plausible failures. Load [Codex QA](../codex-qa/SKILL.md) when the review threshold applies, including visual inspection when relevant. Otherwise the commander accepts attributable, small and reversible work from relevant checks and the scoped diff. Repair failed criteria and recheck affected scope when required; reuse evidence. A build, HTTP 200, mock or worker claim alone is insufficient.
 5. **Deliver the requested endpoint.** Reconcile every original requirement against evidence and the reviewer verdict when required, otherwise the commander's acceptance. Mark each passed, unmet or unverified. Keep required work open; a narrower review cannot discharge it. Deliver with checks and material limits, and do not invent another increment after completion.
 
-Use [Task Completion Review](../task-completion-review/SKILL.md) for a substantive finish, wait or escalation decision; reuse current evidence. Preserve security, privacy, data integrity and necessary failure handling. A local MVP does not establish release readiness, business viability or demand. For explicitly local work, do not invent deployment obligations.
+Use [Task Completion Review](../task-completion-review/SKILL.md) only when a substantive finish, wait or escalation decision remains uncertain after applying this contract; otherwise decide directly and reuse current evidence. Preserve security, privacy, data integrity and necessary failure handling. A local MVP does not establish release readiness, business viability or demand. For explicitly local work, do not invent deployment obligations.
 
 ## Six skills, one coordinated package
 

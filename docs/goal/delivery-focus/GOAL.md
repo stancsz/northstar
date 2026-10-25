@@ -18,7 +18,7 @@ The owner says Northstar has spread across too many prompts and still fails to f
 
 ## Current accepted changes
 
-The central delivery contract focuses one existing commitment, finishes required work before expanding, stops optional work at diminishing returns, and assigns approval decisions to one existing commander. Commander-only acceptance requires attributable scope and relevant checks; independent QA remains separate when required. Six entrypoints point to that contract instead of repeating it as another workflow.
+The central delivery contract focuses one existing commitment, finishes required work before expanding, stops optional work at diminishing returns, and assigns approval decisions to one existing commander. Commander-only acceptance requires attributable scope and relevant checks; independent QA remains separate when required. Task Completion Review is conditional on unresolved substantive uncertainty after applying the contract, so it does not create a routine extra review step. Six entrypoints point to that contract instead of repeating it as another workflow.
 
 The repository `AGENTS.md` now starts from Northstar and the live task. Direction, goals, reports, evaluations and companion guidance are consulted when they could change scope, the next action or acceptance. The Advisor examples use `python`, which worked on this Windows host after the documented `py` launcher failed to start its selected target. Installed Advisor source matches the repository copy.
 
