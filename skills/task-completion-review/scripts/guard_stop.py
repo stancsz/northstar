@@ -60,7 +60,7 @@ def redact(text):
 
 
 def model_identifier(value):
-    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,99}", value) or redact(value) != value:
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:/-]{0,99}", value) or redact(value) != value:
         raise ValueError("Use a compact nonsecret supported model identifier")
     return value
 

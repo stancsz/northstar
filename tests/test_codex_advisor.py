@@ -96,7 +96,7 @@ def test_bearer_key_is_sent_for_text_and_image_consultations(monkeypatch, images
         return io.StringIO(json.dumps({"choices": [{"finish_reason": "stop",
             "message": {"content": "Verdict: received."}}]}))
     monkeypatch.setattr(caller, "urlopen", upstream)
-    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1,
+    args = SimpleNamespace(model="provider/primary-route", base_url="http://localhost:4040/v1", timeout_seconds=1,
         image_parts=[{"type": "image_url", "image_url": {"url": "data:image/png;base64,AAAA"}}] if images else [])
     result = caller.consult(args, [{"role": "user", "content": "Inspect."}])
     assert len(requests) == 1
@@ -114,7 +114,7 @@ def test_auth_error_is_actionable_redacted_and_never_retried(monkeypatch, status
         requests.append(request)
         raise caller.HTTPError(request.full_url, status, "failed", {}, io.BytesIO(b"fixture-secret"))
     monkeypatch.setattr(caller, "urlopen", upstream)
-    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
+    args = SimpleNamespace(model="provider/primary-route", base_url="http://localhost:4040/v1", timeout_seconds=1)
     with pytest.raises(RuntimeError) as error:
         caller.consult(args, [])
     assert len(requests) == 1
@@ -148,7 +148,7 @@ def test_redirect_does_not_forward_an_advisor_credential(monkeypatch):
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
-        args = SimpleNamespace(model="sol", base_url=f"http://127.0.0.1:{server.server_port}/v1",
+        args = SimpleNamespace(model="provider/primary-route", base_url=f"http://127.0.0.1:{server.server_port}/v1",
             timeout_seconds=1)
         with pytest.raises(RuntimeError, match="HTTP 302"):
             caller.consult(args, [])
@@ -292,7 +292,7 @@ def test_incomplete_expert_is_not_advice(monkeypatch):
     caller = load_caller()
     body = {"choices": [{"message": {"content": "partial"}, "finish_reason": "length"}]}
     monkeypatch.setattr(caller, "urlopen", lambda *a, **k: io.StringIO(json.dumps(body)))
-    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
+    args = SimpleNamespace(model="provider/primary-route", base_url="http://localhost:4040/v1", timeout_seconds=1)
     with pytest.raises(RuntimeError, match="completed"):
         caller.consult(args, [])
 
@@ -515,7 +515,7 @@ def test_image_preflight_stops_before_provider(tmp_path, monkeypatch, bad):
         monkeypatch.setattr(caller, "MAX_TOTAL_IMAGE_BYTES", image.stat().st_size)
         paths *= 2
     monkeypatch.setattr(caller, "parse_args", lambda: SimpleNamespace(
-        model="sol", question="Inspect", input_file=None, timeout_seconds=1,
+        model="provider/primary-route", question="Inspect", input_file=None, timeout_seconds=1,
         reader_scope=[], reader_root=None, image=paths, image_detail="high"))
     monkeypatch.setattr(caller, "urlopen", lambda *a, **kw: pytest.fail("Invalid image spent a provider call"))
     assert caller.main() == 1
@@ -544,7 +544,7 @@ def test_reader_keeps_image_pixels_on_followup_and_dispatches_its_own_question(
             "choices": [{"finish_reason": "stop", "message": {"content": answer}}]}))
 
     monkeypatch.setattr(caller, "urlopen", upstream)
-    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1,
+    args = SimpleNamespace(model="provider/primary-route", base_url="http://localhost:4040/v1", timeout_seconds=1,
         reader_root=source_repo, reader_scope=["src"], reader_model="default", image_parts=parts)
     result = reader.run_with_reader(args, "Inspect the screenshot and check source if needed.",
                                     caller.consult, caller.VISUAL_INSTRUCTION)
@@ -569,11 +569,11 @@ def test_attaching_images_preserves_original_user_blocks():
 
 def test_caller_accepts_arbitrary_model_and_council_aliases(monkeypatch):
     caller = load_caller()
-    monkeypatch.setattr(sys, "argv", [str(CALLER), "--model", "any-primary",
-                                       "--council-model", "any-review", "--question", "test"])
+    monkeypatch.setattr(sys, "argv", [str(CALLER), "--model", "provider/primary",
+                                       "--council-model", "provider/reviewer", "--question", "test"])
     args = caller.parse_args()
-    assert args.model == "any-primary"
-    assert args.council_model == "any-review"
+    assert args.model == "provider/primary"
+    assert args.council_model == "provider/reviewer"
 
 
 @pytest.mark.parametrize(("model", "council_model", "message"), [
