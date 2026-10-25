@@ -1,0 +1,82 @@
+{
+  "scope": "repository source consolidation only",
+  "date": "2026-10-24",
+  "base": "captured dirty-tree Markdown baseline, not Git HEAD",
+  "entrypoint_words_before": 17915,
+  "entrypoint_words_after": 13964,
+  "all_skill_markdown_words_before": 35303,
+  "all_skill_markdown_words_after": 34163,
+  "local_links_checked": 415,
+  "link_errors": [],
+  "whitespace_check": "passed, tracked and scoped untracked files",
+  "helper_tests": "26 before relocation; 26 after; independent targeted review 26 passed",
+  "reviewed_source_hashes": {
+    "skills/northstar/SKILL.md": "84f88ece56c2a8ac97b21e41474d1701643878408c3507388aabf217ec7b22f9",
+    "skills/codex-qa/SKILL.md": "98915acaf5804dc51370cff5a480915c7297d30ae7956548f67304dcb0186db3",
+    "skills/codex-subagents/SKILL.md": "22940665778954831e5ce48a43a591521daa7159fde95ea82209f93ff6ce45fa",
+    "skills/codex-advisor/SKILL.md": "afcdb198507d1e98617734bfdf371ef201d52df33014bd88c26948b1200f71ff",
+    "skills/claude-code-subagents/SKILL.md": "59873723e2353425cdc44e30c9be24b26361a395fcd45b3c4ff0d9a2c451c3a2",
+    "skills/task-completion-review/SKILL.md": "c93031f4effaea502b68127bfaaaeab613b8e4896370c3019e027f7175d0ca93",
+    "skills/northstar/references/protocol.md": "f49aa74f5b404f84402c890faae180f687d84b2128ecff710ca47a44447b153a",
+    "skills/northstar/templates/GOAL.md": "e2a2e4a81aab31186e858d196ab3b91b9f21e9cb0b4caaf72e406fe1c271eccf",
+    "skills/codex-subagents/references/cli-dispatch.md": "0e72f2734c056240e49fbc93255fd9ce9c1a168117a66a2483243b711fdcf4d1",
+    "skills/codex-subagents/templates/orchestrator.md": "cbd299f557ba947bbfec3a2368443cfdeaed35f18adfb9036bc5b161b8fed2f5",
+    "skills/codex-subagents/templates/supervisor.md": "3f9c08d9c29a57cff430a1554d9e24389bbdb4c5bdbe5268ecd85254476accd7"
+  },
+  "cli_receipts": {
+    "worker": {
+      "exit": 0,
+      "turn_completed": true,
+      "native_commands": 12,
+      "reported_usage": {
+        "input_tokens": 918060,
+        "cached_input_tokens": 321408,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 9463,
+        "reasoning_output_tokens": 4301
+      },
+      "edited_paths": [
+        "D:\\github\\northstar\\docs\\reports\\delivery-focus\\core-cli-relocation.md",
+        "D:\\github\\northstar\\skills\\codex-subagents\\SKILL.md",
+        "D:\\github\\northstar\\skills\\codex-subagents\\references\\cli-dispatch.md",
+        "D:\\github\\northstar\\tests\\test_codex_subagents_helper.py"
+      ]
+    },
+    "review": {
+      "exit": 0,
+      "turn_completed": true,
+      "native_commands": 6,
+      "reported_usage": {
+        "input_tokens": 430015,
+        "cached_input_tokens": 151680,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 8574,
+        "reasoning_output_tokens": 4041
+      },
+      "edited_paths": [
+        "D:\\github\\northstar\\docs\\reports\\delivery-focus\\core-focus-review.md"
+      ]
+    },
+    "test-review": {
+      "exit": 0,
+      "turn_completed": true,
+      "native_commands": 2,
+      "reported_usage": {
+        "input_tokens": 181114,
+        "cached_input_tokens": 101248,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2887,
+        "reasoning_output_tokens": 1156
+      },
+      "edited_paths": [
+        "D:\\github\\northstar\\docs\\reports\\delivery-focus\\core-focus-test-review.md"
+      ]
+    }
+  },
+  "limits": [
+    "source scenarios are not observed agent behavior",
+    "no matched runtime-efficiency baseline",
+    "installed skills not synchronized",
+    "pre-edit Python snapshot covers first 140 lines only"
+  ]
+}

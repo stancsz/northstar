@@ -2,7 +2,11 @@
 
 ### Give your AI team a mission. Let it own the decisions. Inspect the result.
 
-**An operating system for delegated AI work, delivered as six coordinated Markdown skills.** Northstar connects your intent to an accountable team: clear authority, local initiative, independent acceptance, and learning that carries into the next assignment.
+**Six coordinated skills for delegated AI work.** Northstar connects your intent to accountable execution: clear authority, local initiative, proportionate acceptance, and learning that carries into the next assignment.
+
+Start with [one delivery contract](skills/northstar/SKILL.md#delivery-contract): improve the highest-value existing workflow, finish and verify it before expanding, let one commander handle covered approvals, and stop optional work at diminishing returns. The six skills support that loop; they are not six stages to run.
+
+This repository stays focused on simple, reusable skills and their necessary supporting tools. Applications and their implementation plans belong in separate repositories.
 
 [中文](docs/misc/README.zh-CN.md) · [Install](docs/misc/install.md) · [How it works](#the-management-ideas-made-executable) · [Evidence](#what-has-actually-been-checked)
 
@@ -24,7 +28,7 @@ Northstar addresses that management gap. It gives agents a way to carry intent, 
 | --- | --- |
 | Every meaningful choice comes back to you. | A commander uses standing authority, makes covered tradeoffs, and escalates only decisions outside its mandate or indispensable human-held dependencies. |
 | More agents produce more disconnected pieces. | One owner integrates the workflow. Managers resolve dependencies and conflicting interfaces. |
-| “Done” means the author thinks it works. | A nonauthor reviewer checks the actual result. Builders repair defects; reviewers recheck. |
+| “Done” means the author thinks it works. | Use one nonauthor check when the shared contract requires it; the commander verifies small, reversible work. Builders repair defects; reviewers recheck when independent review applies. |
 | A stalled agent repeats the same experiment. | Bounded recovery carries failed attempts across handoffs; the owner chooses an alternative, resolves a dependency, or stops the failed route. |
 | Every new chat forgets what was learned. | Checkpoints preserve verified state, lessons, rejected paths, and the next decision in your project's existing records. |
 | A simple task grows a management bureaucracy. | Add functions and coordination only when needed. Reuse evidence, combine compatible roles, and remove redundant approvals. |
@@ -49,7 +53,7 @@ and new paid services outside this assignment.
 Return the working result, verification evidence, and remaining limits.
 ```
 
-The intended workflow: inspect the project → choose the smallest complete delivery → implement → independently verify → repair → hand off evidence and lessons. This is a usage example, not a reported benchmark.
+The intended workflow: inspect the project → choose the smallest complete delivery → implement → verify (independently when warranted) → repair → hand off evidence and lessons. This is a usage example, not a reported benchmark.
 
 **Codex-native. Usable by other agents.** Claude Code, OpenCode, and other agents can read these practices too. Preserve all six skill names and directories; adapt invocation and tools to the host. `Codex` in a name identifies its origin, not who may use it. Claude Code Subagents specifically delegates from Codex to the Claude Code CLI. [Host adaptation and prerequisites →](docs/misc/install.md#installing-from-another-agent)
 
@@ -67,9 +71,9 @@ A supervisor is accountable for a usable result. It supplies context, resolves d
 
 Disagreement gets an evidence exchange. If it persists, the responsible superior hears the actual positions, decides within its authority, and assigns the next action. Material dissent stays visible; unanimous agreement is unnecessary. [Operating practice →](skills/northstar/references/operating-system.md)
 
-### 3. Freedom to build. Independent acceptance.
+### 3. Freedom to build. Proportionate acceptance.
 
-Builders can run development checks and learn from their work. Independent QA and taste judgment belong to someone who did not create or repair that deliverable. The reviewer exercises the workflow, inspects visible results, challenges relevant failures, and checks repairs.
+Builders run relevant checks and learn from their work. Use one independent QA/taste review when required or when it can change acceptance: material user/data/security risk, cross-component integration, unresolved uncertainty or visual judgment. The commander directly verifies small, reversible changes with clear evidence. A reviewer must not certify work they created or repaired.
 
 A manager who edits the work inherits the same conflict. A green build, a worker's report, or a confident “LGTM” cannot replace inspection. [Codex QA →](skills/codex-qa/SKILL.md)
 
@@ -98,7 +102,7 @@ The design adapts ideas from mission command, reversible decision-making, lean d
 | [**Claude Code Subagents**](skills/claude-code-subagents/SKILL.md) | Delegate bounded work from Codex to Claude Code through its CLI, then inspect and integrate the result. | You request Claude Code or it adds useful independent capacity. |
 | [**Task Completion Review**](skills/task-completion-review/SKILL.md) | Review a proposed finish, find missing information and direct authorized next work; optional Stop-hook adapter. | An agent claims completion or wants to stop while requirements may remain. |
 
-Use `$northstar` as the central entry point; each companion is also directly invocable. Install all six, load what the task needs. A small change can use one builder and one independent reviewer; supervisors exist when coordination warrants them.
+Use `$northstar` as the central entry point; each companion is also directly invocable. Install all six, load what the task needs. One owner handles small, reversible changes; use one independent reviewer when the shared contract requires it. Add supervisors only when coordination warrants them.
 
 ```mermaid
 flowchart TD

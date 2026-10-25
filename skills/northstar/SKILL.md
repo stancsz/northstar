@@ -5,7 +5,7 @@ description: Central coordinator of the six-skill Northstar package for project 
 
 # Northstar
 
-Turn the owner's request into a useful, verified result with the least total time, tokens and rework. Default to one implementation owner and one independent acceptance review of the coherent delivery. Choose ordinary methods yourself, preserve existing authority and dirty work, and keep the full requested endpoint visible. Explicit task and repository requirements still apply.
+Deliver useful, verified work with low total effort and rework. Preserve authority, dirty work and the full requested outcome; follow the [delivery contract](#delivery-contract).
 
 **Start with the next useful action.** Read the applicable instructions and current task state, identify the next unmet criterion, and make the smallest change or distinguishing check that advances it. Before expanding research, planning or team setup, produce a relevant artifact, inspect a real result, or demonstrate the specific blocker. More process records are not delivery. Detailed guidance below is for its stated trigger; do not read every linked reference before acting.
 
@@ -14,18 +14,18 @@ Turn the owner's request into a useful, verified result with the least total tim
 This is the shared default for all six skills, their references and templates. Companion instructions specialize it; they must not create a second workflow or approval chain. Explicit task requirements and platform boundaries still govern.
 
 - **Focus the existing core.** Choose one current commitment: the existing user workflow whose completion or repair delivers the most useful value. Treat 80/20 as a prioritization heuristic, not a measured ratio or permission to drop requirements. Add a feature, role, tool or abstraction only when it is needed for this commitment; park other ideas.
-- **Finish before expanding.** Keep Ask / Acceptance / Remaining in the existing task record. Build the smallest complete result, run relevant checks, obtain one nonauthor review of the coherent delivery, and repair failed criteria. Accepted scope stays closed unless new evidence warrants reopening it.
+- **Finish before expanding.** Keep Ask / Acceptance / Remaining in the existing task record. Build the smallest complete result and run relevant checks. Use one nonauthor review when required or when it can change acceptance: material user/data/security risk, cross-component integration, unresolved uncertainty or visual judgment. Otherwise the commander accepts small, reversible work when its scope is attributable and relevant checks pass. If scope or evidence cannot be established, keep acceptance unverified or obtain the required review. This is accountable acceptance, not an independent verdict. Repair failed criteria; keep accepted scope closed unless new evidence warrants reopening it.
 - **Continue while the next step earns its cost.** Continue when an authorized step can satisfy a required criterion, remove a material risk or resolve uncertainty that changes the next action. Stop optional polish, research, consultation and process changes when their expected benefit no longer justifies time, tokens, coordination and rework. State the concrete reason; no invented scores or fixed improvement quotas. Diminishing returns never turns an unmet requirement into a pass: retain it and use bounded recovery or report its exact dependency.
 - **One approval owner.** Name the existing commander as the approval/decision owner, not a new standing agent. Treat covered actions as already authorized; workers execute local choices without asking, and route genuine in-mandate exceptions to that owner. The owner decides once using available evidence and standing grants. QA supplies an independent verdict; it is not another permission queue. Do not invent human sign-offs. Explicitly retained human decisions and actual platform restrictions remain exceptions.
-- **Subtract process.** Default to one builder and one independent reviewer; the commander may fill a compatible role. Load a companion only for the current need. Reuse one result, decision and evidence record. Consult council for a material unresolved decision, not reassurance. Stop adding goals and mechanisms while the current commitment can be finished.
+- **Subtract process.** Default to one owner. Add workers or reviewers only when required or when their value exceeds coordination and integration cost. Load a companion only for the current need. Reuse one result, decision and evidence record. Consult council for a material unresolved decision, not reassurance. Stop adding goals and mechanisms while the current commitment can be finished.
 
 ## Deliver a usable MVP, then improve in increments
 
 1. **Resume the actual request.** Recover original requirements, authorized changes, existing evidence, relevant lessons and failed attempts. Use the project's current records; do not restart accepted work or create missing Northstar folders just to begin.
 2. **Define the finish.** Name the intended user workflow, environment and observable acceptance. Distinguish the full requested endpoint from this increment and retain remaining obligations. A request and short handoff suffice for small work. For uncertain products, identify the riskiest assumption and test it with a bounded usable increment.
 3. **Build the next complete step.** Reuse existing tools and supported capabilities. Research a concrete decision that blocks implementation; otherwise implement. Choose reversible details within the mandate. If delegation is worthwhile, give the worker the target artifact, acceptance check, first action, authority, write scope and deadline, then dispatch promptly. For a small CLI assignment, use a host-enforced five-minute artifact checkpoint and ten-minute handoff deadline with one targeted check. Longer work names intermediate artifacts and a real deadline. Stop a missed or blocked worker, preserve partial work and resolve the cause; do not let it run serial diagnostics or retry unchanged.
-4. **Verify and repair.** Builders run relevant development checks. A nonauthor reviewer inspects the actual coherent workflow, resulting effects and plausible failures against the request. Repair concrete failed criteria and recheck affected scope through a nonauthor. Reuse applicable evidence; do not start another review chain. Use [Codex QA](../codex-qa/SKILL.md) for acceptance, including rendered inspection for visible artifacts. A build, HTTP 200, mock or worker claim alone is insufficient.
-5. **Deliver the requested endpoint.** Reconcile every original requirement and authorized change with current artifact evidence in the intended environment and the independent verdict: passed, unmet or unverified. State whether the increment or full request is accepted. Continue useful authorized work while required outcomes remain; a narrower review or limitations note cannot discharge them. Close with the usable result, checks and material limits; do not manufacture a next increment after the request is satisfied.
+4. **Verify and repair.** Check changed behavior and plausible failures. Load [Codex QA](../codex-qa/SKILL.md) when the review threshold applies, including visual inspection when relevant. Otherwise the commander accepts attributable, small and reversible work from relevant checks and the scoped diff. Repair failed criteria and recheck affected scope when required; reuse evidence. A build, HTTP 200, mock or worker claim alone is insufficient.
+5. **Deliver the requested endpoint.** Reconcile every original requirement against evidence and the reviewer verdict when required, otherwise the commander's acceptance. Mark each passed, unmet or unverified. Keep required work open; a narrower review cannot discharge it. Deliver with checks and material limits, and do not invent another increment after completion.
 
 Use [Task Completion Review](../task-completion-review/SKILL.md) for a substantive finish, wait or escalation decision; reuse current evidence. Preserve security, privacy, data integrity and necessary failure handling. A local MVP does not establish release readiness, business viability or demand. For explicitly local work, do not invent deployment obligations.
 
@@ -35,17 +35,17 @@ Install sibling directories `northstar`, `codex-qa`, `codex-subagents`, `codex-a
 
 | Trigger | Load |
 | --- | --- |
-| Accept a changed coherent deliverable | [Codex QA](../codex-qa/SKILL.md) |
+| Independent acceptance is required or materially useful | [Codex QA](../codex-qa/SKILL.md) |
 | Worthwhile parallel work, CLI delegation or independent reviewer setup | [Codex Subagents](../codex-subagents/SKILL.md) |
 | Documented capability risk, art/image/aesthetic work or a concrete expert blocker | [Codex Advisor](../codex-advisor/SKILL.md); apply its material-decision triggers |
 | Requested Claude Code or useful independent Claude capacity | [Claude Code Subagents](../claude-code-subagents/SKILL.md) |
 | Decide whether substantive work may finish, continue, wait or escalate | [Task Completion Review](../task-completion-review/SKILL.md) |
 
-Bundling does not require every lane or parallel implementation. Independent acceptance remains separate from authorship. The optional [Windows app recovery](../windows-app-recovery/SKILL.md) utility installs separately. Advisor service, optional Pi and CLI/provider prerequisites are separate from skill installation.
+Bundling does not require every lane or parallel implementation. When independent acceptance applies, keep it separate from authorship. The optional [Windows app recovery](../windows-app-recovery/SKILL.md) utility installs separately. Advisor service, optional Pi and CLI/provider prerequisites are separate from skill installation.
 
 ## Use with other agents
 
-Use these practices in Codex, Claude Code, OpenCode or another agent. `Codex` names identify origin, not a restriction. Preserve the six sibling names; adapt invocation, configuration and tools to the host's actual capabilities, reading the entrypoint directly if necessary. Preserve intent, authority, recovery history and independent acceptance. If a capability is unavailable, continue applicable work and identify that gap; do not invent a reviewer or claim runtime compatibility from installation. The Claude adapter specifically describes Codex-to-Claude CLI delegation.
+Use these practices in Codex, Claude Code, OpenCode or another agent. `Codex` names identify origin, not a restriction. Preserve the six sibling names; adapt invocation, configuration and tools to the host's actual capabilities, reading the entrypoint directly if necessary. Preserve intent, authority, recovery history and independent acceptance where required. If a capability is unavailable, continue applicable work and identify that gap; do not invent a reviewer or claim runtime compatibility from installation. The Claude adapter specifically describes Codex-to-Claude CLI delegation.
 
 ## Prefer local LiteLLM inference for agent work
 
@@ -53,7 +53,7 @@ Route Codex and Claude CLI workers' primary inference through `http://127.0.0.1:
 
 ## Match process to the work
 
-Apply the [delivery contract](#delivery-contract). Keep outcome, data, acceptance, resources, authorization and write ownership firm; delegate methods. Activate product, architecture or operations work only for an actual decision or dependency. Related low-risk edits share one coherent review; required checks before consequential use still apply. Templates are prompts for relevant information, not forms to complete.
+Apply the [delivery contract](#delivery-contract). Keep outcome, data, acceptance, resources, authorization and write ownership firm; delegate methods. Activate product, architecture or operations work only for an actual decision or dependency. Batch related low-risk edits into one owner check; use one coherent independent review when warranted. Required checks before consequential use still apply. Templates are prompts for relevant information, not forms to complete.
 
 Resolve shared-interface questions with affected owners, then let the accountable owner decide within the mandate. Use existing handoffs for alignment, acceptance and learning; add a meeting or report only when it can change a decision.
 
@@ -103,7 +103,7 @@ Ask the human only for indispensable input, a retained decision or action outsid
 
 Use project-owned records and existing conventions, never a skill installation tree. Goals, reports and evaluations name information and ownership, not mandatory folders. The optional `docs/northstar/`, `docs/goal/`, `docs/reports/`, `docs/evals/` layout applies only when needed or explicitly required by the repository. For stale pointers or denied writes, use [goal storage guidance](references/goal-driven-engineering.md#define-the-goal); do not invent competing canonical state.
 
-The orchestrator owns direction and integrated outcome; the supervisor coordinates a goal, inspects handoffs and records acceptance; the worker owns its scoped artifact and report without expanding scope, weakening criteria, closing the goal or delegating further. Combine compatible functions. Authorship/operator status survives a role rename or fresh context: a creator cannot independently certify the same result. A manager records but cannot override a failed independent verdict. If review is unavailable, deliver useful work and checks as independently unverified, naming the gap. Obtain human acceptance where required. Use [role profiles](../codex-subagents/references/role-profiles.md) or the [coordination loop](../codex-subagents/SKILL.md#coordinate-to-a-working-result) when assigning a team.
+Orchestrators own integrated outcomes; supervisors coordinate goals; workers own scoped artifacts. Combine roles where compatible. A creator cannot independently certify their work. If required review is unavailable, report it unverified; otherwise the commander accepts from evidence. Human acceptance applies only to retained decisions. See [role profiles](../codex-subagents/references/role-profiles.md) when assigning a team.
 
 ## Worker reports and handoffs
 

@@ -8,7 +8,7 @@ The existing commander is the single approval owner under the [delivery contract
 
 Give the worker the intended value, useful context, acceptance, authority, next action or viable approach, fallback/escalation trigger and evidence needed for handoff. The worker chooses local methods. When it cannot resolve an in-mandate issue, the commander inspects the failed criterion and chooses the best available route using useful value, full effort/cost, urgency, downside and reversibility. Focused expertise can inform that choice; it does not transfer accountability or create new retries.
 
-Consequential work receives proportionate inspection and a recovery plan where applicable. Consequence, uncertainty, an unfamiliar tool or a reviewer disagreement alone does not trigger human approval. Use existing authority and act. Keep explicit owner commitments and independent acceptance firm; changing method, staffing or priority is not permission to report a failed criterion as passed.
+Consequential work receives proportionate inspection and a recovery plan where applicable. Consequence, uncertainty, an unfamiliar tool or a reviewer disagreement alone does not trigger human approval. Use existing authority and act. Keep explicit owner commitments and any required independent acceptance firm; changing method, staffing or priority is not permission to report a failed criterion as passed.
 
 ## Continue across agents and tools
 

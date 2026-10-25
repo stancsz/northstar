@@ -14,7 +14,7 @@ Status: active
 ## Ownership and tasks
 
 - Builder, exact write scope/task scratch, first artifact/action, dependencies and assigned report path.
-- Nonauthor reviewer, actual review scope and integration owner. Compatible roles may share an agent; the author cannot certify their own work.
+- Reviewer and scope if independent acceptance is required; otherwise the commander accepts. Authors cannot certify their own work as independent.
 - For delegated work: verified route/tool setup, context/validation command and parent-enforced checkpoint/deadline. Use relevant companion guidance rather than copying it here.
 
 ## Execution record
@@ -26,6 +26,6 @@ Status: active
 
 ## Acceptance
 
-- Reconcile each required outcome: passed, unmet or unverified, with current evidence and one independent verdict.
+- Reconcile required outcomes as passed, unmet or unverified from evidence and reviewer verdict when required; otherwise record commander acceptance.
 - Approval owner records the decision once: deliver the accepted increment/full endpoint, repair a failed criterion, or retain an exact dependency. Do not mark the full goal complete while required outcomes remain.
 - Handoff the usable result, checks and material limits. Update the existing index where required; no duplicate approval or learning record.

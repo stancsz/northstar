@@ -4,7 +4,7 @@ Use this practice for sustained project delivery or business operations. Read th
 
 ## Turn direction into today's work
 
-Before assignment, use the [functional profiles](../../codex-subagents/references/role-profiles.md) to cover the decisions actually needed: product/outcome, architecture/interfaces, implementation, independent QA, experience/taste, operations and domain expertise. They are functions across the existing hierarchy, not seven standing departments. Combine compatible work, but separate creation or operating decisions from their independent certification. Name the author, nonauthor reviewer and decision owner. Use the [agent-to-agent handoff practice](../../codex-subagents/references/agent-handoffs.md) when responsibility or artifacts move between agents.
+Before assignment, use the [functional profiles](../../codex-subagents/references/role-profiles.md) to cover the decisions actually needed: product/outcome, architecture/interfaces, implementation, independent QA, experience/taste, operations and domain expertise. They are functions across the existing hierarchy, not seven standing departments. Combine compatible work; separate creation or operating decisions from independent certification when that review is required. Name the reviewer only when needed, alongside the accountable decision owner. Use the [agent-to-agent handoff practice](../../codex-subagents/references/agent-handoffs.md) when responsibility or artifacts move between agents.
 
 Keep one chain visible in existing records: **beneficiary and intended value → current outcome → limiting condition → owned action → acceptance evidence → operational result → learning**. Reject work that has no useful connection to that chain, unless it is another explicitly authorized obligation. An agent's autonomy means choosing methods, challenging assumptions and initiating remedies inside its mandate; it does not require claims about consciousness.
 
@@ -18,7 +18,7 @@ An agreed cadence describes when reviews are needed. It does not create a schedu
 
 ## Required ceremonies with useful outputs
 
-These are decision responsibilities, not mandatory meetings. Apply the [delivery contract](../SKILL.md#delivery-contract): reuse an adequate brief, test result or handoff; hold an exchange only for a material unresolved issue. Do not add a retrospective or status record when it will not change future action. Independent acceptance still requires a nonauthor; never invent reviewers or consensus.
+These are decision responsibilities, not mandatory meetings. Apply the [delivery contract](../SKILL.md#delivery-contract): reuse an adequate brief, test result or handoff; hold an exchange only for a material unresolved issue. Do not add a retrospective or status record when it will not change future action. When independent acceptance is required, use a nonauthor; never invent reviewers or consensus.
 
 | Trigger | Who participates | Required outcome |
 | --- | --- | --- |
@@ -27,7 +27,7 @@ These are decision responsibilities, not mandatory meetings. Apply the [delivery
 | Material disagreement persists after one direct evidence exchange, or threatens authority/acceptance immediately | Responsible superior chairs with disputing owners | [Decision meeting](#resolve-disagreement): real positions, evidence, selected action, reason, owner, check and reopening condition. |
 | Relevant competence is missing, or bounded recovery leaves a material knowledge gap | Owner and appropriate available specialist | [Expert consultation](#bring-in-expertise): an answer or explicit uncertainty, evidence, a discriminating check and owner's disposition. |
 | Agreed operating period ends, or a material business signal changes | Accountable operator and affected owners | Compare outcome with commitments/resources, resolve the present constraint, and set the next bounded commitment. Run checkpoint learning in the same review. |
-| Acceptance or transfer of responsibility | Delivering owner, nonauthor reviewer and accountable accepting owner; combine only compatible functions | Inspect actual integrated results, retain unmet criteria and lessons, and accept, repair or record a precise blocker. Missing independent review leaves acceptance unverified. |
+| Acceptance or transfer of responsibility | Delivering owner and accountable accepting owner; add a nonauthor reviewer when independent inspection is required | Inspect actual integrated results, retain unmet criteria and lessons, and accept, repair or record a precise blocker. Missing required independent review leaves that acceptance unverified. |
 
 Use one compact decision record: **question/trigger; evidence and limits; actual positions; decision and reason; action owner; next check or deadline; reopening condition**. Existing handoffs can supply most of it. Combine overlapping ceremonies and retain one decision, not repeated minutes. A result of “no change” is valid with evidence and a next check. Remove duplicate status recitation, spectators and unnecessary approval steps; preserve decisions, dissent, review and learning.
 
