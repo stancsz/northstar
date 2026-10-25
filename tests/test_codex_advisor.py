@@ -105,6 +105,26 @@ def test_bearer_key_is_sent_for_text_and_image_consultations(monkeypatch, images
     assert "fixture-user-key" not in json.dumps(result)
 
 
+def test_gateway_request_does_not_send_the_experts_service_key(monkeypatch):
+    caller = load_caller()
+    monkeypatch.setenv("EXPERTS_API_KEY", "experts-service-key")
+    monkeypatch.setenv("GATEWAY_MASTER_KEY", "gateway-service-key")
+    monkeypatch.setattr(caller, "windows_user_api_key", lambda: pytest.fail("Local 4000 must use its gateway key"))
+    requests = []
+
+    def upstream(request, **kwargs):
+        requests.append(request)
+        assert request.get_header("Authorization") == "Bearer gateway-service-key"
+        return io.StringIO(json.dumps({"choices": [{"finish_reason": "stop",
+            "message": {"content": "Verdict: route received the gateway credential."}}]}))
+
+    monkeypatch.setattr(caller, "urlopen", upstream)
+    args = SimpleNamespace(model="mimo-v2.6-flash", base_url="http://127.0.0.1:4000/v1", timeout_seconds=1)
+    result = caller.consult(args, [{"role": "user", "content": "Inspect."}])
+    assert len(requests) == 1
+    assert result["advice"] == "Verdict: route received the gateway credential."
+
+
 @pytest.mark.parametrize("status", [401, 502])
 def test_auth_error_is_actionable_redacted_and_never_retried(monkeypatch, status):
     caller = load_caller()

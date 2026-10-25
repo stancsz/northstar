@@ -195,16 +195,19 @@ def windows_user_api_key() -> str | None:
 
 
 def expert_api_key(base_url: str) -> str | None:
-    # Explicit process configuration wins, including an intentional empty value.
-    if "EXPERTS_API_KEY" in os.environ:
-        return os.environ["EXPERTS_API_KEY"] or None
     endpoint = urlsplit(base_url)
     local = (endpoint.scheme == "http" and endpoint.hostname in ("127.0.0.1", "localhost", "::1")
              and endpoint.username is None and endpoint.password is None)
     if local and endpoint.port == 4000:
         return os.environ.get("GATEWAY_MASTER_KEY") or None
     if local and endpoint.port == 4040:
+        # Keep the dedicated Experts credential scoped to its own endpoint.
+        if "EXPERTS_API_KEY" in os.environ:
+            return os.environ["EXPERTS_API_KEY"] or None
         return windows_user_api_key()
+    # An explicit key is for nonlocal or alternate compatible endpoints only.
+    if "EXPERTS_API_KEY" in os.environ:
+        return os.environ["EXPERTS_API_KEY"] or None
     return None
 
 
