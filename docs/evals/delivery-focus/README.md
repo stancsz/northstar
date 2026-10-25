@@ -45,7 +45,7 @@ Six affected Advisor/dispatch files in the active `~/.codex/skills` installation
 
 A final audit found the installation template still prescribing Gemini for Council and Sol for image review, despite the generic caller. The template now describes a distinct configured Council route and the configured primary route's image path, and states that model IDs/aliases come from the selected Subroute-compatible endpoint. This documentation repair does not change routing code or establish multi-provider live compatibility; model names in the surrounding dated receipts remain historical observations.
 
-The Advisor capability-trigger register also framed its users as Luna workers. It now applies to any worker route, says no named model is required, and identifies benchmark results as contextual rather than route prescriptions. Dated model comparisons remain intact as source evidence. Local Markdown link-target and whitespace checks pass; these are documentation checks only.
+The Advisor capability-trigger register also framed its users as Luna workers. It now applies to any worker route, says no named model is required, and identifies benchmark results as contextual rather than route prescriptions. Dated model comparisons remain intact as source evidence. Before syncing, the installed reference matched its pre-change source after newline normalization; the original is backed up at `tmp/model-agnostic-installed-sync-20261026/capability-triggers.md.before`. The installed file now matches source at SHA-256 `588502A902C4ADA5C2AAE34018A30466E5A764D153A7DCCE1CEAEF4288D71FA8`. Local Markdown link-target and whitespace checks pass; these are documentation checks only.
 
 ## Delegation entrypoint consolidation (2026-10-24)
 
