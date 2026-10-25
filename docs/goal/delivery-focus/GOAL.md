@@ -30,6 +30,8 @@ The approval clause now makes the user's preference operational: one commander a
 
 The latest prompt audit removes repeated focus/authority sections, keeps their unique guidance once, and removes repository-specific storage and debt paths from the portable entrypoint. The [evaluation](../../evals/delivery-focus/README.md#subtractive-prompt-audit-2026-10-24) records the scope, 265-word entrypoint reduction, link/format checks and scenario limits. This improves prompt focus but does not establish lower runtime usage or better delivery; continue to the real-work proof before further speculative edits.
 
+A fresh read-only route check on the real Northstar Console candidate still found forced models on both worker ports (4000 `mimo-v2.6-pro`, policy 119; 4005 `minimax-flash-direct`, policy 2093), versus the Console trial's required Luna/alias behavior. No provider call or app change was made; its previous live failure remains the stopping boundary. The [evaluation](../../evals/delivery-focus/README.md#read-only-real-task-route-check-2026-10-24) records this current state. Real-task skill effectiveness remains unverified until a suitable authorized task and compatible route are available.
+
 ## Evidence and limits
 
 The frozen comparison used the same small synthetic documentation repair. Both arms passed; the revised arm reported 44,786 fewer input tokens but made one additional command. Both emitted the skill-budget warning. This is one constructed pair, not a real-task reliability or cost result. The [evaluation](../../evals/delivery-focus/README.md) holds its receipt and the earlier source/installation history.
