@@ -26,6 +26,8 @@ The latest source repair removes a direct conflict between repository rules that
 
 The primary accepts these source changes for their stated scope based on the nonauthor [acceptance-threshold review](../../reports/delivery-focus/acceptance-threshold-review.md), targeted [helper test review](../../reports/delivery-focus/core-focus-test-review.md), and current checks. This is source acceptance, not proof of runtime effectiveness.
 
+The approval clause now makes the user's preference operational: one commander agent directs actions covered by the standing grant without fresh approval, workers do not create another approval queue, and only an explicitly user-reserved decision or missing authority is escalated. An Advisor Council review caught and corrected wording that could imply re-approval. The [evaluation](../../evals/delivery-focus/README.md#approval-owner-alignment-2026-10-24) records the decision and install check. Host permission denials remain binding; real-work effectiveness is unverified.
+
 ## Evidence and limits
 
 The frozen comparison used the same small synthetic documentation repair. Both arms passed; the revised arm reported 44,786 fewer input tokens but made one additional command. Both emitted the skill-budget warning. This is one constructed pair, not a real-task reliability or cost result. The [evaluation](../../evals/delivery-focus/README.md) holds its receipt and the earlier source/installation history.
