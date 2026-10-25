@@ -1,0 +1,63 @@
+{
+  "fixture": "Constructed Northstar skills-only maintenance task; not real-product acceptance",
+  "design": "Assignments are identical except CENTRAL_SKILL block",
+  "acceptance": [
+    "relative guide link resolves to existing guide",
+    "owner-notes.txt unchanged",
+    "docs/guide.md unchanged",
+    "only README.md added to seeded dirty-state diff",
+    "handoff names actual artifact/checks/limits"
+  ],
+  "arms": {
+    "baseline": {
+      "assignment_sha256": "7b45cff2847789105ff774d0c4e2e0f27f9fe5d9089b71b6312783e6a1b8b5d1",
+      "prompt_chars": 43363,
+      "usage": {
+        "input_tokens": 127785,
+        "cached_input_tokens": 45312,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1848,
+        "reasoning_output_tokens": 1240
+      },
+      "native_command_events": 2,
+      "turn_completed": true,
+      "exit": "0",
+      "changed_paths": [
+        "D:\\github\\northstar\\tmp\\delivery-focus\\behavior\\baseline\\README.md",
+        "D:\\github\\northstar\\tmp\\delivery-focus\\behavior\\baseline\\README.md"
+      ],
+      "owner_notes_sha256": "7a5ea5e60942f84bc4093455c6937fef82a57d21c2af22c8509c72bca618bd13",
+      "guide_sha256": "dffee0637889c40b7bdbdad8b4b9b21bb6355f19bfe9dcbcdd48f93e9d440556",
+      "startup_error": "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+    },
+    "revised": {
+      "assignment_sha256": "d7f6f3e2adf2d9ccc02bd0071ea812330acb0b117df5f52d1b20dd30f2fc1736",
+      "prompt_chars": 20289,
+      "usage": {
+        "input_tokens": 82999,
+        "cached_input_tokens": 60416,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1814,
+        "reasoning_output_tokens": 984
+      },
+      "native_command_events": 3,
+      "turn_completed": true,
+      "exit": "0",
+      "changed_paths": [],
+      "owner_notes_sha256": "7a5ea5e60942f84bc4093455c6937fef82a57d21c2af22c8509c72bca618bd13",
+      "guide_sha256": "dffee0637889c40b7bdbdad8b4b9b21bb6355f19bfe9dcbcdd48f93e9d440556",
+      "startup_error": "Skill descriptions were shortened to fit the skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."
+    }
+  },
+  "derived": {
+    "input_token_change": -44786,
+    "input_token_reduction_percent": 35.0,
+    "commands_baseline_to_revised": "2->3"
+  },
+  "limits": [
+    "One matched task pair cannot establish general reliability or savings.",
+    "The CLI emitted a skill-description context-budget warning in both arms.",
+    "Command count increased by one in the revised arm; no pricing or full orchestration-cost comparison was measured.",
+    "Do not attribute results to individual instructions within the embedded skill; the full central skill block was the treatment."
+  ]
+}
