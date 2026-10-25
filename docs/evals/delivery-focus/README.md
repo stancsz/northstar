@@ -90,3 +90,7 @@ The openings of [Codex QA](../../../skills/codex-qa/SKILL.md), [Codex Advisor](.
 ## 2026-10-24: tool-path dependency check
 
 The previous function-call preflight failed before the base request was sent. A later read-only inspection found a substantial `advisor_plugin.py` rewrite in Subroute's working tree, but Subroute's active goal assigns this integration to another chat and prohibits restarting shared services before integration. The port-4000 container started before the host edit and mounts source read-only, so the new source is not accepted as live behavior. No unchanged retry, service restart or Subroute edit was made. The text-only CLI review confirms inference only; function-tool dispatch remains unverified. This is a current integration dependency, not evidence of a Northstar prompt defect.
+
+## 2026-10-25: reduce skill-discovery descriptions
+
+The six core skill descriptions were shortened from 1,434 to 782 characters (45.5%) and 196 to 105 words while preserving each capability's trigger. No skill body or invocation policy changed. `quick_validate.py` passed for all six; each installed Codex entrypoint matched the committed baseline before editing, was backed up under ignored `tmp/skill-descriptions-20261025-02/`, and now matches its source. This reduces Northstar's contribution to discovery context; the prior CLI budget warning was not rechecked, and other installed skills/plugins may still trigger it. No runtime or general efficiency claim is made.

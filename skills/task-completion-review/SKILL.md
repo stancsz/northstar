@@ -1,6 +1,6 @@
 ---
 name: task-completion-review
-description: Review whether ongoing assigned work should finish, continue, wait, or escalate before a final handoff. Use for premature stopping, completion audits, and opt-in Codex Stop hooks.
+description: Review premature stops, substantive completions, waits, or escalations; use for completion audits and opt-in Codex Stop hooks.
 ---
 
 # Task Completion Review

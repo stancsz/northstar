@@ -1,6 +1,6 @@
 ---
 name: codex-advisor
-description: Consult GPT-6.1 Sol for material uncertainty, relevant capability risks or visual decisions; use council when a second perspective can change the action. Send compact evidence and actual image attachments; retain worker ownership. Codex-native and usable by other agents.
+description: Consult GPT-6.1 Sol or Council when uncertainty, capability risks, or visual decisions could change the next action; attach images for visual advice.
 ---
 
 # Codex Advisor

@@ -1,6 +1,6 @@
 ---
 name: codex-qa
-description: Plan and inspect delivery quality before handoff. Use for functional, rendered visual, accessibility, code-quality and adversarial review; verify fixes with evidence and bounded effort. Part of the Northstar package. Codex-native and usable by other agents.
+description: Independently review functional, visual, accessibility, and code quality against requested acceptance; verify material fixes.
 ---
 
 # Codex QA

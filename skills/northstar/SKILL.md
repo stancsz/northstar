@@ -1,6 +1,6 @@
 ---
 name: northstar
-description: Central coordinator of the six-skill Northstar package for project and business execution, Codex QA, subagent coordination, Codex Advisor consultation, bounded Codex-to-Claude delegation, and completion/stop review. Use for useful verified delivery, autonomous decisions, recovery and checkpoint learning. Codex-native and usable by other agents.
+description: Central workflow for project and business delivery. Use for coordination, delegation, advice, QA, recovery, and completion decisions.
 ---
 
 # Northstar

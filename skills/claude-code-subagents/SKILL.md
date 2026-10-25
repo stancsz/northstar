@@ -1,6 +1,6 @@
 ---
 name: claude-code-subagents
-description: Delegate bounded work from Codex to Claude Code through its CLI, then inspect and integrate the result. Use when Claude Code is requested or adds useful independent capacity.
+description: Delegate bounded work from Codex to Claude Code CLI. Use when requested or when independent capacity helps; inspect and integrate the result.
 ---
 
 # Claude Code Subagents

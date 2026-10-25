@@ -1,6 +1,6 @@
 ---
 name: codex-subagents
-description: Coordinate complex work with orchestrators, supervisors and workers, explicit authority, bounded tasks and model capability allocation. Part of the Northstar package. Codex-native and usable by other agents.
+description: Coordinate bounded agent work when delegation helps; define ownership, authority, handoffs, and integration.
 ---
 
 # Codex subagents
