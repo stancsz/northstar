@@ -80,7 +80,7 @@ Resolve `scripts/ask_expert.py` under the installed Codex Advisor directory show
 
 ```powershell
 $advisorHome = Join-Path $env:USERPROFILE '.codex\skills\codex-advisor'
-py (Join-Path $advisorHome 'scripts\ask_expert.py') --help
+python (Join-Path $advisorHome 'scripts\ask_expert.py') --help
 ```
 
 `--help` is local and makes no provider call. Read the [advisor skill](../../skills/codex-advisor/SKILL.md) before sending a packet.

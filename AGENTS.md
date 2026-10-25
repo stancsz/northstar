@@ -12,9 +12,8 @@ Keep this repository skills-only. Prioritize concise skill instructions, example
 
 ## Start here
 
-1. Read [project direction](docs/northstar/README.md).
-2. Read the relevant [goal](docs/goal/README.md), its [worker reports](docs/reports/README.md), and [evaluations](docs/evals/README.md).
-3. Read the central skill and relevant companion skill: [Northstar](skills/northstar/SKILL.md), [Codex QA](skills/codex-qa/SKILL.md), [Codex Subagents](skills/codex-subagents/SKILL.md), [Codex Advisor](skills/codex-advisor/SKILL.md), [Claude Code Subagents](skills/claude-code-subagents/SKILL.md), or [Task Completion Review](skills/task-completion-review/SKILL.md).
+1. Start from the current task state and [Northstar](skills/northstar/SKILL.md); take its next useful action.
+2. Read [project direction](docs/northstar/README.md), the active [goal](docs/goal/README.md), linked evidence or companion guidance only when it can change scope, the next action, or acceptance.
 
 ## Layout and maintenance
 

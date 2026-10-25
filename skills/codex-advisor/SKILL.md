@@ -74,7 +74,7 @@ $skillDirectories += Join-Path (Join-Path $env:USERPROFILE '.codex\skills') 'cod
 $codexAdvisor = $skillDirectories | Where-Object { Test-Path (Join-Path $_ 'SKILL.md') } | Select-Object -First 1
 if (-not $codexAdvisor) { throw 'Set $codexAdvisor to this installation''s codex-advisor directory.' }
 $codexAdvisor = (Resolve-Path $codexAdvisor).Path
-py (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model sol --input-file .\advisor-packet.txt
+python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model sol --input-file .\advisor-packet.txt
 ```
 
 For a complex text decision with a concrete reason for an independent second view, add `--council` to the command above. Gemini receives the packet without Sol's opinion. Sol receives the same packet plus Gemini's bounded review, gives its own verdict, and then assesses the review. A successful receipt includes both answers, model IDs and provider usage. The caller makes at most one call to each model, with no retry or fallback; Gemini failure stops before Sol. Council mode cannot be combined with image attachments or Pi reader mode; use Sol's image-backed path for visual decisions.
@@ -82,7 +82,7 @@ For a complex text decision with a concrete reason for an independent second vie
 For visual advice, attach the overall view and useful details proactively. The text packet supplies criteria, revision/state, reference roles and the next decision; image bytes are separate from its character budget:
 
 ```powershell
-py (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model sol --input-file .\advisor-packet.txt --image .\current.png --image .\detail.png
+python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model sol --input-file .\advisor-packet.txt --image .\current.png --image .\detail.png
 ```
 
 Supported files are PNG, JPEG, WebP and GIF, with at most eight images, 10 MB per file and 20 MB total per call; split further requested views into calls. Bytes are preserved without resizing, with `--image-detail high` by default (`auto`/`low` also available). High detail requests provider inspection quality; it does not guarantee every fine feature is readable. The receipt records attachment paths, types, byte counts and hashes without echoing pixels. Visual advice asks for concrete observations, fixes and requested views under 4,000 characters, rather than the ordinary 160-word target. An attachment receipt proves what was sent; only image-backed feedback establishes what was inspected.
