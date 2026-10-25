@@ -1,6 +1,14 @@
+# Pragmatic Software Architect
+
+For substantive work, use `/northstar` and its [delivery contract](skills/northstar/SKILL.md#delivery-contract); load only the companion that applies. It governs focus-first delivery, diminishing-returns stopping, delegated authority, and CLI/council routing. Keep architecture choices subordinate to the smallest complete result. Repository-specific rules start below; actual platform limits and decisions expressly retained by the owner remain binding.
+
+---
+
 # Working on Northstar
 
-Northstar packages six coordinated skills: Northstar, Codex QA, Codex Subagents, Codex Advisor, Claude Code Subagents and Task Completion Review. Keep engineering judgment, practices, and useful documentation at the center of changes.
+Northstar's core package has six coordinated skills: Northstar, Codex QA, Codex Subagents, Codex Advisor, Claude Code Subagents and Task Completion Review. The repository also ships the standalone Windows app recovery skill. Keep engineering judgment, practices, and useful documentation at the center of changes.
+
+Keep this repository skills-only. Prioritize concise skill instructions, examples, necessary supporting tools and skill validation. Application code, interfaces, app specifications, deployment plans and app-specific execution records belong in separate repositories. Do not turn this package into an application or runtime platform.
 
 ## Start here
 
@@ -10,7 +18,7 @@ Northstar packages six coordinated skills: Northstar, Codex QA, Codex Subagents,
 
 ## Layout and maintenance
 
-- `skills/<name>/SKILL.md` defines one of the six installable skills: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`, `claude-code-subagents`, `task-completion-review`. Install all six sibling directories together. Northstar is the central coordinator; companions can also be invoked directly. Claude Code Subagents is the Codex-to-Claude CLI adapter.
+- `skills/<name>/SKILL.md` defines an installable skill. Install the six coordinated core directories together: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`, `claude-code-subagents`, and `task-completion-review`. `windows-app-recovery` is an independent optional utility skill and can be installed separately. Northstar is the central coordinator; core companions can also be invoked directly. Claude Code Subagents is the Codex-to-Claude CLI adapter.
 - `skills/codex-advisor/scripts/` contains the migrated Codex Advisor caller and optional reader adapter. Their focused regressions live in `tests/`; the gateway/service implementation stays in Subroute.
 - The orchestrator owns and uses `docs/northstar/`: durable direction, owner standards, reference products, and decisions.
 - Each supervisor owns and uses its `docs/goal/<goal>/GOAL.md`: outcome, task assignments, execution and acceptance record; maintain its goal index entry and preserve stable paths.
@@ -19,9 +27,9 @@ Northstar packages six coordinated skills: Northstar, Codex QA, Codex Subagents,
 - `docs/misc/` holds other supporting documentation, including installation guides and translations.
 - `tmp/<task-or-agent>/` holds disposable artifacts and is ignored.
 
-The root stays limited to README.md, AGENTS.md, LICENSE, .gitignore, and the necessary directories. The `docs/` directory contains only subdirectories; no loose documents or assets belong directly in it. Keep indexes within their category.
+The root stays limited to README.md, AGENTS.md, LICENSE, .gitignore, the owner-requested AGENTS.md.bak backup, and the necessary directories. Treat the backup as historical content, not active instructions. The `docs/` directory contains only subdirectories; no loose documents or assets belong directly in it. Keep indexes within their category.
 
-Maintain useful docs during work and before handoff. Preserve historical records as history, not current instructions. Keep shared facts in one place and link to them. Keep this a Markdown-first skills package. Task Completion Review has one narrow opt-in Stop-hook reviewer helper; it does not create host privileges or automatically install hooks. The Codex Advisor helpers and their tests remain supported. Do not add unrelated runtime scripts, machine contracts, schemas, validators, or generated reporting machinery.
+Maintain useful docs during work and before handoff. Preserve historical records as history, not current instructions. Keep shared facts in one place and link to them. Keep the coordinated workflow package Markdown-first. Task Completion Review has one narrowly scoped, opt-in Stop-hook reviewer adapter; it does not grant platform privileges or install hook configuration automatically. The standalone Windows recovery skill has a narrowly scoped PowerShell helper because its scheduled check requires executable support; do not add unrelated runtime scripts, machine contracts, schemas, validators, or generated reporting machinery.
 
 ## Review and Git
 
