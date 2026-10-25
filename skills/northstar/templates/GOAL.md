@@ -13,7 +13,7 @@ Status: active
 
 ## Ownership and tasks
 
-- Builder, exact write scope/task scratch, first artifact/action, dependencies and assigned report path.
+- Builder, exact write scope/task scratch when needed, first artifact/action and dependencies; add a report path only when a durable handoff is required.
 - Reviewer and scope if independent acceptance is required; otherwise the commander accepts. Authors cannot certify their own work as independent.
 - For delegated work: verified route/tool setup, context/validation command and parent-enforced checkpoint/deadline. Use relevant companion guidance rather than copying it here.
 

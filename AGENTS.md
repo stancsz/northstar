@@ -13,15 +13,15 @@ Keep this repository skills-only. Prioritize concise skill instructions, example
 ## Start here
 
 1. Start from the current task state and [Northstar](skills/northstar/SKILL.md); take its next useful action.
-2. Read [project direction](docs/northstar/README.md), the active [goal](docs/goal/README.md), linked evidence or companion guidance only when it can change scope, the next action, or acceptance.
+2. For sustained Northstar work, use the [active goal](docs/goal/README.md). Read project direction, linked evidence or companion guidance only when it can change scope, the next action, or acceptance; a small one-turn task can proceed from its request.
 
 ## Layout and maintenance
 
 - `skills/<name>/SKILL.md` defines an installable skill. Install the six coordinated core directories together: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`, `claude-code-subagents`, and `task-completion-review`. `windows-app-recovery` is an independent optional utility skill and can be installed separately. Northstar is the central coordinator; core companions can also be invoked directly. Claude Code Subagents is the Codex-to-Claude CLI adapter.
 - `skills/codex-advisor/scripts/` contains the migrated Codex Advisor caller and optional reader adapter. Their focused regressions live in `tests/`; the gateway/service implementation stays in Subroute.
 - The orchestrator owns and uses `docs/northstar/`: durable direction, owner standards, reference products, and decisions.
-- Each supervisor owns and uses its `docs/goal/<goal>/GOAL.md`: outcome, task assignments, execution and acceptance record; maintain its goal index entry and preserve stable paths.
-- Each worker produces scoped deliverables and writes `docs/reports/<goal>/<task>.md` for handoff, including partial or blocked work. Supervisors read reports and inspect artifacts before accepting tasks. Follow the [report practice](skills/northstar/SKILL.md#worker-reports-and-handoffs).
+- For sustained work that needs durable cross-turn state, the supervisor maintains the existing project goal record and its index entry. Small one-turn tasks use the request and a concise handoff; do not create a goal record just to follow this layout.
+- Workers return the artifact, checks, gaps and next action in a concise handoff. Write `docs/reports/<goal>/<task>.md` only when the task or repository explicitly requires a durable report, or when a partial/blocked result needs continuation. Supervisors inspect artifacts and evidence before accepting work. Follow the [handoff practice](skills/northstar/SKILL.md#worker-reports-and-handoffs).
 - `docs/evals/` records what was inspected, observed results, fixes, and limitations. Link to goals and evaluated revisions.
 - `docs/misc/` holds other supporting documentation, including installation guides and translations.
 - `tmp/<task-or-agent>/` holds disposable artifacts and is ignored.
@@ -38,7 +38,7 @@ Stage intentional files only. Write focused commits with meaningful subjects and
 
 ## Agents, scratch work, and storage
 
-Give subagents the relevant instructions/docs, a write scope, a scoped scratch directory, and an assigned report path. Workers send proposed changes to direction or goals to the owning role. Supervisors record task decisions and the orchestrator's goal acceptance in `GOAL.md`. Assign one editor to shared indexes during concurrent work. Preserve unrelated and other agents' changes. One agent filling multiple roles follows the same document ownership and reporting practices.
+Give subagents the relevant instructions/docs, a write scope, and task-owned scratch only when needed. Assign a durable report path only when the task requires one; otherwise a concise final handoff is enough. Workers send proposed changes to direction or goals to the owning role. For sustained goals, supervisors record material task decisions and the orchestrator's acceptance in the existing `GOAL.md`. Assign one editor to shared indexes during concurrent work. Preserve unrelated and other agents' changes. One agent filling multiple roles follows the same document ownership and reporting practices.
 
 Keep loose artifacts in `tmp/`. Promote necessary evidence or reusable content to its proper location before linking it from durable docs. Maintain scoped ignore rules; do not hide documentation images or other legitimate assets with blanket extension ignores.
 

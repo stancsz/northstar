@@ -107,7 +107,7 @@ Orchestrators own integrated outcomes; supervisors coordinate goals; workers own
 
 ## Worker reports and handoffs
 
-Use one concise handoff in the existing record: artifact/revision, actual checks/results, material failures, remaining gaps and next action. Link evidence instead of copying it; preserve repository-required report paths. Failed experiments do not create another approval stage.
+Use one concise handoff in the task response or existing record: artifact/revision, actual checks/results, material failures, remaining gaps and next action. Link evidence instead of copying it; preserve report paths only when the repository or task requires a durable handoff. Failed experiments do not create another approval stage.
 
 ## Learn from every use
 

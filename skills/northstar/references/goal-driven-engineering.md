@@ -21,12 +21,12 @@ A write denial is evidence of an access boundary, not a reason to retry the prot
 ## Execute and accept
 
 1. The orchestrator assigns the outcome and constraints within the user's mandate.
-2. The supervisor records bounded tasks, owners, write scopes, dependencies, acceptance, and report paths.
-3. Workers implement and check their tasks, then update their [reports](../SKILL.md#worker-reports-and-handoffs), including blocked or partial results.
-4. The supervisor reads reports, inspects artifacts and applicable evidence, coordinates repairs, and records task decisions. Use one nonauthor QA/taste review when the shared contract or task requires it; otherwise the commander accepts attributable, low-risk work from relevant evidence. Reuse valid evidence rather than rerunning work per role.
+2. For sustained work, the supervisor records bounded tasks, owners, write scopes, dependencies and acceptance in the existing goal. Assign report paths only when the project/task needs a durable handoff.
+3. Workers implement and check their tasks, then return the artifact, results, gaps and next action. Use a concise task handoff for small work; record partial or blocked work durably only when continuation needs it.
+4. The supervisor inspects artifacts and applicable evidence, coordinates repairs, and records material task decisions in the existing goal. Use one nonauthor QA/taste review when the shared contract or task requires it; otherwise the commander accepts attributable, low-risk work from relevant evidence. Reuse valid evidence rather than rerunning work per role.
 5. The orchestrator inspects the integrated result and accepts or returns it for repair. The supervisor records that decision and updates any existing task index. Obtain human acceptance where required.
 
-Combine compatible roles. Use nonauthor QA only when required by the task/repository or when it can change acceptance; authors cannot certify their own work. If required review is unavailable, leave that acceptance unverified. For small, reversible work, the commander checks the diff and relevant tests in the existing goal; add no lifecycle or report unless required. Preserve blockers and next action, then deliver accepted work.
+Combine compatible roles. Use nonauthor QA only when required by the task/repository or when it can change acceptance; authors cannot certify their own work. If required review is unavailable, leave that acceptance unverified. For small, reversible work, the commander checks the diff and relevant tests; add no goal lifecycle or durable report unless required. Preserve blockers and next action, then deliver accepted work.
 
 ## Keep continuation cheap
 

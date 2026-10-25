@@ -71,7 +71,7 @@ Keep one accountable accepting role; workers may directly clarify interfaces wit
 
 ## Task brief and handoff
 
-Make assignments self-contained: state result and why it matters, first action, current context, acceptance/evidence (including the baseline failure for repairs), exact writable paths, task-owned scratch path or `scratch none`, required report path, authority/limits, applicable instructions and dependencies. Name the accepting role. Links do not replace essential facts. The parent integrates and accepts; independent review applies only when required. Covered actions are pre-authorized; routine choices need no approval round trip.
+Make assignments self-contained: state result and why it matters, first action, current context, acceptance/evidence (including the baseline failure for repairs), exact writable paths, task-owned scratch path when needed, authority/limits, applicable instructions and dependencies. Name the accepting role. Assign a durable report path only when the project or task requires one; otherwise the worker's concise final handoff carries the result. Links do not replace essential facts. The parent integrates and accepts; independent review applies only when required. Covered actions are pre-authorized; routine choices need no approval round trip.
 
 The parent also supplies any already-verified route/client evidence, the next checkpoint and a firm handoff deadline. Workers do not repeat route setup or checks already established. Give the worker room to investigate directly relevant unknowns and choose methods within scope; when the brief is sufficient, avoid broad project/history rediscovery and proceed. Do not assign nested workers unless delegation is explicitly part of the task.
 
