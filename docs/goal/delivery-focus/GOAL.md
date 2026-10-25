@@ -22,6 +22,8 @@ The central delivery contract focuses one existing commitment, finishes required
 
 The repository `AGENTS.md` now starts from Northstar and the live task. Direction, goals, reports, evaluations and companion guidance are consulted when they could change scope, the next action or acceptance. The Advisor examples use `python`, which worked on this Windows host after the documented `py` launcher failed to start its selected target. Installed Advisor source matches the repository copy.
 
+The latest source repair removes a direct conflict between repository rules that required a goal and report for every worker task and Northstar's lighter small-task path. One-turn work can use its request and concise handoff; durable goals/reports remain for sustained work, explicit project requirements, or continuation of partial/blocked results. The Codex brief/templates now match that boundary, and duplicated shared policy was removed from both delegation templates. This fixes an observed instruction conflict, not proof of workflow effectiveness.
+
 The primary accepts these source changes for their stated scope based on the nonauthor [acceptance-threshold review](../../reports/delivery-focus/acceptance-threshold-review.md), targeted [helper test review](../../reports/delivery-focus/core-focus-test-review.md), and current checks. This is source acceptance, not proof of runtime effectiveness.
 
 ## Evidence and limits
@@ -33,6 +35,8 @@ Two actual tasks expose useful but narrow evidence. A report-index maintenance t
 Using the current workflow on this request exposed the root-context conflict and a broken Advisor launch example, both repaired above. The CLI edit worker reported 369,454 input tokens (210,048 cached), 7,283 output tokens and a skill-description-budget warning for a small documentation assignment. This is a material overhead observation, not proof of its cause or general savings. Its [handoff](../../reports/delivery-focus/repo-entrypoint-context.md) records exact checks and limits.
 
 Earlier local CLI tool/function preflight evidence is in the [dispatch report](../../reports/dispatch-context/current-cli-native-tool-gate.md). A successful bounded CLI edit or text-only review does not establish every client/protocol tool path.
+
+A new direct Responses function-call preflight for a read-only skill review timed out although authenticated `/v1/models` returned the configured aliases. No child was dispatched; the sanitized receipt is in ignored `tmp/active-cli-review-20261024/preflight.json`. This leaves child tool-routing evidence open and is not a skill behavior result.
 
 ## Remaining work
 
