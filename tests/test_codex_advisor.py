@@ -294,33 +294,33 @@ def test_incomplete_expert_is_not_advice(monkeypatch):
         caller.consult(args, [])
 
 
-def test_council_calls_gemini_then_sol_with_own_verdict(monkeypatch):
+def test_council_calls_selected_models_and_keeps_primary_verdict(monkeypatch):
     caller = load_caller()
     requests = []
     def upstream(request, **kwargs):
         body = json.loads(request.data)
         requests.append(body)
-        answer = "Gemini concern: check the timeout." if len(requests) == 1 else (
+        answer = "Council concern: check the timeout." if len(requests) == 1 else (
             "Own verdict: Keep the bounded route.\n"
-            "Gemini review: Agree on timeout evidence, but no broad rewrite.\n"
+            "Independent review: Agree on timeout evidence, but no broad rewrite.\n"
             "Next: Probe cancellation.\nRisk: orphaned work."
         )
         return io.StringIO(json.dumps({"model": body["model"], "usage": {"total_tokens": 9},
             "choices": [{"finish_reason": "stop", "message": {"content": answer}}]}))
     monkeypatch.setattr(caller, "urlopen", upstream)
-    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
+    args = SimpleNamespace(model="primary-route", council_model="review-route",
+                           base_url="http://localhost:4040/v1", timeout_seconds=1)
     result = caller.consult_council(args, "Original decision packet.")
-    assert [request["model"] for request in requests] == [
-        "gemini-4-argon-advisor", "codex-gpt-6.1-sol-advisor"]
+    assert [request["model"] for request in requests] == ["review-route", "primary-route"]
     assert "Original decision packet." in requests[0]["messages"][-1]["content"]
-    assert "Gemini concern" not in requests[0]["messages"][-1]["content"]
-    assert "Gemini concern" in requests[1]["messages"][-1]["content"]
+    assert "Council concern" not in requests[0]["messages"][-1]["content"]
+    assert "Council concern" in requests[1]["messages"][-1]["content"]
     assert "Own verdict" in requests[1]["messages"][0]["content"]
     assert len(result["council"]) == 2
     assert result["council"][0]["usage"]["total_tokens"] == 9
 
 
-def test_council_stops_if_gemini_does_not_complete(monkeypatch):
+def test_council_stops_if_review_model_does_not_complete(monkeypatch):
     caller = load_caller()
     calls = []
     def upstream(request, **kwargs):
@@ -328,13 +328,14 @@ def test_council_stops_if_gemini_does_not_complete(monkeypatch):
         return io.StringIO(json.dumps({"choices": [{"finish_reason": "length",
             "message": {"content": "partial"}}]}))
     monkeypatch.setattr(caller, "urlopen", upstream)
-    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
+    args = SimpleNamespace(model="primary-route", council_model="review-route",
+                           base_url="http://localhost:4040/v1", timeout_seconds=1)
     with pytest.raises(RuntimeError, match="completed"):
         caller.consult_council(args, "Original decision packet.")
-    assert calls == ["gemini-4-argon-advisor"]
+    assert calls == ["review-route"]
 
 
-def test_council_retains_gemini_usage_if_sol_fails(monkeypatch):
+def test_council_retains_review_usage_if_primary_fails(monkeypatch):
     caller = load_caller()
     calls = []
     def upstream(request, **kwargs):
@@ -344,12 +345,13 @@ def test_council_retains_gemini_usage_if_sol_fails(monkeypatch):
         return io.StringIO(json.dumps({"model": model, "usage": {"total_tokens": 17},
             "choices": [{"finish_reason": finish, "message": {"content": "review"}}]}))
     monkeypatch.setattr(caller, "urlopen", upstream)
-    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
+    args = SimpleNamespace(model="primary-route", council_model="review-route",
+                           base_url="http://localhost:4040/v1", timeout_seconds=1)
     result = caller.consult_council(args, "Original decision packet.")
     assert result["status"] == "unavailable"
     assert "advice" not in result
     assert result["council"][0]["usage"]["total_tokens"] == 17
-    assert calls == ["gemini-4-argon-advisor", "codex-gpt-6.1-sol-advisor"]
+    assert calls == ["review-route", "primary-route"]
 
 
 @pytest.mark.parametrize("batches,expected_expert,expected_pi", [
@@ -478,7 +480,7 @@ def test_cli_delivers_actual_images_with_text_and_safe_receipts(tmp_path):
         thread.join(timeout=2)
     assert result.returncode == 0, result.stderr
     assert len(sent) == 1
-    assert sent[0]["model"] == "codex-gpt-6.1-sol-advisor"
+    assert sent[0]["model"] == "default"
     blocks = sent[0]["messages"][-1]["content"]
     assert blocks[0] == {"type": "text", "text": "Inspect both views."}
     images = [block["image_url"] for block in blocks if block["type"] == "image_url"]
@@ -562,9 +564,24 @@ def test_attaching_images_preserves_original_user_blocks():
     assert len(messages[0]["content"]) == 1
 
 
-def test_caller_rejects_astra_instead_of_spending_or_falling_back():
-    result = subprocess.run([sys.executable, "-B", str(CALLER), "--model", "astra", "--question", "test"],
-                            capture_output=True, timeout=10)
-    assert result.returncode == 2
-    assert b"invalid choice" in result.stderr
-    assert load_caller().MODEL_ALIASES == {"sol": "codex-gpt-6.1-sol-advisor"}
+def test_caller_accepts_arbitrary_model_and_council_aliases(monkeypatch):
+    caller = load_caller()
+    monkeypatch.setattr(sys, "argv", [str(CALLER), "--model", "any-primary",
+                                       "--council-model", "any-review", "--question", "test"])
+    args = caller.parse_args()
+    assert args.model == "any-primary"
+    assert args.council_model == "any-review"
+
+
+@pytest.mark.parametrize(("model", "council_model", "message"), [
+    ("default", None, "requires --council-model"),
+    ("same-route", "same-route", "must differ"),
+])
+def test_council_requires_distinct_configured_route(monkeypatch, model, council_model, message):
+    caller = load_caller()
+    argv = [str(CALLER), "--council", "--model", model, "--question", "test"]
+    if council_model:
+        argv.extend(["--council-model", council_model])
+    monkeypatch.setattr(sys, "argv", argv)
+    with pytest.raises(SystemExit, match=message):
+        caller.main()

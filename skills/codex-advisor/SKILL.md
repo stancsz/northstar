@@ -1,6 +1,6 @@
 ---
 name: codex-advisor
-description: Consult GPT-6.1 Sol or Council when uncertainty, capability risks, or visual decisions could change the next action; attach images for visual advice.
+description: Consult a configured Subroute model or Council when uncertainty, capability risks, or visual decisions could change the next action; attach images for visual advice.
 ---
 
 # Codex Advisor
@@ -10,7 +10,7 @@ Follow Northstar's [delivery contract](../northstar/SKILL.md#delivery-contract).
 
 Use this skill in other agents too; the Codex name is not a usage restriction. Follow the bundled [host adaptation guidance](../northstar/SKILL.md#use-with-other-agents); the advisor service and reader prerequisites still apply.
 
-**Default Advisor is GPT-6.1 Sol.** The caller's `--model sol` choice targets the versioned `codex-gpt-6.1-sol-advisor` route. For a complex text decision where a second perspective could change the next action, `--council` makes one independent Gemini 4 Argon call first, then one GPT-6.1 Sol call with both the original packet and Gemini's review. Sol must give its own verdict and explain agreement or disagreement. This is not a model vote or independent acceptance. No Astra, older Sol, worker-model substitution or model fallback. If a selected call fails, report it as unavailable; do not silently replace it. Pi remains a separately scoped source reader.
+The Advisor uses any model ID or routing alias supported by its configured Subroute endpoint. `--model` selects the primary advisor and defaults to `NORTHSTAR_ADVISOR_MODEL`, then `default`. For a complex text decision, `--council` makes one independent call using `--council-model` or the required `NORTHSTAR_COUNCIL_MODEL` setting, then asks the primary model to assess both the original packet and that review. Council requires a distinct model ID or alias from the primary. Both model routes are configurable; the caller does not choose a vendor or silently fall back. Council calls are independent perspectives, not a model vote or acceptance. If a selected call fails, report it as unavailable. Pi remains a separately scoped source reader.
 
 Use this skill when a material uncertainty, relevant capability limitation or unresolved visual decision could change delivery. Consult early when the consequence makes trial and error inappropriate; a topic label alone is not a trigger. Use council for a material unresolved text decision when an independent second view can change the choice. Keep implementation and independent acceptance with their owners; advice grants no additional authority.
 
@@ -43,17 +43,17 @@ For ordinary consultation outside those triggers, all four conditions must hold:
 
 Do not consult for missing credentials or permissions, an unresolved user choice, work that only needs implementation time, or generic reassurance.
 
-Use GPT-6.1 Sol for diagnosis, a design fork, a failed test path or a bounded challenge to an implementation plan. An advisor that coauthors the plan is not its independent acceptance reviewer; expertise does not bypass role separation. Unresolved decisions require changed evidence or a scoped follow-up to the same Advisor, never Astra escalation or a model vote.
+Use the configured Advisor for diagnosis, a design fork, a failed test path or a bounded challenge to an implementation plan. An advisor that coauthors the plan is not its independent acceptance reviewer; expertise does not bypass role separation. Unresolved decisions require changed evidence or a scoped follow-up to the same configured route, not an automatic model escalation or model vote.
 
 ## Keep consultation within the existing recovery boundary
 
-Default to one bounded consultation for the current decision; allow one distinct follow-up when new evidence makes it useful. A council invocation uses one Sol call plus one Gemini call. Ordinary reader mode allows at most three expert calls and three Pi tasks; council and reader cannot be combined. These are ceilings, not targets or retry windows.
+Default to one bounded consultation for the current decision; allow one distinct follow-up when new evidence makes it useful. A council invocation uses one configured council call plus one primary-advisor call. Ordinary reader mode allows at most three expert calls and three Pi tasks; council and reader cannot be combined. These are ceilings, not targets or retry windows.
 
 A required unresolved criterion may justify further image-backed or capability-risk guidance only when the next call can change a concrete action and stays within existing resources and recovery. Optional refinement stops at diminishing returns. Never reopen exhausted investigation or add implementation trials by consulting again.
 
 ## Make a compact advice request
 
-The dedicated expert API is `http://127.0.0.1:4040/v1`, separate from the worker gateway on port 4000. The skill uses `codex-gpt-6.1-sol-advisor` for Sol and, only in council mode, `gemini-4-argon-advisor` for Gemini Subscription at low reasoning effort. The versioned Sol alias intentionally fails on an older service rather than silently using older Sol. Do not substitute an executor alias or silently fall back to port 4000.
+The expert API defaults to `http://127.0.0.1:4040/v1` and can be changed with `EXPERTS_BASE_URL`. Set it to the Subroute endpoint that exposes the requested model IDs or aliases. Configure selections with `NORTHSTAR_ADVISOR_MODEL` and `NORTHSTAR_COUNCIL_MODEL`, or pass `--model` and `--council-model`; `default` is a routing alias whose destination is controlled by Subroute. Council mode requires a distinct council selection. A failed or unavailable selection stays visible; the caller does not retry another model or endpoint.
 
 Write a high-density packet, normally under 4,000 characters and never over 6,000. Keep only information that could change the recommendation:
 
@@ -74,20 +74,20 @@ $skillDirectories += Join-Path (Join-Path $env:USERPROFILE '.codex\skills') 'cod
 $codexAdvisor = $skillDirectories | Where-Object { Test-Path (Join-Path $_ 'SKILL.md') } | Select-Object -First 1
 if (-not $codexAdvisor) { throw 'Set $codexAdvisor to this installation''s codex-advisor directory.' }
 $codexAdvisor = (Resolve-Path $codexAdvisor).Path
-python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model sol --input-file .\advisor-packet.txt
+python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model default --input-file .\advisor-packet.txt
 ```
 
-For a complex text decision with a concrete reason for an independent second view, add `--council` to the command above. Gemini receives the packet without Sol's opinion. Sol receives the same packet plus Gemini's bounded review, gives its own verdict, and then assesses the review. A successful receipt includes both answers, model IDs and provider usage. The caller makes at most one call to each model, with no retry or fallback; Gemini failure stops before Sol. Council mode cannot be combined with image attachments or Pi reader mode; use Sol's image-backed path for visual decisions.
+For a complex text decision with a concrete reason for an independent second view, add `--council` and select a distinct configured route with `--council-model <route>`. The council model receives the packet without the primary's opinion; the primary receives the packet plus the council's bounded review and gives its own verdict. A successful receipt includes both returned model IDs and provider usage. The caller makes at most one call to each selected route, with no retry or fallback; council failure stops before the primary call. Council mode cannot be combined with image attachments or Pi reader mode; use the primary configured route's image-backed path for visual decisions.
 
 For visual advice, attach the overall view and useful details proactively. The text packet supplies criteria, revision/state, reference roles and the next decision; image bytes are separate from its character budget:
 
 ```powershell
-python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model sol --input-file .\advisor-packet.txt --image .\current.png --image .\detail.png
+python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --model default --input-file .\advisor-packet.txt --image .\current.png --image .\detail.png
 ```
 
 Supported files are PNG, JPEG, WebP and GIF, with at most eight images, 10 MB per file and 20 MB total per call; split further requested views into calls. Bytes are preserved without resizing, with `--image-detail high` by default (`auto`/`low` also available). High detail requests provider inspection quality; it does not guarantee every fine feature is readable. The receipt records attachment paths, types, byte counts and hashes without echoing pixels. Visual advice asks for concrete observations, fixes and requested views under 4,000 characters, rather than the ordinary 160-word target. An attachment receipt proves what was sent; only image-backed feedback establishes what was inspected.
 
-The experts service must already be running with the Sol and Gemini Advisor routes in the Subroute gateway checkout. Its current [Compose configuration](https://github.com/stancsz/subroute/blob/main/docker-compose.yml) defines `docker compose up -d experts`; port 4040 is LAN-published and requires bearer authentication. The Gemini route uses the existing Antigravity subscription bridge. Set `EXPERTS_API_KEY` in the caller environment to match the service key. Never put a credential in a packet or write it to a file. Installing this skill does not install, start or authenticate the external gateway service.
+The configured Subroute API must already be running and expose the selected model IDs or aliases. For the default local expert endpoint, the Subroute checkout's [Compose configuration](https://github.com/stancsz/subroute/blob/main/docker-compose.yml) defines `docker compose up -d experts`; port 4040 is LAN-published and requires bearer authentication. Set `EXPERTS_API_KEY` in the caller environment to match that service key. Never put a credential in a packet or write it to a file. Installing this skill does not install, start or authenticate the external gateway service.
 
 On Windows, the caller also reads `EXPERTS_API_KEY` from the Windows user environment for the default local service (`http://127.0.0.1:4040`, `localhost` or `::1`). This lets an already-open desktop app use a newly configured key without restarting. An explicit process variable takes precedence, including an empty value; other hosts, schemes and ports require the process variable. The caller never follows redirects or retries a failed request. HTTP 401 means the service key is missing or rejected: correct that configuration before trying again; do not disable service authentication or change gateways.
 

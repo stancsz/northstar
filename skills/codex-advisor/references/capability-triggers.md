@@ -2,7 +2,7 @@
 
 Use with [Codex Advisor](../SKILL.md). Checked 2026-09-30. This register guides early compact consultation for Luna and other workers facing the same risks. It is not an exhaustive model diagnosis or a production failure forecast.
 
-All consultations use **GPT-6.1 Sol** for the final advice. Complex text decisions may use the skill's optional Gemini 4 Argon council review first. Visual follow-ups and reader rounds remain Sol-only. Older Sol/Astra benchmark results below are comparison evidence, not selectable Advisor routes or escalation branches.
+Consultations use the model or alias selected for the current Subroute endpoint. Complex text decisions may use a separately configured council route first. Benchmark results below are contextual evidence, not prescribed routes or escalation branches.
 
 Use these historical risk tags to identify a material decision needing evidence. Apply the current [consultation trigger](../SKILL.md#consult-early-and-frequently-on-capability-risks); a matching topic alone does not require a call. Preserve actual image evidence for visual advice, existing authority and recovery limits.
 
