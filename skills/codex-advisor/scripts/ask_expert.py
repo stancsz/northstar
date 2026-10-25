@@ -13,13 +13,24 @@ import time
 from pathlib import Path
 from typing import TextIO
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.parse import urlsplit
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 
 MAX_PACKET_CHARS = 6_000
 MAX_IMAGES = 8
 MAX_IMAGE_BYTES = 10_000_000
 MAX_TOTAL_IMAGE_BYTES = 20_000_000
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # Never forward an Advisor credential to a different endpoint.
+        return None
+
+
+urlopen = build_opener(NoRedirect).open
+
 MODEL_ALIASES = {
     "sol": "codex-gpt-6.1-sol-advisor",
 }
@@ -166,6 +177,33 @@ def with_images(messages: list[dict], parts: list[dict]) -> list[dict]:
     raise ValueError("Image consultation needs a user message.")
 
 
+def windows_user_api_key() -> str | None:
+    """Read persisted user configuration when a desktop parent has a stale environment."""
+    if sys.platform != "win32":
+        return None
+    import winreg
+
+    try:
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+            value, kind = winreg.QueryValueEx(key, "EXPERTS_API_KEY")
+        if kind == winreg.REG_SZ and isinstance(value, str) and value.strip():
+            return value
+    except OSError:
+        pass
+    return None
+
+
+def expert_api_key(base_url: str) -> str | None:
+    # Explicit process configuration wins, including an intentional empty value.
+    if "EXPERTS_API_KEY" in os.environ:
+        return os.environ["EXPERTS_API_KEY"] or None
+    endpoint = urlsplit(base_url)
+    if (endpoint.scheme == "http" and endpoint.hostname in ("127.0.0.1", "localhost", "::1")
+            and endpoint.port == 4040 and endpoint.username is None and endpoint.password is None):
+        return windows_user_api_key()
+    return None
+
+
 def call_model(args: argparse.Namespace, model: str, messages: list[dict], *, images=False) -> dict:
     started = time.monotonic()
     payload = {
@@ -174,7 +212,7 @@ def call_model(args: argparse.Namespace, model: str, messages: list[dict], *, im
         "messages": with_images(messages, getattr(args, "image_parts", [])) if images else messages,
     }
     headers = {"Content-Type": "application/json"}
-    api_key = os.environ.get("EXPERTS_API_KEY")
+    api_key = expert_api_key(args.base_url)
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"
 
@@ -189,7 +227,17 @@ def call_model(args: argparse.Namespace, model: str, messages: list[dict], *, im
         with urlopen(request, timeout=args.timeout_seconds) as response:
             body = json.load(response)
     except HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")[:1_000]
+        detail = exc.read().decode("utf-8", errors="replace")
+        if api_key:
+            detail = detail.replace(api_key, "[REDACTED]")
+        detail = detail[:1_000]
+        if exc.code == 401:
+            raise RuntimeError(
+                "Expert API returned HTTP 401: service authentication failed. "
+                "Set EXPERTS_API_KEY to match the experts service key "
+                "(Windows user environment is also read for the default local service). "
+                "No retry was made."
+            ) from exc
         raise RuntimeError(f"Expert API returned HTTP {exc.code}: {detail}") from exc
     except (URLError, TimeoutError) as exc:
         raise RuntimeError(f"Expert API is unavailable: {exc}") from exc

@@ -31,6 +31,131 @@ def load_caller():
     return module
 
 
+@pytest.mark.parametrize("value,kind,expected", [
+    ("fixture-user-key", 1, "fixture-user-key"), ("", 1, None),
+    ("   ", 1, None), ("fixture-user-key", 2, None), (None, 1, None),
+])
+def test_windows_user_key_reads_only_a_nonempty_string(monkeypatch, value, kind, expected):
+    caller = load_caller()
+    registry = SimpleNamespace(HKEY_CURRENT_USER=object(), REG_SZ=1,
+        OpenKey=lambda *a: io.StringIO(), QueryValueEx=lambda *a: (value, kind))
+    monkeypatch.setitem(sys.modules, "winreg", registry)
+    monkeypatch.setattr(caller.sys, "platform", "win32")
+    assert caller.windows_user_api_key() == expected
+
+
+def test_unconfigured_windows_user_key_is_optional(monkeypatch):
+    caller = load_caller()
+    def missing(*args):
+        raise FileNotFoundError("No configured value")
+    registry = SimpleNamespace(HKEY_CURRENT_USER=object(), REG_SZ=1, OpenKey=missing)
+    monkeypatch.setitem(sys.modules, "winreg", registry)
+    monkeypatch.setattr(caller.sys, "platform", "win32")
+    assert caller.windows_user_api_key() is None
+    monkeypatch.setattr(caller.sys, "platform", "linux")
+    registry.OpenKey = lambda *a: pytest.fail("Registry must not be read off Windows")
+    assert caller.windows_user_api_key() is None
+
+
+@pytest.mark.parametrize("url,allowed", [
+    ("http://127.0.0.1:4040/v1", True), ("http://LOCALHOST:4040/v1/", True),
+    ("http://[::1]:4040/v1", True), ("http://127.0.0.1:4000/v1", False),
+    ("http://localhost/v1", False), ("https://localhost:4040/v1", False),
+    ("http://example.com:4040/v1", False), ("http://192.168.1.2:4040/v1", False),
+    ("http://user@localhost:4040/v1", False),
+])
+def test_user_key_fallback_is_limited_to_default_local_origin(monkeypatch, url, allowed):
+    caller = load_caller()
+    monkeypatch.delenv("EXPERTS_API_KEY", raising=False)
+    calls = []
+    monkeypatch.setattr(caller, "windows_user_api_key", lambda: calls.append(1) or "user-key")
+    assert caller.expert_api_key(url) == ("user-key" if allowed else None)
+    assert len(calls) == int(allowed)
+
+
+@pytest.mark.parametrize("key", ["process-key", ""])
+def test_explicit_process_key_wins_over_user_configuration(monkeypatch, key):
+    caller = load_caller()
+    monkeypatch.setenv("EXPERTS_API_KEY", key)
+    monkeypatch.setattr(caller, "windows_user_api_key", lambda: pytest.fail("Must use process env"))
+    assert caller.expert_api_key("http://localhost:4040/v1") == (key or None)
+
+
+@pytest.mark.parametrize("images", [False, True])
+def test_bearer_key_is_sent_for_text_and_image_consultations(monkeypatch, images):
+    caller = load_caller()
+    monkeypatch.delenv("EXPERTS_API_KEY", raising=False)
+    monkeypatch.setattr(caller, "windows_user_api_key", lambda: "fixture-user-key")
+    requests = []
+    def upstream(request, **kwargs):
+        requests.append(request)
+        assert request.get_header("Authorization") == "Bearer fixture-user-key"
+        return io.StringIO(json.dumps({"choices": [{"finish_reason": "stop",
+            "message": {"content": "Verdict: received."}}]}))
+    monkeypatch.setattr(caller, "urlopen", upstream)
+    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1,
+        image_parts=[{"type": "image_url", "image_url": {"url": "data:image/png;base64,AAAA"}}] if images else [])
+    result = caller.consult(args, [{"role": "user", "content": "Inspect."}])
+    assert len(requests) == 1
+    blocks = json.loads(requests[0].data)["messages"][0]["content"]
+    assert isinstance(blocks, list) == images
+    assert "fixture-user-key" not in json.dumps(result)
+
+
+@pytest.mark.parametrize("status", [401, 502])
+def test_auth_error_is_actionable_redacted_and_never_retried(monkeypatch, status):
+    caller = load_caller()
+    monkeypatch.setenv("EXPERTS_API_KEY", "fixture-secret")
+    requests = []
+    def upstream(request, **kwargs):
+        requests.append(request)
+        raise caller.HTTPError(request.full_url, status, "failed", {}, io.BytesIO(b"fixture-secret"))
+    monkeypatch.setattr(caller, "urlopen", upstream)
+    args = SimpleNamespace(model="sol", base_url="http://localhost:4040/v1", timeout_seconds=1)
+    with pytest.raises(RuntimeError) as error:
+        caller.consult(args, [])
+    assert len(requests) == 1
+    assert "fixture-secret" not in str(error.value)
+    assert f"HTTP {status}" in str(error.value)
+    if status == 401:
+        assert "EXPERTS_API_KEY" in str(error.value)
+        assert "No retry" in str(error.value)
+
+
+def test_redirect_does_not_forward_an_advisor_credential(monkeypatch):
+    caller = load_caller()
+    monkeypatch.setenv("EXPERTS_API_KEY", "fixture-secret")
+    requests = []
+    class Handler(BaseHTTPRequestHandler):
+        def do_POST(self):
+            requests.append(self.path)
+            self.rfile.read(int(self.headers["Content-Length"]))
+            self.send_response(302)
+            self.send_header("Location", "/redirected")
+            self.end_headers()
+
+        def do_GET(self):
+            requests.append(self.path)
+            self.send_response(200)
+            self.end_headers()
+
+        def log_message(self, *args):
+            pass
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        args = SimpleNamespace(model="sol", base_url=f"http://127.0.0.1:{server.server_port}/v1",
+            timeout_seconds=1)
+        with pytest.raises(RuntimeError, match="HTTP 302"):
+            caller.consult(args, [])
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+    assert requests == ["/v1/chat/completions"]
+
+
 def test_packaged_caller_reconfigures_legacy_windows_stdout_to_utf8():
     caller = load_caller()
     raw = io.BytesIO()

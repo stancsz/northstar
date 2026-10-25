@@ -1,0 +1,23 @@
+{
+  "model": "codex-gpt-6.1-sol-advisor",
+  "advice": "Verdict: Main heading: “Profile settings”. Field label: “Display name”. No button is visible. The white rounded panel and empty input extend beyond the image’s right edge.\nNext: No redesign recommended; these observations are limited to the attached image.\nRisk: The right side is cropped; image access alone does not verify authentication or transport behavior.",
+  "advice_words": 54,
+  "usage": {
+    "completion_tokens": 75,
+    "prompt_tokens": 689,
+    "total_tokens": 764
+  },
+  "request_id": "chatcmpl-codex-advisor-20e8debe3ffe",
+  "elapsed_seconds": 4.777,
+  "images": [
+    {
+      "image": 1,
+      "path": "D:\\github\\northstar\\docs\\evals\\assets\\qa-suite\\A-narrow-viewport.png",
+      "mime_type": "image/png",
+      "bytes": 10647,
+      "sha256": "3752689e6eacb5d2aee0d41bc9c82e5d297ae83d7d6375dd2321a7d5292597b7",
+      "detail": "high"
+    }
+  ],
+  "packet_chars": 324
+}
