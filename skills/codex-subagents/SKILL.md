@@ -18,66 +18,27 @@ Default to one implementation owner plus an independent acceptance reviewer. Do 
 3. Create a supervisor only for a workstream whose dependencies or integration need a dedicated coordinator. The primary can directly manage a builder and independent reviewer; product and architecture can remain compatible functions of an existing agent. The hierarchy describes accountability, not mandatory staffed layers. Remove a temporary coordinator when its coordination need ends.
 4. Assign a nonauthor acceptance reviewer for the useful delivery boundary; reuse that eligible reviewer across related checks. Add implementation workers only when their tasks are sufficiently independent to run in parallel. Keep tightly coupled changes with one worker or the orchestrator. Apply [proportionate process](../northstar/SKILL.md#match-process-to-the-work): one compact handoff and scoped verdict can cover a coherent increment; do not create a new agent, meeting or approval chain per edit.
 
-Treat roughly 20 agents as a possible scale, not a target or limit. Include the orchestrator when estimating total headcount. A small request may need only one brief nonauthor review; a broad request may need more or fewer than 20 depending on independent work, tool limits, cost, time, and review capacity. Stop adding agents when coordination and integration would outweigh the parallel progress.
-
 Use the [functional profiles](references/role-profiles.md) to cover product/outcomes, architecture/interfaces, implementation, independent QA, experience/taste, operations and expertise. Roles are functions, not seven standing agents. Name creators, reviewer, decision owner and artifact scope before dispatch; combine only compatible functions. Use the [agent-to-agent handoff practice](references/agent-handoffs.md) for peer coordination or remote agents.
 
 ## Allocate capability and cost
 
+For shared workflow expectations, see the [Northstar delivery contract](../northstar/SKILL.md#delivery-contract).
+
 Choose models by task difficulty, consequence and observed capability. Default to a capable lower-cost model for bounded execution; reserve stronger reasoning for direction, difficult integration, consequential decisions or a specific specialist gap. Respect the user's specified models and actual runtime availability. More capable models may be needed for some worker tasks; explain the evidence rather than silently making every worker the strongest model.
 
-Route each Codex subagent's primary model inference through the local LiteLLM API at `http://localhost:4000/v1` by default; this applies to the worker itself, not just its supporting tools. Use model ID `default` as a gateway alias for the currently saved routing-desk target regardless of alias/force/off mode. This does not pin the worker to Luna or another fixed model; LiteLLM chooses the configured target. If no target is saved, the gateway applies its own configured initial-target fallback. Before relying on a newly configured client/protocol, make one bounded read-only smoke request and confirm the unique response; a catalog listing or open port is insufficient. Preserve explicit per-task model/provider constraints, credential boundaries and client protocol requirements. Do not change saved global settings or send credentials to a different host. If the Codex runtime cannot use the local route, or it is unavailable, state the concrete limitation and surface any authorized fallback; do not silently change providers. This does not change the Advisor's own route or allow an advisor to perform implementation or acceptance.
+Keep provider routing and client setup owned by the commander. Verify any new or reconfigured route before dispatch, preserve explicit model/provider constraints and credential boundaries, and disclose unavailable routes rather than silently changing providers. Do not repeat an already-confirmed route smoke for each worker; pass its evidence in the brief. The Advisor's route remains independent and does not authorize implementation or acceptance.
 
-For local Codex CLI workers, use a dedicated profile so the child process has an explicit gateway endpoint and never inherits or changes the primary Codex provider. Create `%USERPROFILE%\.codex\subroute-subagents.config.toml` with this profile, and provide `GATEWAY_MASTER_KEY` through the process environment:
-
-```toml
-model = "default"
-model_provider = "subroute"
-model_catalog_json = 'C:\Users\<user>\.codex\subroute-subagents-models.json'
-
-[model_providers.subroute]
-name = "Subroute local LiteLLM"
-base_url = "http://localhost:4000/v1"
-env_key = "GATEWAY_MASTER_KEY"
-wire_api = "responses"
-requires_openai_auth = false
-```
-
-The current Codex CLI expects its own `{"models":[...]}` catalog schema, while LiteLLM returns OpenAI's `{"data":[...]}` schema. Generate a profile-local compatible catalog from the installed CLI's bundled catalog, append a copy of a compatible bundled model entry with `slug` and `display_name` changed to `default`; this catalog entry is local CLI metadata only, while LiteLLM resolves the request to the active target, and point `model_catalog_json` to that file. Regenerate it after CLI upgrades. Do not copy a model catalog or prompt metadata from another Codex version.
-
-```powershell
-$catalogPath = Join-Path $env:USERPROFILE '.codex\subroute-subagents-models.json'
-$bundled = codex debug models --bundled | ConvertFrom-Json
-$template = $bundled.models | Select-Object -First 1
-$default = $template | ConvertTo-Json -Depth 30 | ConvertFrom-Json
-$default.slug = 'default'
-$default.display_name = 'default'
-[ordered]@{ models = @($bundled.models) + @($default) } |
-    ConvertTo-Json -Depth 30 |
-    Set-Content -LiteralPath $catalogPath -Encoding utf8
-```
-
-Run a bounded child assignment from its intended repository directory with `codex exec --profile subroute-subagents --ephemeral --skip-git-repo-check --sandbox read-only "<assignment>"`; choose the sandbox and permissions to match the task's authorized write scope. Keep the prompt self-contained and capture the child's output as a handoff. The installed Codex CLI's native `spawn_agent` path may reject the custom `default` model before dispatch; a successful parent request does not prove that native child path works. If that occurs, use the explicit profile-backed CLI worker only when it satisfies the task's acceptance criteria, and report that the native spawn path remains unavailable. Never substitute a platform-hosted model or claim it used port 4000.
+For CLI workers, consult [the local CLI dispatch reference](references/cli-dispatch.md) when dispatching. One existing commander owns approvals; workers may make local implementation decisions within the assigned scope and acceptance criteria without a round trip. The commander records the nonauthor acceptance verdict; it cannot independently accept its own authored scope.
 
 Give workers enough context and authority to solve the task and challenge a flawed brief. Their handoff should identify a failed criterion and evidence of the gap. Improve an ambiguous brief, access or task boundary before treating every failure as a model problem. Escalate a genuine capability gap through [Codex Advisor](../codex-advisor/SKILL.md) when its setup fits, another authorized bounded expert consultation, or stronger worker assignment; preserve scope, rejected paths and all recovery counts. Unavailable model selection must be disclosed, not presented as a cheaper-model run.
 
 For an effectiveness trial, record actual model/role, reasoning effort when exposed, task/criteria, accepted and rejected outcomes, wall time, attempts, interventions and expert use. Include commander, workers, consultation, review and rework in any total token/cost comparison. Use runtime usage and current applicable rates when available; label missing usage/cost unknown. No invented estimates presented as measured savings. Compare matched tasks with unchanged acceptance and comparable starting conditions before claiming efficiency. A single mixed-capability run supports feasibility only; all-strong-model success cannot validate economical execution. Manager takeover counts as rescue, not worker success.
 
+For matched configuration/effectiveness experiments only, use the [comparison notes](references/cli-dispatch.md#configuration-comparisons). Do not load trial history for ordinary dispatch.
+
 ## Configure Codex thread capacity and delegation depth
 
-In Codex, set the subagent concurrency ceiling in `~/.codex/config.toml` for a user-wide default, or `<repo>/.codex/config.toml` for a trusted project:
-
-```toml
-[agents]
-enabled = true
-max_concurrent_threads_per_session = 20
-```
-
-`max_concurrent_threads_per_session` caps concurrently open spawned-agent threads and excludes the primary thread. It sets capacity; it does not make Codex spawn that many agents. Thus `20` allows up to 20 subagent threads plus the Orchestrator thread. If the desired ceiling is 20 total units including the Orchestrator, set it to `19`. The older `agents.max_threads` key is an alias; use the current key and do not set both.
-
-Current Codex configuration documentation does not list a `max_depth` setting. Enforce a two-edge delegation depth in the task instructions: **depth 0:** Orchestrator; **depth 1:** Supervisors spawned by the Orchestrator; **depth 2:** Workers spawned by Supervisors. Workers must not spawn agents. Include a direct instruction such as: “Use three reporting levels with maximum delegation depth 2: Orchestrator → Supervisors → Workers. Do not create another level. Stay within the configured concurrent-thread cap; 20 includes only subagent threads, so use 19 if the cap must include the Orchestrator.”
-
-See [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) and the [configuration reference](https://developers.openai.com/codex/config-reference/) for current key names and behavior.
+Use the host's existing capacity. Change it only for an authorized task that needs more useful parallel work; a ceiling is not a staffing target. Host-specific settings are in the [CLI reference](references/cli-dispatch.md#optional-host-capacity). Never edit global settings merely to start a routine task.
 
 ## Roles and authority
 
@@ -106,23 +67,15 @@ Critic and verifier are independent functional assignments within this structure
 - Do not spawn or delegate to other agents, change another worker's files or systems, broaden the objective, or commit, publish, deploy, or contact others unless covered by the task's inherited user mandate and permitted delegation depth. The commander's valid subdelegation supplies that authority; do not demand a second personal grant from the user.
 - Choose implementation, internal refactoring, and checks within the task's bounds. If one part is blocked, report its precise dependency and continue independent assigned work. Return the artifact, evidence, remaining gaps, and next action.
 
-Keep one accountable accepting role; workers may directly clarify interfaces with affected peers using authorized communication tools. Record material agreements once for the responsible supervisor. Peer agreement cannot expand authority or transfer write ownership by itself. After one direct evidence exchange leaves a material conflict unresolved, the responsible superior must chair the [decision meeting](../northstar/references/operating-system.md#resolve-disagreement). Workers supply reasons for and against options; the chair decides within authority, preserves dissent and assigns the next check. Consult [expertise](../northstar/references/operating-system.md#bring-in-expertise) for material competence gaps. Permission violations require immediate attention.
+Keep one accountable accepting role; workers may directly clarify interfaces with affected peers using authorized communication tools. Record material agreements once for the responsible supervisor. Peer agreement cannot expand authority or transfer write ownership by itself. Route a material unresolved conflict to the single approval owner using the shortest useful [decision exchange](../northstar/references/operating-system.md#resolve-disagreement). Workers supply reasons for and against options; the chair decides within authority, preserves dissent and assigns the next check. Consult [expertise](../northstar/references/operating-system.md#bring-in-expertise) for material competence gaps. Permission violations require immediate attention.
 
 ## Task brief and handoff
 
-When assigning a managing role, fill the [orchestrator brief](templates/orchestrator.md) or [supervisor brief](templates/supervisor.md). Load only the needed role. Use these alongside this practice, not as additional management layers. The assigning agent supplies known facts rather than sending placeholders or asking the user to repeat them.
+Make each assignment self-contained enough to act without broad rediscovery. State the usable result, why it matters and relevant current state; observable acceptance criteria and evidence (including the actual baseline failure for a repair); exact writable paths, task-owned scratch path or `scratch none`, and required report path; standing authority, local discretion and limits; and the applicable repository/skill instructions plus essential context or exact paths where they are available. Links may support, but not replace, instructions or facts needed to act. The parent owns integration and independent acceptance; identify the accepting role and any dependencies or affected owners. Covered actions are pre-authorized within those limits; routine choices need no approval round trip.
 
-Give each delegate five things. Put the assigned result and immediate next action in the prompt; include facts needed to act now, and link supporting background instead of pasting unrelated history. Keep acceptance criteria and scope/authority constraints explicit in the brief; do not relegate them to linked background. Do not make links a substitute for essential instructions or evidence. Name unknowns when they could change the work. Avoid arbitrary length limits; remove context that cannot change the delegate's next action or acceptance.
+The parent also supplies any already-verified route/client evidence, the next checkpoint and a firm handoff deadline. Workers do not repeat route setup or checks already established. Give the worker room to investigate directly relevant unknowns and choose methods within scope; when the brief is sufficient, avoid broad project/history rediscovery and proceed. Do not assign nested workers unless delegation is explicitly part of the task.
 
-- **Result:** the usable outcome, why it matters, and relevant goal/current state.
-- **Acceptance:** observable behavior, required evidence and independent reviewer; the builder chooses development checks, while the reviewer owns acceptance testing.
-- **Autonomy:** owned paths, local design choices, already-authorized actions and source, explicit limits, and applicable repository instructions.
-- **Coordination:** functional assignments, creators and reviewer conflicts, dependencies/interfaces, affected owners, and changes requiring agreement or escalation.
-- **Handoff:** accepting role, integration owner, scratch/report paths, applicable successful methods and ruled-out paths, existing evidence and recovery checkpoint when relevant.
-
-For substantial or ambiguous assignments, have the delegate begin by briefly restating the assigned result, acceptance and first action. Correct a material mismatch before it compounds; if those points are clear, the delegate proceeds without waiting for another approval turn. Skip this check for clear, single-step work.
-
-Reports cover completed, partial, or blocked work; follow Northstar's [handoff practice](../northstar/SKILL.md#worker-reports-and-handoffs). Keep them proportional: artifact, actual verification, remaining gap. Preserve meaningful failure history. Supervisors inspect the work and record one task decision in the goal; link evidence rather than copying it into a second report. Workers propose changes to shared direction through its owner.
+For a Codex CLI worker, require its own native tools for assigned work; do not launch another CLI or ask the parent to perform the work. Follow higher-priority host and repository instructions: a task brief cannot override them or enforce filesystem/read isolation. If an assigned capability or required context is unavailable, stop that step and report the precise gap rather than switching tool class or widening scope. Handoffs cover complete, partial and blocked work: name the artifact, actual changes and checks, unmet criterion or missing prerequisite, and remaining gap. Preserve meaningful failure history and apply the inherited recovery limit. The parent inspects the result and records acceptance; worker claims do not substitute for independent review. For host-specific dispatch and isolation limits, see [local CLI dispatch](references/cli-dispatch.md).
 
 ## Coordinate to a working result
 
@@ -131,7 +84,7 @@ Reports cover completed, partial, or blocked work; follow Northstar's [handoff p
 3. **Resolve at the lowest responsible level.** Workers own local implementation choices; supervisors resolve goal-level dependencies; orchestrators resolve cross-goal tradeoffs. Before escalating to the commander, inspect the problem and propose a remedy. The commander decides unresolved in-mandate tradeoffs by useful value, full cost, urgency, downside and reversibility; do not forward them to the human by default. Apply Northstar's [proportionate process](../northstar/SKILL.md#match-process-to-the-work) and [authorization rules](../northstar/SKILL.md#ask-only-for-decisions-the-user-owns). Remove temporary oversight once its specific failure is resolved.
 4. **Intervene in stalled or overlapping work.** Inspect the failed criterion and inherited recovery history first. If its recovery is not exhausted, give the next bounded correction; otherwise apply Northstar's [decision after exhausted recovery](../northstar/SKILL.md#decide-after-exhausted-recovery) immediately. Choose and execute a remedy within your mandate instead of forwarding status or giving a new worker fresh retries. Narrow the implementation, never the promised acceptance. Stop or redirect duplicate work. Before transferring write ownership, confirm the old writer has stopped and inspect its diff; preserve useful partial work.
 5. **Integrate and accept.** Have a nonauthor reviewer inspect the combined workflow in the intended environment, not just each worker's checks. Managers retain delivery accountability; their own repairs need independent recheck. Reuse applicable evidence and target interface gaps or changed behavior. A false completion claim returns the task for a concrete repair; do not weaken criteria or tests. Preserve the best verified baseline. When current acceptance passes, deliver; while authorized outcomes remain actionable, continue without requiring a 'continue' prompt.
-6. **Learn at the checkpoint.** Apply Northstar's [self-learning loop](../northstar/SKILL.md#learn-from-every-use). Workers contribute evidence of what worked/failed through existing handoffs; the accepting owner inspects it, resolves conflicting lessons, checks intent/acceptance drift and records one next-action decision. Carry applicable lessons and rejected paths into the next assignment. This review is required; use affected participants and combine overlapping ceremonies. Unresolved material disagreement goes to the responsible superior for a decision meeting, without resetting recovery history.
+6. **Learn at the checkpoint.** Apply Northstar's [self-learning loop](../northstar/SKILL.md#learn-from-every-use). Workers contribute evidence of what worked/failed through existing handoffs; the accepting owner inspects it, resolves conflicting lessons, checks intent/acceptance drift and records one next-action decision. Carry applicable lessons and rejected paths into the next assignment. Record only decisions or lessons that change the next action; no extra retrospective is needed for routine success. The approval owner resolves material disagreement without resetting recovery history.
 
 Keep task owner, write scope, dependency/interface, next action, evidence, and any blocker in the existing goal; separate observed facts from assumptions and update on material changes, not every poll. Give affected owners the same current evidence rather than filtered chains of status summaries. At a context change, restore this state and existing authorization before dispatching more work. If nothing can advance, report the exact unmet criterion and unblock condition. Instructions cannot enforce runtime timeouts or guarantee future compliance.
 
