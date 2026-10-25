@@ -38,6 +38,8 @@ Earlier local CLI tool/function preflight evidence is in the [dispatch report](.
 
 A direct Responses function-call preflight for a read-only skill review initially timed out; the sanitized receipt is in ignored `tmp/active-cli-review-20261024/preflight.json`. A later corrected function/result roundtrip passed, followed by a helper-mediated CLI-native read smoke and an independent read-only review of the committed instruction changes. The reviewer passed with no source contradiction or file changes. Its reported usage was 229,901 input tokens (81,920 cached), 3,278 output and 1,894 reasoning tokens. This proves one exact read-only review path and source acceptance, not repeated reliability, economical delegation or product delivery; high usage remains material evidence, and the cause is unassigned.
 
+The seven files changed by this increment were then synced to the active Codex skill installation after confirming the installed content matched the prior committed source. Backups are in `tmp/installed-sync-20261024-205742/before/`; both installed skills pass format validation and their complete file trees match source hashes. The running app's reload state was not verified.
+
 ## Remaining work
 
 Apply the current package to distinct, owner-valued real tasks with fixed acceptance and actual result inspection. Record total effort, reviewer/commander work, owner rescue, failures and missing evidence; do not infer savings from word counts or one paired run. Use the [next-proof protocol](../../northstar/next-proof.md) before making comparative claims. Do not invent a product brief or weaken the user’s endpoint to manufacture a passing test. If no suitable task is available, retain the uncertainty and make no speculative prompt edits.
