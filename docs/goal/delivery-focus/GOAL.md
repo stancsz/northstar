@@ -1,6 +1,6 @@
 # Goal: make Northstar's entry path help finish the work
 
-Date: 2026-10-23; updated 2026-10-24. Status: source repairs accepted; real-world effectiveness remains unverified and this goal stays active. Owner and approval authority: primary. Keep application work in its own repository.
+Date: 2026-10-23; updated 2026-10-26. Status: source repairs accepted; real-world effectiveness remains unverified and this goal stays active. Owner and approval authority: primary. Keep application work in its own repository.
 
 ## Ask
 
@@ -31,6 +31,8 @@ The approval clause now makes the user's preference operational: one commander a
 The latest prompt audit removes repeated focus/authority sections, keeps their unique guidance once, and removes repository-specific storage and debt paths from the portable entrypoint. The [evaluation](../../evals/delivery-focus/README.md#subtractive-prompt-audit-2026-10-24) records the scope, 265-word entrypoint reduction, link/format checks and scenario limits. This improves prompt focus but does not establish lower runtime usage or better delivery; continue to the real-work proof before further speculative edits.
 
 A fresh read-only route check on the real Northstar Console candidate found different forced targets on worker ports 4000 and 4005. The prior trial treated a Luna/alias expectation as required, which conflicts with the owner's model-agnostic requirement; those observed route selections are not evidence that Subroute must use Luna or that the selected targets are incompatible. No provider call or app change was made. The [evaluation](../../evals/delivery-focus/README.md#read-only-real-task-route-check-2026-10-24) retains the historical result. Active Northstar guidance and Advisor tooling must accept any model ID or alias supported by the configured Subroute endpoint; real-task skill effectiveness remains unverified.
+
+The Advisor caller no longer maps named model choices to fixed Sol/Gemini routes: it forwards configured model IDs or aliases, and Council requires a distinct configured route. The shared CLI dispatch reference now treats Advisor routing as configurable. `tests/test_codex_advisor.py` passes 62/62 and the skill validator passes. A live request through `default` then timed out without a response while the gateway reported `force → mimo-v2.6-pro` (policy 119); upstream identity and usage are unknown, so this does not verify runtime compatibility. The [evaluation](../../evals/delivery-focus/README.md#model-agnostic-advisor-routing-2026-10-26) retains the exact acceptance boundary. The model-agnostic source change was pushed as `bfa44a4`; real-task skill effectiveness and live multi-model support remain unverified.
 
 The Codex Subagents prompt was consolidated by 483 words: its coordination loop now carries only delegation-specific actions, while detailed delivery/recovery and skill-effectiveness guidance remain in their existing shared sources. The [evaluation](../../evals/delivery-focus/README.md#delegation-entrypoint-consolidation-2026-10-24) records preserved scenarios and install checks. Further prompt reduction should wait for an observed failure; the real-delegation proof remains open.
 
