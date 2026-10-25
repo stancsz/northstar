@@ -14,7 +14,7 @@ Deliver useful, verified work with low total effort and rework. Preserve authori
 This is the shared default for all six skills, their references and templates. Companion instructions specialize it; they must not create a second workflow or approval chain. Explicit task requirements and platform boundaries still govern.
 
 - **Focus the existing core.** Choose one current commitment: the existing user workflow whose completion or repair delivers the most useful value. Treat 80/20 as a prioritization heuristic, not a measured ratio or permission to drop requirements. Add a feature, role, tool or abstraction only when it is needed for this commitment; park other ideas.
-- **Finish before expanding.** Keep Ask / Acceptance / Remaining in the existing task record. Build the smallest complete result and run relevant checks. Use one nonauthor review when required or when it can change acceptance: material user/data/security risk, cross-component integration, unresolved uncertainty or visual judgment. Otherwise the commander accepts small, reversible work when its scope is attributable and relevant checks pass. If scope or evidence cannot be established, keep acceptance unverified or obtain the required review. This is accountable acceptance, not an independent verdict. Repair failed criteria; keep accepted scope closed unless new evidence warrants reopening it.
+- **Finish before expanding.** Keep Ask / Acceptance / Remaining in the existing task record. Build the smallest complete result and run relevant checks. Use one nonauthor review when required or when it can change acceptance: material user/data/security risk, cross-component integration, unresolved uncertainty or visual judgment. Otherwise the commander accepts small, reversible work when its scope is attributable and relevant checks pass. If scope or evidence cannot be established, keep acceptance unverified or obtain the required review. This is accountable acceptance, not an independent verdict. Repair failed criteria; keep accepted scope closed unless new evidence warrants reopening it. Reuse evidence only while its artifact, environment and claim remain applicable.
 - **Continue while the next step earns its cost.** Continue when an authorized step can satisfy a required criterion, remove a material risk or resolve uncertainty that changes the next action. Stop optional polish, research, consultation and process changes when their expected benefit no longer justifies time, tokens, coordination and rework. State the concrete reason; no invented scores or fixed improvement quotas. Diminishing returns never turns an unmet requirement into a pass: retain it and use bounded recovery or report its exact dependency.
 - **One approval owner.** Name one commander agent as the sole approval/decision owner. Covered actions are already authorized by the user's standing grant; the commander directs them without fresh approval, and workers execute within scope without asking the user or opening another approval queue. The commander resolves exceptions within its delegated authority. QA supplies an independent verdict, not another permission gate. Ask the user only for a decision explicitly reserved to them or authority the grant does not cover. An agent cannot approve beyond the user's grant or override a platform denial; report the exact boundary and continue independent authorized work.
 - **Subtract process.** Default to one owner. Add workers or reviewers only when required or when their value exceeds coordination and integration cost. Load a companion only for the current need. Reuse one result, decision and evidence record. Consult council for a material unresolved decision, not reassurance. Stop adding goals and mechanisms while the current commitment can be finished.
@@ -51,25 +51,15 @@ Use these practices in Codex, Claude Code, OpenCode or another agent. `Codex` na
 
 Route Codex and Claude CLI workers' primary inference through `http://127.0.0.1:4000/v1` with alias `default`; LiteLLM selects the saved target without pinning workers to a model. The parent verifies a new/reconfigured client and required tool path with bounded smoke evidence before dispatch, keeps credentials private, and passes the proven configuration to the worker. A listening port, model list or parent completion does not prove child routing. Follow the [CLI setup and capture instructions](../codex-subagents/SKILL.md#allocate-capability-and-cost) when dispatching; do not change global settings or force an incompatible protocol. Surface an unavailable route and any authorized fallback; never silently switch providers. Advisor uses its separately configured route.
 
-## Match process to the work
+## Coordinate proportionately
 
-Apply the [delivery contract](#delivery-contract). Keep outcome, data, acceptance, resources, authorization and write ownership firm; delegate methods. Activate product, architecture or operations work only for an actual decision or dependency. Batch related low-risk edits into one owner check; use one coherent independent review when warranted. Required checks before consequential use still apply. Templates are prompts for relevant information, not forms to complete.
-
-Resolve shared-interface questions with affected owners, then let the accountable owner decide within the mandate. Use existing handoffs for alignment, acceptance and learning; add a meeting or report only when it can change a decision.
+Coordinate shared interfaces with affected owners, then let the accountable owner decide within the mandate. Use existing handoffs; add meetings or reports only when they can change acceptance or the next action. Treat templates as prompts, not forms.
 
 ## Run the work as an operating system
 
 For sustained business operations, responsibility transfer or a material unresolved disagreement, load the relevant part of the [operating practice](references/operating-system.md). Use an existing brief, handoff or decision record; convene people/agents only when an exchange will resolve a specific issue. A finished project does not prove a healthy business or supply a scheduler.
 
 For explicitly requested spec-driven work or a project using GitHub Spec Kit, follow the [Spec Kit bridge](references/spec-kit.md) and its required reviews. Do not add that workflow to ordinary tasks.
-
-## Focus effort before expanding work
-
-Resolve the current commitment's limiting unmet condition before opening optional work. Read [operating principles](references/operating-principles.md) only when they can change that decision; feature count, agent activity and documentation volume are not delivered value.
-
-## Avoid repeated work
-
-Reopen accepted work only for a new requirement, relevant change, contradiction or coverage gap. Reuse evidence while its artifact, environment and claim remain applicable; batch independent reads and parallelize only when the work repays coordination and integration cost. Progress changes a criterion, narrows a failure or changes the next action; activity alone is not progress.
 
 ## Recover from a stall
 
@@ -91,13 +81,7 @@ Reopen only for a concrete changed condition with a distinguishing check. Escala
 
 Build simple, modular, pluggable systems with the fewest moving parts. Use proven tools, explicit interfaces and high-cohesion modules; depend on boundaries rather than external implementations. Keep pure, stateless logic separate from I/O and SDK adapters. Prefer one deployment with internal module boundaries when sufficient; a tiny core with swappable adapters is useful only for real variation. Ports/adapters, microkernels and modular monoliths are design options, not three mandatory frameworks.
 
-Reuse before adding. Remove dead code and duplication in touched scope, flatten abstractions, and leave unrelated work intact. For tangled internals, introduce a narrow boundary and replace incrementally rather than rewriting. Separate structural refactoring from behavior changes; verify the relevant baseline before and after, and revert only your failed refactor. Log out-of-scope debt in the project's existing `TECH_DEBT.md` or designated debt record (here, `docs/misc/TECH_DEBT.md`), without turning it into current scope. Judge quality through working behavior and understandable structure, not speculative extensibility.
-
-## Ask only for decisions the user owns
-
-Use the single approval owner in the [delivery contract](#delivery-contract). Carry the grant's source, scope and limits through delegation; covered actions need no repeated approval.
-
-Ask the human only for indispensable input, a retained decision or action outside the mandate. A grant cannot bypass a platform denial. Diagnose real access failures and continue independent work; see [authority](references/protocol.md) and [routing](references/routing-rubric.md) for boundary cases.
+Reuse before adding. Remove dead code and duplication in touched scope, flatten abstractions, and leave unrelated work intact. For tangled internals, introduce a narrow boundary and replace incrementally rather than rewriting. Separate structural refactoring from behavior changes; verify the relevant baseline before and after, and revert only your failed refactor. Log out-of-scope debt in the project's existing `TECH_DEBT.md` or designated debt record without turning it into current scope. Judge quality through working behavior and understandable structure, not speculative extensibility.
 
 ## Ownership: North Star → goals → tasks
 
@@ -122,7 +106,5 @@ At a natural handoff, briefly identify a new actionable lesson and its record; r
 ## Keep records and the repository small
 
 Maintain existing records at material decisions and handoff, one editor per shared file. Keep `AGENTS.md` concise and follow the project's layout. Use scoped `tmp/` scratch, preserve necessary evidence, and ignore actual caches/secrets rather than blanket file extensions. Inspect status/diffs, stage only intentional files and follow the user's Git workflow.
-
-Share the **100 GB** ceiling (100,000,000,000 bytes) across agents, ignored files, caches and attributable copies/worktrees. Measure before large operations and after substantial growth; address bloat near 80 GB and stop growth that cannot fit. Clean only owned disposable material. Moving it elsewhere does not reset the budget.
 
 Use the [goal lifecycle](references/goal-driven-engineering.md), [goal template](templates/GOAL.md) or [examples](references/examples.md) only when they help the current work.

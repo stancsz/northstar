@@ -1,6 +1,6 @@
 # Authority and handoff protocol
 
-Start with the [standing mandate](../SKILL.md#ask-only-for-decisions-the-user-owns), not an approval category. Record the owner's outcome, covered workspace/actions, resource limits, retained decisions and right to subdelegate once in the existing task/workspace. Derive them from actual instructions; do not make the owner fill a new form when the grant is already clear. A commander can delegate a subset of the authority received without another user round trip.
+Start with the Northstar [delivery contract](../SKILL.md#delivery-contract), not an approval category. Record the owner's outcome, covered workspace/actions, resource limits, retained decisions and right to subdelegate once in the existing task/workspace. Derive them from actual instructions; do not make the owner fill a new form when the grant is already clear. A commander can delegate a subset of the authority received without another user round trip.
 
 ## Commander owns the decision
 

@@ -28,6 +28,8 @@ The primary accepts these source changes for their stated scope based on the non
 
 The approval clause now makes the user's preference operational: one commander agent directs actions covered by the standing grant without fresh approval, workers do not create another approval queue, and only an explicitly user-reserved decision or missing authority is escalated. An Advisor Council review caught and corrected wording that could imply re-approval. The [evaluation](../../evals/delivery-focus/README.md#approval-owner-alignment-2026-10-24) records the decision and install check. Host permission denials remain binding; real-work effectiveness is unverified.
 
+The latest prompt audit removes repeated focus/authority sections, keeps their unique guidance once, and removes repository-specific storage and debt paths from the portable entrypoint. The [evaluation](../../evals/delivery-focus/README.md#subtractive-prompt-audit-2026-10-24) records the scope, 265-word entrypoint reduction, link/format checks and scenario limits. This improves prompt focus but does not establish lower runtime usage or better delivery; continue to the real-work proof before further speculative edits.
+
 ## Evidence and limits
 
 The frozen comparison used the same small synthetic documentation repair. Both arms passed; the revised arm reported 44,786 fewer input tokens but made one additional command. Both emitted the skill-budget warning. This is one constructed pair, not a real-task reliability or cost result. The [evaluation](../../evals/delivery-focus/README.md) holds its receipt and the earlier source/installation history.

@@ -63,7 +63,7 @@ The intended workflow: inspect the project → choose the smallest complete deli
 
 The owner defines the desired value, standards, resources, and limits. The commander turns that mandate into actionable guidance. Workers choose methods close to the work. Authority travels with the assignment, so a handoff or a new context does not trigger another round of permission requests.
 
-When a hard choice belongs to the commander, it must decide: weigh expected value, total cost, time, downside, and reversibility, then act. Difficulty alone does not send the decision back to the human. [Standing authority →](skills/northstar/SKILL.md#ask-only-for-decisions-the-user-owns)
+When a hard choice belongs to the commander, it must decide: weigh expected value, total cost, time, downside, and reversibility, then act. Difficulty alone does not send the decision back to the human. [Standing authority →](skills/northstar/SKILL.md#delivery-contract)
 
 ### 2. Managers own resolution.
 

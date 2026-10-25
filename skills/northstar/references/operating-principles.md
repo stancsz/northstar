@@ -1,6 +1,6 @@
 # Operating principles across domains
 
-Use this reference when choosing or reviewing coordination under uncertainty. Apply the [core focus rules](../SKILL.md#focus-effort-before-expanding-work), authority and recovery rules; use the [operating system](operating-system.md) to turn them into decisions, useful ceremonies and operational learning. This is a selective comparison of stated practices, not a ranking of organizations, a universal recipe, or evidence that borrowing their language improves AI agents.
+Use this reference when choosing or reviewing coordination under uncertainty. Apply Northstar's [delivery contract](../SKILL.md#delivery-contract), authority and recovery rules; use the [operating system](operating-system.md) to turn them into decisions, useful ceremonies and operational learning. This is a selective comparison of stated practices, not a ranking of organizations, a universal recipe, or evidence that borrowing their language improves AI agents.
 
 ## Shared patterns and engineering adaptations
 
