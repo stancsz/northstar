@@ -376,7 +376,7 @@ def test_unavailable_native_and_preflight_launch_have_distinct_safe_remedies(set
     assert "sk-synthetic" not in json.dumps(output) and "decision" not in output
 
 
-@pytest.mark.parametrize("selected", [None, "provider/reviewer-route"])
+@pytest.mark.parametrize("selected", [None, "route/provider:model+revision@zone"])
 def test_model_selection_is_optional_exact_and_only_on_reviewer_exec(setup, monkeypatch, selected):
     args, event = setup
     args.model = selected
@@ -396,7 +396,7 @@ def test_model_selection_is_optional_exact_and_only_on_reviewer_exec(setup, monk
 
 def test_selected_model_failure_never_retries_or_reselects(setup, monkeypatch):
     args, event = setup
-    args.model = "provider/reviewer-route"
+    args.model = "route/provider:model+revision@zone"
     observed = []
     def run(command, *unused, **kwargs):
         observed.append(command)
@@ -408,14 +408,17 @@ def test_selected_model_failure_never_retries_or_reselects(setup, monkeypatch):
     assert "decision" not in output
 
 
-@pytest.mark.parametrize("identifier", ["bad model", "model;$(unsafe)", "sk-synthetic-PRIVATE"])
-def test_model_identifier_rejects_shell_fragments_and_secret_shapes(identifier):
+@pytest.mark.parametrize("identifier", ["", "   ", "-help", "model\nname", "sk-synthetic-PRIVATE"])
+def test_model_identifier_rejects_blank_nonprintable_option_and_secret_shapes(identifier):
     with pytest.raises(ValueError):
         guardian.model_identifier(identifier)
 
 
-@pytest.mark.parametrize("identifier", ["default", "provider/model-id", "vendor/model:revision"])
-def test_model_identifier_accepts_supported_route_shapes(identifier):
+@pytest.mark.parametrize("identifier", [
+    "default", "provider/model-id", "vendor/model:revision", "route/provider:model+revision@zone",
+    "alias !,=()[]{};`$",
+])
+def test_model_identifier_accepts_supported_route_names_without_vendor_whitelist(identifier):
     assert guardian.model_identifier(identifier) == identifier
 
 
@@ -519,7 +522,7 @@ def test_only_genuine_new_owner_turn_renews_budget_and_preserves_history(event_s
 
 def test_event_failure_and_selected_route_survive_new_owner_request(event_setup):
     args, capture, stop = event_setup
-    args.model = "provider/reviewer-route"
+    args.model = "route/provider:model+revision@zone"
     guardian.handle_event(capture, args)
     def failed(*_):
         raise guardian.ReviewerError("reviewer-exit", 1)
@@ -528,7 +531,7 @@ def test_event_failure_and_selected_route_survive_new_owner_request(event_setup)
     guardian.handle_event(capture | {"turn_id": "owner-2", "prompt": "Continue within the existing limits."}, args)
     saved = checkpoint(args)
     assert saved["reviews"] == 0 and saved["failure_counts"]["reviewer-exit"] == 1
-    assert saved["route_history"][-1]["model"] == "provider/reviewer-route"
+    assert saved["route_history"][-1]["model"] == "route/provider:model+revision@zone"
 
 
 def test_event_context_is_bounded_and_original_request_survives(event_setup):
