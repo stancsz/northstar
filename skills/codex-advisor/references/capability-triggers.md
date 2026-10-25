@@ -1,8 +1,8 @@
 # Capability-triggered Advisor guidance
 
-Use with [Codex Advisor](../SKILL.md). Checked 2026-09-30. This register guides early compact consultation for Luna and other workers facing the same risks. It is not an exhaustive model diagnosis or a production failure forecast.
+Use with [Codex Advisor](../SKILL.md). Checked 2026-09-30. This register guides early compact consultation for any worker route when a listed risk can change the next action. No named model is required. It is not an exhaustive model diagnosis or a production failure forecast.
 
-Consultations use the model or alias selected for the current Subroute endpoint. Complex text decisions may use a separately configured council route first. Benchmark results below are contextual evidence, not prescribed routes or escalation branches.
+Consultations use the model ID or alias selected for the current Subroute endpoint. Complex text decisions may use a distinct configured council model ID or alias. Benchmark results below are contextual evidence, not model requirements, route prescriptions or escalation branches.
 
 Use these historical risk tags to identify a material decision needing evidence. Apply the current [consultation trigger](../SKILL.md#consult-early-and-frequently-on-capability-risks); a matching topic alone does not require a call. Preserve actual image evidence for visual advice, existing authority and recovery limits.
 
