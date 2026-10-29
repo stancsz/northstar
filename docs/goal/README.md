@@ -6,7 +6,7 @@ Each supervisor owns its `docs/goal/<goal>/GOAL.md` and index entry. Read the or
 
 Advance one Northstar improvement at a time. The current lane is [Delivery-first entrypoint](delivery-focus/GOAL.md): embed the shared delivery, authority and diminishing-returns contract in the existing package, then verify it on representative accepted work. [Verified product delivery](product-delivery/GOAL.md) is the broader acceptance boundary after that proof; its real-delivery requirement remains unsatisfied and it is not a second execution lane. Resume another parked commitment only when it is a concrete dependency or the owner selects it. The current commander handles covered decisions and approvals; platform permission boundaries and required independent QA still apply.
 
-Owner-selected active goal: [REA reference and skill-stack soak](rea-skill-stack/GOAL.md). This is a bounded package-level lane to reverse engineer the requested reference, then align and evaluate the existing skills; it does not erase the delivery-first evidence obligation.
+Owner-selected active goal: [REA reference and skill-stack soak](rea-skill-stack/GOAL.md). Core skills (`northstar`, `codex-subagents`, `claude-code-subagents`) are refactored for fast agents (`minimax-m3.1-flash`, `luna 6`, `gemini 3.8`); next step is wiring MiniMax through Subroute for Codex and Claude Code and running bounded drift exercises. This does not erase the delivery-first evidence obligation.
 
 ## Parked commitments
 
