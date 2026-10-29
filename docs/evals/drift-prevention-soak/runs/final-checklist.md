@@ -11,8 +11,8 @@ Planning artifact only. These are proposed observable acceptance checks for a fu
 
 ## R2 — Preserve inputs; offline, no publishing
 
-- [ ] Record a cryptographic hash of each source input before preview/import and compare afterward; hashes match and source files remain present and unchanged.
-- [ ] Run the complete workflow with network access unavailable; preview, import, and rejection-report CSV export complete using only local resources, with no network-dependent service required.
+- [ ] Preserve each selected source input file unchanged through preview and import; the source file remains present and its contents are not modified. **Suggested verification method (optional, not an owner requirement):** compare a cryptographic hash recorded before and after the workflow.
+- [ ] Run the complete workflow offline; preview, import, and rejection-report CSV export complete using only local resources, with no network-dependent service required.
 - [ ] Inspect the workflow and its outputs for publishing/transmission actions; confirm none occur and no input or report is sent to an external destination.
 
 ## R3 — Integer-cent amounts and refunds
