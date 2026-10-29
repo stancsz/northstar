@@ -6,7 +6,7 @@ For substantive work, use `/northstar` and its [delivery contract](skills/norths
 
 # Working on Northstar
 
-Northstar's core package has six coordinated skills: Northstar, Codex QA, Codex Subagents, Codex Advisor, Claude Code Subagents and Task Completion Review. The repository also ships the standalone Windows app recovery skill. Keep engineering judgment, practices, and useful documentation at the center of changes.
+Northstar's core package has six coordinated skills: Northstar, Codex QA, Codex Subagents, Codex Advisor, Claude Code Subagents and Task Completion Review. It also ships the standalone Soak testing skill and Windows app recovery utility. Keep engineering judgment, practices, and useful documentation at the center of changes.
 
 Keep this repository skills-only. Prioritize concise skill instructions, examples, necessary supporting tools and skill validation. Application code, interfaces, app specifications, deployment plans and app-specific execution records belong in separate repositories. Do not turn this package into an application or runtime platform.
 
@@ -17,8 +17,9 @@ Keep this repository skills-only. Prioritize concise skill instructions, example
 
 ## Layout and maintenance
 
-- `skills/<name>/SKILL.md` defines an installable skill. Install the six coordinated core directories together: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`, `claude-code-subagents`, and `task-completion-review`. `windows-app-recovery` is an independent optional utility skill and can be installed separately. Northstar is the central coordinator; core companions can also be invoked directly. Claude Code Subagents is the Codex-to-Claude CLI adapter.
+- `skills/<name>/SKILL.md` defines an installable skill. Install the six coordinated core directories together: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`, `claude-code-subagents`, and `task-completion-review`. `soak-testing` and `windows-app-recovery` are independent optional skills and can be installed separately. Northstar is the central coordinator; core companions can also be invoked directly. Claude Code Subagents is the Codex-to-Claude CLI adapter. Soak testing guidance does not include or install the separate Soak framework.
 - `skills/codex-advisor/scripts/` contains the migrated Codex Advisor caller and optional reader adapter. Their focused regressions live in `tests/`; the gateway/service implementation stays in Subroute.
+- Keep model selection model-agnostic: use the configured Subroute `default` alias when no task selection is given, and pass through any model ID or alias supported by the selected endpoint. Do not pin a vendor or backend model in shared guidance or defaults.
 - The orchestrator owns and uses `docs/northstar/`: durable direction, owner standards, reference products, and decisions.
 - For sustained work that needs durable cross-turn state, the supervisor maintains the existing project goal record and its index entry. Small one-turn tasks use the request and a concise handoff; do not create a goal record just to follow this layout.
 - Workers return the artifact, checks, gaps and next action in a concise handoff. Write `docs/reports/<goal>/<task>.md` only when the task or repository explicitly requires a durable report, or when a partial/blocked result needs continuation. Supervisors inspect artifacts and evidence before accepting work. Follow the [handoff practice](skills/northstar/SKILL.md#worker-reports-and-handoffs).

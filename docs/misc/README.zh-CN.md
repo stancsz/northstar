@@ -2,7 +2,11 @@
 
 ### 把目标交给 AI 团队，把决策权放到一线，把结果交给验收。
 
-**一套让 AI 承接授权、组织协作、对交付负责的工作体系，以六个协同的 Markdown Skills 提供。** Northstar 把你的意图连接到明确的责任人、自主决策、独立验收，以及能带进下一次任务的经验。
+**六个用于 AI 授权、协作和交付的 Markdown Skills，另有可选的 Windows 应用恢复技能。** Northstar 把你的意图连接到明确的责任人、自主决策、独立验收，以及能带进下一次任务的经验。
+
+默认遵循[一条交付主线](../../skills/northstar/SKILL.md#delivery-contract)：优先做好最有价值的已有工作流，完成并验证后再扩展；由一个现有负责人处理授权内的审批；可选工作出现收益递减就停止。六个技能按需支持这条主线，不是六个必跑阶段。
+
+本仓库优先保持技能简单、精简、可复用，只保留必要的支持工具。应用程序及其实施方案放在独立仓库。
 
 [English](../../README.md) · [安装使用](install.md) · [管理思想如何落地](#把管理思想变成-agent-的具体动作) · [已有验证](#已经验证了什么)
 
@@ -96,8 +100,8 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 | [**Codex Subagents**](../../skills/codex-subagents/SKILL.md) | 任务边界、角色、模型分配、协调与交接。 | 需要委派、集成或独立评审分工。 |
 | [**Codex QA**](../../skills/codex-qa/SKILL.md) | 功能、视觉、对抗与结构审查。 | 需要知道实际交付是否达标。 |
 | [**Codex Advisor**](../../skills/codex-advisor/SKILL.md) | 使用配置的 Subroute 端点和模型别名，提供能力风险与视觉任务的 compact 指导。 | 已记录的能力风险、任何视觉判断，或普通任务中的具体知识缺口。 |
-| [**Claude Code Subagents**](../../skills/claude-code-subagents/SKILL.md) | 通过 Claude Code CLI 委派有边界的工作，并检查、整合交接结果。 | 用户指定 Claude Code，或它能提供有用的独立执行能力。 |
 | [**Task Completion Review**](../../skills/task-completion-review/SKILL.md) | 停止前检查完整目标、实际证据和已有授权，查找信息并决定下一步。 | agent 声称完成或准备过早停止；可选接入 Stop hook。 |
+| [**Claude Code Subagents**](../../skills/claude-code-subagents/SKILL.md) | 通过 Claude Code CLI 委派有边界的工作，并检查、整合交接结果。 | 用户指定 Claude Code，或它能提供有用的独立执行能力。 |
 
 `$northstar` 是总入口，其他技能也可直接调用。六个一起安装，按需加载。小改动可以只有一位构建者和一位独立 reviewer；确有协调需要时才增加主管。
 
@@ -115,7 +119,11 @@ flowchart TD
     L --> N
 ```
 
-核心工作方法以 Markdown 提供。包内另附 Advisor 调用器和可选 reader；[Advisor 服务](install.md#advisor-prerequisites)需单独配置，安装不会启动服务或发起模型调用。非视觉执行、协调和 QA 无需该服务即可使用。美术、看图和审美工作必须完成 [Advisor 截图指导与修后复查](../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance)：调用时主动用 `--image` 附上图片，看不清就提供多个原分辨率切片，由 Advisor 决定细看哪里；它要求的查看内容必须满足。需要独立调查源码时启用 reader mode，由 Advisor 自己决定是否派 Pi reader、问什么；初始截图由执行者主动提供。
+核心工作方法以 Markdown 提供。Task Completion Review 附带可选的 Stop hook 适配器；复制技能不会自动启用 hook，也不会提升平台权限。包内另附 Advisor 调用器和可选 reader；[Advisor 服务](install.md#advisor-prerequisites)需单独配置，安装不会启动服务或发起模型调用。非视觉执行、协调和 QA 无需该服务即可使用。美术、看图和审美工作必须完成 [Advisor 截图指导与修后复查](../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance)：调用时主动用 `--image` 附上图片，看不清就提供多个原分辨率切片，由 Advisor 决定细看哪里；它要求的查看内容必须满足。需要独立调查源码时启用 reader mode，由 Advisor 自己决定是否派 Pi reader、问什么；初始截图由执行者主动提供。
+
+## 可选的 Windows 工具
+
+独立的 [Windows 应用恢复技能](../../skills/windows-app-recovery/SKILL.md)可以在后台检查指定桌面应用的窗口，并在窗口消失后重新启动应用。它不属于六个协同工作流技能；图形界面应用仍需要用户会话运行，恢复时窗口可能短暂出现后最小化。
 
 ## 从项目交付，延伸到持续经营
 
@@ -139,6 +147,7 @@ flowchart TD
 | [角色与授权评审](../evals/healthy-roles.md) | 角色冲突场景、独立验收规则，以及对指挥官授权的限定范围审查。 |
 | [Northstar 评审 Northstar](../evals/dogfood-review.md) | 实际发生的多 agent 评审与决策流程，包含分歧和限制记录。 |
 | [四技能包评估](../evals/central-package.md) | 打包、安装路径检查和 Advisor 离线回归。 |
+| [Task Completion Review 评估](../evals/completion-guardian/README.md) | 手动与直接 CLI 停止审查各一个案例，另有 42 项检查；保留之前失败，自动 hook 激活仍未验证。 |
 
 **仍待证明：** 真实任务中的对比收益、更少的人类救援、总成本节省、持续经营成果，以及广泛的宿主集成效果。[对照任务试点](../northstar/next-proof.md)已提出，尚未完成。本包提供行为指导，不是强制执行引擎，也不保证完全自治。
 

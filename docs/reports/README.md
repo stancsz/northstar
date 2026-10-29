@@ -1,26 +1,15 @@
 # Worker reports
 
-Workers own `docs/reports/<goal>/<task>.md` and link their actual deliverables, checks, gaps, and next action. Write a report for completed, partial, or blocked handoffs. Follow the [report practice](../../skills/northstar/SKILL.md#worker-reports-and-handoffs); keep reports concise and update the same task report after repairs.
+Workers own `docs/reports/<goal>/<task>.md` and hand off the artifact or revision, actual checks, material gaps and next action. Update the same report after repairs; keep scratch logs in `tmp/`. Follow the [Northstar handoff practice](../../skills/northstar/SKILL.md#worker-reports-and-handoffs).
 
-Supervisors assign distinct report paths, read reports and inspect the work, then record acceptance or repairs in the linked `GOAL.md`. Find reports through their goal's task entries. [Evaluations](../evals/README.md) record review conclusions and link supporting reports; disposable logs belong in `tmp/`.
+The [goal index](../goal/README.md) is the main navigation path: goals link their task handoffs, and supervisors record acceptance there. [Evaluations](../evals/README.md) link independent findings to the reports and artifacts they inspect. Keep direct links here only for reports that no goal links yet.
 
-- [Role ownership: align reporting](role-ownership/align-reporting.md)
-- [Dispatch context: implementation](dispatch-context/implementation.md), [CLI trials](dispatch-context/cli-trials.md) and [independent review](dispatch-context/review.md); see the [goal](../goal/dispatch-context/GOAL.md).
-- [Task Completion Review: implementation](completion-guardian/implementation.md), [earlier independent acceptance](completion-guardian/review.md) and [installation review](completion-guardian/install-review.md); see the [goal](../goal/completion-guardian/GOAL.md).
-- [Issue revisions: goal storage](issue-maturity/goal-storage.md), [integration](issue-maturity/implementation.md), and [independent acceptance](issue-maturity/review.md)
-- [Claude Code Subagents skill: implementation and use](claude-code-subagents/implementation.md)
-- [Bilingual README positioning: independent review](readme-positioning/review.md)
-- [Skill learning and feedback: implementation](skill-feedback/implementation.md)
-- [Incremental delivery: delivery rules](incremental-delivery/delivery-rules.md)
-- [QA suite: implementation](qa-suite/implementation.md)
-- [Coordinated delivery: implementation](coordinated-delivery/implementation.md), [orchestrator trial](coordinated-delivery/orchestrator-trial.md), [supervisor trial](coordinated-delivery/supervisor-trial.md), and [independent review](coordinated-delivery/independent-review.md)
-- [Bounded autonomy follow-up: trial](coordinated-delivery/autonomy-trial.md) and [review](coordinated-delivery/autonomy-review.md)
+## Reports without a goal link
 
-- [Project and business operating system: implementation and lower-tier handoffs](operating-system/implementation.md)
-
-- [Central package implementation](central-package/implementation.md), [Codex Advisor migration](central-package/advisor-migration.md), [independent package review](central-package/package-review.md), [publication review](central-package/release-review.md), and [cross-agent installation review](central-package/portability-review.md)
-- [Mandatory visual Advisor review](central-package/visual-advisor-review.md)
-- [Caller image delivery: backend handoff](central-package/advisor-image-backend.md) and [independent integration review](central-package/advisor-image-review.md)
-- [Luna capability-trigger primary research](central-package/capability-trigger-research.md)
-- [Dogfood review: product](dogfood-review/product.md), [usability and economics](dogfood-review/usability.md), and [adversarial QA](dogfood-review/qa.md)
-- [Healthy roles: profiles](healthy-roles/profiles.md), [A2A source analysis](healthy-roles/a2a.md), [integration](healthy-roles/integration.md), [agent scenarios](healthy-roles/scenarios.md), [independent QA](healthy-roles/qa.md), [flexibility review](healthy-roles/flexibility-review.md), and [commander authority review](healthy-roles/commander-review.md)
+- Central package: [package review](central-package/package-review.md), [visual Advisor review](central-package/visual-advisor-review.md), and [Advisor image integration review](central-package/advisor-image-review.md).
+- Delivery focus: [compact brief review](delivery-focus/compact-brief.md).
+- Dispatch context: [brief scratch-scope review](dispatch-context/codex-brief-scratch-scope-20261023.md), [exponent-precision review](dispatch-context/exponent-precision-review.md), [invalid HOME fallback test](dispatch-context/invalid-home-fallback-test-20261023.md), and [six CLI trial fixtures](dispatch-context/trial-inventory-control.md) ([treatment](dispatch-context/trial-inventory-treatment.md), [missing control](dispatch-context/trial-missing-control.md), [missing treatment](dispatch-context/trial-missing-treatment.md), [missing neutral control](dispatch-context/trial-missing-neutral-control.md), [missing neutral treatment](dispatch-context/trial-missing-neutral-treatment.md)).
+- Finish contract: [case 1](finish-contract/case-1.md), [case 2](finish-contract/case-2.md), [case 3](finish-contract/case-3.md), and [case 3b repeat](finish-contract/case-3b.md).
+- Healthy roles: [A2A source analysis](healthy-roles/a2a.md), [role profiles](healthy-roles/profiles.md), and [agent scenarios](healthy-roles/scenarios.md).
+- Issue maturity: [goal storage](issue-maturity/goal-storage.md) and [integration](issue-maturity/implementation.md).
+- Operating system: [independent review](operating-system/independent-review.md).

@@ -1,14 +1,18 @@
 # Install and use the Northstar package
 
-The coordinated package has six distinct skills: [Northstar](../../skills/northstar/SKILL.md), [Codex QA](../../skills/codex-qa/SKILL.md), [Codex Subagents](../../skills/codex-subagents/SKILL.md), [Codex Advisor](../../skills/codex-advisor/SKILL.md), [Claude Code Subagents](../../skills/claude-code-subagents/SKILL.md) and [Task Completion Review](../../skills/task-completion-review/SKILL.md). Install them together as sibling directories so their relative links work. Northstar is the central coordinator; all six keep their own `SKILL.md` and can be invoked directly. Claude Code Subagents is a Codex-to-Claude CLI adapter; it does not install or configure Claude Code or its provider.
+The coordinated package has six distinct skills: [Northstar](../../skills/northstar/SKILL.md), [Codex QA](../../skills/codex-qa/SKILL.md), [Codex Subagents](../../skills/codex-subagents/SKILL.md), [Codex Advisor](../../skills/codex-advisor/SKILL.md), [Claude Code Subagents](../../skills/claude-code-subagents/SKILL.md) and [Task Completion Review](../../skills/task-completion-review/SKILL.md). Install them together as sibling directories so their relative links work. Northstar is the central coordinator; all six keep their own `SKILL.md` and can be invoked directly. The repository also includes the independent [Soak testing skill](../../skills/soak-testing/SKILL.md) and [Windows app recovery skill](../../skills/windows-app-recovery/SKILL.md), installed separately. Soak testing is guidance; the [Soak framework](https://github.com/stancsz/soak) is a separate project and is not bundled or installed here. Claude Code Subagents is a Codex-to-Claude CLI adapter; it does not install or configure Claude Code or its provider.
 
 Claude Code Subagents invokes the available Claude Code CLI; it does not install or configure Claude Code itself. Follow **Install all six** below for the package copy flow.
 
+The Soak testing skill is an optional standalone addition to the six-skill coordination package. Its installation command is below. This copies guidance only; install the separate Soak framework by following that project's README if you need its runner.
+
+The Windows app recovery skill is a separate utility. Its scheduled-task setup is not performed by copying the skill; read and follow its instructions only when you want to configure recovery for a specific Windows app.
+
 ## Installing from another agent
 
-**Installer instruction:** this package is native to Codex, but its Markdown practices are also intended for Claude Code, OpenCode and other agents. Do not reject or skip a skill because its name contains `Codex` or you are a different agent. Select skills by the work they support. Preserve the six skill names and sibling directories when installing. `claude-code-subagents` is specifically for Codex delegating through the Claude Code CLI; use its instructions only when that host context is available.
+**Installer instruction:** this package is native to Codex, but its Markdown practices are also intended for Claude Code, OpenCode and other agents. Do not reject or skip a skill because its name contains `Codex` or you are a different agent. Select skills by the work they support. Preserve the six core skill names and sibling directories when installing. `claude-code-subagents` is specifically for Codex delegating through the Claude Code CLI; use its instructions only when that host context is available.
 
-Use the receiving host's actual configured skill location and loading/invocation mechanism; the PowerShell paths and `$skill-name` examples below are Codex-oriented examples, not requirements for every host. If there is no native skill loader, read `northstar/SKILL.md` directly and load linked companions as needed. Tell the receiving agent that the six skills are available and point it to the bundled [host adaptation guidance](../../skills/northstar/SKILL.md#use-with-other-agents).
+Use the receiving host's actual configured skill location and loading/invocation mechanism; the PowerShell paths and `$skill-name` examples below are Codex-oriented examples, not requirements for every host. If there is no native skill loader, read `northstar/SKILL.md` directly and load linked companions as needed. Tell the receiving agent that the six core skills are available and point it to the bundled [host adaptation guidance](../../skills/northstar/SKILL.md#use-with-other-agents).
 
 Adapt host-specific tools to available equivalents. Advisor service/model routes and optional reader prerequisites still apply; a different executor does not supply those dependencies or change the configured backend. This is portable operating guidance, not a claim that every integration has been tested on every host.
 
@@ -28,6 +32,36 @@ foreach ($skillName in $northstarSkills) {
 ```
 
 Use your host's configured skills directory if different, such as `.agents/skills`. Preserve any local customization before replacing existing installations. Copy each whole directory, including its references, templates, scripts and metadata; copying only `SKILL.md` is incomplete. The six directories collectively are the coordinated package, not six separate setup exercises.
+
+To add Soak testing guidance, copy `skills/soak-testing` to the same skills directory as a sibling. This does not install the separate Soak framework.
+
+## Install the optional Soak testing skill
+
+This section gives both client paths. Codex discovers personal skills under `.codex\skills`; Claude Code discovers personal skills under `.claude\skills` (or under `$env:CLAUDE_CONFIG_DIR\skills` when using an isolated profile). These are copies of the same source skill, installed as siblings to the six core skills.
+
+Install to Codex from this repository root in PowerShell:
+
+```powershell
+$skillsDestination = Join-Path $env:USERPROFILE '.codex\skills'
+$skillName = 'soak-testing'
+$skillSource = (Resolve-Path (Join-Path '.\skills' $skillName)).Path
+$skillDestination = Join-Path $skillsDestination $skillName
+New-Item -ItemType Directory -Force $skillDestination | Out-Null
+Copy-Item -Path (Join-Path $skillSource '*') -Destination $skillDestination -Recurse -Force
+```
+
+Install to Claude Code's default personal skill directory:
+
+```powershell
+$skillsDestination = Join-Path $env:USERPROFILE '.claude\skills'
+$skillName = 'soak-testing'
+$skillSource = (Resolve-Path (Join-Path '.\skills' $skillName)).Path
+$skillDestination = Join-Path $skillsDestination $skillName
+New-Item -ItemType Directory -Force $skillDestination | Out-Null
+Copy-Item -Path (Join-Path $skillSource '*') -Destination $skillDestination -Recurse -Force
+```
+
+For an isolated Claude profile, set `$env:CLAUDE_CONFIG_DIR` to that profile root before computing `$skillsDestination`, and keep the same value when launching Claude Code. Verify the installed `SKILL.md` against the repository copy and restart the corresponding agent session when needed for discovery. Installing the skill does not install or run the separate Soak framework.
 
 ## Add global Codex instructions
 
@@ -65,6 +99,21 @@ Reload updated skills or start a new chat because active chats may retain earlie
 `completion-guardian` and `dont-stop-early` are now **Task Completion Review** (`task-completion-review`). Preserve local customizations, update hook commands to the new directory and retain the existing state directory so review budgets/history survive. Review and trust the changed commands through the normal host flow, then retire the old installation to avoid duplicate checks.
 
 For optional use across projects, its [event mode](../../skills/task-completion-review/references/stop-hook.md#across-projects-event-mode) pairs `UserPromptSubmit` and `Stop` through the same helper; it does not require a fixed project brief. Review and trust the exact commands through the host's normal flow, reload the host and capture a new request. Read the [tested installation and remaining limits](../evals/completion-guardian/installation.md); copying files or trusting a declaration alone is not evidence of actual continuation.
+
+## Install the optional Windows recovery skill
+
+From this repository root in PowerShell:
+
+```powershell
+$skillsDestination = Join-Path $env:USERPROFILE '.codex\skills'
+$skillName = 'windows-app-recovery'
+$skillSource = (Resolve-Path (Join-Path '.\skills' $skillName)).Path
+$skillDestination = Join-Path $skillsDestination $skillName
+New-Item -ItemType Directory -Force $skillDestination | Out-Null
+Copy-Item -Path (Join-Path $skillSource '*') -Destination $skillDestination -Recurse -Force
+```
+
+Use your host's configured skills directory if it differs. The skill includes a PowerShell helper for its scheduled check. Installing it does not register a task or start monitoring; task configuration is a separate, app-specific action.
 
 ## Advisor prerequisites
 

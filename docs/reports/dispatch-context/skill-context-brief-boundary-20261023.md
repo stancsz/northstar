@@ -1,0 +1,7 @@
+# Skill context in exact-path CLI briefs
+
+The task evidence showed a brief-construction gap: repository `AGENTS.md` required `/northstar`, while the CLI brief allowed `AGENTS.md` but neither supplied the applicable Northstar instructions nor allowed `skills/northstar/SKILL.md`. The worker made one malformed Windows-path read attempt for the global skill; that command failed before opening the file. No out-of-scope content was read or changed. This is not evidence of a CLI sandbox boundary.
+
+The Codex Subagents guidance now requires the parent to resolve required skill references before dispatch, then inline only applicable operational instructions or explicitly allow the exact skill file. If required skill instructions are unavailable within scope, the worker must stop and ask the parent rather than widening reads. Embedded Windows paths should use forward slashes or literal-safe quoting.
+
+This is brief-construction guidance, not host-enforced read isolation; prompt scopes do not establish an enforced boundary. Parent-verified route smoke evidence for this task was a `default` Responses roundtrip at `http://127.0.0.1:4000/v1/responses` using `echo_marker`, returning `cellar-table-bytes-91390933b8304600b9ac8541b5f1355a`. The read-only CLI smoke produced a native `command_execution`, handoff, `turn.completed`, and exit 0. These smoke results do not change the read-boundary conclusion.

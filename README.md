@@ -37,7 +37,7 @@ These are inspectable working rules. Their effectiveness depends on the executin
 
 ## Try it on one real outcome
 
-Install all six sibling skills from this repository using the [installation guide](docs/misc/install.md). Then give the agent a bounded outcome, for example:
+Install the six coordinated sibling skills from this repository using the [installation guide](docs/misc/install.md). The optional [Soak testing skill](skills/soak-testing/SKILL.md) and [Windows app recovery skill](skills/windows-app-recovery/SKILL.md) are installed separately. Soak guidance does not include the separate [Soak framework](https://github.com/stancsz/soak). Then give the agent a bounded outcome, for example:
 
 ```text
 Use $northstar to deliver a working CSV import flow in this project.
@@ -55,7 +55,7 @@ Return the working result, verification evidence, and remaining limits.
 
 The intended workflow: inspect the project → choose the smallest complete delivery → implement → verify (independently when warranted) → repair → hand off evidence and lessons. This is a usage example, not a reported benchmark.
 
-**Codex-native. Usable by other agents.** Claude Code, OpenCode, and other agents can read these practices too. Preserve all six skill names and directories; adapt invocation and tools to the host. `Codex` in a name identifies its origin, not who may use it. Claude Code Subagents specifically delegates from Codex to the Claude Code CLI. [Host adaptation and prerequisites →](docs/misc/install.md#installing-from-another-agent)
+**Codex-native. Usable by other agents.** Claude Code, OpenCode, and other agents can read these practices too. Preserve the six core skill names and directories; adapt invocation and tools to the host. `Codex` in a name identifies its origin, not who may use it. Claude Code Subagents specifically delegates from Codex to the Claude Code CLI. [Host adaptation and prerequisites →](docs/misc/install.md#installing-from-another-agent)
 
 ## The management ideas, made executable
 
@@ -99,10 +99,13 @@ The design adapts ideas from mission command, reversible decision-making, lean d
 | [**Codex Subagents**](skills/codex-subagents/SKILL.md) | Scope, roles, capability allocation, coordination, and handoffs. | Work needs delegation, integration, or review separation. |
 | [**Codex QA**](skills/codex-qa/SKILL.md) | Functional, visual, adversarial, and structural review. | You need to know whether the actual result meets the bar. |
 | [**Codex Advisor**](skills/codex-advisor/SKILL.md) | Configurable Subroute model for compact capability-risk and image-backed repair advice. | A documented capability risk, any visual judgment, or a concrete ordinary knowledge gap. |
-| [**Claude Code Subagents**](skills/claude-code-subagents/SKILL.md) | Delegate bounded work from Codex to Claude Code through its CLI, then inspect and integrate the result. | You request Claude Code or it adds useful independent capacity. |
 | [**Task Completion Review**](skills/task-completion-review/SKILL.md) | Review a proposed finish, find missing information and direct authorized next work; optional Stop-hook adapter. | An agent claims completion or wants to stop while requirements may remain. |
+| [**Claude Code Subagents**](skills/claude-code-subagents/SKILL.md) | Delegate bounded work from Codex to Claude Code through its CLI, then inspect and integrate the result. | You request Claude Code or it adds useful independent capacity. |
+| [**Soak Testing**](skills/soak-testing/SKILL.md) | Plan, run, and evaluate bounded soak tests for agent harnesses and models. | You need evidence about repeated-use reliability over time. |
 
-Use `$northstar` as the central entry point; each companion is also directly invocable. Install all six, load what the task needs. One owner handles small, reversible changes; use one independent reviewer when the shared contract requires it. Add supervisors only when coordination warrants them.
+Soak Testing is a standalone addition to the six-skill coordination workflow. It does not include the [Soak framework](https://github.com/stancsz/soak).
+
+Use `$northstar` as the central entry point; each companion is also directly invocable. Install all six core skills, load what the task needs. One owner handles small, reversible changes; use one independent reviewer when the shared contract requires it. Add supervisors only when coordination warrants them.
 
 ```mermaid
 flowchart TD
@@ -118,7 +121,13 @@ flowchart TD
     L --> N
 ```
 
-Core practices are Markdown. The bundle also includes an optional Task Completion Review Stop-hook adapter, the Advisor caller and optional reader; [Advisor service setup](docs/misc/install.md#advisor-prerequisites) is separate. Installing the package does not start services or make provider calls. Nonvisual execution, coordination, and QA can be used without that service. Art, image inspection and aesthetic work require [Advisor's screenshot and repair loop](skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance): proactively attach images with `--image`, and enable scoped reader mode when the Advisor may need to investigate source evidence independently.
+Core practices are Markdown. Task Completion Review adds an opt-in Stop-hook adapter; installing the skill does not activate a hook or elevate host permissions. The bundle also includes the Advisor caller and optional reader; [Advisor service setup](docs/misc/install.md#advisor-prerequisites) is separate. Installing the package does not start services or make provider calls. Nonvisual execution, coordination, and QA can be used without that service. Art, image inspection and aesthetic work require [Advisor's screenshot and repair loop](skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance): proactively attach images with `--image`, and enable scoped reader mode when the Advisor may need to investigate source evidence independently.
+
+## Optional utility
+
+The standalone [Soak testing skill](skills/soak-testing/SKILL.md) guides bounded reliability tests. It is listed with the package skills above, installed separately from the six-skill coordination set, and does not install or run the separate framework.
+
+The standalone [Windows app recovery skill](skills/windows-app-recovery/SKILL.md) configures a quiet per-user check that can relaunch a selected desktop app when its window disappears. It does not make GUI apps into background services.
 
 ## Built for delivery—and the work after delivery
 

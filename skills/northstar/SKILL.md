@@ -64,6 +64,8 @@ Bundling does not require every lane or parallel implementation. When independen
 
 ## Use with other agents
 
+For buyer-facing product concept demos, use the separately installed `bilingual-product-demo-deck` skill when available and applicable. Respect requested images-first sequencing, shared screenshots and language variants. The finished slides must visibly carry the sales narrative: customer problem, demonstrated workflow, buyer value, offer and next decision. Essential presentation content belongs on the slides; speaker notes or a separate script only supplement it. Verify that the rendered deck makes sense without a presenter, alongside visual checks. A Marp PDF export alone does not establish a complete prototype presentation; keep illustrative capabilities distinct from working software and validated demand.
+
 Use these practices in Codex, Claude Code, OpenCode or another agent. `Codex` names identify origin, not a restriction. Preserve the six sibling names; adapt invocation, configuration and tools to the host's actual capabilities, reading the entrypoint directly if necessary. Preserve intent, authority, recovery history and independent acceptance where required. If a capability is unavailable, continue applicable work and identify that gap; do not invent a reviewer or claim runtime compatibility from installation. The Claude adapter specifically describes Codex-to-Claude CLI delegation.
 
 ## Prefer local LiteLLM inference for agent work

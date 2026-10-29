@@ -1,6 +1,6 @@
 # Northstar's next proof
 
-Proposed direction from the [2026-09-29 dogfood review](../evals/dogfood-review.md). This sharpens the existing [owner direction](README.md); it does not replace its project/business scope, five-skill package or required ceremonies. The review is complete; the pilot below has not run.
+Proposed direction from the [2026-09-29 dogfood review](../evals/dogfood-review.md). Historical proposal, not the current work queue. Apply the current [delivery contract](../../skills/northstar/SKILL.md#delivery-contract); do not start this pilot unless it resolves the active commitment. The review is complete; the pilot below has not run.
 
 Subsequent owner requirement: [healthy functional roles and independent acceptance](../goal/healthy-roles/GOAL.md) changes the package before any pilot. Identify the resulting source snapshot when freezing a future comparison; the earlier review fingerprint is historical. In a comparison, maintain the owner's independent-review requirement in both arms rather than weakening the baseline to manufacture a benefit.
 

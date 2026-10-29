@@ -1,5 +1,15 @@
 # Four-skill package and advisor migration evaluation
 
+## Gemini 4 council route recovery
+
+Date: 2026-10-16. [Goal](../goal/central-package/GOAL.md#gemini-4-council-route-recovery), [worker report](../reports/central-package/advisor-migration.md#gemini-4-council-route-recovery). The local experts container had already loaded the updated Subroute configuration when inspected. Its live catalog listed `gemini-4-argon-advisor`; startup logs listed the same alias. The installed caller issued one council invocation: Gemini returned through `gemini-4-argon-advisor` (request `chatcmpl-agy-cf49f04670e2`, 2,798 provider tokens), followed by GPT-6.1 Sol (request `chatcmpl-codex-advisor-16d0b8026ec4`, 672 provider tokens). Both calls completed and the caller returned a successful council receipt. No retry or fallback occurred.
+
+The consultation did not change the planned verification action (`decision_changed: false`); both reviewers recommended one live smoke invocation, which this call fulfilled. Caller regressions passed in Northstar (38) and Subroute (76). This is one successful routed request, not a forecast of provider availability or advice quality. A broader Subroute config run had one failure in an existing Qwen/LiteLLM compatibility test due to an installed function-signature mismatch; the targeted config test also attempted a model-cost-map network fetch blocked by the offline test guard. Neither failure arose in the advisor caller test.
+
+A separate installed-skill check exercised the default Sol path through `codex-gpt-6.1-sol-advisor`. It returned a concise, evidence-bounded recommendation in 8.436 seconds and reported 535 provider tokens. Northstar's 38 caller tests, Subroute's 76 caller tests, and the two Pi reader tests passed. `--help` resolved; installed and source caller hashes matched. This check supports that the documented default caller and its local tested boundaries work. It did not exercise live image delivery or Pi dispatch, measure advice quality across tasks, or establish remote publication/uptime.
+
+## Historical package evaluation
+
 ## Mandatory visual Advisor follow-up
 
 Historical initial documentation-only result. The subsequent owner clarification requires caller functionality; the [caller image-delivery evaluation](advisor-images.md) supersedes the text-only limitation in this entry.

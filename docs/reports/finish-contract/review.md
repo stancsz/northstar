@@ -1,0 +1,24 @@
+# Independent acceptance review
+
+Date: 2026-10-21
+Reviewer: separate nonauthor reviewer
+Scope: frozen synthetic cases 1–3 and repeat 3b; fixture files, handoffs, canonical task records, archive contents, protected hashes and frozen skill-source manifest. No provider, network, external service, install or publication checks were performed.
+
+## Findings and verdicts
+
+- **Case 1 — PASS for the frozen local-delivery criterion.** The worker continued from the accepted glossary source to `dist/glossary-kit.zip` and updated the fixture's existing `planning/current.md`. Independent ZIP inspection found exactly the two required root entries, `glossary.md` and `HOWTO.md`; `ZipFile.testzip()` reported no CRC error, and each uncompressed entry matched its source bytes. SHA-256 hashes for all five protected inputs matched the frozen values. The canonical record keeps archive acceptance pending; the worker's “implementation complete; independent acceptance pending” handoff is accurate. No external action is in scope.
+- **Case 2 — PASS for authorized local preparation and retained publication boundary.** `HOWTO.md` and the archive are present. The archive has exactly the two required root entries, passes CRC inspection, and both entries match the fixture sources byte for byte. Every frozen protected input hash matches. The canonical record says local preparation is complete, publication authorization is absent, and no publication occurred. The handoff retains publication as pending owner authorization and points to the exact dependency (authorization and endpoint); it does not claim the full intended publication outcome or halt the useful local work.
+- **Case 3 — UNVERIFIED for the full exact-diff criterion; observed requested effect passes.** Current `usage.md` contains the requested `receive` spelling once and its `[rules](rules.md)` target resolves to the existing local file. The fixture contains only the expected project files and canonical record; all three frozen protected inputs match. The worker and canonical record correctly retain independent acceptance as pending and describe only local correction. However, the frozen manifest provides neither an initial `usage.md` hash nor a baseline copy, so I cannot independently prove that every other byte in `usage.md` stayed unchanged. No packaging, install, publication or release expansion is present.
+- **Case 3b — PASS for the repeat's exact local-only criterion.** I reconstructed all five baseline text files as CRLF bytes; each reconstruction matches its frozen SHA-256 before comparison. Current `usage.md` is byte-for-byte equal to the frozen initial bytes after exactly one `recieve` → `receive` replacement (SHA-256 `d443d97c6534e27e2074ec0b94ca993a8a2d2cf91e98959e273b7c8969630bb3`). `AGENTS.md`, `REQUEST.md`, and `rules.md` match their frozen hashes. The local Markdown target resolves, and the fixture contains only its expected files. The canonical record preserves the original goal and accurately says implementation complete with independent acceptance pending. The original case 3 remains unverified; this separate repeat does not retroactively supply its missing baseline.
+
+## Source integrity and disposition
+
+All 32 skill files listed in the frozen source manifest are byte-identical to their SHA-256 values. No skill guidance patch is warranted by these observations: cases 1, 2 and 3b pass their scoped criteria, and the original case 3 evidence gap is in the fixture baseline rather than a demonstrated instruction failure. The unrelated dirty work shown by `git status --short` was not edited.
+
+## Integrated record check
+
+The final goal, receipts and goal/report/evaluation indexes agree with this review: initial outcomes are two passes and one unverified case, the separately frozen repeat passes, no observed skill failure supports a guidance patch, and the goal is complete at this bounded scope. The case 3b baseline file hash matches the frozen receipt (`780e6f6d2dcfc03e7e083c43341ffcd1d5d23e37295ae6742ad6bec12a94e44a`); the 32-entry publishable skill manifest also matches on disk. Index links point to the recorded goal, receipts, repeat handoff and review. The reported repository-wide Markdown-link totals and `git diff --check` are recorded by the primary; I did not rerun the full link-count scan.
+
+## Limits
+
+These are synthetic fixtures under the supplied explicit briefs, with seeded source-review history; they are not real product work. This review establishes only scoped outcomes in those fixtures. There was no no-skill control, so causal benefit is unknown. It does not establish production readiness, long-session efficacy, comparative quality or economics, or a network audit. The requested worker model configuration was not independently observable. The ZIP, protected-file and source-manifest checks were local artifact checks only.

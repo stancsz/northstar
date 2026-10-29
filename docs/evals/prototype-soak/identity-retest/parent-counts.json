@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Lantern Hall Museum",
+    "expectedEN": 4,
+    "expectedZH": 4,
+    "actualEN": 4,
+    "actualZH": 4,
+    "pass": true
+  },
+  {
+    "name": "Northstar Learning School",
+    "expectedEN": 6,
+    "expectedZH": 6,
+    "actualEN": 6,
+    "actualZH": 6,
+    "pass": true
+  },
+  {
+    "name": "Maya Chen",
+    "expectedEN": 2,
+    "expectedZH": 2,
+    "actualEN": 2,
+    "actualZH": 2,
+    "pass": true
+  },
+  {
+    "name": "River Room",
+    "expectedEN": 3,
+    "expectedZH": 3,
+    "actualEN": 3,
+    "actualZH": 3,
+    "pass": true
+  },
+  {
+    "name": "VisitDesk",
+    "expectedEN": 0,
+    "expectedZH": 0,
+    "actualEN": 0,
+    "actualZH": 0,
+    "pass": true
+  }
+]

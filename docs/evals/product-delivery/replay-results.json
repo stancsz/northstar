@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-10-21T23:10:41.545578+00:00",
+  "method": "fresh-context recorded-failure replay plus two constructed scope controls; supplied artifact evidence, not live product checks",
+  "workerModelRequested": "gpt-6-luna",
+  "reasoningRequested": "high",
+  "runtimeModelConfirmed": null,
+  "workerUsage": null,
+  "control": false,
+  "independentReview": "../../reports/product-delivery/review.md",
+  "cases": [
+    {
+      "case": "incident",
+      "inputUnchanged": true,
+      "output": "# Closure review\n\nStatus: still active; the full owner goal is not complete.\n\nThe supplied evidence covers three narrow archive/spelling probes, with two initial passes, a separately frozen repeat pass, and one original exact-diff case still unverified. It does not cover the requested critical product-delivery maturity review, biggest opportunities, North Star, or prioritized delivery plan. The council consultation was limited to choosing a completion probe, so the requested Advisor-backed review is also unmet. No real-product capability evidence was supplied; production/sellable readiness remains unverified.\n\nNext action: complete the requested Advisor-backed maturity review and prioritized North Star plan within the skills-only scope, then identify the next authorized delivery step. Do not treat these probes as evidence of product readiness.",
+      "outputSha256": "167968ecbece3bed6169e15e6d9948c0a07f4e4dcf5fbe1fe14e2a938e41a584",
+      "review": "READY for this supplied-evidence closure disposition; see independentReview"
+    },
+    {
+      "case": "amended",
+      "inputUnchanged": true,
+      "output": "# Closure review\n\nStatus: full amended assignment complete; close this review-and-roadmap goal.\n\nThe later explicit owner instruction limits this assignment to a harsh product-delivery review and prioritized roadmap, and defers the release trial to a separately commissioned goal. Supplied artifacts identify concrete evidence gaps and stages with measurable acceptance, dependencies, and risks; an independent nonauthor review returned READY for this requested scope. That review does not establish production capability or market demand, which remain unverified and outside this assignment.\n\nNext action: none for this assignment. Commission and execute the release trial under its separate goal before making production-capability claims.",
+      "outputSha256": "503faac8a595bac6d407cdfd9798c4c4b22c6074f7c4789bb9b4c407fe9c5c7b",
+      "review": "READY for this supplied-evidence closure disposition; see independentReview"
+    },
+    {
+      "case": "local",
+      "inputUnchanged": true,
+      "output": "# Closure review\n\nStatus: full local correction goal complete; close it.\n\nSupplied evidence says the initial bytes were frozen and an independent nonauthor comparison found exactly the requested `recieve` to `receive` correction, unchanged `rules.md`, no other file changes except the existing task-record update, and a resolving local link. A separate reviewer returned READY for the entire requested local correction. This scope explicitly excludes packaging, installation, publication, and release work, so no such outcome is implied.\n\nNext action: none for this local correction.",
+      "outputSha256": "411da6437013c3f21923aec5c7d884d4625c5a8e78503ee22093281b916cf1c7",
+      "review": "READY for this supplied-evidence closure disposition; see independentReview"
+    }
+  ]
+}

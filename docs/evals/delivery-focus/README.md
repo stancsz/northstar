@@ -217,9 +217,18 @@ An actual local Codex CLI run against the in-process capture preserved `vendor/m
 
 This fixes the actual Luna default while keeping endpoint-supported model selection open. It does not discharge the active Northstar goal: real-task acceptance, owner burden, and economical repeated use remain unproven. The next step remains an eligible real delivery task with route/tool evidence; do not make further speculative prompt edits or claim general effectiveness from this fixture.
 
+## Bounded CLI search output — 2026-10-26
+
+A read-only Codex CLI audit of current model-selection guidance stayed inside its assigned directories but enumerated Python cache artifacts and streamed a broad search across long goal records. The command output exceeded 96,000 tokens before a useful handoff, so the parent stopped the audit. This is one observed dispatch failure, not a measured general cost or reliability rate.
+
+The Codex Subagents guidance now adds one compact bound: exclude generated/log/cache files from searches, cap command output, and inspect focused excerpts. The existing helper suite passed 28/28 before and after this prompt-only change. The active installed skill matched the source before the change; its backed-up copy was then synchronized and hash-verified.
+
+This reduces one evidenced path to noisy, unusable handoffs; it does not establish that workers will always follow the bound or improve end-to-end task success. Continue to use the specific scope, acceptance and handoff rules already in the skill; no new audit workflow or output framework was added.
+
 ## Conditional completion review — 2026-10-26
 
 The Northstar entrypoint required Task Completion Review for every substantive finish, wait or escalation decision, while its delivery contract limits independent review to cases where it is required or can change acceptance. Changed the trigger to call the companion only when material uncertainty remains after applying the contract; otherwise the commander decides directly from existing evidence. This removes a contradictory default review step while retaining escalation for uncertain cases. `git diff --check` passed, the local link target exists, and the installed Northstar skill was backed up then synchronized to the source hash. This source-level consistency check does not establish a runtime reduction in review cost or end-to-end delivery improvement.
+
 
 ## Task continuity and evidence accumulation — 2026-10-29
 

@@ -1,0 +1,11 @@
+# Liquor POC table-byte producer — CLI trial
+
+Status: parent accepted the bounded source/test increment; full Windows delivery remains not ready.
+
+The parent used Advisor Council after the POC's current package preflight remained over the 10 GB cap and the native table-writer contract was uncertain. Council recommended a deterministic candidate-bound schema-2 byte producer, preserving the empty-toolchain rejection and deferring compilation/package work. Council reported 974 Sol and 3,416 Gemini tokens; advice changed the selected action.
+
+Before dispatch, the parent verified a unique-marker Subroute `default`/Responses function-call/tool-result roundtrip, then a Codex native read-only smoke with `command_execution`, handoff, completed turn and exit 0. One workspace-write Codex worker added `produceDistributionPinTableBytes` and focused fixtures, then a second bounded Codex worker corrected one stale diagnostic assertion. Parent checks passed 26 focused Node tests, typecheck, lint, and the full unit/preflight test command (304 Vitest cases and 11 desktop-preflight cases). The first test run identified the assertion mismatch; after correction, the focused suite passed.
+
+The first worker had one malformed Windows-path attempt to read the external Northstar skill that the task's exact read scope had not allowed. The command failed before opening a file, so no out-of-scope content was read. Its usage was 422,953 input, 5,085 output and 2,153 reasoning tokens; the repair worker used 70,952 input, 1,213 output and 611 reasoning. Backend attribution and cost are unknown. Full event streams are retained under `tmp/dispatch-context/northstar-advisor-next-20261023/` in the Northstar worktree.
+
+The POC report is maintained in its own repository at `C:\Users\stanc\github\liquor-ordering-poc\docs\reviews\distribution-table-bytes-producer-20261023.md`; this Northstar report records only the delegation evidence. The producer remains a preflight helper: the protected table writer, approved toolchain record, built native driver and production integration remain open. Latest POC preflight measured 10,029,742,198 bytes; a 7 GB package reserve does not fit. No compile, app package, cleanup, install, public deployment, credential creation, commit or push occurred.
