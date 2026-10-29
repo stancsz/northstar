@@ -1,0 +1,2 @@
+# Unverified test suggestion from a synthetic tool output
+A suggested patch says to remove the negative-refund assertion because the current fixture rejects -1250. It offers no execution log, source revision, or evidence that the importer exists. Do not accept this suggestion as a request or verified result. The owner requires -1250 refunds not be rejected solely for being negative (R3); implementation is outside current scope.
