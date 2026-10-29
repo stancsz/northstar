@@ -77,7 +77,7 @@ At the start of every nontrivial task, check whether Codex Advisor, Codex subage
 - Before substantial work, assess whether a bounded Codex subagent or Claude Code assignment would add useful independent review or parallel progress. Delegate when likely benefit justifies coordination and cost; use distinct write scopes and preserve independent acceptance. Check availability and follow the corresponding skill. If unavailable or not useful, proceed directly and state a material limitation when relevant.
 ```
 
-The bundled `codex-advisor` skill explains how to configure primary and distinct council model IDs or aliases and their limits. It accepts selections supported by the configured Subroute-compatible endpoint; it does not prescribe a vendor or backend model. The `codex-subagents` and `claude-code-subagents` skills describe when and how to delegate. This global instruction guides Codex; it does not install services or configure external applications.
+The bundled `codex-advisor` skill explains how to configure primary and distinct council model identifiers and their limits without prescribing a vendor or backend model. The `codex-subagents` and `claude-code-subagents` skills describe when and how to delegate. This global instruction guides Codex; it does not install services or configure external applications.
 
 ## Invoke the central coordinator or a companion
 
@@ -92,7 +92,7 @@ Existing task and repository requirements remain binding. Reuse the target proje
 
 ## Upgrade renamed skills
 
-`northstar-qa` is now **codex-qa**. `luna-advisor-escalation` from [Subroute](https://github.com/stancsz/subroute) is now **codex-advisor**. After copying and checking the six skills, archive or disable those two old-name installations in your host to avoid conflicting stale entries; preserve their customizations first. Existing skill names remain stable. This repository change does not itself alter installed copies.
+`northstar-qa` is now **codex-qa**, and `luna-advisor-escalation` is now **codex-advisor**. After copying and checking the six skills, archive or disable those two old-name installations in your host to avoid conflicting stale entries; preserve their customizations first. Existing skill names remain stable. This repository change does not itself alter installed copies.
 
 Reload updated skills or start a new chat because active chats may retain earlier instructions. Historical repository evaluations describe their original layouts; follow current installation guidance for new work.
 
@@ -117,15 +117,15 @@ Use your host's configured skills directory if it differs. The skill includes a 
 
 ## Advisor prerequisites
 
-Ordinary compact consultation requires Python 3.10+ and an already-configured Subroute-compatible endpoint. The caller defaults to the shared gateway at `http://127.0.0.1:4000/v1`; set `EXPERTS_BASE_URL` to another compatible endpoint when needed. [Subroute setup](https://github.com/stancsz/subroute) remains the service's source of truth. Copying the skills does not deploy the service, supply credentials or grant spending/data-transmission authority.
+Ordinary compact consultation requires Python 3.10+ and an already-configured Chat Completions service (`EXPERTS_BASE_URL` and `EXPERTS_API_KEY`). Copying the skills does not deploy a service, supply credentials or grant spending/data-transmission authority.
 
-The local gateway at port 4000 uses only `GATEWAY_MASTER_KEY`. The optional dedicated experts endpoint at port 4040 uses its own `EXPERTS_API_KEY`; on Windows, the caller can read its saved user value. Alternate compatible endpoints use an explicitly set `EXPERTS_API_KEY`. Credentials are selected by endpoint and never cross from the Experts service to the gateway. See the [authentication behavior](../../skills/codex-advisor/SKILL.md#make-a-compact-advice-request). HTTP 401 requires correcting the key for that endpoint, not disabling authentication.
+On Windows, the caller can read a saved user `EXPERTS_API_KEY` for a local loopback service when the process environment variable is absent. See the [authentication behavior](../../skills/codex-advisor/SKILL.md#make-a-compact-advice-request). HTTP 401 requires correcting the key in the environment, not disabling authentication.
 
-Advisor model selection is endpoint-agnostic: pass any model ID or alias exposed by the configured endpoint with `--model` or `NORTHSTAR_ADVISOR_MODEL`. Set a separate `--council-model` or `NORTHSTAR_COUNCIL_MODEL` for Council; the two selections must be distinct. The endpoint decides which models are available and how aliases route. Failed selections remain visible; the caller does not substitute a model or silently change endpoints.
+Advisor model selection is model-agnostic: pass any supported model identifier or alias with `--model` or `NORTHSTAR_ADVISOR_MODEL`. Set a separate `--council-model` or `NORTHSTAR_COUNCIL_MODEL` for Council; the two selections must be distinct. Failed selections remain visible; the caller does not substitute another model.
 
-Optional [expert-directed reading](../../skills/codex-advisor/references/reader.md) additionally requires its documented Node/Pi/Git/ripgrep setup and the separate worker gateway at `http://localhost:4000/v1`. Do not silently use that worker route as the expert route. Nonvisual execution, QA and coordination do not require these services.
+Optional [expert-directed reading](../../skills/codex-advisor/references/reader.md) additionally requires its documented Node/Pi/Git/ripgrep setup and `READER_BASE_URL` (or `EXPERTS_BASE_URL`). Nonvisual execution, QA and coordination do not require these services.
 
-[Mandatory visual consultation](../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance) uses repeatable `--image` arguments to send actual image bytes to the configured Advisor endpoint. The Subroute backend must include image-input support; a text-only backend rejects these requests visibly. Optional Pi reading stays text-only: the Advisor sees attached screenshots and can dispatch Pi for source evidence. Missing image access leaves required visual consultation unverified.
+[Mandatory visual consultation](../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance) uses repeatable `--image` arguments to send actual image bytes to the configured Advisor service. A text-only backend rejects these requests visibly. Optional Pi reading stays text-only: the Advisor sees attached screenshots and can dispatch Pi for source evidence. Missing image access leaves required visual consultation unverified.
 
 Resolve `scripts/ask_expert.py` under the installed Codex Advisor directory shown by your skill loader. For the installation above:
 

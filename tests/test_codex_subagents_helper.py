@@ -3,9 +3,9 @@
 The helper body is read from the PowerShell fence in
 ``skills/codex-subagents/references/cli-dispatch.md`` and executed with pwsh against a local
 PowerShell function stub named ``codex``. The stub records the public argument
-strings and the child-visible environment, so neither the Codex CLI, the
-Subroute gateway, nor any network service is contacted. Every asserted value
-is a public argument string or a synthetic sentinel.
+strings and the child-visible environment, so neither the Codex CLI nor any
+network service is contacted. Every asserted value is a public argument string
+or a synthetic sentinel.
 """
 
 import contextlib
@@ -26,15 +26,6 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "codex-subagents" / "references" / "cli-dispatch.md"
 PWSH = shutil.which("pwsh")
 
-BASE_URL_OVERRIDE = 'model_providers.subroute.base_url="http://127.0.0.1:4000/v1"'
-OBSERVED_OVERRIDES = (
-    "features.shell_tool=true",
-    "features.apps=false",
-    "features.remote_plugin=false",
-    "features.multi_agent=false",
-    'mcp_servers.browseros-neo.transport="streamable_http"',
-    "mcp_servers.browseros-neo.enabled=false",
-)
 PLUGIN_OVERRIDE = "features.plugins=false"
 SKILL_DISCOVERY_ENABLE_FLAG = "--enable"
 SKILL_DISCOVERY_FEATURE = "skip_host_skill_discovery"
@@ -122,11 +113,8 @@ def extract_helper_function() -> str:
     helper = "\n".join(lines[: closing + 1])
     assert "function Invoke-CodexChild" in helper and helper.rstrip().endswith("}")
     for expected in (
-        "--profile",
-        "subroute-subagents",
         "--sandbox",
         "features.plugins=false",
-        *OBSERVED_OVERRIDES,
         *SKILL_DISCOVERY_ARGUMENTS,
     ):
         assert expected in helper, f"extracted helper lost {expected!r}"
@@ -163,14 +151,10 @@ def expected_arguments(working_directory, sandbox="read-only", overrides=(), ext
         "--json",
         "--cd",
         os.path.normcase(os.path.normpath(str(working_directory))),
-        "--profile",
-        "subroute-subagents",
         "--ephemeral",
         "--skip-git-repo-check",
         "--sandbox",
         sandbox,
-        "-c",
-        BASE_URL_OVERRIDE,
     ]
     if model is not None:
         arguments.extend(["--model", model])
@@ -188,7 +172,6 @@ def run_helper(
     working_directory,
     assignment=SYNTHETIC_ASSIGNMENT,
     sandbox=None,
-    observed=False,
     disable_plugins=False,
     skip_host_skill_discovery=False,
     model=None,
@@ -209,8 +192,6 @@ def run_helper(
         invocation.append(f"-Sandbox {ps_literal(sandbox)}")
     if model is not None:
         invocation.append(f"-Model {ps_literal(model)}")
-    if observed:
-        invocation.append("-UseObservedSubrouteSettings")
     if disable_plugins:
         invocation.append("-DisablePlugins")
     if skip_host_skill_discovery:
@@ -296,10 +277,10 @@ def child_environment(invocation):
     return invocation["environment"]
 
 
-def test_helper_dispatches_exact_route_profile_and_sandbox_arguments(workspace):
+def test_helper_dispatches_default_sandbox_and_working_directory_arguments(workspace):
     payload = run_helper(
         workspace["root"],
-        name="exact-route",
+        name="default-dispatch",
         working_directory=workspace["project"],
         setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
     )
@@ -328,34 +309,6 @@ def test_helper_resolves_relative_working_directory_and_honours_workspace_write(
     assert normalize(invocation["arguments"]) == expected_arguments(child, sandbox="workspace-write")
 
 
-def test_observed_subroute_settings_add_each_override_exactly_once(workspace):
-    payload = run_helper(
-        workspace["root"],
-        name="observed",
-        working_directory=workspace["project"],
-        observed=True,
-        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
-    )
-    assert payload["error"] is None, payload["error"]
-    arguments = payload["invocations"][0]["arguments"]
-    for override in OBSERVED_OVERRIDES:
-        assert arguments.count(override) == 1, f"{override} must be added exactly once"
-    assert arguments.count(BASE_URL_OVERRIDE) == 1
-    assert arguments.count("-c") == 7
-    assert normalize(arguments) == expected_arguments(workspace["project"], overrides=OBSERVED_OVERRIDES)
-
-    plain = run_helper(
-        workspace["root"],
-        name="not-observed",
-        working_directory=workspace["project"],
-        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
-    )
-    plain_arguments = plain["invocations"][0]["arguments"]
-    for override in OBSERVED_OVERRIDES:
-        assert override not in plain_arguments, f"{override} must not appear without the switch"
-    assert plain_arguments.count("-c") == 1
-
-
 def test_disable_plugins_adds_only_its_opt_in_plugin_flag(workspace):
     payload = run_helper(
         workspace["root"],
@@ -367,23 +320,8 @@ def test_disable_plugins_adds_only_its_opt_in_plugin_flag(workspace):
     assert payload["error"] is None, payload["error"]
     arguments = payload["invocations"][0]["arguments"]
     assert arguments.count(PLUGIN_OVERRIDE) == 1
-    assert arguments.count("-c") == 2
-    for override in OBSERVED_OVERRIDES:
-        assert override not in arguments, f"{override} must not appear without the observed switch"
+    assert arguments.count("-c") == 1
     assert normalize(arguments) == expected_arguments(workspace["project"], overrides=(PLUGIN_OVERRIDE,))
-
-    both = run_helper(
-        workspace["root"],
-        name="observed-and-plugins",
-        working_directory=workspace["project"],
-        observed=True,
-        disable_plugins=True,
-        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
-    )
-    both_arguments = both["invocations"][0]["arguments"]
-    assert both_arguments.count("-c") == 8
-    for override in (*OBSERVED_OVERRIDES, PLUGIN_OVERRIDE):
-        assert both_arguments.count(override) == 1, f"{override} must be added exactly once"
 
 
 def test_default_invocation_keeps_the_documented_arguments_unchanged(workspace):
@@ -398,10 +336,10 @@ def test_default_invocation_keeps_the_documented_arguments_unchanged(workspace):
     assert normalize(arguments) == expected_arguments(workspace["project"])
     assert arguments.count(SKILL_DISCOVERY_ENABLE_FLAG) == 0, "the enable flag must stay opt-in"
     assert arguments.count(SKILL_DISCOVERY_FEATURE) == 0, "the feature must stay opt-in"
-    assert arguments.count("-c") == 1
+    assert arguments.count("-c") == 0
 
 
-def test_any_supported_model_id_or_alias_can_override_the_profile_default(workspace):
+def test_any_supported_model_id_or_alias_can_override_the_default(workspace):
     selected = "provider/model-with-slashes"
     payload = run_helper(
         workspace["root"],
@@ -425,7 +363,7 @@ def test_explicit_blank_model_selection_fails_before_launch(workspace):
         setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
     )
     assert payload["error"]["message"] == (
-        "Model must not be empty or whitespace-only: provide a model ID or alias supported by the configured endpoint."
+        "Model must not be empty or whitespace-only: provide a valid model identifier."
     )
     assert payload["invocations"] == []
 
@@ -450,28 +388,7 @@ def test_skip_host_skill_discovery_adds_the_enable_flag_exactly_once(workspace):
     )
 
 
-def test_skip_host_skill_discovery_stays_independent_of_observed_and_plugin_switches(workspace):
-    observed = run_helper(
-        workspace["root"],
-        name="observed-and-skill-discovery",
-        working_directory=workspace["project"],
-        observed=True,
-        skip_host_skill_discovery=True,
-        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
-    )
-    assert observed["error"] is None, observed["error"]
-    observed_arguments = observed["invocations"][0]["arguments"]
-    assert observed_arguments.count("-c") == 7
-    for override in OBSERVED_OVERRIDES:
-        assert observed_arguments.count(override) == 1, f"{override} must be added exactly once"
-    assert observed_arguments.count(SKILL_DISCOVERY_ENABLE_FLAG) == 1
-    assert observed_arguments.count(SKILL_DISCOVERY_FEATURE) == 1
-    assert normalize(observed_arguments) == expected_arguments(
-        workspace["project"],
-        overrides=OBSERVED_OVERRIDES,
-        extra=SKILL_DISCOVERY_ARGUMENTS,
-    )
-
+def test_skip_host_skill_discovery_stays_independent_of_plugin_switch(workspace):
     plugins = run_helper(
         workspace["root"],
         name="plugins-and-skill-discovery",
@@ -482,37 +399,13 @@ def test_skip_host_skill_discovery_stays_independent_of_observed_and_plugin_swit
     )
     assert plugins["error"] is None, plugins["error"]
     plugin_arguments = plugins["invocations"][0]["arguments"]
-    assert plugin_arguments.count("-c") == 2
+    assert plugin_arguments.count("-c") == 1
     assert plugin_arguments.count(PLUGIN_OVERRIDE) == 1
-    for override in OBSERVED_OVERRIDES:
-        assert override not in plugin_arguments, f"{override} must not appear without the observed switch"
     assert plugin_arguments.count(SKILL_DISCOVERY_ENABLE_FLAG) == 1
     assert plugin_arguments.count(SKILL_DISCOVERY_FEATURE) == 1
     assert normalize(plugin_arguments) == expected_arguments(
         workspace["project"],
         overrides=(PLUGIN_OVERRIDE,),
-        extra=SKILL_DISCOVERY_ARGUMENTS,
-    )
-
-    combined = run_helper(
-        workspace["root"],
-        name="all-opt-in-switches",
-        working_directory=workspace["project"],
-        observed=True,
-        disable_plugins=True,
-        skip_host_skill_discovery=True,
-        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
-    )
-    assert combined["error"] is None, combined["error"]
-    combined_arguments = combined["invocations"][0]["arguments"]
-    assert combined_arguments.count("-c") == 8
-    for override in (*OBSERVED_OVERRIDES, PLUGIN_OVERRIDE):
-        assert combined_arguments.count(override) == 1, f"{override} must be added exactly once"
-    assert combined_arguments.count(SKILL_DISCOVERY_ENABLE_FLAG) == 1
-    assert combined_arguments.count(SKILL_DISCOVERY_FEATURE) == 1
-    assert normalize(combined_arguments) == expected_arguments(
-        workspace["project"],
-        overrides=(*OBSERVED_OVERRIDES, PLUGIN_OVERRIDE),
         extra=SKILL_DISCOVERY_ARGUMENTS,
     )
 
@@ -525,7 +418,6 @@ def test_overrides_stay_process_only_and_never_write_codex_home(workspace):
         workspace["root"],
         name="process-only",
         working_directory=workspace["project"],
-        observed=True,
         disable_plugins=True,
         setup=[
             set_env("USERPROFILE", workspace["user_profile"]),

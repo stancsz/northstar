@@ -19,7 +19,7 @@ def test_prompt_builder_preserves_review_scope_and_conditional_worker_mandate():
     assert "preserve the operator's selected/configured route" in prompt
     assert "CONDITIONAL CLI-WORKER MANDATE" in prompt
     assert "exactly one bounded, write-enabled Codex or Claude CLI implementation worker" in prompt
-    assert "approved gateway route" in prompt
+    assert "bounded, write-enabled Codex or Claude CLI implementation worker." in prompt
     assert "Name the worker's concrete output and acceptance check" in prompt
     assert "supporting investigation in that assignment" in prompt
     assert "does not delegate or execute product work" in prompt

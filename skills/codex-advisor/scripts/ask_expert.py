@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ask the dedicated local expert API for a compact, advice-only review."""
+"""Ask the configured expert API for a compact, advice-only review."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ MAX_TOTAL_IMAGE_BYTES = 20_000_000
 
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
-        # Never forward an Advisor credential to a different endpoint.
+        # Never forward an Advisor credential to a different host.
         return None
 
 
@@ -79,7 +79,7 @@ def configure_utf8_stdout(stdout: TextIO | None = None) -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", default=DEFAULT_ADVISOR_MODEL,
-                        help="Model ID or routing alias supported by the configured Subroute endpoint.")
+                        help="Model ID or alias for the primary advisor.")
     parser.add_argument("--council-model", default=DEFAULT_COUNCIL_MODEL,
                         help="Distinct council model ID or alias; defaults to NORTHSTAR_COUNCIL_MODEL.")
     parser.add_argument("--council", action="store_true",
@@ -89,8 +89,8 @@ def parse_args() -> argparse.Namespace:
     source.add_argument("--question")
     parser.add_argument(
         "--base-url",
-        default=os.environ.get("EXPERTS_BASE_URL", "http://127.0.0.1:4000/v1"),
-        help="Subroute API base URL. Defaults to the shared local gateway.",
+        default=os.environ.get("EXPERTS_BASE_URL", ""),
+        help="Advisor API base URL (or set EXPERTS_BASE_URL).",
     )
     parser.add_argument("--timeout-seconds", type=float, default=75.0)
     parser.add_argument("--image", type=Path, action="append", default=[],
@@ -101,7 +101,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--reader-scope", action="append", default=[],
                         help="Approved relative source directory/file; repeat as needed.")
     parser.add_argument("--reader-model", default="default",
-                        help="Alias requested from localhost:4000; gateway policy still applies.")
+                        help="Model ID or alias requested for the reader.")
     return parser.parse_args()
 
 
@@ -125,7 +125,7 @@ def read_packet(args: argparse.Namespace) -> str:
 
 
 def prepare_images(paths: list[Path], detail: str = "high") -> tuple[list[dict], list[dict]]:
-    """Read explicit attachments before any provider call; keep pixels out of receipts."""
+    """Read explicit attachments before any call; keep pixels out of receipts."""
     if len(paths) > MAX_IMAGES:
         raise ValueError(f"At most {MAX_IMAGES} images per call; split the requested views into batches.")
     parts, receipts, total = [], [], 0
@@ -195,23 +195,19 @@ def windows_user_api_key() -> str | None:
 
 
 def expert_api_key(base_url: str) -> str | None:
+    if "EXPERTS_API_KEY" in os.environ:
+        return os.environ["EXPERTS_API_KEY"] or None
     endpoint = urlsplit(base_url)
     local = (endpoint.scheme == "http" and endpoint.hostname in ("127.0.0.1", "localhost", "::1")
              and endpoint.username is None and endpoint.password is None)
-    if local and endpoint.port == 4000:
-        return os.environ.get("GATEWAY_MASTER_KEY") or None
-    if local and endpoint.port == 4040:
-        # Keep the dedicated Experts credential scoped to its own endpoint.
-        if "EXPERTS_API_KEY" in os.environ:
-            return os.environ["EXPERTS_API_KEY"] or None
+    if local and endpoint.port is not None:
         return windows_user_api_key()
-    # An explicit key is for nonlocal or alternate compatible endpoints only.
-    if "EXPERTS_API_KEY" in os.environ:
-        return os.environ["EXPERTS_API_KEY"] or None
     return None
 
 
 def call_model(args: argparse.Namespace, model: str, messages: list[dict], *, images=False) -> dict:
+    if not getattr(args, "base_url", None) or not str(args.base_url).strip():
+        raise RuntimeError("Advisor API base URL is not configured; set EXPERTS_BASE_URL or pass --base-url.")
     started = time.monotonic()
     payload = {
         "model": model,
@@ -241,8 +237,7 @@ def call_model(args: argparse.Namespace, model: str, messages: list[dict], *, im
         if exc.code == 401:
             raise RuntimeError(
                 "Expert API returned HTTP 401: service authentication failed. "
-                "Set EXPERTS_API_KEY, or GATEWAY_MASTER_KEY for the local Subroute gateway "
-                "(Windows user environment is read for the optional experts endpoint). "
+                "Set EXPERTS_API_KEY (Windows user environment is read for local loopback). "
                 "No retry was made."
             ) from exc
         raise RuntimeError(f"Expert API returned HTTP {exc.code}: {detail}") from exc

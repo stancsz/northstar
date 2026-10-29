@@ -1,8 +1,8 @@
 # Capability-risk consultation guide
 
-Use with [Codex Advisor](../SKILL.md). This register identifies task conditions where evidence or judgment may change the next action. It applies to any model ID or alias supported by the configured Subroute endpoint; it neither diagnoses model capability nor prescribes a route.
+Use with [Codex Advisor](../SKILL.md). This register identifies task conditions where evidence or judgment may change the next action. It applies to any configured advisor model; it neither diagnoses model capability nor prescribes a model.
 
-The selected model ID or alias is sent to the configured Subroute endpoint, where gateway policy determines alias routing. Complex text decisions may use a distinct configured council selection.
+Complex text decisions may use a distinct configured council selection.
 
 Consult when a listed risk creates a material decision. A matching topic alone does not require a call; apply the current [consultation trigger](../SKILL.md#consult-early-and-frequently-on-capability-risks). Preserve actual image evidence for visual advice, existing authority and recovery limits. Advice remains a hypothesis; a separate nonauthor reviewer owns acceptance.
 
@@ -26,4 +26,4 @@ Consult when a listed risk creates a material decision. A matching topic alone d
 | `defensive-security` | Authorized security investigation/repair needs unfamiliar-code reasoning, vulnerability validation or a decision affecting containment. | Authorized scope, threat model, sanitized failing evidence and proposed defensive change. | Which bounded defensive experiment can validate the suspected vulnerability or repair? | Verify within authorized scope; preserve controls, contain effects and obtain independent security review. |
 | `research-validity` | Novel science, difficult mathematics, simulation or statistical inference depends on assumptions, model selection or a claim beyond observed results. | Question, assumptions, data provenance, methods and reproducible discrepancy; include units and comparison baseline. | Which assumption or falsification check could invalidate this conclusion? | Run the derivation/reproduction or controlled comparison; distinguish benchmark performance and hypotheses from real-world proof. |
 
-These tags select questions about the work, not a model, vendor or fallback. Route choice and alias mapping remain with the configured endpoint. Check a route's actual capability only when the current task exposes a concrete compatibility gap; retain the observed failure and its exact selection without generalizing it to other routes.
+These tags select questions about the work, not a model or vendor. Check a model's actual capability only when the current task exposes a concrete compatibility gap; retain the observed failure and its exact selection without generalizing it to other models.

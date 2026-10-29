@@ -61,7 +61,6 @@ def test_unconfigured_windows_user_key_is_optional(monkeypatch):
     ("http://127.0.0.1:4040/v1", "user-key", 1),
     ("http://LOCALHOST:4040/v1/", "user-key", 1),
     ("http://[::1]:4040/v1", "user-key", 1),
-    ("http://127.0.0.1:4000/v1", "gateway-key", 0),
     ("http://localhost/v1", None, 0), ("https://localhost:4040/v1", None, 0),
     ("http://example.com:4040/v1", None, 0), ("http://192.168.1.2:4040/v1", None, 0),
     ("http://user@localhost:4040/v1", None, 0),
@@ -69,7 +68,6 @@ def test_unconfigured_windows_user_key_is_optional(monkeypatch):
 def test_local_key_fallback_uses_endpoint_credentials_without_leaking(monkeypatch, url, expected, windows_reads):
     caller = load_caller()
     monkeypatch.delenv("EXPERTS_API_KEY", raising=False)
-    monkeypatch.setenv("GATEWAY_MASTER_KEY", "gateway-key")
     calls = []
     monkeypatch.setattr(caller, "windows_user_api_key", lambda: calls.append(1) or "user-key")
     assert caller.expert_api_key(url) == expected
@@ -105,24 +103,12 @@ def test_bearer_key_is_sent_for_text_and_image_consultations(monkeypatch, images
     assert "fixture-user-key" not in json.dumps(result)
 
 
-def test_gateway_request_does_not_send_the_experts_service_key(monkeypatch):
+def test_missing_base_url_stops_before_request(monkeypatch):
     caller = load_caller()
-    monkeypatch.setenv("EXPERTS_API_KEY", "experts-service-key")
-    monkeypatch.setenv("GATEWAY_MASTER_KEY", "gateway-service-key")
-    monkeypatch.setattr(caller, "windows_user_api_key", lambda: pytest.fail("Local 4000 must use its gateway key"))
-    requests = []
-
-    def upstream(request, **kwargs):
-        requests.append(request)
-        assert request.get_header("Authorization") == "Bearer gateway-service-key"
-        return io.StringIO(json.dumps({"choices": [{"finish_reason": "stop",
-            "message": {"content": "Verdict: route received the gateway credential."}}]}))
-
-    monkeypatch.setattr(caller, "urlopen", upstream)
-    args = SimpleNamespace(model="mimo-v2.6-flash", base_url="http://127.0.0.1:4000/v1", timeout_seconds=1)
-    result = caller.consult(args, [{"role": "user", "content": "Inspect."}])
-    assert len(requests) == 1
-    assert result["advice"] == "Verdict: route received the gateway credential."
+    monkeypatch.setattr(caller, "urlopen", lambda *a, **kw: pytest.fail("Unconfigured base URL must not send a request"))
+    args = SimpleNamespace(model="default", base_url="", timeout_seconds=1)
+    with pytest.raises(RuntimeError, match="EXPERTS_BASE_URL"):
+        caller.consult(args, [{"role": "user", "content": "Inspect."}])
 
 
 @pytest.mark.parametrize("status", [401, 502])

@@ -99,7 +99,7 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 | [**Northstar**](../../skills/northstar/SKILL.md) | 方向、授权、交付、恢复与学习。 | 希望一个目标被持续推进到经过检查的成果。 |
 | [**Codex Subagents**](../../skills/codex-subagents/SKILL.md) | 任务边界、角色、模型分配、协调与交接。 | 需要委派、集成或独立评审分工。 |
 | [**Codex QA**](../../skills/codex-qa/SKILL.md) | 功能、视觉、对抗与结构审查。 | 需要知道实际交付是否达标。 |
-| [**Codex Advisor**](../../skills/codex-advisor/SKILL.md) | 使用配置的 Subroute 端点和模型别名，提供能力风险与视觉任务的 compact 指导。 | 已记录的能力风险、任何视觉判断，或普通任务中的具体知识缺口。 |
+| [**Codex Advisor**](../../skills/codex-advisor/SKILL.md) | 使用已配置的顾问模型或 council，提供能力风险与视觉任务的精简指导。 | 已记录的能力风险、任何视觉判断，或普通任务中的具体知识缺口。 |
 | [**Task Completion Review**](../../skills/task-completion-review/SKILL.md) | 停止前检查完整目标、实际证据和已有授权，查找信息并决定下一步。 | agent 声称完成或准备过早停止；可选接入 Stop hook。 |
 | [**Claude Code Subagents**](../../skills/claude-code-subagents/SKILL.md) | 通过 Claude Code CLI 委派有边界的工作，并检查、整合交接结果。 | 用户指定 Claude Code，或它能提供有用的独立执行能力。 |
 

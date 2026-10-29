@@ -1,6 +1,6 @@
 ---
 name: codex-advisor
-description: Consult a configured Subroute model or Council when uncertainty, capability risks, or visual decisions could change the next action; attach images for visual advice.
+description: Consult an independent advisor model or council when uncertainty, capability risks, or visual decisions could change the next action; attach images for visual advice.
 ---
 
 # Codex Advisor
@@ -8,9 +8,9 @@ description: Consult a configured Subroute model or Council when uncertainty, ca
 Follow Northstar's [delivery contract](../northstar/SKILL.md#delivery-contract). Load this companion only for its advisory function.
 
 
-Use this skill in other agents too; the Codex name is not a usage restriction. Follow the bundled [host adaptation guidance](../northstar/SKILL.md#use-with-other-agents); the advisor service and reader prerequisites still apply.
+Use this skill in other agents too; the Codex name is not a usage restriction. Follow the bundled [host adaptation guidance](../northstar/SKILL.md#use-with-other-agents); the advisor caller and reader prerequisites still apply.
 
-The Advisor uses any model ID or routing alias supported by its configured Subroute endpoint. `--model` selects the primary advisor and defaults to `NORTHSTAR_ADVISOR_MODEL`, then `default`. For a complex text decision, `--council` makes one call using `--council-model` or the required `NORTHSTAR_COUNCIL_MODEL` setting, then asks the primary route to assess both the original packet and that review. Council requires a distinct model ID or alias string from the primary; distinct selections do not prove that Subroute maps them to different upstream models or providers. Treat Council as a second configured perspective unless route mapping confirms upstream independence. Neither call is a model vote or acceptance. Both selections are configurable; the caller does not choose a vendor or silently fall back. If a selected call fails, report it as unavailable. Pi remains a separately scoped source reader.
+`--model` selects the primary advisor and defaults to `NORTHSTAR_ADVISOR_MODEL` (or `default`). For a complex text decision, `--council` makes one call using `--council-model` or `NORTHSTAR_COUNCIL_MODEL`, then asks the primary advisor to assess both the original packet and that review. Council requires a distinct model identifier from the primary. Neither call is a model vote or acceptance. Both selections are configurable; the caller never silently falls back to another model. If a selected call fails, report it as unavailable. Pi remains a separately scoped source reader.
 
 Use this skill when a material uncertainty, relevant capability limitation or unresolved visual decision could change delivery. Consult early when the consequence makes trial and error inappropriate; a topic label alone is not a trigger. Use council for a material unresolved text decision when an independent second view can change the choice. Keep implementation and independent acceptance with their owners; advice grants no additional authority.
 
@@ -53,7 +53,7 @@ A required unresolved criterion may justify further image-backed or capability-r
 
 ## Make a compact advice request
 
-The Advisor API defaults to the shared Subroute gateway at `http://127.0.0.1:4000/v1`; set `EXPERTS_BASE_URL` to another compatible Subroute endpoint when needed. Local port 4000 uses only `GATEWAY_MASTER_KEY`. The dedicated local Experts endpoint at port 4040 uses `EXPERTS_API_KEY` (or the saved Windows user value); alternate endpoints use the explicit `EXPERTS_API_KEY` when set. Credentials remain scoped to the selected endpoint. Configure any supported model ID or alias with `NORTHSTAR_ADVISOR_MODEL` and `NORTHSTAR_COUNCIL_MODEL`, or pass `--model` and `--council-model`; `default` is only the fallback routing alias, whose destination is controlled by Subroute. Council mode requires a distinct selection string, not proof of a different upstream model. A failed or unavailable selection stays visible; the caller does not retry another model or endpoint.
+Configure the advisor via `EXPERTS_BASE_URL` (or `--base-url`) and `EXPERTS_API_KEY` in the caller environment, and select models with `NORTHSTAR_ADVISOR_MODEL` / `NORTHSTAR_COUNCIL_MODEL` (or `--model` / `--council-model`). Council mode requires a distinct model selection string from the primary. A failed or unavailable selection stays visible; the caller never follows redirects or retries a failed request.
 
 Write a high-density packet, normally under 4,000 characters and never over 6,000. Keep only information that could change the recommendation:
 
@@ -85,17 +85,15 @@ For visual advice, attach the overall view and useful details proactively. The t
 python (Join-Path $codexAdvisor 'scripts\ask_expert.py') --input-file .\advisor-packet.txt --image .\current.png --image .\detail.png
 ```
 
-Supported files are PNG, JPEG, WebP and GIF, with at most eight images, 10 MB per file and 20 MB total per call; split further requested views into calls. Bytes are preserved without resizing, with `--image-detail high` by default (`auto`/`low` also available). High detail requests provider inspection quality; it does not guarantee every fine feature is readable. The receipt records attachment paths, types, byte counts and hashes without echoing pixels. Visual advice asks for concrete observations, fixes and requested views under 4,000 characters, rather than the ordinary 160-word target. An attachment receipt proves what was sent; only image-backed feedback establishes what was inspected.
+Supported files are PNG, JPEG, WebP and GIF, with at most eight images, 10 MB per file and 20 MB total per call; split further requested views into calls. Bytes are preserved without resizing, with `--image-detail high` by default (`auto`/`low` also available). High detail requests inspection quality; it does not guarantee every fine feature is readable. The receipt records attachment paths, types, byte counts and hashes without echoing pixels. Visual advice asks for concrete observations, fixes and requested views under 4,000 characters, rather than the ordinary 160-word target. An attachment receipt proves what was sent; only image-backed feedback establishes what was inspected.
 
-The configured Subroute API must already be running and expose the selected model IDs or aliases. The optional dedicated expert endpoint at port 4040 is defined by the Subroute checkout's [Compose configuration](https://github.com/stancsz/subroute/blob/main/docker-compose.yml); it has its own advertised alias set and bearer key, so set both `EXPERTS_BASE_URL` and `EXPERTS_API_KEY` when using it. Never put a credential in a packet or write it to a file. Installing this skill does not install, start or authenticate the external gateway service.
-
-On Windows, the caller reads a saved user `EXPERTS_API_KEY` for the optional local endpoint on port 4040 only when that process variable is absent. The shared gateway on port 4000 always uses the process `GATEWAY_MASTER_KEY` and ignores `EXPERTS_API_KEY`, even when it is explicitly empty; this prevents the Experts service credential from crossing to the gateway. Other hosts, schemes and ports use an explicit process `EXPERTS_API_KEY`. The caller never follows redirects or retries a failed request. HTTP 401 means the key for that endpoint is missing or rejected: correct that configuration before trying again; do not disable service authentication or change gateways.
+Never put a credential in a packet or write it to a file. On Windows, the caller can read a saved user `EXPERTS_API_KEY` for a local loopback service only when the process environment variable is absent. HTTP 401 means the key is missing or rejected: correct the environment configuration before trying again.
 
 ## Let the expert independently read more
 
 Use reader mode when the Advisor may need to independently dispatch a source reader beyond the compact packet. Enable it at the start when source uncertainty is plausible; the Advisor decides whether to read and what to ask, and can finish without dispatching a reader. Combine `--image` with `--reader-root` and explicit `--reader-scope` values for image-backed consultation with optional source investigation. Read [Advisor Reader](references/reader.md) before using it for setup and limits.
 
-Pi is a separate, ephemeral harness using `http://localhost:4000/v1`, never direct OpenAI credentials. It receives only the expert's evidence question and an approved source snapshot, not the worker's conversation or conclusions. It can read and search, but cannot implement, run shell commands, or delegate again. This reduces shared-context bias; it does not guarantee unbiased findings.
+Pi is a separate, ephemeral harness that receives only the expert's evidence question and an approved source snapshot, not the worker's conversation or conclusions. It can read and search, but cannot implement, run shell commands, or delegate again. This reduces shared-context bias; it does not guarantee unbiased findings.
 
 Ordinary reader mode uses the task-wide ceilings above; required risk/visual consultation uses its stated allowance while each reader invocation remains bounded. Each Pi task returns a compact evidence brief. Independent Pi tasks may run in parallel; dependent questions wait for findings. Stop early once evidence supports the current decision. Use the direct one-call path when no independent source reading is needed.
 

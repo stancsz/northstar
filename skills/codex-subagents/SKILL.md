@@ -22,8 +22,8 @@ Default to one owner. Delegate builders or reviewers only when required or when 
 
 Follow the [Northstar delivery contract](../northstar/SKILL.md#delivery-contract).
 
-- **Model routing:** Default bounded worker execution to a fast, capable model via local Subroute (`http://127.0.0.1:4000/v1`), using the dynamic `default` alias or an explicit endpoint-supported model ID/alias via `-Model` (e.g., MiniMax, Luna, or Gemini aliases configured on the gateway). Reserve heavy reasoning or [Codex Advisor](../codex-advisor/SKILL.md) for architecture forks, hard blockers, or visual judgment.
-- **Parent owns route setup:** Verify any new/reconfigured route and tool roundtrip once before dispatch, keep credentials process-scoped, and pass the verified smoke evidence (`endpoint`, `model`, `marker`) in the worker brief so the worker never repeats route checks. Never silently switch providers on failure.
+- **Model selection:** Match capability to task difficulty. Default bounded worker execution to a fast, capable model (`--model` / `-Model` when overriding the host default), and reserve heavier reasoning or [Codex Advisor](../codex-advisor/SKILL.md) for architecture forks, hard blockers, or visual judgment. Never silently switch models on failure.
+- **Parent owns CLI verification:** Verify any new or reconfigured CLI setup once before dispatch and pass the baseline context in the worker brief so the worker never repeats setup checks.
 - **CLI dispatch:** Follow [local CLI dispatch](references/cli-dispatch.md) (`Invoke-CodexChild`). For effectiveness comparisons, use [skill-effectiveness receipts](../codex-qa/references/skill-effectiveness.md) and [configuration comparisons](references/cli-dispatch.md#configuration-comparisons).
 
 ## Configure Codex thread capacity and delegation depth
@@ -58,7 +58,7 @@ Every worker brief must be self-contained so a fast model can execute without re
 - Outcome & Why: [Single deliverable and its purpose]
 - First Action: [Exact file to read/edit or command to run first]
 - Write Scope: [Exact allowed file paths + tmp/<task-id>/ scratch; all other paths read-only]
-- Context & Baseline: [Relevant facts, verified route/model smoke, baseline test/error]
+- Context & Baseline: [Relevant facts, baseline test/error, and any verified CLI setup]
 - Verification: [Exact command that must pass before handoff]
 - Bounds: [5-min artifact checkpoint, 10-min handoff deadline, max 5 read-only calls before first edit/check, no nested CLI]
 ```
@@ -80,4 +80,4 @@ Follow Northstar's [repository rules](../northstar/SKILL.md#keep-records-and-the
 
 ## Failure, retries, and final integration
 
-Delegation never weakens acceptance or resets the 2-strike recovery count. If CLI dispatch fails, continue directly in the parent within authority or report the exact route blocker using Northstar's [delivery loop](../northstar/SKILL.md#deliver-a-usable-mvp-then-improve-in-increments) and [stall recovery](../northstar/SKILL.md#recover-from-a-stall).
+Delegation never weakens acceptance or resets the 2-strike recovery count. If CLI dispatch fails, continue directly in the parent within authority or report the exact blocker using Northstar's [delivery loop](../northstar/SKILL.md#deliver-a-usable-mvp-then-improve-in-increments) and [stall recovery](../northstar/SKILL.md#recover-from-a-stall).

@@ -5,7 +5,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { execFileSync } from "node:child_process";
 
-export const BASE_URL = "http://localhost:4000/v1";
+export const BASE_URL = process.env.READER_BASE_URL || process.env.EXPERTS_BASE_URL || "";
 export const LIMITS = { calls: 4, tools: 8, seconds: 90, outputTokens: 1200 };
 
 export async function numberedRead(file) {
@@ -48,11 +48,11 @@ export async function runReader(input) {
     const pi = await import(pathToFileURL(path.join(input.package, "dist/index.js")).href);
     const authStorage = pi.AuthStorage.inMemory();
     const modelRegistry = pi.ModelRegistry.inMemory(authStorage);
-    authStorage.setRuntimeApiKey("reader-gateway", process.env.READER_API_KEY || "local-no-key");
-    modelRegistry.registerProvider("reader-gateway", {
+    authStorage.setRuntimeApiKey("advisor-reader", process.env.READER_API_KEY || "local-no-key");
+    modelRegistry.registerProvider("advisor-reader", {
       api: "openai-completions", baseUrl: BASE_URL,
       apiKey: process.env.READER_API_KEY || "local-no-key",
-      models: [{ id: input.model, name: "Reader through local gateway", reasoning: false,
+      models: [{ id: input.model, name: "Advisor source reader", reasoning: false,
         input: ["text"], contextWindow: 32000, maxTokens: LIMITS.outputTokens,
         cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
         compat: { supportsDeveloperRole: false, supportsStore: false,
@@ -96,7 +96,7 @@ Do not invent citations. Include conflicting evidence when present.`;
     } } }).filter(tool => tool.name !== "find")
       .map(tool => boundedTool(tool, root, receipt));
     ({ session } = await pi.createAgentSession({ cwd: root, agentDir: path.dirname(root),
-      authStorage, modelRegistry, model: modelRegistry.find("reader-gateway", input.model),
+      authStorage, modelRegistry, model: modelRegistry.find("advisor-reader", input.model),
       thinkingLevel: "off", tools: customTools.map(t => t.name), customTools,
       settingsManager, resourceLoader, sessionManager: pi.SessionManager.inMemory(root) }));
     if (input.preflight) {

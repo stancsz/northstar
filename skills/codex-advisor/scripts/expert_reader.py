@@ -1,4 +1,4 @@
-"""Bounded expert-directed Pi reading through the worker gateway."""
+"""Bounded expert-directed Pi source reading."""
 from __future__ import annotations
 
 import hashlib
@@ -104,9 +104,9 @@ def run_pi(package: Path, snapshot: Path, question: str, model: str, *, prefligh
     helper = Path(__file__).with_name("pi_reader.mjs")
     payload = {"package": str(package), "root": str(snapshot), "question": question,
                "model": model, "preflight": preflight}
-    # Explicitly omit upstream credentials. Pi receives only the gateway's optional key.
+    # Explicitly omit unrelated credentials. Pi receives only the reader configuration.
     environment = {k: v for k, v in os.environ.items() if k.upper() in {
-        "PATH", "PATHEXT", "SYSTEMROOT", "WINDIR", "TEMP", "TMP", "READER_API_KEY"}}
+        "PATH", "PATHEXT", "SYSTEMROOT", "WINDIR", "TEMP", "TMP", "READER_API_KEY", "READER_BASE_URL", "EXPERTS_BASE_URL"}}
     environment.update(PI_TELEMETRY="off", PI_OFFLINE="1")
     try:
         completed = subprocess.run(["node", str(helper)], input=json.dumps(payload),

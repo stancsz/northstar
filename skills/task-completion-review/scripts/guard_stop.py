@@ -315,7 +315,7 @@ def build_reviewer_prompt(policy, brief, proposal, state, event, event_mode):
         "CONDITIONAL CLI-WORKER MANDATE: Apply only when trusted owner/project instructions require the "
         "parent executor to coordinate CLI implementation. If an actionable implementation criterion remains, "
         "disposition must be continue and next_action must direct the parent executor to dispatch exactly one "
-        "bounded, write-enabled Codex or Claude CLI implementation worker through the approved gateway route. "
+        "bounded, write-enabled Codex or Claude CLI implementation worker. "
         "Name the worker's concrete output and acceptance check; include supporting investigation in that assignment. "
         "Use a separate bounded investigation only to resolve a specific verified blocker. This reviewer only "
         "recommends the assignment: it does not delegate or execute product work. After handoff, the parent executor "

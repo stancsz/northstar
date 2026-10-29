@@ -38,5 +38,5 @@ Keep this compact and current using the [continuity practice](../SKILL.md#preser
 ## Acceptance
 
 - Reconcile required outcomes as passed, unmet or unverified from evidence and reviewer verdict when required; otherwise record commander acceptance.
-- Approval owner records the decision once: deliver the accepted increment/full endpoint, repair a failed criterion, or retain an exact dependency. Do not mark the full goal complete while required outcomes remain.
+- Approval owner records the decision once: deliver the accepted increment/full outcome, repair a failed criterion, or retain an exact dependency. Do not mark the full goal complete while required outcomes remain.
 - Handoff the usable result, checks and material limits. Update the existing index where required; no duplicate approval or learning record.
