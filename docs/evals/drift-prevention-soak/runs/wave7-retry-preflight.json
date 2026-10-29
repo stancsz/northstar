@@ -1,0 +1,46 @@
+{
+  "wave": 7,
+  "model": "minimax/minimax-m3.1-flash",
+  "cli_version": "2.1.251 (Claude Code)",
+  "session_hash": "6fdb84b91304af2591bac574a3449e5407d56a57082e16365f0acde6a87baad4",
+  "usage": {
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 0,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "",
+    "iterations": [],
+    "speed": "standard"
+  },
+  "total_cost_usd": 0,
+  "duration_ms": 97,
+  "num_turns": 1,
+  "native_subagents": {
+    "agent_types": [],
+    "successful_handoffs": []
+  },
+  "checks": {
+    "cli_success": false,
+    "marker": false,
+    "active_R1_R7": false,
+    "delegated_names_reported": false,
+    "two_native_handoffs": false,
+    "session_id_returned": true
+  },
+  "passed": false,
+  "answer": "Not logged in Â· Please run /login",
+  "stderr": "[claude-code:unrecognized_model] {\"model\":\"minimax/minimax-m3.1-flash\",\"query_source\":\"sdk\"}\n",
+  "timestamp_utc": "2026-10-29T19:44:10.425885+00:00"
+}

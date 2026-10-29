@@ -1,0 +1,59 @@
+{
+  "wave": 7,
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "started_at": "2026-10-29T19:51:41.064302+00:00",
+  "stages": [
+    {
+      "stage": "read_only_cli_route_smoke",
+      "passed": true,
+      "session_hash": "3ba10e6c3c32db29446c67b6d75f7dddcfe1229f022561d080255006db169c1e",
+      "checks": {
+        "cli_success": true,
+        "exact_marker": true,
+        "model_3_1": true
+      },
+      "usage": {
+        "input_tokens": 3118,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 128,
+        "output_tokens": 100,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "total_cost_usd": 0.018154,
+      "model_usage": {
+        "minimax/minimax-m3.1-flash": {
+          "inputTokens": 3118,
+          "outputTokens": 100,
+          "cacheReadInputTokens": 128,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.018154,
+          "contextWindow": 256000,
+          "maxOutputTokens": 32000,
+          "canonicalModel": "minimax/minimax-m3.1-flash",
+          "provider": "firstParty",
+          "costBasis": "unknown"
+        }
+      },
+      "duration_ms": 2302,
+      "num_turns": 1,
+      "stderr": "[claude-code:unrecognized_model] {\"model\":\"minimax/minimax-m3.1-flash\",\"query_source\":\"sdk\"}\n"
+    }
+  ],
+  "passed": false
+}

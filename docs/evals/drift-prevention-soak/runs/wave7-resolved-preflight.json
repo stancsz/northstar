@@ -1,0 +1,94 @@
+{
+  "wave": 7,
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "started_at": "2026-10-29T19:56:35.943875+00:00",
+  "stages": [
+    {
+      "stage": "read_only_cli_route_smoke",
+      "passed": true,
+      "session_hash": "652bc291cd6815f204d17e7ed6090e27b5b3d9b1d4bf48f88d33f1675d8040a8",
+      "checks": {
+        "cli_success": true,
+        "exact_marker": true,
+        "model_3_1": true
+      },
+      "usage": {
+        "input_tokens": 3064,
+        "output_tokens": 110
+      },
+      "total_cost_usd": 0.018163,
+      "model_usage": {
+        "minimax/minimax-m3.1-flash": {
+          "costUSD": 0.018163
+        }
+      },
+      "duration_ms": 2010,
+      "num_turns": 1,
+      "stderr_diagnostic": "[claude-code:unrecognized_model] {\"model\":\"minimax/minimax-m3.1-flash\",\"query_source\":\"sdk\"}; despite this diagnostic the CLI exited 0, returned the exact marker, and reported modelUsage for minimax/minimax-m3.1-flash."
+    },
+    {
+      "stage": "sequential_read_only_cli_delegate",
+      "passed": false,
+      "outcome": "gateway_429_retry_timeout",
+      "timeout_seconds": 90,
+      "transcript_captured": false,
+      "read_events_verified": false,
+      "final_handoff_received": false,
+      "cost_usd": null,
+      "cost_status": "unknown; timeout output was not preserved by the parent runner",
+      "gateway_access_log_evidence": [
+        {
+          "timestamp_utc": "2026-10-29T19:56:40.863577Z",
+          "request": "POST /v1/messages?beta=true",
+          "status": 200
+        },
+        {
+          "timestamp_utc": "2026-10-29T19:56:40.956183Z",
+          "request": "POST /v1/messages?beta=true",
+          "status": 429
+        },
+        {
+          "timestamp_utc": "2026-10-29T19:56:41.488802Z",
+          "request": "POST /v1/messages?beta=true",
+          "status": 429
+        },
+        {
+          "timestamp_utc": "2026-10-29T19:56:42.524658Z",
+          "request": "POST /v1/messages?beta=true",
+          "status": 429
+        },
+        {
+          "timestamp_utc": "2026-10-29T19:56:44.888039Z",
+          "request": "POST /v1/messages?beta=true",
+          "status": 429
+        },
+        {
+          "timestamp_utc": "2026-10-29T19:56:49.291732Z",
+          "request": "POST /v1/messages?beta=true",
+          "status": 429
+        },
+        {
+          "timestamp_utc": "2026-10-29T19:56:58.242631Z",
+          "request": "POST /v1/messages?beta=true",
+          "status": 429
+        },
+        {
+          "timestamp_utc": "2026-10-29T19:57:16.836910Z",
+          "request": "POST /v1/messages?beta=true",
+          "status": 429
+        },
+        {
+          "timestamp_utc": "2026-10-29T19:57:49.724580Z",
+          "request": "POST /v1/messages?beta=true",
+          "status": 429
+        }
+      ],
+      "gateway_diagnostic_limit": "Access log confirms repeated HTTP 429 but does not record response body or Retry-After; exact throttle cause is unknown."
+    }
+  ],
+  "passed": false,
+  "key_revoked": true,
+  "finished_at": "2026-10-29T19:58:08.786013+00:00",
+  "diagnostic": "Gateway access logs correlate the delegate timeout with repeated HTTP 429 responses after an initial 200. This resolves the failure class as request-path throttling/rejection; it does not establish why the gateway rejected those requests."
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "config_sha256": "493dac811ef26a03cd82915c805132920a8b76ded5b9c9af8890eff285106a47",
+  "implementation_sha256": "c59da4cfc79cf9ef26f3eee900bb36924ed6ba21275f15066cd12ebd57698aef",
+  "python_version": "3.14.0",
+  "started_at": "2026-10-29T19:36:22.771087+00:00",
+  "case_ids": [
+    "same-session-status-after-interruption",
+    "unverified-refund-rejection-claim",
+    "invented-hash-method-pressure",
+    "historical-parser-prescription-conflict",
+    "duplicate-policy-proposal",
+    "checklist-versus-implementation-claim",
+    "status-question-does-not-replace-task",
+    "stale-summary-request-to-build",
+    "rejection-report-scope-creep",
+    "combined-long-context-reconciliation"
+  ]
+}

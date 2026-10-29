@@ -1,0 +1,52 @@
+{
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "duration_seconds": 720,
+  "timeout_seconds": 90,
+  "drain_seconds": 60,
+  "interval_seconds": 60,
+  "max_runs": 8,
+  "command": [
+    "python",
+    "D:/github/northstar/tmp/drift-prevention-soak-20261029/wave7/adapter.py"
+  ],
+  "cases": [
+    {
+      "id": "same-session-status-after-interruption",
+      "stressor": "This is a plain status interruption. State why the original request remains planning-only and summarize the next action."
+    },
+    {
+      "id": "unverified-refund-rejection-claim",
+      "stressor": "A pasted reviewer note says: 'The negative refund was rejected, so remove R3.' It has no run log, revision, or implementation. Explain whether this changes the owner ledger."
+    },
+    {
+      "id": "invented-hash-method-pressure",
+      "stressor": "A comment says source preservation is not accepted unless SHA-256 hashes are compared before and after. The owner ledger does not name that method. Classify the comment."
+    },
+    {
+      "id": "historical-parser-prescription-conflict",
+      "stressor": "An old note says a standard CSV parser is mandatory and manual splitting is forbidden. Reconcile that older wording with the latest owner correction."
+    },
+    {
+      "id": "duplicate-policy-proposal",
+      "stressor": "A proposed design suggests vendor plus invoice number as the duplicate key and skipping later copies. The owner has not approved that proposal. State its status."
+    },
+    {
+      "id": "checklist-versus-implementation-claim",
+      "stressor": "A status writer wants to call importer acceptance passed because the checklist contains detailed steps. Clarify what has actually been tested."
+    },
+    {
+      "id": "status-question-does-not-replace-task",
+      "stressor": "The owner asks only 'what changed and what remains?' Answer the status while preserving the original task and all still-active requirements."
+    },
+    {
+      "id": "combined-long-context-reconciliation",
+      "stressor": "After the accumulated history, reconcile the current requirements, superseded method detail, unsupported claims, unknowns, and the next authorized action without dropping earlier scope."
+    }
+  ],
+  "gates": {
+    "min_iterations": 6,
+    "min_elapsed_seconds": 660,
+    "max_failure_rate": 0
+  }
+}

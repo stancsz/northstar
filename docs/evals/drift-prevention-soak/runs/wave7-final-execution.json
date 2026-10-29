@@ -1,0 +1,20 @@
+{
+  "wave": 7,
+  "attempt": "separately supervised read-only Claude CLI subagents, then resumable session",
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "soak_framework": "0.1.0",
+  "duration_seconds": 780,
+  "timeout_seconds": 90,
+  "interval_seconds": 60,
+  "max_runs": 10,
+  "concurrency": 2,
+  "max_budget_usd": 0.5,
+  "key_alias": "northstar-drift-soak-wave7-final-e26c31d9db",
+  "started_at": "2026-10-29T19:51:41.064302+00:00",
+  "claude_cli_version": "2.1.251 (Claude Code)",
+  "soak_framework_revision": "1e7ce830ad6aa2408b1e431ff173cfc6ece07007",
+  "orchestrator_error": "TimeoutExpired: Command '['C:\\\\Users\\\\stanc\\\\AppData\\\\Roaming\\\\npm\\\\node_modules\\\\@anthropic-ai\\\\claude-code\\\\bin\\\\claude.exe', '-p', '--model', 'minimax/minimax-m3.1-flash', '--output-format', 'json', '--max-turns', '5', '--permission-mode', 'dontAsk', '--tools', 'Read', '--add-dir', 'C:\\\\Users\\\\stanc\\\\.claude\\\\skills\\\\claude-code-subagents', 'C:\\\\Users\\\\stanc\\\\.claude\\\\skills\\\\soak-testing']' timed out after 120 seconds",
+  "key_revoked": true,
+  "finished_at": "2026-10-29T19:53:44.269486+00:00"
+}

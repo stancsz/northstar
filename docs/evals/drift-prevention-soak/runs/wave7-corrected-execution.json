@@ -1,0 +1,23 @@
+{
+  "wave": 7,
+  "attempt": "auth-source-corrected resumable-session run",
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "soak_framework": "0.1.0",
+  "duration_seconds": 780,
+  "timeout_seconds": 90,
+  "interval_seconds": 60,
+  "max_runs": 10,
+  "concurrency": 1,
+  "max_budget_usd": 0.5,
+  "key_alias": "northstar-drift-soak-wave7-corrected-a4d5cb7e3c",
+  "started_at": "2026-10-29T19:45:09.222924+00:00",
+  "claude_cli_version": "2.1.251 (Claude Code)",
+  "soak_framework_revision": "1e7ce830ad6aa2408b1e431ff173cfc6ece07007",
+  "preflight_timeout_seconds": 150,
+  "preflight_error": "Claude CLI preflight timed out",
+  "preflight_stderr_tail": "[claude-code:unrecognized_model] {\"model\":\"minimax/minimax-m3.1-flash\",\"query_source\":\"sdk\"}\n",
+  "orchestrator_error": "RuntimeError: Claude CLI preflight timed out",
+  "key_revoked": true,
+  "finished_at": "2026-10-29T19:47:39.466423+00:00"
+}

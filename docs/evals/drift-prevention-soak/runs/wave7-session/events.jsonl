@@ -1,0 +1,1 @@
+{"iteration": 1, "case_id": "same-session-status-after-interruption", "status": "timeout", "elapsed_seconds": 55.2125, "detail": "adapter exceeded timeout or run deadline", "timestamp": "2026-10-29T19:37:17.985040+00:00"}
