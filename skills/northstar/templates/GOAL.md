@@ -25,7 +25,8 @@ Keep this compact and current using the [continuity practice](../SKILL.md#preser
 - Verified project facts with artifact/revision/environment; hypotheses and unknowns kept separate.
 - Next unmet criterion and first action; retain all other required obligations in Remaining above.
 - What new evidence changed in project understanding; whether the current method still serves the full ask.
-- Last verified checkpoint and any stale or unsaved state to reconcile on resumption.
+- Last verified checkpoint, protected working behavior/checks, and any stale or unsaved state to reconcile on resumption.
+- If drift is detected: contradiction, suspended dependent action, corrective check and condition for resuming; retain the existing recovery allowance.
 
 ## Execution record
 

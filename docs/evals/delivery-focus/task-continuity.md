@@ -68,3 +68,12 @@ The documentation mechanism is implemented and installed; bounded source/respons
 - Cold-probe skill SHA-256: `27a04a5908fe143dc6c7caba6241e5fce2c559958d961e2c87d4e7fead840206`.
 - Final source skill SHA-256: `5c97e183a0886476e9c0944a2d2ce52dade3174bc14418f7b3b2c11ddc9c5b75`.
 - Compact repair answer SHA-256: `921c00c04a121bed64fce74f9653156ce654708623793da92b03c803b7c6e204`.
+
+
+## Follow-up: stop compounding drift — 2026-10-29
+
+The owner asks why later project work becomes erratic and requests prevention. Added two bounded controls to the existing continuity practice: suspend dependent edits on a specific drift signal, and protect required behavior/checks during diagnosis. This supplements the earlier memory/reassessment rules with an explicit action boundary; it does not add a watchdog or claim guaranteed enforcement.
+
+Author scenario inspection: an unexplained feature addition is deferred until tied to the ask; an edit contradicting a confirmed decision stops before the next patch; a regression requires checking the last working behavior; a repeated disproven approach retains recovery counts; deleting a failing assertion merely to pass is prohibited; a genuinely incorrect assertion can change with requirement/evidence justification and retained coverage. Independent authorized work continues without another approval request. The existing template records the suspended action and resumption condition in the same goal.
+
+Validation scope: source/installed text parity for the new rules, Markdown links/anchors, scoped staged diff and whitespace checks. This is source-level scenario coverage, not a new behavioral trial; the prior cold-probe limits still apply. No claim is made that these controls diagnose the user's specific past failures without their traces, or that skill text alone can prevent every future drift.
