@@ -17,6 +17,16 @@ Status: active
 - Reviewer and scope if independent acceptance is required; otherwise the commander accepts. Authors cannot certify their own work as independent.
 - For delegated work: verified route/tool setup, context/validation command and parent-enforced checkpoint/deadline. Use relevant companion guidance rather than copying it here.
 
+## Current understanding and continuation
+
+Keep this compact and current using the [continuity practice](../SKILL.md#preserve-task-continuity-and-accumulate-evidence); link detailed evidence rather than duplicating logs.
+
+- User decisions/corrections and their sources; superseded decisions and why. Keep agent proposals separate from mandatory acceptance.
+- Verified project facts with artifact/revision/environment; hypotheses and unknowns kept separate.
+- Next unmet criterion and first action; retain all other required obligations in Remaining above.
+- What new evidence changed in project understanding; whether the current method still serves the full ask.
+- Last verified checkpoint and any stale or unsaved state to reconcile on resumption.
+
 ## Execution record
 
 - Current artifact/revision and actual checks/results; link evidence once.

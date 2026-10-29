@@ -30,6 +30,8 @@ Combine compatible roles. Use nonauthor QA only when required by the task/reposi
 
 ## Keep continuation cheap
 
+Apply the [continuity practice](../SKILL.md#preserve-task-continuity-and-accumulate-evidence) in this same record: keep current understanding separate from hypotheses, incorporate corrections, preserve the full remaining ask, and recheck relevant artifacts before resuming. Keep the record discoverable through the existing index or handoff; do not create another memory store.
+
 Maintain the next unmet criterion, material decisions, reusable evidence, and blockers in the same goal. Update the same handoff after repairs and retain material failure history. Keep evaluation details in the existing review/task record with revision/environment and evidence; avoid copying them across records.
 
 For stalled work, carry the [recovery checkpoint](../SKILL.md#recover-from-a-stall) forward. Attempts belong to the unmet criterion, not to a particular agent or approach. Inspect current artifacts before using a checkpoint; resume a blocked investigation only when its unblock condition changes.
