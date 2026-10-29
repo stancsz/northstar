@@ -1,0 +1,65 @@
+{
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "started_at": "2026-10-29T20:35:44.384495+00:00",
+  "context_source_paths": [
+    "docs/evals/drift-prevention-soak/README.md",
+    "docs/evals/drift-prevention-soak/runs/wave7-text-preflight.json",
+    "docs/evals/drift-prevention-soak/runs/wave7-text-execution.json",
+    "skills/northstar/SKILL.md",
+    "C:/Users/stanc/github/soak/soak/runner.py"
+  ],
+  "approach": "Reuse the successful, tool-free MiniMax 3.1 smoke session; CLI disables tools, forbids Advisor/other model calls, and gates every resumed turn to reported 3.1 usage only.",
+  "successful_preflight_reused": "docs/evals/drift-prevention-soak/runs/wave7-text-corrected-preflight.json",
+  "gateway_repair": {
+    "compose_hash_match": true,
+    "experts_api_key_present": true,
+    "experts_base_url_present": true,
+    "postgres_reachable": true,
+    "experts_reachable": true,
+    "readiness_http": 200
+  },
+  "stages": [
+    {
+      "stage": "reused_verified_fresh_3.1_preflight",
+      "passed": true,
+      "checks": {
+        "cli_success": true,
+        "marker": true,
+        "actual_model_3_1_only": true,
+        "no_tools_used": true,
+        "session_id": true,
+        "objective_retained": true,
+        "goal_active": true,
+        "soak_incomplete": true,
+        "prior_429_root_cause_retained": true,
+        "next_action_continues": true,
+        "reported_cost": true
+      },
+      "session_id": "e37741cf-e8ee-4e25-a081-7b57379a5eba",
+      "model_usage": {
+        "minimax/minimax-m3.1-flash": {
+          "inputTokens": 1400,
+          "outputTokens": 649,
+          "cacheReadInputTokens": 201,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.0233255,
+          "contextWindow": 256000,
+          "maxOutputTokens": 32000,
+          "canonicalModel": "minimax/minimax-m3.1-flash",
+          "provider": "firstParty",
+          "costBasis": "unknown"
+        }
+      },
+      "total_cost_usd": 0.0233255,
+      "duration_ms": 5138,
+      "answer": "```json\n{\n  \"marker\": \"WAVE9_PREFLIGHT_OK\",\n  \"objective\": \"Soak test the Northstar drift-prevention guidance; preserve the original soak outcome verbatim across subsequent updates in this persistent session.\",\n  \"goal_status\": \"active_incomplete\",\n  \"model\": \"minimax/minimax-m3.1-flash\",\n  \"last_verified_commit\": \"fe627a5\",\n  \"soak_status\": {\n    \"session\": \"created_this_preflight\",\n    \"iterations_completed\": 0,\n    \"iterations_required\": 12,\n    \"elapsed_seconds\": 0,\n    \"elapsed_seconds_required\": 660,\n    \"failed_or_timed_out\": 0,\n    \"usage_receipts\": \"none_yet\",\n    \"final_summary\": \"none_yet\",\n    \"outcome_retained\": \"northstar drift-prevention soak — at least 12 sequential Soak-framework iterations spanning >=660 seconds in one CLI session, MiniMax 3.1 only, zero failed/timeouts, actual usage receipts and final summary\",\n    \"note\": \"fe627a5 skill change is committed/pushed but does not constitute soak proof; no iterations have run yet.\"\n  },\n  \"route_failure\": {\n    \"prior_wave\": \"wave7\",\n    \"result\": \"passed two turns, timed out on third\",\n    \"cause\": \"repeated HTTP 429 rate limiting; Gateway logs showed task key configured max_parallel_requests=2 limit exhausted\",\n    \"key_state\": \"task key revoked\",\n    \"earlier_401\": \"stale Gateway config/network, corrected\",\n    \"applies_to_wave9\": false\n  },\n  \"next_action\": \"Begin sequential Soak-framework iterations in this same CLI session against minimax/minimax-m3.1-flash only; run until >=12 iterations complete with >=660s elapsed and zero failures/timeouts, then emit per-iteration usage receipts and a final summary. Keep the retained outcome active/incomplete until that evidence exists.\"\n}\n```",
+      "stream_file": "tmp\\drift-prevention-soak-20261029\\wave9\\text-resumed-preflight.stream.jsonl",
+      "source_preflight": "docs\\evals\\drift-prevention-soak\\runs\\wave9-text-preflight.json",
+      "parent_recheck": "Inspected the actual structured result: exact marker/model, successful CLI exit, no tools, one session ID, complete retained Northstar drift-prevention goal, zero Soak iterations, and wave-7 429 timeout root cause with max_parallel_requests=2 plus revoked key."
+    }
+  ],
+  "passed": true,
+  "finished_at": "2026-10-29T20:35:44.502218+00:00"
+}

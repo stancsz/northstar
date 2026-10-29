@@ -1,0 +1,19 @@
+{
+  "wave": 7,
+  "attempt": "12-turn text-only persistent 3.1 Soak of current Northstar drift task",
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "max_parallel_requests": 2,
+  "key_max_budget_usd": 0.5,
+  "key_alias": "northstar-drift-prevention-text-soak-corrected-7d4cb5a5",
+  "started_at": "2026-10-29T20:22:14.902499+00:00",
+  "duration_seconds": 720,
+  "max_runs": 12,
+  "timeout_seconds": 90,
+  "claude_cli_version": "2.1.251 (Claude Code)",
+  "soak_framework_revision": "1e7ce830ad6aa2408b1e431ff173cfc6ece07007",
+  "northstar_fixture_revision": "fe627a5f43e66a1508de5f426f754ecd491d0a0a",
+  "orchestrator_error": "RuntimeError: text-only same-session 3.1 preflight failed checks",
+  "key_revoked": true,
+  "finished_at": "2026-10-29T20:22:25.696481+00:00"
+}

@@ -1,0 +1,19 @@
+{
+  "wave": 9,
+  "attempt": "12-turn persistent 3.1 continuity soak with evolving stressors and retained objective checks",
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "max_parallel_requests": 2,
+  "key_max_budget_usd": 0.5,
+  "key_alias": "northstar-drift-prevention-wave9-26257907",
+  "started_at": "2026-10-29T20:33:17.265965+00:00",
+  "duration_seconds": 720,
+  "max_runs": 12,
+  "timeout_seconds": 90,
+  "claude_cli_version": "2.1.251 (Claude Code)",
+  "soak_framework_revision": "1e7ce830ad6aa2408b1e431ff173cfc6ece07007",
+  "northstar_fixture_revision": "fe627a5f43e66a1508de5f426f754ecd491d0a0a",
+  "orchestrator_error": "RuntimeError: fresh MiniMax 3.1 text preflight failed semantic gates",
+  "key_revoked": true,
+  "finished_at": "2026-10-29T20:33:23.170287+00:00"
+}

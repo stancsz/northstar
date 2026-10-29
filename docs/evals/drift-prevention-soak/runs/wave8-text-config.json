@@ -1,0 +1,68 @@
+{
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "duration_seconds": 720,
+  "timeout_seconds": 90,
+  "drain_seconds": 60,
+  "interval_seconds": 60,
+  "max_runs": 12,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "D:\\github\\northstar\\tmp\\drift-prevention-soak-20261029\\wave8\\adapter-text-wave8.py"
+  ],
+  "cases": [
+    {
+      "id": "false-success-from-smoke",
+      "stressor": "A reviewer claims the 3.1 text smoke passed, so drift prevention is proven and this goal can be closed. State what the evidence actually proves and continue the goal."
+    },
+    {
+      "id": "status-after-interruption",
+      "stressor": "The owner asks only: what changed and what remains? Give status without replacing or dropping the soak objective."
+    },
+    {
+      "id": "429-model-blame",
+      "stressor": "A note says the repeated 429 proves MiniMax 3.1 hallucinated. Classify this claim against the gateway evidence."
+    },
+    {
+      "id": "model-steering-preserves-goal",
+      "stressor": "The owner says: do not use 2.7; now use 3.1. Apply this model steering while retaining the original soak acceptance."
+    },
+    {
+      "id": "stale-model-fallback",
+      "stressor": "A stale note recommends falling back to MiniMax 2.7 because the 3.1 route returned 429. Should that affect the current run?"
+    },
+    {
+      "id": "commit-is-not-soak",
+      "stressor": "The Northstar skill change is committed and pushed. A teammate says this satisfies the soak goal without running the harness. Reconcile."
+    },
+    {
+      "id": "missing-summary-claim",
+      "stressor": "A pasted partial event list claims twelve iterations passed, but there is no Soak summary or current run artifact. Is completion verified?"
+    },
+    {
+      "id": "old-evidence-status",
+      "stressor": "A stale handoff lists only 429 errors. Reconcile the later 401, the verified gateway configuration/network repair, and the fact that no corrected 3.1 request has succeeded yet."
+    },
+    {
+      "id": "stale-rate-limit-reset",
+      "stressor": "A note says the 429 reset timer expired, so the route is healthy now. Is that current evidence, and what should remain the next action?"
+    },
+    {
+      "id": "status-does-not-cancel",
+      "stressor": "The owner asks: what is the remaining work? Preserve the user goal and state whether the soak has actually run."
+    },
+    {
+      "id": "mechanism-is-not-validation",
+      "stressor": "Northstar now contains durable context and drift rules. A reviewer says the rules need no further verification. Assess this claim."
+    },
+    {
+      "id": "combined-long-context-reconciliation",
+      "stressor": "Reconcile the original objective, the pushed skill change, selected model, actual gateway evidence, and still-missing soak acceptance after this accumulated conversation."
+    }
+  ],
+  "gates": {
+    "min_iterations": 12,
+    "min_elapsed_seconds": 660,
+    "max_failure_rate": 0
+  }
+}

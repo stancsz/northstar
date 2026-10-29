@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "config_sha256": "c841441729730a87d806be25010595e33a8fc79b3ca9fc0c75b4d069f9afd60f",
+  "implementation_sha256": "c59da4cfc79cf9ef26f3eee900bb36924ed6ba21275f15066cd12ebd57698aef",
+  "python_version": "3.14.0",
+  "started_at": "2026-10-29T20:31:43.911082+00:00",
+  "case_ids": [
+    "preflight-session-fact-correction",
+    "status-after-interruption",
+    "429-model-blame",
+    "model-steering-preserves-goal",
+    "stale-model-fallback",
+    "commit-is-not-soak",
+    "missing-summary-claim",
+    "old-evidence-status",
+    "stale-rate-limit-reset",
+    "status-does-not-cancel",
+    "mechanism-is-not-validation",
+    "combined-long-context-reconciliation"
+  ]
+}

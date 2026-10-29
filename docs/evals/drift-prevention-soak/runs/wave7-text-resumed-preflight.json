@@ -1,0 +1,69 @@
+{
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "started_at": "2026-10-29T20:23:49.875204+00:00",
+  "context_source_paths": [
+    "docs/evals/drift-prevention-soak/README.md",
+    "docs/evals/drift-prevention-soak/runs/wave7-text-preflight.json",
+    "docs/evals/drift-prevention-soak/runs/wave7-text-execution.json",
+    "skills/northstar/SKILL.md",
+    "C:/Users/stanc/github/soak/soak/runner.py"
+  ],
+  "approach": "Reuse the successful, tool-free MiniMax 3.1 smoke session; CLI disables tools, forbids Advisor/other model calls, and gates every resumed turn to reported 3.1 usage only.",
+  "successful_preflight_reused": "docs/evals/drift-prevention-soak/runs/wave7-text-corrected-preflight.json",
+  "gateway_repair": {
+    "compose_hash_match": true,
+    "experts_api_key_present": true,
+    "experts_base_url_present": true,
+    "postgres_reachable": true,
+    "experts_reachable": true,
+    "readiness_http": 200
+  },
+  "stages": [
+    {
+      "stage": "reused_successful_3.1_text_preflight",
+      "passed": true,
+      "checks": {
+        "cli_success": true,
+        "actual_model_3_1_only": true,
+        "no_tool_use": true,
+        "no_other_model_usage": true,
+        "marker": true,
+        "session_id": true,
+        "objective_active": true,
+        "model_selection": true,
+        "commit_recorded": true,
+        "soak_not_started": true,
+        "route_failure_classified": true,
+        "unsupported_completion_claims": true,
+        "reported_cost": true
+      },
+      "session_id": "fb4a0ec1-053c-40eb-b1f9-a411d7cc322f",
+      "model_usage": {
+        "minimax/minimax-m3.1-flash": {
+          "inputTokens": 1693,
+          "outputTokens": 1883,
+          "cacheReadInputTokens": 186,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.055633,
+          "contextWindow": 256000,
+          "maxOutputTokens": 32000,
+          "canonicalModel": "minimax/minimax-m3.1-flash",
+          "provider": "firstParty",
+          "costBasis": "unknown"
+        }
+      },
+      "only_model_used": true,
+      "total_cost_usd": 0.055633,
+      "num_turns": 1,
+      "duration_ms": 9872,
+      "answer": "```json\n{\n  \"marker\": \"WAVE7_TEXT_PREFLIGHT_OK\",\n  \"objective\": \"Soak test the drift prevention against a persistent minimax/minimax-m3.1-flash CLI session for >=660 seconds and >=12 turns in the same session with zero failed/timeout iterations, capturing real model/cost/session receipts and a final summary.\",\n  \"goal_status\": \"active\",\n  \"goal_status_detail\": \"The user goal remains open. This preflight confirms readiness to attempt the soak; it does not satisfy the gates, and the goal stays active until a real long-duration soak meets the explicit gates and produces a final receipt.\",\n  \"model\": \"minimax/minimax-m3.1-flash\",\n  \"model_constraints\": {\n    \"permitted\": [\"minimax/minimax-m3.1-flash\"],\n    \"forbidden\": [\"MiniMax 2.7\", \"any non-3.1 MiniMax model\", \"advisor/secondary models\"],\n    \"note\": \"No Advisor tool or any other model was consulted for this preflight.\"\n  },\n  \"last_verified_commit\": \"fe627a5\",\n  \"last_verified_commit_detail\": \"Northstar added explicit intent and requirement-baseline clauses; committed and pushed as fe627a5 on main. The locally installed skill contains those clauses. State capsule was verified against docs/evals/drift-prevention-soak/README.md, docs/evals/drift-prevention-soak/runs/wave7-resolved-preflight.json, skills/northstar/SKILL.md, and C:/Users/stanc/github/soak/soak/runner.py.\",\n  \"soak_status\": {\n    \"phase\": \"preflight_complete_soak_not_started\",\n    \"soak_iterations_started\": 0,\n    \"completed_turns\": 0,\n    \"elapsed_seconds\": 0,\n    \"required_seconds\": 660,\n    \"required_turns\": 12,\n    \"failed_or_timeout_iterations\": 0,\n    \"required_failed_or_timeout_iterations\": 0,\n    \"same_session_requirement\": \"All >=12 turns must run in one persistent 3.1 CLI session.\",\n    \"receipts_captured\": \"none\",\n    \"final_summary_produced\": false,\n    \"gates_met\": false\n  },\n  \"route_failure\": {\n    \"classification\": \"gateway_and_configuration_failure_not_model_drift\",\n    \"observed_failures\": [\n      {\n        \"stage\": \"prior_3.1_cli_attempts\",\n        \"symptom\": \"repeated HTTP 429 at max_parallel_requests=2\",\n        \"cause\": \"request-path rate limiting at the request layer\"\n      },\n      {\n        \"stage\": \"prior_3.1_cli_attempts\",\n        \"symptom\": \"HTTP 401\",\n        \"cause\": \"live Gateway lacked its configured EXPERTS_API_KEY / EXPERTS_BASE_URL, and was isolated from its PostgreSQL/Experts containers on the declared production network\"\n      }\n    ],\n    \"owner_requested_repair\": \"Re-created only the local gateway, restored its missing configured environment, attached existing dependencies to the production network, matched the current Compose hash, and returned readiness HTTP 200.\",\n    \"repair_evidence_type\": \"configuration_and_network_only\",\n    \"repair_verdict\": \"preflight evidence of route readiness\",\n    \"explicitly_not_proven\": \"The repair is not proof that a 3.1 model request now succeeds end-to-end. No Soak iteration has started and no 3.1 request has yet been issued over the repaired route.\"\n  },\n  \"unsupported_claims\": [\n    {\n      \"claim\": \"The drift prevention is soaked and validated.\",\n      \"why_unsupported\": \"No Soak iteration has started; 0 of 12 required turns and 0 of 660 required seconds have been executed, so no completion evidence exists.\"\n    },\n    {\n      \"claim\": \"The route repair proves the soak will pass.\",\n      \"why_unsupported\": \"The repair only re-created and reconfigured the local gateway and returned readiness HTTP 200. It demonstrates configuration and network reachability, not that repeated 3.1 completions under the runner will return zero failed/timeout iterations.\"\n    },\n    {\n      \"claim\": \"The prior 429/401 errors were caused by model drift in MiniMax 3.1.\",\n      \"why_unsupported\": \"The 429s occurred at the request path and the 401 was caused by missing EXPERTS_API_KEY/EXPERTS_BASE_URL plus container/network isolation. These are gateway, credential, and configuration faults; attributing them to model behavior is an assumption with no supporting evidence.\"\n    },\n    {\n      \"claim\": \"Commit fe627a5 demonstrates the intent and requirement-baseline clauses work.\",\n      \"why_unsupported\": \"fe627a5 verifies only that the clauses exist in Northstar and are installed locally. Whether the runtime holds them across a long session is precisely the hypothesis the soak must test; commits are not behavioral evidence.\"\n    },\n    {\n      \"claim\": \"A prior smoke check is sufficient to close the goal.\",\n      \"why_unsupported\": \"A smoke check exercises one short interaction. It cannot establish the >=660-second, >=12-turn, single-session, zero-failure stability that the gates require, and it produces no cost/session receipts or final summary.\"\n    },\n    {\n      \"claim\": \"The goal can be marked complete on the basis of this preflight.\",\n      \"why_unsupported\": \"Completion requires a real long-duration soak meeting explicit gates and producing a final receipt. None of those artifacts exist yet.\"\n    }\n  ],\n  \"assumptions_vs_verified\": {\n    \"verified_facts\": [\n      \"Intent and requirement-baseline clauses committed and pushed as fe627a5 on main.\",\n      \"The locally installed Northstar skill contains those clauses.\",\n      \"The gateway repair restored missing configured environment, attached existing dependencies to the production network, matched the current Compose hash, and returned readiness HTTP 200.\",\n      \"Earlier 3.1 CLI attempts failed at the request path with 429s and then a 401.\",\n      \"No Soak iteration has started and no 3.1 request has yet tested the repaired route.\"\n    ],\n    \"assumptions_not_yet_verified\": [\n      \"That the repaired route serves 3.1 completions successfully under the soak runner's concurrency and timeout settings.\",\n      \"That 12+ turns across >=660 seconds in one session stay within rate limits with zero failed/timeout iterations.\",\n      \"That the installed clauses survive and remain enforced across a long uninterrupted session.\"\n    ]\n  },\n  \"next_action\": \"Start the actual Soak framework (soak/runner.py) against a single persistent minimax/minimax-m3.1-flash CLI session and drive at least 660 seconds and 12 turns in that same session, with max_parallel_requests kept at or below 2 and EXPERTS_API_KEY/EXPERTS_BASE_URL and production-network attachment confirmed. Record every iteration's status, and abort-and-report (not silently retry) on any 429 or 401 to preserve the failure signal. On completion, capture the actual model, token/cost, and session receipts together with the final summary, then evaluate the gates: >=660 seconds, >=12 turns, one session, zero failed/timeout iterations. If any gate fails, keep the goal active, preserve the remaining requirements, and report the failing gate rather than claiming success.\",\n  \"continuity_notes\": \"Original user outcome (soak the drift prevention to explicit gates with a final receipt) is retained unchanged. Remaining requirements are carried forward in full and are not waived by the preflight. No completion is claimed without evidence.\"\n}\n```",
+      "stderr": "[claude-code:unrecognized_model] {\"model\":\"minimax/minimax-m3.1-flash\",\"query_source\":\"sdk\"}\n",
+      "preflight_reused_from": "docs\\evals\\drift-prevention-soak\\runs\\wave7-text-corrected-preflight.json",
+      "preflight_reused_reason": "The only failed gate was an adapter type mismatch: the model truthfully returned structured soak_status, while the first guard converted it to text. Parent now verifies its explicit phase, zero iterations and gates_met=false; the successful request and session are reused without another smoke call."
+    }
+  ],
+  "passed": true,
+  "finished_at": "2026-10-29T20:23:49.996116+00:00"
+}

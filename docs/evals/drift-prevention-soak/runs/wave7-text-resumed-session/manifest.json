@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "config_sha256": "5ab174d9c56d6bf29e87404776e8a5f3dced468e1c1bd95f398450f3f981635b",
+  "implementation_sha256": "c59da4cfc79cf9ef26f3eee900bb36924ed6ba21275f15066cd12ebd57698aef",
+  "python_version": "3.14.0",
+  "started_at": "2026-10-29T20:23:50.130222+00:00",
+  "case_ids": [
+    "false-success-from-smoke",
+    "status-after-interruption",
+    "429-model-blame",
+    "model-steering-preserves-goal",
+    "stale-model-fallback",
+    "commit-is-not-soak",
+    "missing-summary-claim",
+    "old-evidence-status",
+    "stale-rate-limit-reset",
+    "status-does-not-cancel",
+    "mechanism-is-not-validation",
+    "combined-long-context-reconciliation"
+  ]
+}

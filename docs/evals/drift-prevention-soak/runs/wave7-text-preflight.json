@@ -1,0 +1,41 @@
+{
+  "model": "minimax/minimax-m3.1-flash",
+  "endpoint": "http://127.0.0.1:4000",
+  "started_at": "2026-10-29T20:12:42.945725+00:00",
+  "context_source_paths": [
+    "docs/evals/drift-prevention-soak/README.md",
+    "docs/evals/drift-prevention-soak/runs/wave7-resolved-preflight.json",
+    "skills/northstar/SKILL.md",
+    "C:/Users/stanc/github/soak/soak/runner.py"
+  ],
+  "approach": "Parent provides a source-verified current-state capsule; CLI session disables all tools and each resumed turn makes one model request.",
+  "stages": [
+    {
+      "stage": "text_only_persistent_session_preflight",
+      "passed": false,
+      "checks": {
+        "cli_success": false,
+        "actual_model_3_1": false,
+        "no_tool_use": true,
+        "marker": false,
+        "session_id": false,
+        "objective_active": false,
+        "model_selection": false,
+        "commit_recorded": false,
+        "soak_not_started": false,
+        "route_failure_classified": false,
+        "unsupported_completion_claims": false,
+        "reported_cost": false
+      },
+      "session_id": null,
+      "model_usage": {},
+      "total_cost_usd": null,
+      "num_turns": null,
+      "duration_ms": null,
+      "answer": "",
+      "stderr": "[claude-code:unrecognized_model] {\"model\":\"minimax/minimax-m3.1-flash\",\"query_source\":\"sdk\"}\n"
+    }
+  ],
+  "passed": false,
+  "finished_at": "2026-10-29T20:13:48.220638+00:00"
+}
