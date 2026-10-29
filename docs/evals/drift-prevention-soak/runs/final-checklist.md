@@ -20,10 +20,10 @@ Planning artifact only. These are proposed observable acceptance checks for a fu
 - [ ] Use fixtures whose expected amounts are specified in integer cents; inspect preview and imported values and confirm they are represented/compared as integer cents, without floating-point rounding changing the cents value.
 - [ ] Include a negative integer-cent amount representing a refund. Confirm it is not rejected solely because it is negative and is previewed/imported according to the same applicable amount rules as other valid records.
 
-## R4 — Quoted commas; use a standard CSV parser
+## R4 — Quoted commas remain one field
 
-- [ ] Include a valid CSV row with a quoted field containing a comma. Confirm preview and subsequent import each retain that comma within one field and preserve the expected field boundaries, as parsed by a standard CSV parser.
-- [ ] Do not use or retry manual delimiter splitting; two attempts failed and existing evidence supports a standard CSV parser.
+- [ ] Include a valid CSV row with a quoted field containing a comma. Confirm preview and subsequent import each retain that comma within one field and preserve the expected field boundaries. This observable field-boundary outcome is binding; implementation method is not prescribed.
+- **Superseded method prescription:** the earlier R4 wording named/recommended a standard CSV parser and said not to retry manual delimiter splitting. The owner correction explicitly removes that method requirement; any method is acceptable if it passes the quoted-field boundary check. The two failed manual attempts remain historical evidence, not an acceptance rule.
 
 ## R5 — Separate requirements from proposals; no implementation claims
 

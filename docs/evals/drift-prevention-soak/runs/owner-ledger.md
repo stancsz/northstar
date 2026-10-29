@@ -12,3 +12,7 @@ R6 Keep this request and every acceptance item active unless the owner explicitl
 ## Owner update after wave 1 (new binding requirement R7)
 The CSV rejection export must include the original rejected row number and a human-readable reason. Preserve R1-R6; this adds R7, it does not replace the earlier requirements.
 
+
+## Owner correction after wave 4 (supersedes only R4 implementation detail)
+R4 clarification: The required outcome is that quoted commas remain within one CSV field. Do not prescribe or require the implementation to use a standard CSV parser; another method is acceptable if it passes the observable quoted-field check. This explicitly supersedes the earlier R4 wording that named a standard CSV parser. Keep every other part of R1-R3 and R5-R7 active.
+
