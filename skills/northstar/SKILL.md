@@ -49,8 +49,8 @@ Shared rules across all six Northstar skills (`northstar`, `codex-qa`, `codex-su
 1. **Resume the actual request.** Read existing records and diffs; do not restart accepted work or create empty Northstar directories. (Use [business planning](references/business-planning.md) only when asked for market/financial/GTM strategy.)
 2. **Define the finish.** State the target workflow, environment, and observable acceptance check.
 3. **Build the next complete step.** Reuse existing code and tools. Cap read-only exploration at **5 tool calls** before making a concrete edit or running a distinguishing check. When delegating to a CLI worker, assign one target artifact, exact writable paths, one verification check, and a firm deadline (5-minute artifact checkpoint, 10-minute handoff).
-4. **Verify and repair.** Run the actual check and inspect affected workflows. Repair failures in scope. A passing build, HTTP 200, mock, or worker summary alone is not verification.
-5. **Deliver the requested endpoint.** Reconcile every item in `Ask` against real evidence (`passed`, `unmet`, or `unverified`). Report material limits and stop—do not invent a new phase after completion.
+4. **Verify and repair.** Run the actual check once and inspect the changed behavior. Repair failures in scope. Once the required check passes and affected files are verified, **stop calling tools and deliver the handoff**—do not run redundant status/timestamp/diff checks after verification. A passing build, HTTP 200, mock, or worker summary alone is not verification.
+5. **Deliver the requested outcome.** Reconcile every item in `Ask` against real evidence (`passed`, `unmet`, or `unverified`). Report material limits and stop—do not invent a new phase after completion.
 
 ## Recover from a stall
 
@@ -80,11 +80,7 @@ Load a companion skill **only** when its trigger applies:
 
 ## Use with other agents
 
-These practices work across Codex, Claude Code, Gemini, MiniMax, Luna, and OpenCode. Adapt tool calls to the host while keeping intent locking, single-commander authority, 2-strike recovery, and evidence verification intact. (For bilingual buyer-facing slide decks, use `bilingual-product-demo-deck` when installed and ensure slides stand alone visually.)
-
-## Prefer local LiteLLM inference for agent work
-
-Default Codex and Claude CLI workers to `http://127.0.0.1:4000/v1` using Subroute's dynamic `default` alias unless the task selects another supported model ID/alias; never pin a vendor model in shared docs. The parent verifies the route and tool path once with a bounded smoke before dispatch, keeps keys process-scoped, and never silently switches providers on failure. See [CLI setup](../codex-subagents/SKILL.md#allocate-capability-and-cost).
+These practices work across Codex, Claude Code, OpenCode, and other coding agents. Adapt tool calls to the host while keeping intent locking, single-commander authority, 2-strike recovery, and evidence verification intact. (For bilingual buyer-facing slide decks, use `bilingual-product-demo-deck` when installed and ensure slides stand alone visually.)
 
 ## Coordinate proportionately
 
