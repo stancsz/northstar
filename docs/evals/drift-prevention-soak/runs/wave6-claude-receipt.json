@@ -1,0 +1,17 @@
+{
+  "wave": 6,
+  "model": "minimax/minimax-m3.1-flash",
+  "alias": "northstar-soak-wave6-retry-f7c59079f4",
+  "reused_smoke": "prior text + Messages tool round-trip passed for same route/config",
+  "stages": [
+    {
+      "stage": "minimax_3_1_readonly_recovery",
+      "exit": 0,
+      "output_bytes": 5131,
+      "error_bytes": 93,
+      "marker_presence": true,
+      "route": "minimax/minimax-m3.1-flash"
+    }
+  ],
+  "key_revoked": true
+}
