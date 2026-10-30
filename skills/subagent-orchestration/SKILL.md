@@ -70,7 +70,8 @@ Every worker brief must be self-contained so a fast model can execute without re
 - Bounds: [5-min artifact checkpoint, 10-min handoff deadline, max 5 read-only calls before first edit/check, no nested CLI]
 ```
 
-- **Search & output discipline:** Exclude generated/log/cache directories from searches, cap command output, and read focused line ranges.
+- **Search & output discipline:** Stay strictly inside the assigned working directory (never walk `..` into parent repositories), exclude generated/log/cache directories from searches, cap command output, and read focused line ranges.
+- **Single-tool-call pacing on rate-limited routes:** When executing against a concurrency-limited gateway, emit one tool call per turn rather than parallel tool batches so in-flight concurrency slots are never exhausted.
 - **Native tools only:** CLI workers must use their native tools (`command_execution`/`file_change` in Codex; `Read`/`Edit`/`Write`/`Bash` in Claude Code), never nested CLI invocations or parent wrappers.
 - **Required handoff:** Return `Artifact/paths changed` (with base and candidate commit/tree SHA when using worktrees), `Checks run & results`, `Unmet/unknown items`, and `Next action` (plus failure/recovery count if any).
 

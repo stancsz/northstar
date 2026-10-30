@@ -40,3 +40,4 @@ Identify the goal, evaluated revision or working-tree base, relevant environment
 - [REA reference and skill-stack drift evaluation](rea-skill-stack/NS-DRIFT-04.md)
 - [Claude Code Subroute preflight receipt](rea-skill-stack/claude-route.md)
 - [Skill-stack spend reconciliation and Claude concurrency diagnosis](rea-skill-stack/accounting-and-route-diagnosis.md)
+- [MiniMax 8-run skill-stack soak evaluation (`NS-DRIFT-01`..`04`)](rea-skill-stack/minimax-soak-20261030.md)

@@ -24,7 +24,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "subagent-orchestration" / "references" / "cli-dispatch.md"
-PWSH = shutil.which("pwsh")
+PWSH = shutil.which("pwsh") or shutil.which("powershell")
 
 PLUGIN_OVERRIDE = "features.plugins=false"
 SKILL_DISCOVERY_ENABLE_FLAG = "--enable"
@@ -34,7 +34,7 @@ ADAPTER_RELATIVE = Path("skills") / "task-completion-review" / "scripts" / "guar
 SYNTHETIC_ASSIGNMENT = "Synthetic assignment: report the scoped handoff."
 
 pytestmark = pytest.mark.skipif(
-    PWSH is None, reason="pwsh (PowerShell 7) is required to execute the documented helper"
+    PWSH is None, reason="pwsh or powershell is required to execute the documented helper"
 )
 
 
@@ -47,7 +47,7 @@ function Get-EnvState {
     $state = [ordered]@{}
     foreach ($name in @('HOME', 'USERPROFILE', 'CODEX_HOME', 'DONT_STOP_EARLY_REVIEW_CHILD')) {
         $present = Test-Path -Path ('Env:{0}' -f $name)
-        $value = [Environment]::GetEnvironmentVariable($name)
+        $value = if ($present) { [string](Get-Item -LiteralPath ('Env:{0}' -f $name)).Value } else { $null }
         $state[$name] = @{ present = $present; value = $value }
     }
     return $state
@@ -241,13 +241,11 @@ def run_helper(
 
 @contextlib.contextmanager
 def synthetic_root():
-    """Yield a disposable directory that is always removed again."""
+    """Yield a disposable directory under tmp/ that is always removed again."""
 
-    try:
-        root = Path(tempfile.mkdtemp(prefix="codex-subagents-helper-"))
-    except OSError:
-        root = ROOT / "tmp" / f"codex-subagents-helper-{uuid.uuid4().hex}"
-        root.mkdir(parents=True, exist_ok=True)
+    base_tmp = ROOT / "tmp"
+    base_tmp.mkdir(parents=True, exist_ok=True)
+    root = Path(tempfile.mkdtemp(prefix="codex-subagents-helper-", dir=str(base_tmp)))
     try:
         yield root
     finally:
@@ -455,13 +453,18 @@ def test_home_fallback_restores_an_empty_caller_home(workspace):
         setup=[set_env("USERPROFILE", workspace["user_profile"]), set_env("HOME", "")],
     )
     assert payload["error"] is None, payload["error"]
-    assert payload["before"]["HOME"] == {"present": True, "value": ""}
+    # On Windows PowerShell 5.1 (.NET Framework), assigning '' to $env:HOME deletes the variable;
+    # on PowerShell 7 (.NET Core) / POSIX, it keeps an empty string. Either way, after must match before.
+    assert payload["before"]["HOME"] in (
+        {"present": True, "value": ""},
+        {"present": False, "value": None},
+    )
     child = child_environment(payload["invocations"][0])
     assert child["HOME"]["present"] is True
     assert os.path.normcase(os.path.normpath(child["HOME"]["value"])) == os.path.normcase(
         os.path.normpath(str(workspace["user_profile"]))
     )
-    assert payload["after"]["HOME"] == {"present": True, "value": ""}
+    assert payload["after"]["HOME"] == payload["before"]["HOME"]
 
 
 def test_existing_home_is_passed_through_to_the_child_and_restored(workspace):

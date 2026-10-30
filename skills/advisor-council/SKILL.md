@@ -64,6 +64,13 @@ $advisorCouncil = (Resolve-Path $advisorCouncil).Path
 python (Join-Path $advisorCouncil 'scripts\ask_expert.py') --input-file .\advisor-packet.txt
 ```
 
+Or in POSIX / Git Bash:
+
+```bash
+ADVISOR_DIR=$(for d in "${CODEX_HOME:+$CODEX_HOME/skills}" "$HOME/.agents/skills" "$HOME/.codex/skills" "$HOME/.claude/skills"; do [ -f "$d/advisor-council/SKILL.md" ] && echo "$d/advisor-council" && break; done)
+python3 "$ADVISOR_DIR/scripts/ask_expert.py" --input-file ./advisor-packet.txt
+```
+
 - **Council mode (complex text decisions):** Add `--council --council-model <distinct-route>`. The council model reviews the packet independently; the primary model evaluates both the packet and council review. Council stops immediately if the council call fails and cannot be combined with `--image` or reader mode.
 - **Visual mode (`--image`):** Attach up to 8 PNG/JPEG/WebP/GIF files (≤ 10 MB each, ≤ 20 MB total; `--image-detail high` by default):
 

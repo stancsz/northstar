@@ -1,6 +1,11 @@
 # Disposable project artifacts
 /tmp/
 
+# Python / test caches
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
 # Local environment and secrets
 .env
 .env.*

@@ -12,7 +12,7 @@ The target user is an owner or developer working with AI agents who needs initia
 
 ## Confirmed owner expectations
 
-The owner's outcome is useful delivery to the agreed standard, with initiative inside the existing authority and evidence that distinguishes completed work from assumptions. The [delivery contract](../../skills/northstar/SKILL.md#delivery-contract) is the single operational source for all six skills and their templates; [AGENTS.md](../../AGENTS.md) holds repository-specific boundaries.
+The owner's outcome is useful delivery to the agreed standard, with initiative inside the existing authority and evidence that distinguishes completed work from assumptions. The [delivery contract](../../skills/northstar/SKILL.md#delivery-contract) is the single operational source for the five coordinated core skills (`northstar`, `subagent-orchestration`, `independent-qa`, `advisor-council`, `task-completion-review`) and their templates; [AGENTS.md](../../AGENTS.md) holds repository-specific boundaries.
 
 ## Product assumptions and open questions
 

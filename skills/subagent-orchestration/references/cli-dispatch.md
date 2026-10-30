@@ -34,12 +34,14 @@ A Codex CLI child must use its own structured native `command_execution` for bou
 
 The noninteractive invocations in this section use `--json`: retain and parse stdout as JSONL to capture actual `command_execution` and `file_change` events, the final handoff, and `turn.completed` usage fields. Capture stderr separately; it is diagnostic output, not the structured event stream.
 
-**Capture every dispatch.** Dispatch through the helper and retain the structured stream while it runs: `Tee-Object` writes each JSONL line to a task-scoped file as the event arrives, and stderr goes to a separate task-scoped file because it is diagnostic output, not part of the event stream.
+**Capture every dispatch.** Dispatch through the helper into task-scoped `.jsonl` and `.stderr.log` files under `tmp/<task-id>/`, enforcing a parent wall-clock deadline and stopping immediately if the stream emits `api_retry` (HTTP 429) or `unrecognized_model`:
 
 ```powershell
 $taskId = 'issue-42-doc-write'
-$jsonlPath = Join-Path $env:TEMP "$taskId.jsonl"
-$stderrPath = Join-Path $env:TEMP "$taskId.stderr.log"
+$scratchDir = Join-Path (Resolve-Path '.').Path "tmp\$taskId"
+New-Item -ItemType Directory -Force -Path $scratchDir | Out-Null
+$jsonlPath = Join-Path $scratchDir "$taskId.jsonl"
+$stderrPath = Join-Path $scratchDir "$taskId.stderr.log"
 $assignment = 'Update the scoped documentation and return a concise handoff.'
 $workingDirectory = 'D:\work\my-project'
 
@@ -49,7 +51,7 @@ Invoke-CodexChild -Assignment $assignment -WorkingDirectory $workingDirectory `
 $childExitStatus = $LASTEXITCODE
 ```
 
-Use a fresh path pair per run: `Tee-Object` overwrites its target, so reusing a path overwrites and destroys the earlier run's receipt. Add `-DisablePlugins` only when the task needs no plugin integration, and leave it off otherwise. `Tee-Object` also passes the lines on to the parent; `| Out-Null` only keeps the parent console readable.
+Use a fresh path pair per run: `Tee-Object` overwrites its target, so reusing a path overwrites and destroys the earlier run's receipt. When running against a rate-limited or newly configured gateway, wrap the invocation in a background job (`Start-Job`) with a 10-minute deadline loop that watches `$jsonlPath` and kills the job immediately on the first `"api_retry"` or `"unrecognized_model"` event (matching the pattern in [Claude Code CLI dispatch](claude-cli-dispatch.md#3-run-bounded-work-safely)). Add `-DisablePlugins` only when the task needs no plugin integration, and leave it off otherwise. `Tee-Object` also passes the lines on to the parent; `| Out-Null` only keeps the parent console readable.
 
 **Interruption.** If the run is cancelled, the child dies, or the session is cut, whatever arrived is already on disk, but that receipt is incomplete: the stream stopped early, so an absent later event proves nothing — the event may never have been emitted. Read the partial file for what it does contain, then re-dispatch or diagnose. Never accept a truncated file as the run's evidence.
 
