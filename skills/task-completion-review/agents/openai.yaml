@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Completion Review"
+  short_description: "Audit proposed stops against requirements, evidence, and standing authority"
+  default_prompt: "Use $task-completion-review to audit whether this task is genuinely complete, blocked on a verified dependency, or has remaining authorized work to continue."

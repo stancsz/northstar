@@ -1,0 +1,4 @@
+interface:
+  display_name: "Advisor Council"
+  short_description: "Consult an advisor model or two-model council for risk and visual guidance"
+  default_prompt: "Use $advisor-council for compact decision advice. For complex text decisions where a second perspective could change the next action, use --council with a distinct --council-model, followed by the primary model's own verdict and assessment. Send actual screenshots for visual work; use scoped reading when needed. Preserve authority, recovery, and independent acceptance."

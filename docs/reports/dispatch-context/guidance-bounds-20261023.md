@@ -4,8 +4,8 @@ Goal: dispatch-context. Task: bound the Guidance placeholder in the Codex Subage
 
 ## Changes
 
-- [orchestrator.md](../../../skills/codex-subagents/templates/orchestrator.md), Guidance bullet (line 8) only. The placeholder now requires the brief to name the exact path **plus the relevant heading or line range** for applicable repository instructions and source/test facts; to name the existing validation command to run **or** state that validation is parent-owned; and to list the concrete unrelated reads and tools excluded because they cannot affect acceptance, asking the parent for a missing exact input instead of starting broad discovery.
-- [supervisor.md](../../../skills/codex-subagents/templates/supervisor.md), Guidance bullet (line 8) only. Same wording; the two bullets are byte-identical.
+- [orchestrator.md](../../../skills/subagent-orchestration/templates/orchestrator.md), Guidance bullet (line 8) only. The placeholder now requires the brief to name the exact path **plus the relevant heading or line range** for applicable repository instructions and source/test facts; to name the existing validation command to run **or** state that validation is parent-owned; and to list the concrete unrelated reads and tools excluded because they cannot affect acceptance, asking the parent for a missing exact input instead of starting broad discovery.
+- [supervisor.md](../../../skills/subagent-orchestration/templates/supervisor.md), Guidance bullet (line 8) only. Same wording; the two bullets are byte-identical.
 - This report: `docs/reports/dispatch-context/guidance-bounds-20261023.md`.
 
 No other file was created or edited. No new brief field, approval step, agent layer, or command-count cap was added. Scratch: none.

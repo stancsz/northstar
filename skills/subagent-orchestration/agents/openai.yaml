@@ -1,0 +1,7 @@
+interface:
+  display_name: "Subagent Orchestration"
+  short_description: "Orchestrate multi-agent work across subagents, Codex CLI, and Claude CLI"
+  default_prompt: "Use $subagent-orchestration to plan and coordinate bounded multi-agent work across native subagents, Codex CLI, or Claude Code CLI."
+
+policy:
+  allow_implicit_invocation: true

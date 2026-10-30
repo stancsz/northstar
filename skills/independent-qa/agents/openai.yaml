@@ -1,0 +1,4 @@
+interface:
+  display_name: "Independent QA"
+  short_description: "Nonauthor functional, visual, adversarial, and structural acceptance review"
+  default_prompt: "Use $independent-qa to independently inspect this deliverable against its acceptance criteria and verify material repairs."

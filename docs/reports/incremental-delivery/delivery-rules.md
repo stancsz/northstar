@@ -4,7 +4,7 @@ Goal: [Usable MVP delivery](../../goal/incremental-delivery/GOAL.md). Date: 2026
 
 Worker: editing agent, also acting as supervisor, orchestrator, and reviewer. No delegated or independent review. Status: completed; acceptance recorded in the goal.
 
-Based on `8b8e5bbd1c981e299e60977076ea76ee3f11740d`, updated the [core skill](../../../skills/northstar/SKILL.md), its [lifecycle](../../../skills/northstar/references/goal-driven-engineering.md), [template](../../../skills/northstar/templates/GOAL.md), [examples](../../../skills/northstar/references/examples.md), and [delegation guidance](../../../skills/codex-subagents/SKILL.md). Updated project direction and English/Chinese entrypoints; the [Chinese guide](../../misc/README.zh-CN.md#避免重复绕圈) includes a reusable prompt.
+Based on `8b8e5bbd1c981e299e60977076ea76ee3f11740d`, updated the [core skill](../../../skills/northstar/SKILL.md), its [lifecycle](../../../skills/northstar/references/goal-driven-engineering.md), [template](../../../skills/northstar/templates/GOAL.md), [examples](../../../skills/northstar/references/examples.md), and [delegation guidance](../../../skills/subagent-orchestration/SKILL.md). Updated project direction and English/Chinese entrypoints; the [Chinese guide](../../misc/README.zh-CN.md#避免重复绕圈) includes a reusable prompt.
 
 The changes distinguish current delivery from the long-term destination, require reasons for repeated work, change uninformative retry approaches, and make delivery criteria the stopping point. The existing report and ownership practices remain intact; one agent can inspect once for multiple responsibilities.
 

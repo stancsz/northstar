@@ -4,7 +4,7 @@ Goal: [dispatch-context](../../goal/dispatch-context/GOAL.md). Author: bounded C
 
 ## Behavior
 
-[`Invoke-CodexChild`](../../../skills/codex-subagents/SKILL.md) now accepts an optional `[switch] $SkipHostSkillDiscovery`. When present, the helper appends exactly `--enable skip_host_skill_discovery` to that one child invocation, immediately before the stdin marker `-`. When absent, the default child arguments are unchanged and the flag is never default-on.
+[`Invoke-CodexChild`](../../../skills/subagent-orchestration/SKILL.md) now accepts an optional `[switch] $SkipHostSkillDiscovery`. When present, the helper appends exactly `--enable skip_host_skill_discovery` to that one child invocation, immediately before the stdin marker `-`. When absent, the default child arguments are unchanged and the flag is never default-on.
 
 The switch is documented as experimental: the Codex CLI lists `skip_host_skill_discovery` under development, so it is enabled per assignment, may change or disappear in a later CLI release, and is never written into global or user Codex configuration. It is process-only. Enabling it removes the host-discovered skill descriptions and their context from the child, so the caller must carry the necessary skill instructions in the assignment instead of relying on host skill discovery.
 
@@ -40,7 +40,7 @@ Accepted as a scoped source/test increment after independent review. The documen
 
 ## Repair note: qualified skill-discovery caveat
 
-The independent nonauthor review (`codex-skill-discovery-review-20261023.md`) required the `-SkipHostSkillDiscovery` paragraph in [`skills/codex-subagents/SKILL.md`](../../../skills/codex-subagents/SKILL.md) to stop asserting the flag as a guarantee. That sentence now states that enabling the flag requests that the host-discovered skill descriptions and their context are removed from the child, notes that the feature is under development and that this behavior is not guaranteed, records that no total-context or token reduction is proven and that the recorded write worker still emitted the skill-context-budget warning, and tells callers to inline the skill instructions the worker needs and not to rely on the flag as a context-budget or token-saving fix.
+The independent nonauthor review (`codex-skill-discovery-review-20261023.md`) required the `-SkipHostSkillDiscovery` paragraph in [`skills/codex-subagents/SKILL.md`](../../../skills/subagent-orchestration/SKILL.md) to stop asserting the flag as a guarantee. That sentence now states that enabling the flag requests that the host-discovered skill descriptions and their context are removed from the child, notes that the feature is under development and that this behavior is not guaranteed, records that no total-context or token reduction is proven and that the recorded write worker still emitted the skill-context-budget warning, and tells callers to inline the skill instructions the worker needs and not to rely on the flag as a context-budget or token-saving fix.
 
 The experimental boundary is unchanged: default-off, process-only, enabled per assignment, never written to global or user Codex configuration, and still independent of `-UseObservedSubrouteSettings` and `-DisablePlugins`.
 

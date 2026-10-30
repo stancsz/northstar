@@ -6,7 +6,7 @@ A synthetic parser worker rejected string '1.2345' but accepted numeric literal 
 
 ## Instruction change
 
-Added to the handoff guidance in [Codex subagents](../../../skills/codex-subagents/SKILL.md#task-brief-and-handoff): when acceptance depends on value type or representation, test actual values of each relevant runtime type rather than textual equivalents alone; rerun targeted acceptance against the final edited artifact before reporting; provide concrete commands/results or explicitly mark uncovered criteria unverified. The existing five brief elements, authority rules, and independent parent acceptance remain unchanged.
+Added to the handoff guidance in [Codex subagents](../../../skills/subagent-orchestration/SKILL.md#task-brief-and-handoff): when acceptance depends on value type or representation, test actual values of each relevant runtime type rather than textual equivalents alone; rerun targeted acceptance against the final edited artifact before reporting; provide concrete commands/results or explicitly mark uncovered criteria unverified. The existing five brief elements, authority rules, and independent parent acceptance remain unchanged.
 
 ## Checks and limits
 

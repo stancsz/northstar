@@ -34,7 +34,7 @@ Sapling is not itself evidence that Northstar should replace Git. The official p
 
 ## Northstar-specific design inferences
 
-Northstar's actual unit of coordination is a goal/task with an owner, bounded artifact scope, base state, handoff, independent reviewer, acceptance evidence and learning checkpoint. Its repo instructions already preserve Git as the repository history, use one writer per scope, and require inspecting diffs/status and staging intentional files only. ([Northstar direction](../../northstar/README.md), [subagent coordination](../../../skills/codex-subagents/SKILL.md), [repository instructions](../../../AGENTS.md))
+Northstar's actual unit of coordination is a goal/task with an owner, bounded artifact scope, base state, handoff, independent reviewer, acceptance evidence and learning checkpoint. Its repo instructions already preserve Git as the repository history, use one writer per scope, and require inspecting diffs/status and staging intentional files only. ([Northstar direction](../../northstar/README.md), [subagent coordination](../../../skills/subagent-orchestration/SKILL.md), [repository instructions](../../../AGENTS.md))
 
 The useful adaptation is therefore a **thin, task-centric SCM overlay on ordinary Git/worktrees**, not a new VCS or online source-control service:
 

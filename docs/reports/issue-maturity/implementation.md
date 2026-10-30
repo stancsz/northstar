@@ -4,9 +4,9 @@ Date: 2026-10-21. Author: primary implementation/integration agent. Status: impl
 
 ## Changes
 
-- Issue #3: retained the existing [learning/feedback workflow](../../../skills/northstar/references/skill-feedback.md) and added [behavioral receipt guidance](../../../skills/codex-qa/references/skill-effectiveness.md). Exercise actual lesson reuse and fixture feedback transitions instead of claiming that existing prose proves effectiveness.
+- Issue #3: retained the existing [learning/feedback workflow](../../../skills/northstar/references/skill-feedback.md) and added [behavioral receipt guidance](../../../skills/independent-qa/references/skill-effectiveness.md). Exercise actual lesson reuse and fixture feedback transitions instead of claiming that existing prose proves effectiveness.
 - Issue #4: a bounded worker made project-root defaults, installation-tree exclusion and write-denial/migration recovery explicit. See its [scoped handoff](goal-storage.md).
-- Issue #5: added the [Spec Kit bridge](../../../skills/northstar/references/spec-kit.md), [three-pass checklist](../../../skills/codex-qa/references/spec-review.md), and [optional eight-section profile](../../../skills/codex-qa/templates/spec-profile.md). Existing schemas and constitutions win; spec readiness is distinct from executed implementation acceptance. Entrypoints and English/Chinese guides route to the new practices.
+- Issue #5: added the [Spec Kit bridge](../../../skills/northstar/references/spec-kit.md), [three-pass checklist](../../../skills/independent-qa/references/spec-review.md), and [optional eight-section profile](../../../skills/independent-qa/templates/spec-profile.md). Existing schemas and constitutions win; spec readiness is distinct from executed implementation acceptance. Entrypoints and English/Chinese guides route to the new practices.
 - Council-directed maturity increment: compact, reusable cold-trial receipts in existing records. No new installable runtime machinery. Gemini and Sol advice remain separately attributable in the [evaluation](../../evals/issue-maturity.md).
 
 ## Verification and limits

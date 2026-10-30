@@ -6,7 +6,7 @@ Status: complete for assigned scope. Author/date: Codex worker, 2026-09-29.
 
 ## Artifact
 
-Added [functional agent profiles](../../../skills/codex-subagents/references/role-profiles.md), with seven functions: product/outcomes, architecture/interfaces, builder/integrator, independent verifier/QA, experience/taste, operations/service ownership, and research/domain expertise. The reference separates functional responsibilities from the existing orchestrator/supervisor/worker hierarchy and gives triggers, decisions, inputs, outputs/handoffs, and conflicts. Independence follows artifact creators across fresh contexts; isolated QA execution remains compatible with independent review. Briefs name creators, reviewer, accountable decision owner and artifact revision. The profiles also cover review unavailability, owner authority, dissent, and checkpoint learning.
+Added [functional agent profiles](../../../skills/subagent-orchestration/references/role-profiles.md), with seven functions: product/outcomes, architecture/interfaces, builder/integrator, independent verifier/QA, experience/taste, operations/service ownership, and research/domain expertise. The reference separates functional responsibilities from the existing orchestrator/supervisor/worker hierarchy and gives triggers, decisions, inputs, outputs/handoffs, and conflicts. Independence follows artifact creators across fresh contexts; isolated QA execution remains compatible with independent review. Briefs name creators, reviewer, accountable decision owner and artifact revision. The profiles also cover review unavailability, owner authority, dissent, and checkpoint learning.
 
 ## Verification and limits
 

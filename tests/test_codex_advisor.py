@@ -15,7 +15,7 @@ import pytest
 
 
 ROOT = Path(__file__).parents[1]
-CALLER = ROOT / "skills" / "codex-advisor" / "scripts" / "ask_expert.py"
+CALLER = ROOT / "skills" / "advisor-council" / "scripts" / "ask_expert.py"
 
 
 def load_caller():

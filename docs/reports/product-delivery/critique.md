@@ -6,7 +6,7 @@ Date: 2026-10-21. Author: independent product/source critic. Status: source revi
 
 These skills provide a credible delivery discipline. They do **not yet demonstrate that an agent given a real product brief can carry it to usable production or a sellable result**. The harshest defensible criticism is the distance between the ambition and the evidence, not an absent instruction to finish. Repeating that instruction would add little.
 
-Existing safeguards are substantive: [Northstar](../../../skills/northstar/SKILL.md), lines 46–54, requires continuation beyond a first slice and distinguishes an MVP from release/business readiness; lines 107–113 preserve unmet requirements and prohibit silent success redefinition. Lines 141–151 separate authors from independent certification. [QA](../../../skills/codex-qa/SKILL.md), lines 16–39, starts from the request, requires real effects and failures, and preserves unavailable evidence as unverified. The [lifecycle](../../../skills/northstar/references/goal-driven-engineering.md#execute-and-accept) already requires integrated inspection. Preserve these rules.
+Existing safeguards are substantive: [Northstar](../../../skills/northstar/SKILL.md), lines 46–54, requires continuation beyond a first slice and distinguishes an MVP from release/business readiness; lines 107–113 preserve unmet requirements and prohibit silent success redefinition. Lines 141–151 separate authors from independent certification. [QA](../../../skills/independent-qa/SKILL.md), lines 16–39, starts from the request, requires real effects and failures, and preserves unavailable evidence as unverified. The [lifecycle](../../../skills/northstar/references/goal-driven-engineering.md#execute-and-accept) already requires integrated inspection. Preserve these rules.
 
 ## Highest-value gaps
 
@@ -38,7 +38,7 @@ The [template](../../../skills/northstar/templates/GOAL.md), lines 1, 9–17 and
 
 **Type: scope ambiguity plus unproven integrated effectiveness; independence itself is already required.**
 
-[QA](../../../skills/codex-qa/SKILL.md), lines 12, 24–26 and 53–60, sensibly scales to the changed surface/coherent increment and reuses applicable evidence. Original intent and real-entry-point checks are already required in lines 16, 30 and 39. However, the final `READY` is for “current criteria”; neither that decision bullet nor the template's final acceptance explicitly asks whether the accumulated scoped verdicts cover the original requested workflow in its final environment. The lifecycle requires orchestrator integrated inspection, but that owner may also be an author and must rely on a nonauthor verdict for acceptance.
+[QA](../../../skills/independent-qa/SKILL.md), lines 12, 24–26 and 53–60, sensibly scales to the changed surface/coherent increment and reuses applicable evidence. Original intent and real-entry-point checks are already required in lines 16, 30 and 39. However, the final `READY` is for “current criteria”; neither that decision bullet nor the template's final acceptance explicitly asks whether the accumulated scoped verdicts cover the original requested workflow in its final environment. The lifecycle requires orchestrator integrated inspection, but that owner may also be an author and must rely on a nonauthor verdict for acceptance.
 
 **Delivery consequence:** separately correct component/increment reviews can leave an interaction or release-environment gap. Independence does not make an underscoped review complete.
 

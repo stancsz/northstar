@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { boundedTool, numberedRead } from "../skills/codex-advisor/scripts/pi_reader.mjs";
+import { boundedTool, numberedRead } from "../skills/advisor-council/scripts/pi_reader.mjs";
 
 test("tool wrappers deny path escape and bound attempts/output", async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "pi-reader-test-"));

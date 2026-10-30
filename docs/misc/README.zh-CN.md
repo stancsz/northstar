@@ -2,16 +2,16 @@
 
 ### 把目标交给 AI 团队，把决策权放到一线，把结果交给验收。
 
-**六个用于 AI 授权、协作和交付的 Markdown Skills，另有可选的 Windows 应用恢复技能。** Northstar 把你的意图连接到明确的责任人、自主决策、独立验收，以及能带进下一次任务的经验。
+**五个用于 AI 授权、协作和交付的核心协同 Markdown Skills，另有可选的 Agent 浸泡测试与 Windows 应用看门狗技能。** Northstar 把你的意图连接到明确的责任人、自主决策、独立验收，以及能带进下一次任务的经验。
 
-默认遵循[一条交付主线](../../skills/northstar/SKILL.md#delivery-contract)：优先做好最有价值的已有工作流，完成并验证后再扩展；由一个现有负责人处理授权内的审批；可选工作出现收益递减就停止。六个技能按需支持这条主线，不是六个必跑阶段。
+默认遵循[一条交付主线](../../skills/northstar/SKILL.md#delivery-contract)：优先做好最有价值的已有工作流，完成并验证后再扩展；由一个现有负责人处理授权内的审批；可选工作出现收益递减就停止。五个核心技能按需支持这条主线，不是五个必跑阶段。
 
 本仓库优先保持技能简单、精简、可复用，只保留必要的支持工具。应用程序及其实施方案放在独立仓库。
 
 [English](../../README.md) · [安装使用](install.md) · [管理思想如何落地](#把管理思想变成-agent-的具体动作) · [已有验证](#已经验证了什么)
 
 ![形式：Markdown Skills](https://img.shields.io/badge/format-Markdown_skills-2563eb)
-![六个协同技能](https://img.shields.io/badge/package-6_coordinated_skills-0f766e)
+![五个协同技能](https://img.shields.io/badge/package-5_coordinated_skills-0f766e)
 [![MIT 许可证](https://img.shields.io/badge/license-MIT-475569)](../../LICENSE)
 
 面向希望把一件有价值的事交出去的创业者、开发者和业务负责人，让日常判断有归属，让你能把注意力留给方向。
@@ -27,7 +27,7 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 | AI 工作常卡在哪里 | Northstar 要求怎样处理 |
 | --- | --- |
 | 稍微重要一点的选择，都要回来问你。 | 指挥官使用持续授权，自行完成范围内的取舍；只把越界决定或不可替代的人类依赖交还用户。 |
-| agent 越多，零件越多，完整产品却没出现。 | 明确集成人；管理者负责解决依赖和接口冲突，检查完整工作流。 |
+| agent 越多，零件越多，完整产品却没出现。 | 明确集成人；管理者通过隔离的 Git worktree 与树哈希（tree SHA）绑定解决并行冲突与检查完整工作流。 |
 | “完成了”只代表作者自己觉得没问题。 | 由未参与创作的 reviewer 检查实际结果；作者修复，reviewer 复验。 |
 | 卡住以后，换说法、换 agent，继续同一种失败。 | 有界恢复保留完整尝试历史；负责人必须换有效路径、解决依赖，或停止失败路线。 |
 | 每换一次会话，就从头踩坑。 | 在项目已有记录里保留已验证状态、适用经验、排除路径和下一决策。 |
@@ -39,7 +39,7 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 
 ## 从一件真实的事开始
 
-按[安装说明](install.md)一次安装六个并列技能，然后给 agent 一个有明确边界的目标。例如：
+按[安装说明](install.md)一次安装五个并列核心技能，然后给 agent 一个有明确边界的目标。例如：
 
 ```text
 用 $northstar 为这个项目交付一个可用的 CSV 导入流程。
@@ -56,7 +56,7 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 
 预期工作链条：检查项目 → 确定最小完整交付 → 实现 → 独立验证 → 修复 → 交付证据与经验。这是使用示例，不是一项已经跑完的性能测试。
 
-**原生面向 Codex，也可供其他 agent 使用。** Claude Code、OpenCode 等可以读取这些 Markdown 实践。保留六个技能的名称和目录，按宿主适配调用方式与工具；名称里的 `Codex` 表示来源，不限制使用者。Claude Code Subagents 专用于 Codex 通过 Claude Code CLI 委派任务。[跨 agent 安装与依赖说明 →](install.md#installing-from-another-agent)
+**跨各类编程 Agent 通用。** Codex、Claude Code、OpenCode 等均可直接使用这些 Markdown 实践。安装时保留五个核心技能的名称和并列目录，按宿主适配调用方式与工具。`subagent-orchestration` 同时内置了 Codex CLI（`references/cli-dispatch.md`）、Claude Code CLI（`references/claude-cli-dispatch.md`）以及 Git worktree 隔离（`references/worktree-isolation.md`）的执行指南。[跨 agent 安装与依赖说明 →](install.md#installing-from-another-agent)
 
 ## 把管理思想变成 agent 的具体动作
 
@@ -76,13 +76,13 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 
 构建者可以自测、调试、复盘；独立 QA 和体验评审交给没有创作或修复该成果的人。Reviewer 检查真实流程、看实际画面、挑战相关失败场景，并复验修复。
 
-管理者一旦动手修改，也需要另一个人验收。构建通过、报告写完、一句自信的“LGTM”，都不能代替检查。[Codex QA →](../../skills/codex-qa/SKILL.md)
+管理者一旦动手修改，也需要另一个人验收。构建通过、报告写完、一句自信的“LGTM”，都不能代替检查。[Independent QA →](../../skills/independent-qa/SKILL.md)
 
 ### 4. 把智能用在影响结果的地方
 
 边界清楚的执行任务交给能胜任的较低成本模型；方向、整合、重大取舍和困难诊断按需使用更强推理。具体知识缺口需要专家时，再做有界咨询。
 
-效率要看**通过验收的成果与总投入**，把协调、评审、专家调用和返工都算进去。模型便宜或团队庞大，本身都不能证明省钱。[能力与成本分配 →](../../skills/codex-subagents/SKILL.md#allocate-capability-and-cost)
+效率要看**通过验收的成果与总投入**，把协调、评审、专家调用和返工都算进去。模型便宜或团队庞大，本身都不能证明省钱。[能力与成本分配 →](../../skills/subagent-orchestration/SKILL.md#allocate-capability-and-cost)
 
 ### 5. 经验必须改变下一步
 
@@ -92,44 +92,41 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 
 这套设计吸收了任务式指挥、可逆决策、精益交付、源头质量控制，以及战略到执行对齐的思想。具体保留了什么、类比到哪里为止，见[跨领域来源映射](../../skills/northstar/references/operating-principles.md)与[运作体系的设计依据](../../skills/northstar/references/operating-system.md#sources-and-what-was-distilled)。这些是设计来源，不代表相关机构背书，也不能代替 agent 效果验证。
 
-## 六个技能，一套协同方式
+## 五个核心技能，一套协同方式
 
 | 技能 | 承担什么 | 什么时候直接调用 |
 | --- | --- | --- |
-| [**Northstar**](../../skills/northstar/SKILL.md) | 方向、授权、交付、恢复与学习。 | 希望一个目标被持续推进到经过检查的成果。 |
-| [**Codex Subagents**](../../skills/codex-subagents/SKILL.md) | 任务边界、角色、模型分配、协调与交接。 | 需要委派、集成或独立评审分工。 |
-| [**Codex QA**](../../skills/codex-qa/SKILL.md) | 功能、视觉、对抗与结构审查。 | 需要知道实际交付是否达标。 |
-| [**Codex Advisor**](../../skills/codex-advisor/SKILL.md) | 使用已配置的顾问模型或 council，提供能力风险与视觉任务的精简指导。 | 已记录的能力风险、任何视觉判断，或普通任务中的具体知识缺口。 |
-| [**Task Completion Review**](../../skills/task-completion-review/SKILL.md) | 停止前检查完整目标、实际证据和已有授权，查找信息并决定下一步。 | agent 声称完成或准备过早停止；可选接入 Stop hook。 |
-| [**Claude Code Subagents**](../../skills/claude-code-subagents/SKILL.md) | 通过 Claude Code CLI 委派有边界的工作，并检查、整合交接结果。 | 用户指定 Claude Code，或它能提供有用的独立执行能力。 |
+| [**Northstar**](../../skills/northstar/SKILL.md) | 方向、授权、量化目标定义、交付、恢复与学习。 | 希望一个目标被持续推进到经过检查的成果。 |
+| [**Subagent Orchestration**](../../skills/subagent-orchestration/SKILL.md) | 任务边界、角色、Git worktree 隔离、路由预检，以及原生子代理 / Codex CLI / Claude Code CLI 委派与交接。 | 需要委派、并行开发、集成或独立评审分工。 |
+| [**Independent QA**](../../skills/independent-qa/SKILL.md) | 非作者的边界值/等价类、真实运行时与浏览器、视觉、对抗与规格审查（绑定精确 tree SHA）。 | 需要知道实际交付是否达标。 |
+| [**Advisor Council**](../../skills/advisor-council/SKILL.md) | 使用已配置的顾问模型或双模型 council，提供能力风险、设计分歧、图像检查与源码阅读指导。 | 已记录的能力风险、未决的视觉/设计分歧，或普通任务中的具体知识缺口。 |
+| [**Task Completion Review**](../../skills/task-completion-review/SKILL.md) | 停止前检查完整目标、实际证据和已有授权，决定继续或停止；可选接入 Stop hook。 | agent 声称完成或准备过早停止。 |
+| [**Agent Soak Testing**](../../skills/agent-soak-testing/SKILL.md) *(独立可选)* | 规划、运行并评估面向 agent harness 与模型的有界浸泡测试。 | 需要检验多次重复运行下的可靠性与防偏移表现。 |
+| [**Windows App Watchdog**](../../skills/windows-app-watchdog/SKILL.md) *(独立可选)* | 在后台检查指定桌面应用的窗口，并在窗口消失后自动拉起应用。 | 需要保障桌面应用在用户会话内持续在线。 |
 
-`$northstar` 是总入口，其他技能也可直接调用。六个一起安装，按需加载。小改动可以只有一位构建者和一位独立 reviewer；确有协调需要时才增加主管。
+`$northstar` 是总入口，其他技能也可直接调用。五个核心技能一起安装，按需加载。小改动可以只有一位构建者和一位独立 reviewer；确有协调需要时才增加主管。
 
 ```mermaid
 flowchart TD
     O[用户：目标、标准、授权] --> N[Northstar：方向与决策责任]
-    N --> B[执行：明确归属、一线自主]
-    B --> Q[独立 QA：检查实际成果]
+    N --> B[Subagent Orchestration：明确归属、Worktree 隔离、CLI 委派]
+    B --> Q[Independent QA：运行时、边界、视觉与对抗验收]
     Q -->|需要修复| B
-    Q -->|验收证据| N
+    Q -->|绑定 Tree SHA 的证据| N
     N --> D[验收交付与下一承诺]
-    N -. 能力短板、图片或知识缺口 .-> A[Codex Advisor]
+    N -. 能力短板、图片或设计分歧 .-> A[Advisor Council]
     A -. 建议 .-> N
     D --> L[检查点学习]
     L --> N
 ```
 
-核心工作方法以 Markdown 提供。Task Completion Review 附带可选的 Stop hook 适配器；复制技能不会自动启用 hook，也不会提升平台权限。包内另附 Advisor 调用器和可选 reader；[Advisor 服务](install.md#advisor-prerequisites)需单独配置，安装不会启动服务或发起模型调用。非视觉执行、协调和 QA 无需该服务即可使用。美术、看图和审美工作必须完成 [Advisor 截图指导与修后复查](../../skills/codex-advisor/SKILL.md#mandatory-visual-and-aesthetic-guidance)：调用时主动用 `--image` 附上图片，看不清就提供多个原分辨率切片，由 Advisor 决定细看哪里；它要求的查看内容必须满足。需要独立调查源码时启用 reader mode，由 Advisor 自己决定是否派 Pi reader、问什么；初始截图由执行者主动提供。
-
-## 可选的 Windows 工具
-
-独立的 [Windows 应用恢复技能](../../skills/windows-app-recovery/SKILL.md)可以在后台检查指定桌面应用的窗口，并在窗口消失后重新启动应用。它不属于六个协同工作流技能；图形界面应用仍需要用户会话运行，恢复时窗口可能短暂出现后最小化。
+核心工作方法以 Markdown 提供。Task Completion Review 附带可选的 Stop hook 适配器；复制技能不会自动启用 hook，也不会提升平台权限。包内另附 Advisor 调用器和可选 reader；[Advisor 服务](install.md#advisor-prerequisites)需单独配置，安装不会启动服务或发起模型调用。非视觉执行、协调和 QA 无需该服务即可使用。未决的视觉或审美分歧使用 [Advisor Council 截图指导](../../skills/advisor-council/SKILL.md#mandatory-visual-and-aesthetic-guidance)（主动用 `--image` 附上图片），而常规功能与页面视觉验收由 [Independent QA](../../skills/independent-qa/SKILL.md) 完成。
 
 ## 从项目交付，延伸到持续经营
 
 - **做产品：** 挑战问题与高风险假设，先交付完整可用的一段流程，再基于已验收成果增量改进。
 - **救回停滞项目：** 从下一条未满足的标准继续，复用证据，对真正的瓶颈采取行动。
-- **组织团队：** 明确写入范围与集成责任；交接保留权限、产物版本和恢复记录。
+- **组织团队：** 明确写入范围、Git worktree 隔离与集成责任；交接保留权限、产物版本和恢复记录。
 - **持续运营：** 指定负责人和检视周期，检查真实信号，决定继续、修复、重分配、扩张或停止。
 
 优先使用项目已有的 issue、计划和记录。Northstar 自己的目录结构只是示例，不是安装前提。持续运营仍需要宿主提供工具与调度；Markdown 技能本身不能无人值守运行。
@@ -146,7 +143,7 @@ flowchart TD
 | [Issue 修订与技能行为探测](../evals/issue-maturity.md) | 项目内目标、规格驱动 QA 和冷上下文案例；明确区分模拟结果与效果证据。 |
 | [角色与授权评审](../evals/healthy-roles.md) | 角色冲突场景、独立验收规则，以及对指挥官授权的限定范围审查。 |
 | [Northstar 评审 Northstar](../evals/dogfood-review.md) | 实际发生的多 agent 评审与决策流程，包含分歧和限制记录。 |
-| [四技能包评估](../evals/central-package.md) | 打包、安装路径检查和 Advisor 离线回归。 |
+| [核心包评估](../evals/central-package.md) | 打包、安装路径检查和 Advisor 离线回归。 |
 | [Task Completion Review 评估](../evals/completion-guardian/README.md) | 手动与直接 CLI 停止审查各一个案例，另有 42 项检查；保留之前失败，自动 hook 激活仍未验证。 |
 
 **仍待证明：** 真实任务中的对比收益、更少的人类救援、总成本节省、持续经营成果，以及广泛的宿主集成效果。[对照任务试点](../northstar/next-proof.md)已提出，尚未完成。本包提供行为指导，不是强制执行引擎，也不保证完全自治。

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Windows App Watchdog"
+  short_description: "Monitor a Windows desktop app window and relaunch it when closed"
+  default_prompt: "Use $windows-app-watchdog to configure a per-user Windows Scheduled Task that checks for this desktop app's window and relaunches it if it exits."

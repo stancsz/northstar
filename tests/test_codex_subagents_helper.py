@@ -1,7 +1,7 @@
 """Offline regression for the Invoke-CodexChild helper reference.
 
 The helper body is read from the PowerShell fence in
-``skills/codex-subagents/references/cli-dispatch.md`` and executed with pwsh against a local
+``skills/subagent-orchestration/references/cli-dispatch.md`` and executed with pwsh against a local
 PowerShell function stub named ``codex``. The stub records the public argument
 strings and the child-visible environment, so neither the Codex CLI nor any
 network service is contacted. Every asserted value is a public argument string
@@ -23,7 +23,7 @@ import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "skills" / "codex-subagents" / "references" / "cli-dispatch.md"
+SKILL = ROOT / "skills" / "subagent-orchestration" / "references" / "cli-dispatch.md"
 PWSH = shutil.which("pwsh")
 
 PLUGIN_OVERRIDE = "features.plugins=false"

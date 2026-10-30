@@ -2,7 +2,7 @@
 
 ## Result
 
-Moved the Windows/local Codex CLI profile setup, invocation and capture guidance, observed-dispatch notes, `Invoke-CodexChild` helper, and host-discovery notes out of the startup section into [`cli-dispatch.md`](../../../skills/codex-subagents/references/cli-dispatch.md). The main skill retains generic capability/routing policy and links the reference for CLI dispatch. It also links the Northstar [delivery contract](../../../skills/northstar/SKILL.md#delivery-contract), assigns approval ownership to one commander, and permits worker-local decisions within the authorized brief without another approval round trip. Removed the roughly-20-agents scale suggestion.
+Moved the Windows/local Codex CLI profile setup, invocation and capture guidance, observed-dispatch notes, `Invoke-CodexChild` helper, and host-discovery notes out of the startup section into [`cli-dispatch.md`](../../../skills/subagent-orchestration/references/cli-dispatch.md). The main skill retains generic capability/routing policy and links the reference for CLI dispatch. It also links the Northstar [delivery contract](../../../skills/northstar/SKILL.md#delivery-contract), assigns approval ownership to one commander, and permits worker-local decisions within the authorized brief without another approval round trip. Removed the roughly-20-agents scale suggestion.
 
 ## Verification
 

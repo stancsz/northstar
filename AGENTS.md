@@ -6,7 +6,7 @@ For substantive work, use `/northstar` and its [delivery contract](skills/norths
 
 # Working on Northstar
 
-Northstar's core package has six coordinated skills: Northstar, Codex QA, Codex Subagents, Codex Advisor, Claude Code Subagents and Task Completion Review. It also ships the standalone Soak testing skill and Windows app recovery utility. Keep engineering judgment, practices, and useful documentation at the center of changes.
+Northstar's core package has five coordinated skills: Northstar, Subagent Orchestration, Independent QA, Advisor Council, and Task Completion Review. It also ships the standalone Agent Soak Testing skill and Windows App Watchdog utility. Keep engineering judgment, practices, and useful documentation at the center of changes.
 
 Keep this repository skills-only. Prioritize concise skill instructions, examples, necessary supporting tools and skill validation. Application code, interfaces, app specifications, deployment plans and app-specific execution records belong in separate repositories. Do not turn this package into an application or runtime platform.
 
@@ -17,8 +17,8 @@ Keep this repository skills-only. Prioritize concise skill instructions, example
 
 ## Layout and maintenance
 
-- `skills/<name>/SKILL.md` defines an installable skill. Install the six coordinated core directories together: `northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`, `claude-code-subagents`, and `task-completion-review`. `soak-testing` and `windows-app-recovery` are independent optional skills and can be installed separately. Northstar is the central coordinator; core companions can also be invoked directly. Claude Code Subagents is the Codex-to-Claude CLI adapter. Soak testing guidance does not include or install the separate Soak framework.
-- `skills/codex-advisor/scripts/` contains the Codex Advisor caller and optional reader adapter. Their focused regressions live in `tests/`.
+- `skills/<name>/SKILL.md` defines an installable skill. Install the five coordinated core directories together: `northstar`, `subagent-orchestration`, `independent-qa`, `advisor-council`, and `task-completion-review`. `agent-soak-testing` and `windows-app-watchdog` are independent optional skills and can be installed separately. Northstar is the central coordinator; core companions can also be invoked directly. Subagent Orchestration covers multi-agent delegation across native subagents, Codex CLI workers (`references/cli-dispatch.md`), Claude Code CLI workers (`references/claude-cli-dispatch.md`), and Git worktree isolation (`references/worktree-isolation.md`). Agent Soak Testing guidance does not include or install the separate Soak framework.
+- `skills/advisor-council/scripts/` contains the Advisor Council caller and optional reader adapter. Their focused regressions live in `tests/`.
 - Keep skills model-agnostic and provider-agnostic: do not put API provider endpoints, gateways, or vendor-pinned models inside shared skill instructions.
 - The orchestrator owns and uses `docs/northstar/`: durable direction, owner standards, reference products, and decisions.
 - For sustained work that needs durable cross-turn state, the supervisor maintains the existing project goal record and its index entry. Small one-turn tasks use the request and a concise handoff; do not create a goal record just to follow this layout.
@@ -29,7 +29,7 @@ Keep this repository skills-only. Prioritize concise skill instructions, example
 
 The root stays limited to README.md, AGENTS.md, LICENSE, .gitignore, the owner-requested AGENTS.md.bak backup, and the necessary directories. Treat the backup as historical content, not active instructions. The `docs/` directory contains only subdirectories; no loose documents or assets belong directly in it. Keep indexes within their category.
 
-Maintain useful docs during work and before handoff. Preserve historical records as history, not current instructions. Keep shared facts in one place and link to them. Keep the coordinated workflow package Markdown-first. Task Completion Review has one narrowly scoped, opt-in Stop-hook reviewer adapter; it does not grant platform privileges or install hook configuration automatically. The standalone Windows recovery skill has a narrowly scoped PowerShell helper because its scheduled check requires executable support; do not add unrelated runtime scripts, machine contracts, schemas, validators, or generated reporting machinery.
+Maintain useful docs during work and before handoff. Preserve historical records as history, not current instructions. Keep shared facts in one place and link to them. Keep the coordinated workflow package Markdown-first. Task Completion Review has one narrowly scoped, opt-in Stop-hook reviewer adapter; it does not grant platform privileges or install hook configuration automatically. The standalone Windows watchdog skill has a narrowly scoped PowerShell helper because its scheduled check requires executable support; do not add unrelated runtime scripts, machine contracts, schemas, validators, or generated reporting machinery.
 
 ## Review and Git
 

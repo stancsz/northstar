@@ -7,8 +7,8 @@ Goal: [Coordinated delivery](../../goal/coordinated-delivery/GOAL.md). Working-t
 ## Deliverables
 
 - [Northstar](../../../skills/northstar/SKILL.md): resolve routine decisions, inherit scoped authorization with provenance, and distinguish platform restrictions from missing decisions.
-- [Codex Subagents](../../../skills/codex-subagents/SKILL.md): event-driven coordination, shared interface/dependency ownership, bounded intervention, stopped-writer handover, and integrated acceptance.
-- [Orchestrator brief](../../../skills/codex-subagents/templates/orchestrator.md) and [supervisor brief](../../../skills/codex-subagents/templates/supervisor.md): short role-specific assignments using the shared loop.
+- [Codex Subagents](../../../skills/subagent-orchestration/SKILL.md): event-driven coordination, shared interface/dependency ownership, bounded intervention, stopped-writer handover, and integrated acceptance.
+- [Orchestrator brief](../../../skills/subagent-orchestration/templates/orchestrator.md) and [supervisor brief](../../../skills/subagent-orchestration/templates/supervisor.md): short role-specific assignments using the shared loop.
 - Goal template and user guides expose the briefs and required state. No runtime enforcement machinery added.
 
 ## Verification and next action

@@ -6,6 +6,12 @@ Adapted from [Goal-Driven Engineering](https://github.com/stancsz/goal-driven-en
 
 Use the project's existing issue, task file or plan as the goal record; preserve its stable location and ownership. Do not create parallel Northstar records or indexes. If no convention exists and durable state is needed, default to `<project-root>/docs/goal/<goal>/GOAL.md` using the optional [template](../templates/GOAL.md); omit irrelevant sections. A small one-turn task can use its request and handoff. Follow explicit repository requirements.
 
+Every durable goal or multi-step task anchor should satisfy a four-part **quantitative quality bar**:
+1. **Concrete outcome:** State the exact artifact, user workflow, or behavioral change to deliver—never vague verbs like "improve", "optimize", or "clean up" without a target.
+2. **Binary or numeric validator:** Specify the exact command, assertion, threshold, or observable state that proves each criterion passed (`exit 0`, test count, latency ceiling, or rendered state).
+3. **Blast radius and scope bounds:** Name the allowed write paths, forbidden files/systems, and explicit exclusions so workers never expand scope silently.
+4. **Stop and escalation condition:** State what triggers completion, what triggers immediate abort (e.g., missing credentials, HTTP 429 retry storm, or 2-strike recovery exhaustion), and which decisions remain reserved to the user.
+
 Record the user, workflow, environment, acceptance, constraints and excluded scope only where not already clear. Link existing product direction. For new product direction, identify expected value, payer or sustainability model, supporting evidence, and the assumption the next delivery will test. Do not repeat discovery already settled in the repository.
 
 Keep current delivery criteria separate from later increments and long-term business claims. Do not reduce explicit requirements. Compare a reference product only where it informs a current decision or requested evaluation; use named tasks and observable results, not an invented overall quality score.

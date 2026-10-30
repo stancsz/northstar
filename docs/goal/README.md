@@ -6,7 +6,7 @@ Each supervisor owns its `docs/goal/<goal>/GOAL.md` and index entry. Read the or
 
 Advance one Northstar improvement at a time. The current lane is [Delivery-first entrypoint](delivery-focus/GOAL.md): embed the shared delivery, authority and diminishing-returns contract in the existing package, then verify it on representative accepted work. [Verified product delivery](product-delivery/GOAL.md) is the broader acceptance boundary after that proof; its real-delivery requirement remains unsatisfied and it is not a second execution lane. Resume another parked commitment only when it is a concrete dependency or the owner selects it. The current commander handles covered decisions and approvals; platform permission boundaries and required independent QA still apply.
 
-Owner-selected active goal: [REA reference and skill-stack soak](rea-skill-stack/GOAL.md). Core skills (`northstar`, `codex-subagents`, `claude-code-subagents`) are refactored for fast agents (`minimax-m3.1-flash`, `luna 6`, `gemini 3.8`); next step is wiring MiniMax through Subroute for Codex and Claude Code and running bounded drift exercises. This does not erase the delivery-first evidence obligation.
+Owner-selected active goal: [REA reference and skill-stack soak](rea-skill-stack/GOAL.md). The skill stack is deduplicated and unified into five coordinated core skills (`northstar`, `subagent-orchestration`, `independent-qa`, `advisor-council`, `task-completion-review`) plus two standalone skills (`agent-soak-testing`, `windows-app-watchdog`), with Claude CLI dispatch and Git worktree isolation merged into `subagent-orchestration` and live runtime/browser verification added to `independent-qa`; next step is wiring MiniMax through Subroute for Codex and Claude Code and running bounded drift exercises. This does not erase the delivery-first evidence obligation.
 
 ## Parked commitments
 
@@ -15,10 +15,10 @@ These records preserve unfinished scope and evidence; they are not concurrent wo
 | Goal | Recorded state |
 | --- | --- |
 | [Clear, economical subagent dispatch context](dispatch-context/GOAL.md) | Helper tests passed and one bounded Codex task was accepted; tool preflight and Claude route evidence remain open |
-| [Northstar-aligned task SCM](adhoc-scm/GOAL.md) | Design reviewed; real-task pilot pending |
+| [Northstar-aligned task SCM](adhoc-scm/GOAL.md) | Design reviewed and operationalized in `skills/subagent-orchestration/references/worktree-isolation.md`; real-task pilot pending |
 | [External-practice absorption decision](northstar-absorption/GOAL.md) | Recommendation recorded; matched real-task proof pending |
 | [Task Completion Review](completion-guardian/GOAL.md) | Installed and controlled case verified; already-open desktop reload remains unverified |
-| [Claude Code Subagents skill](claude-code-subagents/GOAL.md) | Package integration done; scoped read-only CLI use verified; implementation acceptance remains unverified and no process-scoped Subroute inference key is available |
+| [Claude Code Subagents skill](claude-code-subagents/GOAL.md) | Merged into `skills/subagent-orchestration/references/claude-cli-dispatch.md`; scoped read-only CLI use and A/B MiniMax benchmark verified |
 
 ## Completed and historical records
 

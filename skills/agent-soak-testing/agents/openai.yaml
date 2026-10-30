@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Soak Testing"
+  short_description: "Plan, run, and evaluate bounded reliability and drift soak tests for agents"
+  default_prompt: "Use $agent-soak-testing to design and evaluate a bounded repeated-use reliability and drift test for this agent harness and model."

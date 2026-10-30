@@ -7,7 +7,7 @@
 
 ## Scope and observations
 
-Read repository instructions, direction, goal, report/evaluation indexes, [Northstar](../../../skills/northstar/SKILL.md), [Codex Subagents](../../../skills/codex-subagents/SKILL.md), and both [orchestrator](../../../skills/codex-subagents/templates/orchestrator.md) and [supervisor](../../../skills/codex-subagents/templates/supervisor.md) briefs. Inspected the skill diff. Considered these concrete scenarios against the written instructions:
+Read repository instructions, direction, goal, report/evaluation indexes, [Northstar](../../../skills/northstar/SKILL.md), [Codex Subagents](../../../skills/subagent-orchestration/SKILL.md), and both [orchestrator](../../../skills/subagent-orchestration/templates/orchestrator.md) and [supervisor](../../../skills/subagent-orchestration/templates/supervisor.md) briefs. Inspected the skill diff. Considered these concrete scenarios against the written instructions:
 
 - **An authorized repair resumes under a new supervisor.** Northstar preserves actions, targets, limits, and authorization source; task briefs carry these facts explicitly. The supervisor may resolve local implementation choices without asking the user to authorize the same repair again.
 - **A tool rejects an otherwise authorized action.** The decision guidance separates a user decision from a platform restriction, requires identifying the rejected action, and permits an allowed equivalent without bypassing controls. Existing authorization does not enlarge tool permissions.

@@ -4,7 +4,7 @@ Date: 2026-10-25. Goal: [delivery focus](../../goal/delivery-focus/GOAL.md). Wor
 
 ## Ask and result
 
-Shorten the installable Claude Code companion, remove references that fail outside the repository, preserve its route, authority, credential, tool-evidence and handoff boundaries, and avoid one worker per criterion. The worker changed only [`SKILL.md`](../../../skills/claude-code-subagents/SKILL.md), from 3,216 to 1,091 whitespace-delimited words. It removed timestamped trial narrative and all links to repository-only reports; a new reference file was unnecessary.
+Shorten the installable Claude Code companion, remove references that fail outside the repository, preserve its route, authority, credential, tool-evidence and handoff boundaries, and avoid one worker per criterion. The worker changed only [`SKILL.md`](../../../skills/subagent-orchestration/references/claude-cli-dispatch.md), from 3,216 to 1,091 whitespace-delimited words. It removed timestamped trial narrative and all links to repository-only reports; a new reference file was unnecessary.
 
 ## Evidence
 

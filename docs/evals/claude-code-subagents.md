@@ -8,7 +8,7 @@ Runtime use remains unverified. The configured local endpoint at `127.0.0.1:4000
 
 ## Package integration follow-up (2026-10-03)
 
-The owner directed that Claude Code Subagents be included under `skills/` as a packaged skill. The canonical entrypoint is now [skills/claude-code-subagents/SKILL.md](../../skills/claude-code-subagents/SKILL.md), alongside the other four skills. The old duplicate source under `docs/misc/` was removed. Current installation guidance copies all five sibling directories; the skill's host-specific Codex-to-Claude CLI prerequisite remains explicit.
+The owner directed that Claude Code Subagents be included under `skills/` as a packaged skill. The canonical entrypoint is now [skills/claude-code-subagents/SKILL.md](../../skills/subagent-orchestration/references/claude-cli-dispatch.md), alongside the other four skills. The old duplicate source under `docs/misc/` was removed. Current installation guidance copies all five sibling directories; the skill's host-specific Codex-to-Claude CLI prerequisite remains explicit.
 
 The evaluation inspected README and skill routing, package copy instructions, and local Markdown links; checked that all five installation paths resolve and that the moved entrypoint is present; and ran `git diff --check`. These checks cover documentation and packaging only. No Claude provider call or delegated runtime task succeeded, so runtime use remains unverified as described above. The [implementation report](../reports/claude-code-subagents/implementation.md) records the changed source and limits.
 

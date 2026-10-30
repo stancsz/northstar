@@ -1,6 +1,6 @@
 ---
 name: northstar
-description: Central workflow for project and business delivery. Use for coordination, delegation, advice, QA, recovery, and completion decisions.
+description: Deliver verified outcomes with zero silent drift. Central workflow for intent locking, multi-agent orchestration, independent QA, advisor council, stall recovery, and completion review.
 ---
 
 # Northstar
@@ -36,10 +36,10 @@ For multi-step or resumed work, keep one live block in the project's existing ta
 
 ## Delivery contract
 
-Shared rules across all six Northstar skills (`northstar`, `codex-qa`, `codex-subagents`, `codex-advisor`, `claude-code-subagents`, `task-completion-review`):
+Shared rules across all five coordinated Northstar skills (`northstar`, `subagent-orchestration`, `independent-qa`, `advisor-council`, `task-completion-review`):
 
 - **Focus one core commitment.** Finish and verify the highest-value existing workflow before expanding. Park optional ideas.
-- **Finish before expanding.** Build the smallest complete result and run real checks. The commander accepts small, reversible, attributable work directly from test/diff evidence. Use one independent nonauthor review ([Codex QA](../codex-qa/SKILL.md)) only when required or when material user/data/security/visual risk applies.
+- **Finish before expanding.** Build the smallest complete result and run real checks. The commander accepts small, reversible, attributable work directly from test/diff evidence. Use one independent nonauthor review ([Independent QA](../independent-qa/SKILL.md)) only when required or when material user/data/security/visual risk applies.
 - **Stop optional work at diminishing returns.** Continue while steps satisfy required criteria or remove material risk. Stop optional polish, research, or consultation when cost exceeds value. Never use diminishing returns to waive an unmet required criterion.
 - **One approval owner.** One commander agent owns covered approvals and decisions under the user's standing grant. Workers execute in scope without asking the user or opening a second approval queue. Ask the user only for decisions explicitly reserved to them or outside the grant.
 - **Subtract process.** Default to one agent. Add subagents, reviewers, or council calls only when their value clearly exceeds coordination cost.
@@ -47,8 +47,8 @@ Shared rules across all six Northstar skills (`northstar`, `codex-qa`, `codex-su
 ## Deliver a usable MVP, then improve in increments
 
 1. **Resume the actual request.** Read existing records and diffs; do not restart accepted work or create empty Northstar directories. (Use [business planning](references/business-planning.md) only when asked for market/financial/GTM strategy.)
-2. **Define the finish.** State the target workflow, environment, and observable acceptance check.
-3. **Build the next complete step.** Reuse existing code and tools. Cap read-only exploration at **5 tool calls** before making a concrete edit or running a distinguishing check. When delegating to a CLI worker, assign one target artifact, exact writable paths, one verification check, and a firm deadline (5-minute artifact checkpoint, 10-minute handoff).
+2. **Define the finish.** State the target workflow, environment, quantitative/binary acceptance check, and scope bounds ([goal quality bar](references/goal-driven-engineering.md#define-the-goal)).
+3. **Build the next complete step.** Reuse existing code and tools. Cap read-only exploration at **5 tool calls** before making a concrete edit or running a distinguishing check. When delegating to a subagent or CLI worker (Codex or Claude Code), assign one target artifact, exact writable paths, one verification check, and a firm deadline (5-minute artifact checkpoint, 10-minute handoff), terminating immediately on any `api_retry` (HTTP 429) or `unrecognized_model` event.
 4. **Verify and repair.** Run the actual check once and inspect the changed behavior. Repair failures in scope. Once the required check passes and affected files are verified, **stop calling tools and deliver the handoff**—do not run redundant status/timestamp/diff checks after verification. A passing build, HTTP 200, mock, or worker summary alone is not verification.
 5. **Deliver the requested outcome.** Reconcile every item in `Ask` against real evidence (`passed`, `unmet`, or `unverified`). Report material limits and stop—do not invent a new phase after completion.
 
@@ -58,7 +58,7 @@ Do not loop on the same error or run unbounded diagnostics:
 
 1. **Cap investigation at 5 calls or 10 minutes.** Name the unmet criterion and run one distinguishing check.
 2. **2-strike rule on failures.** Test one causal change at a time while preserving working diffs. After **2 consecutive attempts** with the same failure or no progress, stop patching and enter **one recovery window** (counts carry across agents and context resets).
-3. **Isolate or simplify.** Reproduce the minimal failure, test one simpler implementation, or consult [Codex Advisor](../codex-advisor/SKILL.md) for a concrete capability gap. Never retry an unchanged command or rejected approach.
+3. **Isolate or simplify.** Reproduce the minimal failure, test one simpler implementation, or consult [Advisor Council](../advisor-council/SKILL.md) for a concrete capability gap. Never retry an unchanged command or rejected approach.
 
 ### Decide after exhausted recovery
 When the recovery window is spent, take the first credible action in the same turn:
@@ -66,17 +66,16 @@ When the recovery window is spent, take the first credible action in the same tu
 - Resolve the blocking coordination/dependency; or
 - Stop that route, preserve clean partial work with its exact unblock condition in the checkpoint, and advance independent authorized work. Never lower acceptance silently or end with bare options.
 
-## Six skills, one coordinated package
+## Five skills, one coordinated package
 
 Load a companion skill **only** when its trigger applies:
 
 | Trigger | Companion to load |
 | --- | --- |
-| Independent nonauthor QA or visual inspection is required | [Codex QA](../codex-qa/SKILL.md) |
-| Parallel workstream or CLI worker dispatch helps | [Codex Subagents](../codex-subagents/SKILL.md) |
-| Concrete blocker, capability risk, or visual/aesthetic check | [Codex Advisor](../codex-advisor/SKILL.md) |
-| Delegating bounded CLI work to Claude Code | [Claude Code Subagents](../claude-code-subagents/SKILL.md) |
-| Auditing whether substantive work may stop, wait, or continue | [Task Completion Review](../task-completion-review/SKILL.md) |
+| Parallel workstreams, worktree isolation, or Codex / Claude Code CLI worker dispatch | [Subagent Orchestration](../subagent-orchestration/SKILL.md) |
+| Independent nonauthor QA, live runtime/browser verification, spec review, or visual inspection | [Independent QA](../independent-qa/SKILL.md) |
+| Concrete blocker, capability risk, or unresolved visual/design fork | [Advisor Council](../advisor-council/SKILL.md) |
+| Auditing whether substantive work may stop, wait, or continue (plus opt-in Stop hook) | [Task Completion Review](../task-completion-review/SKILL.md) |
 
 ## Use with other agents
 
@@ -101,7 +100,7 @@ Keep goal and task state in the project repository, never inside `~/.codex/skill
 ## Worker reports and handoffs
 
 Return one concise handoff:
-- **Artifact & paths changed** (with revision/base)
+- **Artifact & paths changed** (with revision/base and candidate tree SHA when applicable)
 - **Checks run & actual results** (link evidence instead of pasting long logs)
 - **Remaining gaps / unknowns** (`passed`, `unmet`, `unverified`)
 - **Next action**

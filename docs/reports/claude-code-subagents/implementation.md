@@ -2,7 +2,7 @@
 
 Status: Codex skill source, package integration and personal installation complete; bounded read-only CLI review/drafting succeeded on 2026-10-14; implementation and independent acceptance remain unverified
 
-Deliverable: [Claude Code Subagents Codex skill](../../../skills/claude-code-subagents/SKILL.md), now maintained as the fifth sibling in Northstar's package. The prior personal installation remains at `~/.codex/skills/claude-code-subagents/SKILL.md`.
+Deliverable: [Claude Code Subagents Codex skill](../../../skills/subagent-orchestration/references/claude-cli-dispatch.md), now maintained as the fifth sibling in Northstar's package. The prior personal installation remains at `~/.codex/skills/claude-code-subagents/SKILL.md`.
 
 Installed at `~/.codex/skills/claude-code-subagents/SKILL.md`; SHA-256 matches the source (`C0D418BBB0E51E93E8820EBF39AB6EEC41A81C948AB57AFDB2ECF0EC6C75DA6B`). The skill makes Codex the orchestrator and Claude Code a bounded CLI worker.
 

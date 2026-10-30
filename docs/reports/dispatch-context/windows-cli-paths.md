@@ -7,7 +7,7 @@
 
 ## Change
 
-Added one reusable rule to the [exact-path assignment guidance](../../../skills/codex-subagents/SKILL.md): for a scratch fixture/worktree cwd, give applicable repository-level instructions such as `AGENTS.md` by absolute path; in JSON or PowerShell command text, use forward slashes or literal-safe quoting and verify the effective path before use. Existing explicit cwd and allowed-path rules remain. This does not ban ordinary Windows paths or add an approval step.
+Added one reusable rule to the [exact-path assignment guidance](../../../skills/subagent-orchestration/SKILL.md): for a scratch fixture/worktree cwd, give applicable repository-level instructions such as `AGENTS.md` by absolute path; in JSON or PowerShell command text, use forward slashes or literal-safe quoting and verify the effective path before use. Existing explicit cwd and allowed-path rules remain. This does not ban ordinary Windows paths or add an approval step.
 
 ## Scoped checks
 
