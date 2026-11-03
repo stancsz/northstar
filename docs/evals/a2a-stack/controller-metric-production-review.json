@@ -1,0 +1,55 @@
+{
+  "all_manifest_hashes_match_current_tree": true,
+  "artifact_manifest_sha256": "6b0d933264f467dc0c38f195b07902a97ff92058d47683d3e717b8a9b47b43ec",
+  "baseline": {
+    "changed_manifest_entries": [
+      "a2a-stack/autonomy/manager.py",
+      "a2a-stack/autonomy/test_manager.py"
+    ],
+    "source_manifest_sha256": "7c358ee486044bcd341a8dc59030975096b9d17bc4672ef8ab6911c0cb78ce0b"
+  },
+  "candidate": "2562d8f450e66020fee26b543f421d4ab12d8c3a0fee788502b1b6fd8a963166",
+  "checks": {
+    "all_exit_zero": true,
+    "comparison_spec_sha256": "e64f37dccf4180d23ce5ab8ae615a862bb3a099213ee04a11145b2046fe34bc2",
+    "count": 7,
+    "current_spec_sha256": "691942fbb1ec9674312ef9b1d8c08a6fec793644acde768a9f619241eb81b677",
+    "definitions_match_previous_integration_spec": true,
+    "ids": [
+      "northstar-workspace-isolation-contract",
+      "northstar-host-workspace-contract",
+      "northstar-candidate-scope-contract",
+      "northstar-agent-tests",
+      "northstar-autonomy-tests",
+      "northstar-runtime-tests",
+      "northstar-independent-scope-matrix"
+    ]
+  },
+  "checks_passed": true,
+  "host_reloaded": false,
+  "integration_precondition": {
+    "namespace_controllers_quiescent": true,
+    "predecessor_controller_stopped": true,
+    "predecessor_goal_accepted": true
+  },
+  "limitations": [
+    "This is independent acceptance of the integrated 50-file source candidate and local checks. No deployed-host reload or live MCP verification is claimed."
+  ],
+  "private_review": {
+    "handoff_sha256": "b04c35bb1a771870e96f26543493f41c53fca3b00a20b43b8407eaded5403f1f",
+    "report_sha256": "f14d271184cec89aa13b434f387cc9b36e7144c420f852dde9c9bc20e0b25305",
+    "reviewed_source_hashes": {
+      "autonomy/manager.py": "b9a03ccf38d0bc4ce644c1b24744c6a6dcd040e515b04701839e01650e0cceeb",
+      "autonomy/test_manager.py": "94757ca5ccc49181f59ac415acbc1a6b03bc1f0478b842f29aabcae280c1b9d3"
+    },
+    "verdict": "READY"
+  },
+  "scope": "Integrated source candidate and seven original registered check definitions/results only; no production host reload or live Goal execution.",
+  "source_file_count": 50,
+  "source_hashes": {
+    "a2a-stack/autonomy/manager.py": "b9a03ccf38d0bc4ce644c1b24744c6a6dcd040e515b04701839e01650e0cceeb",
+    "a2a-stack/autonomy/test_manager.py": "94757ca5ccc49181f59ac415acbc1a6b03bc1f0478b842f29aabcae280c1b9d3"
+  },
+  "summary_sha256": "8a5673cbcbc299585221deeef40192d14704d4a26e75390dee340eae31a27304",
+  "verdict": "READY"
+}

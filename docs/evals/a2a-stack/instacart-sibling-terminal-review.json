@@ -1,0 +1,136 @@
+{
+  "verdict": "READY",
+  "reviewer": "review_agent_workflow",
+  "author": "root+autonomous_goal_runner",
+  "observed_at": "2026-11-03T17:12:30.905701+00:00",
+  "goal_id": "g-b2ff9e4665d64e418705f2436d4916c5",
+  "goal_status": "COMPLETE",
+  "accepted": true,
+  "controller_running": false,
+  "final_candidate": "f78b4c17e971ee97a5b77911bd15be129730edc4de26cb97d4d3a601cb956a3d",
+  "producer_generation": 3,
+  "freeze_id": "ea601fdbcc3042d7a5100676bb27a5b9",
+  "current_generation_matches": true,
+  "workspace": "C:\\Users\\stanc\\github\\instacart-screen-inventory",
+  "goal_spec_sha256": "c7b4ef76191d855b42af0cfff79a4b2e1a3702186614ba76da88d3f1e4db5163",
+  "acceptance_criteria_count": 7,
+  "check_count": 11,
+  "checks_all_exit_zero": true,
+  "checks": [
+    {
+      "id": "instacart-catalog-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-catalog-regressions",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-clementine-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-clementine-regressions",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-snapshots-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-snapshots-regressions",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-replacement-process-integration",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-node-regressions",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-go-regressions",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-empty-error-fields",
+      "exit_code": 0
+    },
+    {
+      "id": "instacart-sibling-empty-error-fields",
+      "exit_code": 0
+    }
+  ],
+  "changed_source_hashes": {
+    "offline/cart-api.js": "069447cd672d38d06f867df28228b94b36c7c8347e9dcd9bfb82a33a0a19d0b1",
+    "offline/cart-api.test.mjs": "c2ae13b7a3da3a7c8cdf46bfcaf58cb91d7ba075cd01b4a6a63a25eab6915919",
+    "offline/checkout-api.js": "18c483a9a9e6b973c405b7104a227bc3d15c8b939de7cdc60f1c83c5817fb078",
+    "offline/checkout-api.test.mjs": "9b899c629bd759cd705c9cdeb6eef0ba81d4228e67d28d58d5cd92f4da95adc6"
+  },
+  "candidate_artifact_sha256": "6f60b3d1f194da2c597528afcd4f1164bf63c89ee95da3c61df699def9447541",
+  "all_changed_source_hashes_match_current_workspace": true,
+  "review": {
+    "task_id": "53e411b4-b94e-482f-b50b-43032ebb8f66",
+    "task_state": "TASK_STATE_COMPLETED",
+    "candidate": "f78b4c17e971ee97a5b77911bd15be129730edc4de26cb97d4d3a601cb956a3d",
+    "verdict": "READY",
+    "evidence_count": 11,
+    "all_evidence_nonempty": true,
+    "artifact_sha256": "4f30841cd543f5d3c575cd1990b83c32aaa5ea1aaaa55981fd07a669a3648f50",
+    "assignment_file": "a-review-candidate-ea601fdb.json",
+    "assignment_candidate": "f78b4c17e971ee97a5b77911bd15be129730edc4de26cb97d4d3a601cb956a3d",
+    "assignment_generation": 3,
+    "assignment_freeze_id": "ea601fdbcc3042d7a5100676bb27a5b9",
+    "write_paths": [],
+    "all_immutable_acceptance_criteria_included": true,
+    "fresh_review_not_stale_generation2_review": true
+  },
+  "producers": [
+    {
+      "task_id": "970bb1e3-f3dd-476f-9d66-053d8282f2c2",
+      "pid": 47564,
+      "process_token": "01dd6bae2232cb96",
+      "terminal_state": "TASK_STATE_COMPLETED",
+      "exit_code": 0,
+      "identity_absent_at_final_os_check": true
+    },
+    {
+      "task_id": "1117b746-c57a-4828-8abf-b0230d92f80d",
+      "pid": 46512,
+      "process_token": "01dd6bad293cec30",
+      "terminal_state": "TASK_STATE_COMPLETED",
+      "exit_code": 0,
+      "identity_absent_at_final_os_check": true
+    }
+  ],
+  "verifier": {
+    "task_id": "c4182664-cad2-4adb-8add-b44426ea487f",
+    "task_state": "TASK_STATE_COMPLETED",
+    "candidate": "f78b4c17e971ee97a5b77911bd15be129730edc4de26cb97d4d3a601cb956a3d",
+    "checks_passed": true
+  },
+  "nonempty_field_probe": {
+    "initial_passed": 2,
+    "initial_failed": 8,
+    "corrected_passed": 10,
+    "corrected_failed": 0,
+    "corrected_case_count": 10,
+    "final_source_hashes_match": {
+      "offline/cart-api.js": true,
+      "offline/checkout-api.js": true
+    }
+  },
+  "framework_source": {
+    "candidate": "46ae175c44601668f72884c474be69523e16f8e4af14ab2d8d40d3dbda4e01c5",
+    "source_file_count": 50,
+    "all_manifest_hashes_match_current_tree": true,
+    "manifest_sha256": "7c358ee486044bcd341a8dc59030975096b9d17bc4672ef8ab6911c0cb78ce0b"
+  },
+  "metric_gap": "The earlier fault observation reported host_restart_count=0 despite concrete old/new host identity and scheduler-run evidence; current accepted Goal state omits that field. This does not alter the independently verified recovery or completion evidence.",
+  "limitations": [
+    "This accepts the terminal Goal3 candidate, exact 11 trusted checks, producer provenance, and fresh candidate-bound READY review.",
+    "No test reruns, new Goal, host action, source edit, or new worker dispatch were performed for this review.",
+    "The earlier invalid/stale reviewer outcomes were not reused; acceptance references the new generation-3 READY review task."
+  ]
+}

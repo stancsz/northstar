@@ -544,5 +544,273 @@ class WatcherRecoveryTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(self.jobs[0].closed)
         self.assertEqual(self.manager.processes, {})
 
+class ControllerStartMetricTests(unittest.TestCase):
+    """Reported controller start metrics derive only from recorded host events."""
+
+    def setUp(self):
+        SCRATCH.mkdir(parents=True, exist_ok=True)
+        self.temp = tempfile.TemporaryDirectory(dir=SCRATCH)
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name).resolve()
+        self.workspace = self.root / "workspace"
+        self.workspace.mkdir()
+        self.state_root = self.root / "host-state"
+        self.state_root.mkdir()
+        self.manager = manager_module.GoalManager(self.state_root, self.workspace)
+        self.addCleanup(lambda: asyncio.run(self.manager.close()))
+        self.goal_id = "g-" + "c" * 32
+        self.directory = self.manager._dir(self.goal_id)
+        self.directory.mkdir(parents=True)
+        self.spec_path = self.directory / "spec.json"
+        self.state_path = self.directory / "state.json"
+        self.journal_path = self.directory / "host-events.jsonl"
+        self.spec_path.write_text(json.dumps({
+            "id": self.goal_id,
+            "goal": "Report recorded controller starts",
+            "acceptance": ["Start metrics reflect recorded controller starts"],
+        }), encoding="utf-8")
+        self.write_state({"id": self.goal_id, "status": "RUNNING", "recovery_count": 0})
+
+    def write_state(self, state):
+        self.state_path.write_text(json.dumps(state), encoding="utf-8")
+
+    @staticmethod
+    def event(name, **fields):
+        return json.dumps({"event": name, "at": "2026-01-01T00:00:00Z", **fields})
+
+    def write_journal(self, lines):
+        self.journal_path.write_text(
+            "".join(line + "\n" for line in lines), encoding="utf-8")
+
+    def report(self):
+        return self.manager.report(self.goal_id)
+
+    def test_absent_journal_reports_zero_starts_and_restarts(self):
+        self.assertFalse(self.journal_path.exists())
+
+        report = self.report()
+
+        self.assertEqual(report["controller_start_count"], 0)
+        self.assertEqual(report["controller_restart_count"], 0)
+        self.assertEqual(report["host_restart_count"], 0)
+        self.assertEqual(report["goal_id"], self.goal_id)
+        self.assertEqual(report["status"], "RUNNING")
+        self.assertEqual(report["goal"], "Report recorded controller starts")
+        self.assertEqual(report["acceptance"], ["Start metrics reflect recorded controller starts"])
+        self.assertFalse(self.journal_path.exists(),
+                         "reporting must not create the host event journal")
+
+    def test_journal_without_controller_started_records_zero(self):
+        self.write_journal([
+            self.event("controller_exited", exit_code=0),
+            self.event("host_recovery", error_type="OSError"),
+            self.event("host_snapshot_recovery", winerror=5),
+        ])
+
+        report = self.report()
+
+        self.assertEqual(report["controller_start_count"], 0)
+        self.assertEqual(report["controller_restart_count"], 0)
+
+    def test_one_recorded_start_reports_zero_restarts(self):
+        self.write_journal([
+            self.event("controller_started", pid=4242),
+            self.event("controller_exited", exit_code=0),
+        ])
+
+        report = self.report()
+
+        self.assertEqual(report["controller_start_count"], 1)
+        self.assertEqual(report["controller_restart_count"], 0)
+
+    def test_two_recorded_starts_report_one_restart(self):
+        self.write_journal([
+            self.event("controller_started", pid=4242),
+            self.event("controller_exited", exit_code=1),
+            self.event("controller_started", pid=4243),
+            self.event("controller_exited", exit_code=0),
+        ])
+
+        report = self.report()
+
+        self.assertEqual(report["controller_start_count"], 2)
+        self.assertEqual(report["controller_restart_count"], 1)
+
+    def test_crash_without_controller_exited_record_still_counts_as_start(self):
+        self.write_journal([
+            self.event("controller_started", pid=4242),
+            self.event("host_recovery", error_type="TimeoutError"),
+        ])
+
+        report = self.report()
+
+        self.assertEqual(report["controller_start_count"], 1)
+        self.assertEqual(report["controller_restart_count"], 0)
+
+    def test_two_crashed_starts_without_exit_records_report_one_restart(self):
+        self.write_journal([
+            self.event("controller_started", pid=4242),
+            self.event("host_recovery", error_type="TimeoutError"),
+            self.event("controller_started", pid=4243),
+        ])
+
+        report = self.report()
+
+        self.assertEqual(report["controller_start_count"], 2)
+        self.assertEqual(report["controller_restart_count"], 1)
+
+    def test_other_host_events_are_ignored(self):
+        self.write_journal([
+            self.event("host_recovery", error_type="OSError"),
+            self.event("host_snapshot_recovery", winerror=32),
+            self.event("controller_started", pid=4242),
+            self.event("controller_exited", exit_code=0),
+            self.event("host_snapshot_recovery", winerror=33),
+        ])
+
+        report = self.report()
+
+        self.assertEqual(report["controller_start_count"], 1)
+        self.assertEqual(report["controller_restart_count"], 0)
+
+    def test_malformed_journal_reports_unknown_metrics_and_ordinary_fields(self):
+        self.write_journal([
+            self.event("controller_started", pid=4242),
+            "{not valid json",
+        ])
+
+        report = self.report()
+
+        self.assertIsNone(report["controller_start_count"])
+        self.assertIsNone(report["controller_restart_count"])
+        self.assertEqual(report["host_restart_count"], 0)
+        self.assertEqual(report["goal_id"], self.goal_id)
+        self.assertEqual(report["status"], "RUNNING")
+        self.assertEqual(report["goal"], "Report recorded controller starts")
+        self.assertEqual(report["acceptance"], ["Start metrics reflect recorded controller starts"])
+        self.assertEqual(report["next_user_action"], "Agent 正在自主执行，无需手动救场。")
+
+    def test_non_record_journal_line_reports_unknown_metrics(self):
+        self.write_journal([
+            self.event("controller_started", pid=4242),
+            json.dumps(["not", "a", "record"]),
+        ])
+
+        report = self.report()
+
+        self.assertIsNone(report["controller_start_count"])
+        self.assertIsNone(report["controller_restart_count"])
+        self.assertEqual(report["status"], "RUNNING")
+
+    def test_unreadable_journal_reports_unknown_metrics(self):
+        self.journal_path.mkdir()
+        (self.journal_path / "blocker").write_text("not a journal\n", encoding="utf-8")
+
+        report = self.report()
+
+        self.assertIsNone(report["controller_start_count"])
+        self.assertIsNone(report["controller_restart_count"])
+        self.assertEqual(report["status"], "RUNNING")
+
+    def test_undecodable_journal_reports_unknown_metrics(self):
+        self.journal_path.write_bytes(b"\xff\xfe not utf-8 \x80\n")
+
+        report = self.report()
+
+        self.assertIsNone(report["controller_start_count"])
+        self.assertIsNone(report["controller_restart_count"])
+        self.assertEqual(report["status"], "RUNNING")
+
+    def test_legacy_host_restart_count_is_preserved_and_state_is_untouched(self):
+        self.write_state({
+            "id": self.goal_id, "status": "RUNNING", "recovery_count": 4,
+            "host_restart_count": 7, "previous_session_ids": ["s1", "s2"]})
+        self.write_journal([
+            self.event("controller_started", pid=4242),
+            self.event("controller_started", pid=4243),
+            self.event("controller_started", pid=4244),
+        ])
+        before = self.state_path.read_bytes()
+
+        report = self.report()
+
+        self.assertEqual(report["host_restart_count"], 7)
+        self.assertEqual(report["session_reset_count"], 2)
+        self.assertEqual(report["controller_start_count"], 3)
+        self.assertEqual(report["controller_restart_count"], 2)
+        self.assertEqual(self.state_path.read_bytes(), before,
+                         "reporting must not rewrite goal state")
+
+    def test_missing_host_restart_count_still_defaults_to_zero(self):
+        self.write_state({"id": self.goal_id, "status": "RECOVERING"})
+
+        report = self.report()
+
+        self.assertEqual(report["host_restart_count"], 0)
+        self.assertEqual(report["controller_start_count"], 0)
+        self.assertEqual(report["controller_restart_count"], 0)
+        self.assertEqual(report["status"], "RECOVERING")
+
+    def test_restart_count_is_max_zero_of_starts_minus_one(self):
+        for starts in range(0, 4):
+            with self.subTest(starts=starts):
+                self.write_journal([self.event("controller_started", pid=100 + index)
+                                    for index in range(starts)])
+
+                report = self.report()
+
+                self.assertEqual(report["controller_start_count"], starts)
+                self.assertEqual(report["controller_restart_count"], max(0, starts - 1))
+
+
+    def deny_journal_edge(self, edge):
+        journal = self.journal_path
+        real = getattr(Path, edge)
+
+        def guarded(path_self, *args, **kwargs):
+            if path_self == journal:
+                raise PermissionError(13, "synthetic denied journal edge")
+            return real(path_self, *args, **kwargs)
+
+        return patch.object(Path, edge, guarded)
+
+    def test_permission_denied_journal_edges_report_unknown_metrics(self):
+        for edge in ("exists", "open", "read_text"):
+            with self.subTest(edge=edge):
+                self.write_journal([self.event("controller_started", pid=4242)])
+
+                with self.deny_journal_edge(edge):
+                    report = self.report()
+
+                self.assertIsNone(report["controller_start_count"])
+                self.assertIsNone(report["controller_restart_count"])
+                self.assertEqual(report["host_restart_count"], 0)
+                self.assertEqual(report["goal_id"], self.goal_id)
+                self.assertEqual(report["status"], "RUNNING")
+                self.assertEqual(report["goal"], "Report recorded controller starts")
+                self.assertEqual(report["acceptance"],
+                                 ["Start metrics reflect recorded controller starts"])
+
+    def test_complete_goal_with_unknown_metrics_keeps_accepted_report_fields(self):
+        receipt = {"completion_ticket": "ticket-1", "checks": [{"id": "unit", "exit_code": 0}]}
+        self.write_state({
+            "id": self.goal_id, "status": "COMPLETE", "recovery_count": 2,
+            "host_restart_count": 5, "last_summary": "All acceptance criteria passed",
+            "accepted_receipt": receipt})
+        self.write_journal([self.event("controller_started", pid=4242), "{not valid json"])
+
+        report = self.report()
+
+        self.assertIsNone(report["controller_start_count"])
+        self.assertIsNone(report["controller_restart_count"])
+        self.assertEqual(report["host_restart_count"], 5)
+        self.assertEqual(report["status"], "COMPLETE")
+        self.assertEqual(report["summary"], "All acceptance criteria passed")
+        self.assertEqual(report["accepted_result"], receipt)
+        self.assertEqual(report["next_user_action"], "查看结果后，由你设置下一条 Goal。")
+        self.assertIsNone(report["blocker"])
+        self.assertEqual(report["recovery_count"], 2)
+
+
 if __name__ == "__main__":
     unittest.main()

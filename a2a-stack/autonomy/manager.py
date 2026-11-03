@@ -153,10 +153,42 @@ class GoalManager:
         return [self.get(path.name) for path in sorted(self.directory.iterdir())
                 if path.is_dir() and ID.fullmatch(path.name) and (path / "spec.json").is_file()]
 
+    def _controller_starts(self, goal_id):
+        """Count recorded controller starts; None when the journal cannot be read.
+
+        Only `controller_started` records count. A crash without a matching
+        `controller_exited` record still counts as a start. The presence and
+        content reads share one guarded edge, so a denied stat or read yields
+        unknown metrics instead of aborting the ordinary report.
+        """
+        journal = self._dir(goal_id) / "host-events.jsonl"
+        try:
+            if not journal.exists():
+                return 0
+            lines = journal.read_text(encoding="utf-8").splitlines()
+        except FileNotFoundError:
+            return 0
+        except (OSError, ValueError):
+            return None
+        starts = 0
+        for line in lines:
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except ValueError:
+                return None
+            if not isinstance(record, dict) or not isinstance(record.get("event"), str):
+                return None
+            if record["event"] == "controller_started":
+                starts += 1
+        return starts
+
     def report(self, goal_id):
         record = self.get(goal_id)
         spec = self._read(self._dir(goal_id) / "spec.json")
         state = record["state"]
+        starts = self._controller_starts(goal_id)
         status = state.get("status", "RECOVERING")
         actions = {"COMPLETE": "查看结果后，由你设置下一条 Goal。",
                    "RUNNING": "Agent 正在自主执行，无需手动救场。",
@@ -170,6 +202,8 @@ class GoalManager:
                 "candidate": state.get("checked_candidate"),
                 "recovery_count": state.get("recovery_count", 0),
                 "host_restart_count": state.get("host_restart_count", 0),
+                "controller_start_count": starts,
+                "controller_restart_count": None if starts is None else max(0, starts - 1),
                 "session_reset_count": len(state.get("previous_session_ids", [])),
                 "blocker": state.get("blocker") if status == "NEEDS_USER" else None,
                 "next_user_action": actions.get(status, "查看进度。"),
