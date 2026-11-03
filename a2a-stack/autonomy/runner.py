@@ -60,6 +60,13 @@ class InfrastructureUnavailable(Exception):
     """Canonical capability failure; retry transport without a model supervisor."""
 
 
+class OwnedSnapshotUnavailable(InfrastructureUnavailable):
+    """Only a known Windows sharing/access failure writing this Journal's state."""
+    def __init__(self, winerror):
+        self.winerror = winerror
+        super().__init__(f"Owned goal-state snapshot write unavailable (winerror={winerror})")
+
+
 def configured_mcp_url(spec):
     config = json.loads(Path(spec["mcp_config"]).read_text(encoding="utf-8"))
     server = config["mcpServers"]["northstar_a2a"]
@@ -214,7 +221,12 @@ class Journal:
         self.state.update(fields, updated_at=runtime.now())
         with (self.directory / "events.jsonl").open("a", encoding="utf-8") as out:
             out.write(json.dumps({"event": event, "at": self.state["updated_at"], **fields}) + "\n")
-        runtime.atomic_json(self.directory / "state.json", self.state)
+        try:
+            runtime.atomic_json(self.directory / "state.json", self.state)
+        except PermissionError as exc:
+            if getattr(exc, "winerror", None) in (5, 32, 33):
+                raise OwnedSnapshotUnavailable(exc.winerror) from exc
+            raise
 
     def cancel_check(self):
         if (self.directory / "cancel.request").exists():
@@ -296,31 +308,31 @@ class NativeBackend:
                 proc.kill()
                 proc.wait()
             raise
-        failures = dict(self.journal.state.get("native_failures", {}))
-        failures.pop(channel, None)
-        self.journal.record("process_observations_reset", native_failures=failures)
-        self.journal.record("process_started", **{channel + "_pid": proc.pid})
-        messages = queue.Queue()
-        def pump(pipe, source):
-            try:
-                for line in pipe:
-                    messages.put((source, line))
-            finally:
-                pipe.close()
-                messages.put((source, None))
-        for pipe, source in ((proc.stdout, "stdout"), (proc.stderr, "stderr")):
-            threading.Thread(target=pump, args=(pipe, source), daemon=True).start()
-        # Writing stdin in a thread also keeps cancellation responsive for large prompts.
-        def feed():
-            try:
-                proc.stdin.write(prompt)
-                proc.stdin.close()
-            except (OSError, ValueError):
-                pass
-        if prompt is not None:
-            threading.Thread(target=feed, daemon=True).start()
-        final, output, ended, diagnostic = None, [], 0, {}
         try:
+            failures = dict(self.journal.state.get("native_failures", {}))
+            failures.pop(channel, None)
+            self.journal.record("process_observations_reset", native_failures=failures)
+            self.journal.record("process_started", **{channel + "_pid": proc.pid})
+            messages = queue.Queue()
+            def pump(pipe, source):
+                try:
+                    for line in pipe:
+                        messages.put((source, line))
+                finally:
+                    pipe.close()
+                    messages.put((source, None))
+            for pipe, source in ((proc.stdout, "stdout"), (proc.stderr, "stderr")):
+                threading.Thread(target=pump, args=(pipe, source), daemon=True).start()
+            # Writing stdin in a thread also keeps cancellation responsive for large prompts.
+            def feed():
+                try:
+                    proc.stdin.write(prompt)
+                    proc.stdin.close()
+                except (OSError, ValueError):
+                    pass
+            if prompt is not None:
+                threading.Thread(target=feed, daemon=True).start()
+            final, output, ended, diagnostic = None, [], 0, {}
             with (self.journal.directory / (channel + ".jsonl")).open("a", encoding="utf-8") as log:
                 while ended < 2 or proc.poll() is None:
                     self.journal.cancel_check()
@@ -394,7 +406,10 @@ class NativeBackend:
             if proc.poll() is None:
                 # The parent additionally closes the complete inherited Windows Job.
                 proc.kill()
-                proc.wait()
+            proc.wait()
+            for pipe in (proc.stdin, proc.stdout, proc.stderr):
+                if pipe:
+                    pipe.close()
 
     def owner(self, feedback):
         self.wait_for_mcp()

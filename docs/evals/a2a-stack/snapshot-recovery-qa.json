@@ -1,0 +1,67 @@
+{
+  "reviewer": "review_agent_workflow",
+  "author": "autonomous_goal_runner + integration coordinator",
+  "verdict": "READY",
+  "scope": "Production rebind of the private snapshot-recovery increment and its 49-file framework check candidate. No live Goal or deployment approval.",
+  "candidate": {
+    "id": "b1114c8c9c42b74700c4db2fa16199f470e32aa767d6d2a9d4f16fe336201337",
+    "file_count": 49,
+    "manifest_path": "tmp/a2a-stack/instacart-soak/snapshot-recovery-integration/artifacts/candidate-combined.json",
+    "manifest_sha256": "377284acd3ba46431fd18e1a8501f3f9afae7a14fd3af31474832e95c8f58bcb",
+    "verification_path": "tmp/a2a-stack/instacart-soak/snapshot-recovery-integration/artifacts/verification-combined.json",
+    "verification_sha256": "324717f5a1da1a7ac7545b587e13a50105804fcbd2801478f20c69801a855cb2",
+    "summary_sha256": "ec2745696e49acf6edefd86a60d8890a516364ae29a8b4c5692a85b6e588630d",
+    "manifest_recomputed": {
+      "entries": 49,
+      "missing": [],
+      "mismatches": []
+    },
+    "runner_sha256": "14ffb11d6851587b8cc278dfb2945dccaccbf788df12ac8c9d88770b82d4cc67",
+    "test_runner_sha256": "ef026755464df54f44fdf5a1173dbdba8382e50638b214f860052b8912f18b0c",
+    "preserved_service_sha256": "3483de6ec61190fbfd76ff6f146d25476f64594fbecb727ed57671b85cc4dd9b",
+    "preserved_runtime_runner_sha256": "84ff4c6465b4a1e4a3e0feb00753062c5c9968606807adbcafd02c2db630252f",
+    "preserved_runtime_test_sha256": "89bb8af06cd65001eba29deaf35d2f1f7b8b84a01ad8d3146ba3eb6af6dc5d52"
+  },
+  "evidence": [
+    "Production autonomy runner SHA matches independently reviewed private candidate 14ffb11d6851587b8cc278dfb2945dccaccbf788df12ac8c9d88770b82d4cc67. Reviewed patch scope: owned Journal state snapshot WinError typing and protected post-spawn cleanup only.",
+    "Maintained test_runner.py includes the six focused recovery/cleanup tests and helper. Independently compared AST bodies in the 40 original Fixture test methods against git HEAD: all 40 are unchanged. The existing 55-test framework subset remains included in the full check; 61 autonomy tests passed.",
+    "Production test placement uses the existing Fixture and ordinary runner import; no private AST-loader scaffold was transplanted. The separate maintained integration handoff records equivalent focused-method bodies and original suite preservation.",
+    "The candidate manifest contains 49 files; recomputation found 49 entries, no missing files and no hash mismatches. Seven closed checks passed: workspace isolation 1, host workspace 2, candidate scope 7, agent 62, autonomy 61, runtime 14, independent scope matrix 8 (155 total tests).",
+    "Previously accepted concurrency service remains SHA 3483de6ec61190fbfd76ff6f146d25476f64594fbecb727ed57671b85cc4dd9b; previously reviewed runtime redaction remains SHA 84ff4c6465b4a1e4a3e0feb00753062c5c9968606807adbcafd02c2db630252f.",
+    "Integration summary marks host_reloaded=false; review therefore makes no claim about the currently loaded host or live recovery behavior."
+  ],
+  "limitations": [
+    "READY applies to the current source and offline check set only. Deployment, real parallel coder probe, fast-recovery probe, and C workload acceptance remain pending.",
+    "Prior private negative controls were reused; no redundant suite or live task was run."
+  ],
+  "checks": [
+    {
+      "id": "northstar-workspace-isolation-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-host-workspace-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-candidate-scope-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-agent-tests",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-autonomy-tests",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-runtime-tests",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-independent-scope-matrix",
+      "exit_code": 0
+    }
+  ]
+}

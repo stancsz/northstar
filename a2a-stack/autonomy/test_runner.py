@@ -1,5 +1,6 @@
 """Offline controller tests: no native model, service, or provider calls."""
 import importlib.util
+import io
 import asyncio
 import hashlib
 import json
@@ -17,6 +18,12 @@ SPEC = importlib.util.spec_from_file_location("autonomous_runner", Path(__file__
 runner = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(runner)
 SCRATCH = Path(__file__).resolve().parents[2] / "tmp/a2a-stack/qa/council-review/runner-fix"
+
+
+def snapshot_permission_error(code):
+    error = PermissionError("synthetic owned-state sharing error")
+    error.winerror = code
+    return error
 
 
 class Fixture(unittest.TestCase):
@@ -675,6 +682,160 @@ class Fixture(unittest.TestCase):
         event["mcp_servers"][0]["status"] = "connected"
         event["tools"].pop()
         self.assertFalse(runner.native_capability_receipt(event)["ready"])
+
+
+    def backend(self, journal, first):
+        fixture = self
+        class Backend:
+            calls = 0
+            supervisor_calls = 0
+            def owner(self, feedback):
+                self.calls += 1
+                if self.calls == 1: first()
+                fixture.assertEqual(journal.state["id"], fixture.spec["id"])
+                fixture.assertEqual(journal.state["session_id"], "same-native-session")
+                return fixture.proposal()
+            def supervisor(self, facts):
+                self.supervisor_calls += 1
+                return {"classification": "recoverable", "advice": "Fixture recovery", "evidence": []}
+            def fetch_review(self, reference): return fixture.task, fixture.stack
+            def check(self, check): return {"exit_code": 0, "output": "fixture passed"}
+        return Backend()
+
+    def journal(self):
+        journal = runner.Journal(self.goal, self.spec)
+        journal.record("fixture_session", session_id="same-native-session")
+        return journal
+
+    def test_owned_snapshot_one_shot_skips_supervisor_only_after_persistence(self):
+        for code in (5, 32, 33):
+            with self.subTest(winerror=code):
+                journal = self.journal()
+                original = runner.runtime.atomic_json
+                armed, recovery_persisted = [False], []
+                def atomic(path, data):
+                    if armed[0] and path == self.goal / "state.json":
+                        armed[0] = False
+                        raise snapshot_permission_error(code)
+                    original(path, data)
+                    if path == self.goal / "state.json" and data.get("status") == "RECOVERING":
+                        recovery_persisted.append(True)
+                def first():
+                    armed[0] = True
+                    journal.record("owned_snapshot_failure")
+                backend = self.backend(journal, first)
+                with mock.patch.object(runner.runtime, "atomic_json", side_effect=atomic):
+                    self.assertEqual(runner.run_goal(self.spec, journal, backend, lambda _: None), 0)
+                self.assertTrue(recovery_persisted)
+                self.assertEqual(backend.calls, 2)
+                self.assertEqual(backend.supervisor_calls, 0)
+                persisted = json.loads((self.goal / "state.json").read_text())
+                self.assertEqual(persisted["status"], "COMPLETE")
+                self.assertEqual(persisted["session_id"], "same-native-session")
+                self.assertNotIn("previous_session_ids", persisted)
+
+    def test_only_owned_atomic_snapshot_errors_are_typed_and_cause_retained(self):
+        journal = self.journal()
+        for code in (5, 32, 33):
+            error = snapshot_permission_error(code)
+            with self.subTest(winerror=code), mock.patch.object(runner.runtime, "atomic_json", side_effect=error):
+                with self.assertRaises(Exception) as raised: journal.record("fixture")
+                self.assertEqual(type(raised.exception).__name__, "OwnedSnapshotUnavailable")
+                self.assertIs(raised.exception.__cause__, error)
+                self.assertIn("winerror=" + str(code), str(raised.exception))
+        with mock.patch.object(runner.runtime, "atomic_json", side_effect=snapshot_permission_error(87)):
+            with self.assertRaises(PermissionError): journal.record("unrecognized_code")
+
+    def test_outside_snapshot_permission_keeps_supervisor(self):
+        journal = self.journal()
+        def first(): raise snapshot_permission_error(5)
+        backend = self.backend(journal, first)
+        runner.run_goal(self.spec, journal, backend, lambda _: None)
+        self.assertEqual(backend.supervisor_calls, 1)
+
+    def test_persistent_snapshot_failure_surfaces_without_false_complete(self):
+        journal = self.journal()
+        original = runner.runtime.atomic_json
+        broken = [False]
+        def atomic(path, data):
+            if broken[0] and path == self.goal / "state.json": raise snapshot_permission_error(5)
+            original(path, data)
+        def first():
+            broken[0] = True
+            journal.record("persistent_failure")
+        backend = self.backend(journal, first)
+        with mock.patch.object(runner.runtime, "atomic_json", side_effect=atomic):
+            with self.assertRaises(Exception) as raised:
+                runner.run_goal(self.spec, journal, backend, lambda _: None)
+        self.assertEqual(type(raised.exception).__name__, "OwnedSnapshotUnavailable")
+        self.assertEqual(backend.calls, 1)
+        self.assertEqual(backend.supervisor_calls, 0)
+        self.assertNotEqual(json.loads((self.goal / "state.json").read_text())["status"], "COMPLETE")
+        self.assertNotIn("accepted_receipt", journal.state)
+
+    def test_setup_failures_after_spawn_close_job_wait_child_and_pipes(self):
+        for boundary in ("process_observations_reset", "process_started", "pump_start"):
+            with self.subTest(boundary=boundary):
+                journal = self.journal()
+                class Process:
+                    pid = 12345
+                    returncode = None
+                    waited = False
+                    def __init__(self): self.stdin, self.stdout, self.stderr = io.StringIO(), io.StringIO(), io.StringIO()
+                    def poll(self): return self.returncode
+                    def kill(self): self.returncode = 1
+                    def wait(self): self.waited = True; return self.returncode
+                process = Process()
+                class Job:
+                    closed = False
+                    def assign(self, child): pass
+                    def close(self): self.closed = True; process.returncode = 1
+                job = Job()
+                original_record = journal.record
+                def record(event, **fields):
+                    if event == boundary: raise ValueError("synthetic setup failure")
+                    return original_record(event, **fields)
+                with mock.patch.object(runner.runtime, "Job", return_value=job), \
+                     mock.patch.object(runner.subprocess, "Popen", return_value=process), \
+                     mock.patch.object(journal, "record", side_effect=record), \
+                     mock.patch.object(runner.threading.Thread, "start", side_effect=ValueError("synthetic setup failure")):
+                    with self.assertRaisesRegex(ValueError, "synthetic setup"):
+                        runner.NativeBackend(self.spec, journal).process(["fixture-only"], "fixture")
+                self.assertTrue(job.closed)
+                self.assertTrue(process.waited)
+                self.assertTrue(all(pipe.closed for pipe in (process.stdin, process.stdout, process.stderr)))
+
+    @unittest.skipUnless(os.name == "nt", "actual Windows Job cleanup fixture")
+    def test_journal_failure_after_real_python_spawn_reaps_owned_child(self):
+        journal = self.journal()
+        processes, jobs = [], []
+        real_popen, real_job = runner.subprocess.Popen, runner.runtime.Job
+        def spawn(*args, **kwargs):
+            child = real_popen(*args, **kwargs)
+            processes.append(child)
+            return child
+        def new_job():
+            job = real_job()
+            jobs.append(job)
+            return job
+        try:
+            with mock.patch.object(runner.subprocess, "Popen", side_effect=spawn), \
+                 mock.patch.object(runner.runtime, "Job", side_effect=new_job), \
+                 mock.patch.object(journal, "record", side_effect=ValueError("synthetic post-spawn journal failure")):
+                with self.assertRaisesRegex(ValueError, "post-spawn journal"):
+                    runner.NativeBackend(self.spec, journal).process([sys.executable, "-c", "import time; time.sleep(60)"], channel="check")
+            self.assertEqual(len(processes), 1)
+            self.assertIsNotNone(processes[0].poll())
+            self.assertTrue(all(pipe.closed for pipe in (processes[0].stdout, processes[0].stderr)))
+        finally:
+            # Negative-control cleanup also reaps the deliberately exposed
+            # baseline vulnerability; no fixture child is allowed to linger.
+            for job in jobs: job.close()
+            for child in processes:
+                if child.poll() is None: child.kill()
+                child.wait()
+                for pipe in (child.stdin, child.stdout, child.stderr):
+                    if pipe: pipe.close()
 
 
 if __name__ == "__main__":
