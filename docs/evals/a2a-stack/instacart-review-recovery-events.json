@@ -1,0 +1,47 @@
+{
+  "goal_id": "g-759acc25206241c9a8783541855fdd6a",
+  "source": "autonomy/goals/g-759acc25206241c9a8783541855fdd6a/events.jsonl",
+  "events": [
+    {
+      "at": "2026-11-03T09:13:00.020893-06:00",
+      "event": "recovering",
+      "status": "RECOVERING",
+      "recovery_count": 2,
+      "native_exitcode": null,
+      "supervisor_pid": null,
+      "owner_pid": null,
+      "immutable_review_coverage_error": true
+    },
+    {
+      "at": "2026-11-03T09:13:00.043677-06:00",
+      "event": "process_started",
+      "status": null,
+      "recovery_count": null,
+      "native_exitcode": null,
+      "supervisor_pid": 40088,
+      "owner_pid": null,
+      "immutable_review_coverage_error": false
+    },
+    {
+      "at": "2026-11-03T09:22:59.7317-06:00",
+      "event": "process_finished",
+      "status": null,
+      "recovery_count": null,
+      "native_exitcode": 0,
+      "supervisor_pid": null,
+      "owner_pid": null,
+      "immutable_review_coverage_error": false
+    },
+    {
+      "at": "2026-11-03T09:22:59.959671-06:00",
+      "event": "process_started",
+      "status": null,
+      "recovery_count": null,
+      "native_exitcode": null,
+      "supervisor_pid": null,
+      "owner_pid": 3168,
+      "immutable_review_coverage_error": false
+    }
+  ],
+  "interpretation": "The recorded coverage rejection starts a supervisor process, whose native exit code is recorded, then resumes an owner process. This confirms execution sequencing, not semantic correctness of the supervisor diagnosis."
+}
