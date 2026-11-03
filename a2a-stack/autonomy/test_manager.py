@@ -12,6 +12,7 @@ import subprocess
 import sys
 import tempfile
 import textwrap
+import threading
 import unittest
 from unittest.mock import patch
 
@@ -382,6 +383,166 @@ class GoalManagerTests(unittest.TestCase):
             self.assertTrue(kwargs["creationflags"] & 0x4)  # CREATE_SUSPENDED
             self.assertTrue(kwargs["creationflags"] & subprocess.CREATE_NO_WINDOW)
 
+
+def watcher_publish_permission_error(code):
+    error = PermissionError("synthetic owned recovery-publish error")
+    error.winerror = code
+    return error
+
+
+class WatcherRecoveryTests(unittest.IsolatedAsyncioTestCase):
+    async def asyncSetUp(self):
+        self.module = manager_module
+        SCRATCH.mkdir(parents=True, exist_ok=True)
+        self.temp = tempfile.TemporaryDirectory(dir=SCRATCH)
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.manager = self.module.GoalManager(self.root / "host", self.root)
+        self.goal_id = "g-" + "b" * 32
+        self.directory = self.manager._dir(self.goal_id)
+        self.directory.mkdir(parents=True)
+        self.state_path = self.directory / "state.json"
+        self.spec_path = self.directory / "spec.json"
+        self.real_atomic = self.module.runtime.atomic_json
+        self.real_atomic(self.state_path, {"id": self.goal_id, "status": "RUNNING", "session_id": "same-native-session"})
+        self.real_atomic(self.spec_path, {"id": self.goal_id, "workspace": str(self.root), "checks": [], "goal": "fixture only"})
+        self.spec_hash = hashlib.sha256(self.spec_path.read_bytes()).hexdigest()
+        self.starts, self.jobs = [], []
+        self.block = threading.Event()
+
+    def boundaries(self, *, fail_codes=(), stop_on_failure=None, block_first=False):
+        fixture = self
+        remaining = list(fail_codes)
+        failures = []
+        loop = asyncio.get_running_loop()
+        self.entered = asyncio.Event()
+        class Process:
+            def __init__(self, number):
+                self.number, self.pid, self.code = number, 12300 + number, None
+                self.waited = False
+            def wait(self):
+                self.waited = True
+                if block_first and self.number == 1:
+                    loop.call_soon_threadsafe(fixture.entered.set)
+                    fixture.block.wait()
+                if self.number == 2:
+                    state = json.loads(fixture.state_path.read_text())
+                    state["status"] = "COMPLETE"
+                    fixture.real_atomic(fixture.state_path, state)
+                self.code = 1 if self.number == 1 else 0
+                return self.code
+            def poll(self): return self.code
+            def kill(self):
+                self.code = 1
+                fixture.block.set()
+        class Job:
+            def __init__(self): self.proc, self.closed = None, False; fixture.jobs.append(self)
+            def assign(self, proc): self.proc = proc
+            def close(self):
+                self.closed = True
+                if self.proc and self.proc.poll() is None: self.proc.kill()
+        def spawn(*args, **kwargs):
+            fixture.assertFalse(any(p.poll() is None for p in fixture.starts), "Duplicate live controller")
+            proc = Process(len(fixture.starts) + 1)
+            fixture.starts.append(proc)
+            return proc
+        def atomic(path, value):
+            if path == fixture.state_path and value.get("status") == "RECOVERING" and remaining:
+                code = remaining.pop(0)
+                failures.append(code)
+                if stop_on_failure == "cancel": (fixture.directory / "cancel.request").touch()
+                if stop_on_failure == "complete":
+                    current = json.loads(fixture.state_path.read_text())
+                    current["status"] = "COMPLETE"
+                    fixture.real_atomic(fixture.state_path, current)
+                if stop_on_failure == "closing": fixture.manager.closing = True
+                raise watcher_publish_permission_error(code)
+            fixture.real_atomic(path, value)
+        patches = [patch.object(self.module.runtime, "Job", Job),
+            patch.object(self.module.subprocess, "Popen", side_effect=spawn),
+            patch.object(self.module.runtime, "process_token", return_value="fixture-token"),
+            patch.object(self.module.runtime, "atomic_json", side_effect=atomic)]
+        return patches, failures
+
+    async def execute(self, **kwargs):
+        from contextlib import ExitStack
+        patches, failures = self.boundaries(**kwargs)
+        with ExitStack() as stack:
+            for patch in patches: stack.enter_context(patch)
+            await self.manager._watch(self.goal_id)
+        return failures
+
+    async def test_one_shot_owned_publish_failure_retries_same_goal(self):
+        for code in (5, 32, 33):
+            with self.subTest(winerror=code):
+                # Separate cases reset only this disposable fixture.
+                self.starts.clear(); self.jobs.clear()
+                self.real_atomic(self.state_path, {"id": self.goal_id, "status": "RUNNING", "session_id": "same-native-session"})
+                self.assertEqual(await self.execute(fail_codes=[code]), [code])
+                state = json.loads(self.state_path.read_text())
+                self.assertEqual(state["status"], "COMPLETE")
+                self.assertEqual(state["id"], self.goal_id)
+                self.assertEqual(state["session_id"], "same-native-session")
+                self.assertEqual(state["host_restart_count"], 1)
+                self.assertEqual(hashlib.sha256(self.spec_path.read_bytes()).hexdigest(), self.spec_hash)
+                self.assertEqual(len(self.starts), 2)
+                self.assertEqual(self.manager.processes, {})
+                self.assertTrue(all(job.closed and job.proc.waited for job in self.jobs))
+
+    async def test_cancel_complete_or_shutdown_during_retry_never_relaunch(self):
+        for condition in ("cancel", "complete", "closing"):
+            with self.subTest(condition=condition):
+                self.starts.clear(); self.jobs.clear(); self.manager.closing = False
+                (self.directory / "cancel.request").unlink(missing_ok=True)
+                self.real_atomic(self.state_path, {"id": self.goal_id, "status": "RUNNING", "session_id": "same-native-session"})
+                await self.execute(fail_codes=[5], stop_on_failure=condition)
+                self.assertEqual(len(self.starts), 1)
+                self.assertTrue(self.jobs[0].closed)
+                self.assertEqual(self.manager.processes, {})
+
+    async def test_unrecognized_permission_error_still_surfaces(self):
+        with self.assertRaises(PermissionError) as caught: await self.execute(fail_codes=[87])
+        self.assertEqual(caught.exception.winerror, 87)
+        self.assertEqual(len(self.starts), 1)
+        self.assertTrue(self.jobs[0].closed)
+
+    async def test_repeated_owned_publish_errors_do_not_duplicate_controllers(self):
+        self.assertEqual(await self.execute(fail_codes=[5, 32, 33]), [5, 32, 33])
+        self.assertEqual(len(self.starts), 2)
+        state = json.loads(self.state_path.read_text())
+        self.assertEqual(state["status"], "COMPLETE")
+        self.assertEqual(state["host_restart_count"], 1)
+        events = [json.loads(line) for line in (self.directory / "host-events.jsonl").read_text().splitlines()]
+        self.assertEqual([event["winerror"] for event in events if event["event"] == "host_snapshot_recovery"], [5, 32, 33])
+
+    async def test_initial_terminal_or_cancel_never_launches(self):
+        for status in ("COMPLETE", "CANCELED", "NEEDS_USER"):
+            self.real_atomic(self.state_path, {"status": status})
+            await self.execute()
+            self.assertEqual(self.starts, [])
+        self.real_atomic(self.state_path, {"status": "RUNNING"})
+        (self.directory / "cancel.request").touch()
+        await self.execute()
+        self.assertEqual(self.starts, [])
+
+    async def test_live_controller_is_not_duplicated_and_cancellation_owns_cleanup(self):
+        from contextlib import ExitStack
+        patches, _ = self.boundaries(block_first=True)
+        with ExitStack() as stack:
+            for patch in patches: stack.enter_context(patch)
+            watcher = asyncio.create_task(self.manager._watch(self.goal_id))
+            try:
+                await self.entered.wait()
+                self.assertEqual(len(self.starts), 1)
+                self.assertIsNotNone(self.manager.processes.get(self.goal_id))
+                watcher.cancel()
+                with self.assertRaises(asyncio.CancelledError): await watcher
+            finally:
+                self.block.set()
+                if not watcher.done(): watcher.cancel()
+        self.assertEqual(len(self.starts), 1)
+        self.assertTrue(self.jobs[0].closed)
+        self.assertEqual(self.manager.processes, {})
 
 if __name__ == "__main__":
     unittest.main()

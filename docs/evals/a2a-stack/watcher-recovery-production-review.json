@@ -1,0 +1,73 @@
+{
+  "reviewer": "review_agent_workflow",
+  "author": "autonomous_goal_runner",
+  "verdict": "READY",
+  "scope": "Production integration acceptance for the GoalManager watcher recovery increment only; not whole Goal, deployment, or soak acceptance.",
+  "candidate": "4e238aa2e860c9c74bb7aa35f07a1efc737da6ad8cb73f92002ccde6767daa48",
+  "git_base_commit": "31858ba931a74fe5029d7420ed5af312b1a51ae9",
+  "source_file_count": 49,
+  "all_manifest_hashes_match_current_tree": true,
+  "changed_paths_reviewed": [
+    "a2a-stack/autonomy/manager.py",
+    "a2a-stack/autonomy/test_manager.py"
+  ],
+  "increment_hashes": {
+    "a2a-stack/autonomy/manager.py": "240c40accd575bef937d470d43526ebde8bd6c886ba2d4316bda85ed39dfb2c7",
+    "a2a-stack/autonomy/test_manager.py": "31f5d8b330d3f699bb331ec667a79346083fcb6e2957c5515afa95445999a596"
+  },
+  "prior_independent_private_and_maintained_test_evidence": {
+    "private_manager_sha256": "240c40accd575bef937d470d43526ebde8bd6c886ba2d4316bda85ed39dfb2c7",
+    "maintained_test_sha256": "31f5d8b330d3f699bb331ec667a79346083fcb6e2957c5515afa95445999a596",
+    "original_fixture_ast": "15 original GoalManager tests and fixture preserved; six new watcher recovery tests were independently reviewed and run, 21/21 total."
+  },
+  "integration": {
+    "checks_passed": true,
+    "check_exit_codes": {
+      "northstar-workspace-isolation-contract": 0,
+      "northstar-host-workspace-contract": 0,
+      "northstar-candidate-scope-contract": 0,
+      "northstar-agent-tests": 0,
+      "northstar-autonomy-tests": 0,
+      "northstar-runtime-tests": 0,
+      "northstar-independent-scope-matrix": 0
+    },
+    "observed_test_counts": {
+      "northstar-workspace-isolation-contract": 1,
+      "northstar-host-workspace-contract": 2,
+      "northstar-candidate-scope-contract": 7,
+      "northstar-agent-tests": 62,
+      "northstar-autonomy-tests": 67,
+      "northstar-runtime-tests": 14,
+      "northstar-independent-scope-matrix": 8
+    },
+    "observed_total_tests": 161,
+    "reported_expected_test_count": 161,
+    "host_reloaded": false
+  },
+  "artifacts": {
+    "summary": {
+      "path": "tmp\\a2a-stack\\instacart-soak\\watcher-recovery-integration\\summary.json",
+      "sha256": "d49028c4a0a696d97b9256f512e055839970c37087e785b9d110d3d7dd477d62"
+    },
+    "candidate_manifest": {
+      "path": "tmp\\a2a-stack\\instacart-soak\\watcher-recovery-integration\\artifacts\\candidate-combined.json",
+      "sha256": "1c0c67918181b434c79ad4f13263ba93fe4c4be5730b65e515af4365d982a1bf"
+    },
+    "verification": {
+      "path": "tmp\\a2a-stack\\instacart-soak\\watcher-recovery-integration\\artifacts\\verification-combined.json",
+      "sha256": "96f07f1bb58abe7d661ec4c5dc793e771554bccbfbb3537e5fb3648e2b49fc06"
+    }
+  },
+  "evidence": [
+    "All 49 paths and SHA-256 values in the integrated candidate manifest match the current tree; candidate identity is bound to the closed verification artifact.",
+    "The only production diff in the scoped increment is the watcher retry around RECOVERING snapshot publication for PermissionError WinError 5/32/33; every retry checks cancellation/closing and rereads terminal state before writing. The controller is not relaunched until the recovery state write succeeds.",
+    "The maintained production test file retains all 15 original GoalManager test methods and fixture unchanged and adds the six reviewed recovery tests. Earlier independent maintained-test review ran all 21 against the exact private manager candidate.",
+    "Integrated verification has seven checks, all exit 0. Captured test counts are 1 + 2 + 7 + 62 + 67 + 14 + 8 = 161; this is read from each check output, not inferred from the expected count.",
+    "The integrated candidate reports host_reloaded=false; no live host reload or whole-goal/soak acceptance is claimed."
+  ],
+  "limitations": [
+    "This approves the watcher recovery source and exact seven-check integration candidate only.",
+    "No new Goal, host mutation, or additional full-suite run was performed; earlier private and maintained 21-test evidence is reused because the candidate hashes match.",
+    "No whole C-workspace readiness or sustained Goal completion claim is included."
+  ]
+}

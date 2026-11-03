@@ -209,13 +209,21 @@ class GoalManager:
                     proc.kill()
                     await asyncio.to_thread(proc.wait)
                 self.processes.pop(goal_id, None)
-            if self.closing or (directory / "cancel.request").exists():
-                return
-            state = self._read(directory / "state.json", {})
-            if state.get("status") in TERMINAL:
-                return
-            state.update(status="RECOVERING", host_restart_count=state.get("host_restart_count", 0) + 1)
-            runtime.atomic_json(directory / "state.json", state)
+            while True:
+                if self.closing or (directory / "cancel.request").exists():
+                    return
+                state = self._read(directory / "state.json", {})
+                if state.get("status") in TERMINAL:
+                    return
+                state.update(status="RECOVERING", host_restart_count=state.get("host_restart_count", 0) + 1)
+                try:
+                    runtime.atomic_json(directory / "state.json", state)
+                    break
+                except PermissionError as exc:
+                    if getattr(exc, "winerror", None) not in (5, 32, 33):
+                        raise
+                    self._event(goal_id, "host_snapshot_recovery", winerror=exc.winerror)
+                    await asyncio.sleep(.2)
             # Yield to other goals between real process-exit events; never a retry ceiling.
             await asyncio.sleep(.2)
 
