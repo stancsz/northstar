@@ -17,3 +17,7 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+# A2A generated evidence is archived outside this repository
+/docs/evals/a2a-stack/*
+!/docs/evals/a2a-stack/README.md

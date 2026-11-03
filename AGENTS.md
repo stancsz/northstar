@@ -16,6 +16,8 @@ Keep this repository skills-only. Prioritize concise skill instructions, example
 
 ## Start here
 
+**Owner focus correction (2026-11-03):** The main chat's 30-minute supervision and subsequent Worker goals advance Northstar A2A itself. Instacart is only an optional validation workload. Do not create an ongoing application-maintenance queue to keep agents busy. Name the framework capability gap, evidence, write scope and distinguishing acceptance for every new goal; preserve and safely close already active work.
+
 1. Start from the current task state and [Northstar](skills/northstar/SKILL.md); take its next useful action.
 2. For sustained Northstar work, use the [active goal](docs/goal/README.md). Read project direction, linked evidence or companion guidance only when it can change scope, the next action, or acceptance; a small one-turn task can proceed from its request.
 
@@ -28,6 +30,7 @@ Keep this repository skills-only. Prioritize concise skill instructions, example
 - For sustained work that needs durable cross-turn state, the supervisor maintains the existing project goal record and its index entry. Small one-turn tasks use the request and a concise handoff; do not create a goal record just to follow this layout.
 - Workers return the artifact, checks, gaps and next action in a concise handoff. Write `docs/reports/<goal>/<task>.md` only when the task or repository explicitly requires a durable report, or when a partial/blocked result needs continuation. Supervisors inspect artifacts and evidence before accepting work. Follow the [handoff practice](skills/northstar/SKILL.md#worker-reports-and-handoffs).
 - `docs/evals/` records what was inspected, observed results, fixes, and limitations. Link to goals and evaluated revisions.
+- **Owner storage rule (2026-11-03):** Keep generated A2A run artifacts and application-specific execution history out of Northstar Git, especially Instacart receipts, logs, screenshots, snapshots, candidate manifests and detailed run reviews. Store them under `D:/northstar-artifacts/a2a-stack/` or the owning application's designated untracked evidence storage. Northstar retains only reusable source/tests/docs and concise capability/storage summaries. Maintain live execution and supervisor journals externally; the repository may link to them while stating that they are local-only. Do not move active ignored runtime state without a quiescent, verified migration. Previously committed history is not rewritten by this policy.
 - `docs/misc/` holds other supporting documentation, including installation guides and translations.
 - `tmp/<task-or-agent>/` holds disposable artifacts and is ignored.
 

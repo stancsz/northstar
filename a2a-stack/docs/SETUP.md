@@ -2,7 +2,7 @@
 
 日常闭环：**你描述 Goal → MCP set_goal → Agent 在 Goal 内自主完成 → MCP get_goal_report → 你决定下一条 Goal。** 不需要你手写 job 文件、逐步派发角色、盯着每次错误重启。
 
-当前安装位置是 `D:\github\northstar`。本机宿主服务、Docker MCP 网关和 Codex 的 `northstar_a2a` 连接条目已经设置。两个真实 Goal 已在无人纠偏下完成，其中一次包含控制进程故障和自动恢复。详细证据见仓库的 `docs/evals/a2a-stack/`。
+当前安装位置是 `D:\github\northstar`。本机宿主服务、Docker MCP 网关和 Codex 的 `northstar_a2a` 连接条目已经设置。两个真实 Goal 已在无人纠偏下完成，其中一次包含控制进程故障和自动恢复。详细运行证据存于仓库外；位置和验证范围见[存储索引](../../docs/evals/a2a-stack/README.md)。
 
 ## 首次安装（尚无运行中的宿主）
 

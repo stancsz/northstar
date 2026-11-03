@@ -6,7 +6,7 @@ Reusable local stack under `D:\github\northstar\a2a-stack`. Coding uses the inst
 
 **[中文启动与 MCP 操作指南](docs/SETUP.md)** · **[自主完成契约](AUTONOMY.md)**
 
-Human interaction is goal-bounded: `set_goal` starts a persistent main agent; `get_goal_report` presents the verified result; the human chooses the next goal. Within the goal, the harness handles native retry, context/process recovery and independent acceptance. Two real local goals completed, including one transient verifier failure and one controller-crash recovery without corrective intervention. Evidence and scope are recorded in `docs/evals/a2a-stack/`.
+Human interaction is goal-bounded: `set_goal` starts a persistent main agent; `get_goal_report` presents the verified result; the human chooses the next goal. Within the goal, the harness handles native retry, context/process recovery and independent acceptance. Two real local goals completed, including one transient verifier failure and one controller-crash recovery without corrective intervention. Evidence is stored outside Git; see the [evaluation storage index](../docs/evals/a2a-stack/README.md) for scope and local archive location.
 
 ```text
 Codex / Claude Code (MCP client)
