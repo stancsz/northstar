@@ -1,0 +1,57 @@
+{
+  "verdict": "READY",
+  "scope": "Component-only independent review of immutable first-stage formal review result change; this does not authorize integration or assess the resumed final candidate.",
+  "handoff_sha256": null,
+  "handoff_note": "No handoff file was present in the six-file closed first-stage snapshot; the active resumed worker handoff was not read.",
+  "reviewed_source_sha256": {
+    "agent/service.py": "e586c8b55e1a7994ac11de15ddd9780b8c9ee40930fb0961538dfe29a383bb36",
+    "agent/stacks.py": "81969b1f450f92fe2298a1a8d9f6912fafe2eb4a6d8c30b728a9a36cfff7d277",
+    "agent/test_formal_review_result.py": "e2628b355a0a89307ac634051bbcf666a1cc6fecaa9687dba555ea19d6c0534d",
+    "autonomy/runner.py": "f6f27c98ed0f26ddc0d0997df47364bc3db303e9900eb87689560c39bff1f769",
+    "autonomy/test_runner.py": "e7436ad20f19be474469900a47c3c670b3b6be286892899e3ec7b970b97d3ca9"
+  },
+  "closed_snapshot_receipts": {
+    "baseline_result_sha256": "df2a44d6ead8f1966145ffad907f5eb27b09d98c69b87934d9de4196e4085182",
+    "focused_result_sha256": "6dbd67d3a985b897f35cf0a4b4e792ef541c553f0cf8c29fd5a0b5d55572c2e2",
+    "verification_sha256": "91b59b3f7c896dcb6ab903c5c649eddbd91e98f88bdfb1b01008a780f0eab945",
+    "author_focused_result": "16 tests, 0 failures, 0 errors; baseline characterization: 16 tests, 12 failures, 2 errors.",
+    "author_verification": "96 tests, 0 failures, 0 errors. This receipt was inspected but not treated as independent runtime evidence."
+  },
+  "baseline_dependencies": {
+    "agent/service.py": "60af6c4895183691bf7215c3283eba7600ef5f2d7b30d6a692f52d2eb72c01e7",
+    "agent/stacks.py": "2f7cf7a04f1f28a26f10b209a2594bb02aa6b408a585c8b2091faf8e144edf49",
+    "autonomy/runner.py": "f6f27c98ed0f26ddc0d0997df47364bc3db303e9900eb87689560c39bff1f769",
+    "autonomy/test_runner.py": "e7436ad20f19be474469900a47c3c670b3b6be286892899e3ec7b970b97d3ca9"
+  },
+  "criteria": {
+    "goal_candidate_metadata": "PASS: StackManager adds formal_review metadata only for a Goal-bound reviewer assignment with a candidate; candidate and Goal ID come from the bound assignment/stack, and current_review validates the frozen candidate before binding.",
+    "formal_result_validation": "PASS: Goal-bound result is parsed with the existing parse_object, must be one object naming the frozen candidate with an accepted verdict and nonempty string evidence; READY, NOT READY, NOT_READY, and UNVERIFIED are allowed Task results.",
+    "publication_order": "PASS: sanitized handoff is validated before _run_job reports success; execute publishes an artifact and completes only after that success. JobFailed takes the Task failure path with no review artifact.",
+    "safe_retry": "PASS: fixed failure text requests a new review Task in the same Goal for the same candidate and does not echo invalid result content. Reviewer binding does not mutate Goal state or advance coder generation.",
+    "generic_shapes": "PASS: diff leaves non-Claude execution untouched; formal validation is a no-op when no formal_review contract is present. Added tests cover coder, candidate-less component reviewer, and legacy job freeform results.",
+    "negative_verdict_goal_acceptance": "PASS by unchanged baseline dependency: autonomy/runner.py requires a completed reviewer Task plus candidate-bound READY evidence before Goal review acceptance; a completed NOT READY/UNVERIFIED Task alone is not Goal acceptance.",
+    "permissions_and_child_launch": "PASS: the first-stage diff changes only the result validator/call and Goal-review metadata. Existing profile tools, permission mode, Claude argv/settings/background wait, environment, and child process lifecycle are unchanged.",
+    "task_store_and_scope": "PASS: TaskStore and autonomy manager/test files are unchanged by this first-stage candidate; metadata is attached in the existing stack loader and validation in the existing job executor."
+  },
+  "independent_runtime": {
+    "status": "PASS",
+    "journey": "Actual A2A SDK Task handled by the first-stage candidate service/stacks; synthetic child process returned progress prose.",
+    "command": "D:/github/northstar/tmp/a2a-stack/venv/Scripts/python.exe -B D:/github/northstar/tmp/a2a-stack/instacart-soak/formal-review-result-first-stage-qa/run_probe.py",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "assertions": "Task becomes FAILED; no artifact is published; Goal state bytes/status remain unchanged.",
+    "fixtures": "D:/github/northstar/tmp/a2a-stack/instacart-soak/formal-review-result-first-stage-qa/fixtures",
+    "snapshot_hashes_preserved": true,
+    "live_host_or_model": false
+  },
+  "findings": {
+    "must_fix": [],
+    "suggestions": [],
+    "unverified": [
+      "This verdict covers only the closed first-stage snapshot. The resumed final five-file delta and its final independent handoff have not been reviewed.",
+      "The original 83 autonomy tests were not independently rerun; no autonomy production/test files changed in the reviewed first stage, and the recorded 96-test receipt is author evidence only."
+    ]
+  },
+  "decision": "Component READY for the exact first-stage hashes only; do not treat this as final integration approval or as permission to read/act on the active resumed worker."
+}
