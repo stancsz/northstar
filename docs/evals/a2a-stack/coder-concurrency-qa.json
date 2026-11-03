@@ -1,0 +1,65 @@
+{
+  "reviewer": "review_agent_workflow",
+  "author": "autonomous_goal_runner + integration coordinator",
+  "verdict": "READY",
+  "scope": "Production source and existing framework check integration for per-coder concurrency; no live deployment, native parallel probe, or C Goal acceptance.",
+  "candidate": {
+    "id": "0f20576707953568fcdc5977472002c5b4ac2f83aff09da8a3e1cc6511861533",
+    "file_count": 49,
+    "manifest_path": "tmp/a2a-stack/instacart-soak/coder-concurrency-integration/artifacts/candidate-combined.json",
+    "manifest_sha256": "6fc5cbb2242f9d755d2b3b2f2dd10e9184b5abb1e820a97ff1320ef847c6e2e3",
+    "verification_path": "tmp/a2a-stack/instacart-soak/coder-concurrency-integration/artifacts/verification-combined.json",
+    "verification_sha256": "f37246c5fa85d6a67b04403d09ef1b7a13aa24fa6fd5d7c103d6a34c407986e3",
+    "summary_sha256": "18e2b08046ff6a7656401dd0a02774b92106f70bbdecb6a93f093d8caf97108d",
+    "manifest_recomputed": {
+      "entries": 49,
+      "missing": [],
+      "mismatches": []
+    },
+    "service_sha256": "3483de6ec61190fbfd76ff6f146d25476f64594fbecb727ed57671b85cc4dd9b",
+    "test_sha256": "27d45c0d82fbeb5d8c3eb892d92124230e2ad29b701ac8d93a98ff58f7f08d7a",
+    "setup_sha256": "4cd38be6b1ff12e33e1fb5a62377f206edd6c6bc05cfff9b2a896a4c750b51ae"
+  },
+  "evidence": [
+    "Production service.py matches privately reviewed candidate SHA 3483de6ec61190fbfd76ff6f146d25476f64594fbecb727ed57671b85cc4dd9b; production test matches private test SHA 27d45c0d82fbeb5d8c3eb892d92124230e2ad29b701ac8d93a98ff58f7f08d7a.",
+    "Compared to the prior production service, the only code change removes role_app_factory injection of the legacy root executor semaphore. Every RegisteredJobExecutor still owns its Semaphore(1); root and same-role serialization remain covered by tests.",
+    "Private test suite was independently run 3/3 PASS; exact production baseline failed only the distinct-coder overlap case, establishing the old behavior.",
+    "SETUP documentation now describes a per-host explicitly authorized workspace and default-to-framework behavior without asserting the current machine is always the framework workspace.",
+    "The combined candidate manifest includes 49 files; recomputation found 49 entries, no missing files and no hash mismatches. All seven integrated checks passed: workspace isolation 1, host workspace 2, candidate scope 7, agent 62, autonomy 55, runtime 14, independent scope matrix 8 (149 tests total).",
+    "Integration summary says host_reloaded=false and active goal g-2ab099f9f9424d93917be136905cf3da unchanged, preserving the separation between source/check readiness and live execution."
+  ],
+  "limitations": [
+    "No host reload, actual native parallel A2A execution, or acceptance of the active C Goal was performed. The running host still has the pre-increment service loaded.",
+    "This verdict does not claim live throughput improvement or Instacart soak completion."
+  ],
+  "checks": [
+    {
+      "id": "northstar-workspace-isolation-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-host-workspace-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-candidate-scope-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-agent-tests",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-autonomy-tests",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-runtime-tests",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-independent-scope-matrix",
+      "exit_code": 0
+    }
+  ]
+}

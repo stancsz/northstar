@@ -727,7 +727,6 @@ def build_app(executor: AgentExecutor | None = None):
 
         role_executor = RegisteredJobExecutor(
             job_loader=scoped_loader,
-            semaphore=(getattr(root_executor, "_semaphore", None) if role["profile"] == "coder" else None),
         )
         role_card = build_agent_card()
         role_card.name = f"northstar/{stack['stack_id']}/{role['id']}/{role['profile']}"
