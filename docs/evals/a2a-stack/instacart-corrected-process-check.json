@@ -1,0 +1,16 @@
+{
+  "candidate": "a8094e9df52e80d2a7cfe4cf0cdc8fe6070ea3835f94753546d718d9e09c0ce4",
+  "source_sha256": "f772ef070f2e9398ace2df609253077e65cdeb5b616ca16c4c307b11ac2bb563",
+  "checks_passed": true,
+  "scope_unchanged_during_check": true,
+  "checks": [
+    {
+      "id": "instacart-replacement-process-integration",
+      "exit_code": 0
+    }
+  ],
+  "check_report_has_error": false,
+  "reported_test_count": 8,
+  "elapsed_seconds": 6.067,
+  "scope": "Owner one-check real process recheck only; fresh formal full10 checks and independent Goal READY remain required."
+}

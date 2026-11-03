@@ -1,0 +1,60 @@
+{
+  "goal_id": "g-759acc25206241c9a8783541855fdd6a",
+  "candidate": "a8094e9df52e80d2a7cfe4cf0cdc8fe6070ea3835f94753546d718d9e09c0ce4",
+  "verifier_task": "bbeaeaf5-e9c0-4baa-b9c8-6a3b328c0d67",
+  "checks_passed": true,
+  "checks": [
+    {
+      "id": "instacart-catalog-contract",
+      "exit_code": 0,
+      "reported_test_count": 13
+    },
+    {
+      "id": "instacart-catalog-regressions",
+      "exit_code": 0,
+      "reported_test_count": 26
+    },
+    {
+      "id": "instacart-clementine-contract",
+      "exit_code": 0,
+      "reported_test_count": 14
+    },
+    {
+      "id": "instacart-clementine-regressions",
+      "exit_code": 0,
+      "reported_test_count": 9
+    },
+    {
+      "id": "instacart-snapshots-contract",
+      "exit_code": 0,
+      "reported_test_count": 24
+    },
+    {
+      "id": "instacart-snapshots-regressions",
+      "exit_code": 0,
+      "reported_test_count": 27
+    },
+    {
+      "id": "instacart-replacement-process-integration",
+      "exit_code": 0,
+      "reported_test_count": 8
+    },
+    {
+      "id": "instacart-node-regressions",
+      "exit_code": 0,
+      "reported_test_count": 178
+    },
+    {
+      "id": "instacart-go-regressions",
+      "exit_code": 0,
+      "reported_test_count": null
+    },
+    {
+      "id": "instacart-empty-error-fields",
+      "exit_code": 0,
+      "reported_test_count": 12
+    }
+  ],
+  "accepted": false,
+  "scope": "Actual fresh full10 verifier result; independent matching-candidate READY and accepted COMPLETE/controller exit still required."
+}
