@@ -1,0 +1,118 @@
+{
+  "status": "CLOSED_EVIDENCE_DIAGNOSIS_ONLY_NO_IMPLEMENTATION",
+  "question": "Why did completed reviewer 19e8d6c3-e603-4274-8b4f-d8f2efaa649a accept candidate47d9 despite its whitespace-only preservation regression?",
+  "conclusion": "Multiple contributing factors: a material ambiguity in the owner Goal's helper-reuse allowance, an omitted predicate-boundary preservation partition, and a reviewer semantic inference made without baseline-byte comparison. The report explicitly acknowledged the trim predicate's whitespace-only rejection, then interpreted established-helper reuse as satisfying no-new-policy. This was not merely failure to see trim(). Generic reviewer prompting offers a place for improvement, but this evidence does not establish a missing prompt instruction as the primary cause.",
+  "review_identity": {
+    "task_id": "19e8d6c3-e603-4274-8b4f-d8f2efaa649a",
+    "status": "TASK_STATE_COMPLETED",
+    "terminal_timestamp": "2026-11-03T16:14:48.758416Z",
+    "candidate": "47d9a411ae890a8c7404a8c36aecd5dca185fc87ac8c2406517ba07143a6059d",
+    "verdict": "READY",
+    "source": "task-observations/19e8d6c3-e603-4274-8b4f-d8f2efaa649a-terminal-sanitized.json"
+  },
+  "actual_short_review_excerpts": [
+    {
+      "location": "artifact JSON evidence item beginning Criterion2 (byte-exact preservation of a valid partner field)",
+      "quote": "only maps empty/whitespace-only strings to null",
+      "what_it_establishes": "Reviewer recognized the changed acceptance domain. Returning retained values byte-exact does not establish preservation of all formerly retained values."
+    },
+    {
+      "location": "artifact JSON evidence item beginning Criterion2 (no new whitespace/trim/normalization policy, abstraction or dependency)",
+      "quote": "which is exactly the reuse the Goal spec permits",
+      "what_it_establishes": "The report's stated justification was reuse permission, not an assertion that trim() was absent. The reviewer equated existing use elsewhere with preserving these adapters' behavior."
+    },
+    {
+      "location": "artifact JSON final Explicit limitations item(c)",
+      "quote": "I did not compare the two adapters against their baseline bytes",
+      "what_it_establishes": "Baseline equivalence was explicitly unverified; the report instead inferred unchanged behavior from current source, the quoted baseline defect and green checks."
+    }
+  ],
+  "owner_wording": {
+    "source": "product-goals/sibling-error-repair.json",
+    "goal_permission": "Do not silently normalize or trim valid nonempty fields, and do not invent a new whitespace policy beyond an already established repository helper if reused.",
+    "acceptance_item_2": "Mixed cases preserve the other valid field byte-exact; fully valid fields and actual HTTP503 remain exact. No new trim/whitespace policy is introduced.",
+    "preservation_item_4": "Existing status/error semantics remain unchanged.",
+    "constraint": "Use established local helpers only where justified; avoid new abstractions/dependencies and speculative whitespace handling.",
+    "diagnosis": "The Goal and exact acceptance require preservation, but valid/nonempty is not exhaustively defined and the prose explicitly qualifies the whitespace restriction with established-helper reuse. Reusing a helper can introduce an old repository policy into a component that did not have it. That distinction was not operationalized by the original check partitions. This is meaningful ambiguity, not proof that any established helper was unconditionally authorized to change behavior. The local request has seven acceptance entries; this analysis does not infer a different count from other live Goal material."
+  },
+  "predicate_and_baseline_facts": {
+    "sources": [
+      "sibling-nonempty-baseline/cart-api.js",
+      "sibling-nonempty-baseline/checkout-api.js"
+    ],
+    "baseline_predicate": "typeof detail.code/message === 'string'",
+    "reviewed_candidate_predicate_from_closed_report": "typeof value === 'string' && value.trim() !== '' ? value : null",
+    "semantic_difference": "The baseline retains any string, including whitespace-only strings; the reviewed helper rejects strings whose trim result is empty, even though it returns other strings without altering bytes. A padded nonblank positive control exercises return-byte preservation but not rejection-domain preservation.",
+    "baseline_source_sha256": {
+      "offline/cart-api.js": "bb8b89e290aaad63ea2f9f88b732820474a5c9ec892f455c56b4b479f7f6f28a",
+      "offline/checkout-api.js": "cbf70a0351e67b0fb9fe308a3b34f5e8c11299252c3bbd85162fa5e0ece502db"
+    },
+    "reviewed_candidate_source_sha256": {
+      "offline/cart-api.js": "30d14c5c77215cd230458b85f7805d1b1d175e8f5aa031dad7d6f6db55b51500",
+      "offline/checkout-api.js": "8d9f56b9ebaeaab2519383552d272a49f3449fd647a0eaf029acc8ae2be85b00"
+    },
+    "availability_limit": "Baseline copies were read for this diagnosis. The old reviewer said baseline copies were unavailable in the baseline directory it inspected. The closed evidence does not establish when the later sibling-nonempty-baseline copies became available to that context."
+  },
+  "check_partition_evidence": {
+    "original_partitions_from_closed_review": [
+      "both empty",
+      "empty code with valid message",
+      "valid code with empty message",
+      "fully valid nonblank values"
+    ],
+    "old_positive_control_from_closed_review": "A padded nonblank message was asserted equal to the original padded value. That passes both length-based and trim-based predicates.",
+    "owner_preservation_probe": "check_sibling_nonempty_preservation.mjs partitions space-fields, padded-fields, newline-code-empty-message, empty-code-whitespace-message and unicode-nonempty across both exported adapter APIs; checks exact code/message/503/same-origin and source consistency.",
+    "recorded_results": [
+      {
+        "receipt": "sibling-nonempty-preservation-baseline.json",
+        "cases": 10,
+        "passed": 6,
+        "failed": 4,
+        "interpretation": "Original baseline preserved space-only, padded and unicode-nonempty partitions in both adapters. Four mixed partitions still failed the intended empty-field repair; baseline was not supposed to pass the entire future repair gate."
+      },
+      {
+        "receipt": "sibling-nonempty-preservation-result.json",
+        "cases": 10,
+        "passed": 2,
+        "failed": 8,
+        "interpretation": "Hashes match old READY candidate. Only padded-fields passed per adapter. Space-only and unicode-nonempty were four previously passing cases that now failed; mixed cases also exposed preserved partner-field losses alongside the empty-field repair."
+      },
+      {
+        "receipt": "sibling-nonempty-preservation-recheck.json",
+        "cases": 10,
+        "passed": 10,
+        "failed": 0,
+        "interpretation": "A different recorded source snapshot satisfies all ten partitions. This diagnosis did not rerun it or inspect current C source and makes no claim about a live final candidate."
+      }
+    ],
+    "finding": "The original gate had a real blind spot at the precise changed predicate boundary. Green original checks were necessary but insufficient evidence for the broader unchanged-behavior assertion."
+  },
+  "existing_framework_prompt_seams": {
+    "a2a-stack/agent/stacks.py:21-26": "PROFILES['reviewer'] grants Read/Glob only; this explains reliance on independent verifier receipts rather than execution by this reviewer.",
+    "a2a-stack/agent/stacks.py:_prompt": "Existing fields are Stack goal, Assignment task, Workspace, Authorized write paths, Acceptance criteria, optional Candidate and Dependency metadata. The profile-specific suffix requests authorship independence/UNVERIFIED, followed by COMPLETION_CONTRACT. It does not itself request a baseline behavioral comparison or preservation-boundary examples.",
+    "a2a-stack/agent/stacks.py:_load_assignment": "The job returns the generated prompt_path and profile tools. The inspected construction does not automatically concatenate prompts/independent-qa.md.",
+    "a2a-stack/prompts/independent-qa.md": "Already requests baseline and complete candidate as inputs, boundary/failure cases and READY only for evidenced criteria. Its mere presence does not prove the old context received it. No new overlay is needed to name these existing concepts.",
+    "causal_limit": "Only the terminal artifact and owning generic construction were inspected, not the active/full historical prompt stream or actual assignment record. Cannot prove which additional prose the old owner supplied in Assignment task/Acceptance criteria, or that a different generic suffix alone would have prevented this error."
+  },
+  "recommendation": {
+    "choose_one": "Goal/check authoring: include a baseline-passing preservation control at the boundary of each predicate changed by a narrow repair.",
+    "transferable_rule": "When authoring the existing immutable acceptance check, pair the defect examples with a valid baseline input that a plausible replacement validator/helper would newly reject or alter. Assert its original observable output through the public API. Keep the intended failing defect partitions; do not demand the unfixed baseline pass the complete repair check.",
+    "application_here": "The existing space-fields or unicode-nonempty preservation partitions would distinguish string-length emptiness from trim-emptiness; a padded nonblank string alone cannot. This is a project-specific example of boundary preservation, not a whitespace rule to put into the generic framework.",
+    "why_this_one": "The old report saw the predicate and gave an explicit reuse-based justification despite an unverified baseline. A deterministic preservation control would have contradicted that justification through the already-existing verifier/repair loop, independent of a longer reviewer prompt. No additional role-prompt change is necessary to address this evidenced omission.",
+    "existing_fields_only": "Keep the control in the owner-authored check referenced by existing check_ids and Acceptance criteria. Main may describe its preservation purpose in existing Assignment task. No new profile, public tool, metadata protocol or runtime approval gate is proposed.",
+    "retry_behavior": "Ordinary failed checks remain actionable same-Goal repair feedback. No human-blocking gate, new policy escalation, budget, turn, runtime or retry ceiling. No implementation or modification of the active Goal/checks in this step."
+  },
+  "scope": "Read-only closed redacted task artifact, original queued Goal, named probe/baseline/recheck artifacts, frozen sibling baseline copies and relevant D generic reviewer prompt construction only. No active streams, C source, live host/Goal/MCP/control, model, Git, auth or settings actions. Sole write is this diagnosis artifact.",
+  "artifact_hashes": {
+    "tmp/a2a-stack/instacart-soak/task-observations/19e8d6c3-e603-4274-8b4f-d8f2efaa649a-terminal-sanitized.json": "744354c73b4bb62933f8ce2d1194b875597403f8ebadab07d894dd4f286e0cba",
+    "tmp/a2a-stack/instacart-soak/product-goals/sibling-error-repair.json": "7685db7c48b58696e3e2d81daa55152fea2265b1c2b8e3d6f11c89dae48b1e18",
+    "tmp/a2a-stack/instacart-soak/check_sibling_nonempty_preservation.mjs": "662437dd3ba80b476af1b70f308bad44c4852eee87d5e8914f032fc5c1c633a3",
+    "tmp/a2a-stack/instacart-soak/sibling-nonempty-preservation-baseline.json": "77707445a1ae3827448884d8f9a1a4b5482b07fa79c68b9d655efc623d51f38e",
+    "tmp/a2a-stack/instacart-soak/sibling-nonempty-preservation-result.json": "b41572611e616eab79d9305a20ee8daad7129c523bca554cbd9edd4017588648",
+    "tmp/a2a-stack/instacart-soak/sibling-nonempty-preservation-recheck.json": "55d7b56c3ccd1fd5e06b080360e61bcf4038e9cdace1f1441cde594f05282f60",
+    "tmp/a2a-stack/instacart-soak/sibling-nonempty-baseline/cart-api.js": "bb8b89e290aaad63ea2f9f88b732820474a5c9ec892f455c56b4b479f7f6f28a",
+    "tmp/a2a-stack/instacart-soak/sibling-nonempty-baseline/checkout-api.js": "cbf70a0351e67b0fb9fe308a3b34f5e8c11299252c3bbd85162fa5e0ece502db",
+    "a2a-stack/agent/stacks.py": "2f7cf7a04f1f28a26f10b209a2594bb02aa6b408a585c8b2091faf8e144edf49",
+    "a2a-stack/prompts/independent-qa.md": "d124e272bf64ada9d77b3b54f46d3b6c7ceb2759dedb7371322ff1e9feff0624"
+  }
+}
