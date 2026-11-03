@@ -1,0 +1,92 @@
+{
+  "reviewer": "review_agent_workflow",
+  "author": "root controlled probe + read-only reconciliation",
+  "verdict": "READY",
+  "scope": "One controlled owned-state replacement failure and subsequent same-session fast reconnect. This is not whole-Goal or system reliability acceptance.",
+  "probe": {
+    "path": "tmp/a2a-stack/instacart-soak/probe_owned_snapshot_once.py",
+    "sha256": "2efb715b0a93cd3be5badb2bc78b2c1134411af0ff7807de5dd15ec4ff43bc54",
+    "runner_sha256": "14ffb11d6851587b8cc278dfb2945dccaccbf788df12ac8c9d88770b82d4cc67"
+  },
+  "evidence_files": {
+    "intent_sha256": "82ad280d5d27eb7896371a43adc0eda0868e543c549fb75ab7a69eef1c488d51",
+    "released_sha256": "325d953178e19fa59b5c2972320d327547ad7ac8d45a080a26980ced447c4b43",
+    "reconciled_result_sha256": "470d4b0670475b54e9ec1528e2fe1b54878eae3091c7521f4a37166e51c9d3c1"
+  },
+  "observed": {
+    "goal_id": "g-759acc25206241c9a8783541855fdd6a",
+    "session_id": "5ccca8a7-6ce0-4d7b-b32a-2707ee26cce5",
+    "fault_injections": 1,
+    "runner_hash_matches_intent_and_result": true,
+    "reader_released": true,
+    "controller_temp_observed": true,
+    "reader_held_seconds": 25.453719999990426,
+    "injector_exit_code": 1,
+    "injector_exit_reason": "Conservative additional-temp guard released reader and exited when following recovery-state temp appeared. No second injection; this reconciliation reads lifecycle metadata only.",
+    "recovery_count_before": 0,
+    "recovery_count_after": 1,
+    "recovery_to_native_ready_seconds": 2.382355,
+    "predicates": {
+      "reader_closed": true,
+      "owned_snapshot_error": true,
+      "ordered_recovery": true,
+      "no_supervisor_started": true,
+      "same_native_session": true,
+      "no_session_reset": true,
+      "required_tools_ready": true,
+      "same_controller_identity": true,
+      "original_worker_identity_live": true,
+      "original_owner_identity_absent": true,
+      "new_owner_identity_live": true,
+      "one_recovery": true,
+      "immutable_spec_unchanged": true
+    },
+    "independent_identity_checks": {
+      "same_controller": true,
+      "original_owner_absent": true,
+      "original_worker_live": true,
+      "new_owner_live": true,
+      "same_session": true,
+      "same_spec": true
+    },
+    "state_status_at_review": "RUNNING",
+    "ordered_lifecycle_events": [
+      {
+        "event": "recovering",
+        "at": "2026-11-03T13:34:14.329101+00:00",
+        "owned_snapshot_error": true
+      },
+      {
+        "event": "infrastructure_reconnect",
+        "at": "2026-11-03T13:34:14.330410+00:00"
+      },
+      {
+        "event": "process_started",
+        "at": "2026-11-03T13:34:14.397808+00:00",
+        "owner_pid": 25368,
+        "supervisor_started": false
+      },
+      {
+        "event": "session_initialized",
+        "at": "2026-11-03T13:34:16.710253+00:00",
+        "same_session": true
+      },
+      {
+        "event": "native_capability_checked",
+        "at": "2026-11-03T13:34:16.711456+00:00",
+        "tools_ready": true
+      }
+    ]
+  },
+  "evidence": [
+    "Intent binds the existing Goal, original session/spec hash, runner source hash, controller PID+creation token, original owner token, and live coding-worker process token. The current deployed runner hash still matches the probe intent and reconciled result.",
+    "The scoped event slice begins at the recorded intent offset: recovery event is OwnedSnapshotUnavailable, then infrastructure_reconnect, owner process start, initialization with the same native session, and required-tools-ready. No supervisor process start or session_reset appeared in the slice.",
+    "Reader receipt confirms the first controller-owned temp was observed and the read handle closed. It held for about 25.45 seconds, below the 30-second no-op release and 3-second post-temp guard.",
+    "Read-only current identity checks confirm controller PID/token unchanged, original owner identity absent, coding worker identity still live, and the replacement owner identity live. Current Goal state retains the same session and spec and remains RUNNING.",
+    "The injector exited 1 after its conservative additional-temp guard saw a subsequent recovery-state temp. It did not reinject. A separate read-only reconciliation captured the completed recovery chain and reports all 13 acceptance predicates true."
+  ],
+  "limitations": [
+    "This proves one controlled fault/recovery instance only. The Goal is still RUNNING; no Goal completion or broader reliability claim is made.",
+    "No product/source-C files, native capture, or live actions were performed during this review."
+  ]
+}
