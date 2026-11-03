@@ -1,0 +1,36 @@
+{
+  "goal_id": "g-b2ff9e4665d64e418705f2436d4916c5",
+  "criterion": "Existing nonempty error fields remain byte-exact; fix empty strings only, no new trim or whitespace policy.",
+  "probe_sha256": "662437dd3ba80b476af1b70f308bad44c4852eee87d5e8914f032fc5c1c633a3",
+  "public_api_with_vm_http503": true,
+  "project_writes": false,
+  "original_baseline_sha256": {
+    "offline/cart-api.js": "bb8b89e290aaad63ea2f9f88b732820474a5c9ec892f455c56b4b479f7f6f28a",
+    "offline/checkout-api.js": "cbf70a0351e67b0fb9fe308a3b34f5e8c11299252c3bbd85162fa5e0ece502db"
+  },
+  "changed_source_sha256": {
+    "offline/cart-api.js": "30d14c5c77215cd230458b85f7805d1b1d175e8f5aa031dad7d6f6db55b51500",
+    "offline/checkout-api.js": "8d9f56b9ebaeaab2519383552d272a49f3449fd647a0eaf029acc8ae2be85b00"
+  },
+  "baseline_both_nonempty_cases": 6,
+  "baseline_both_nonempty_passed": 6,
+  "changed_both_nonempty_cases": 6,
+  "changed_both_nonempty_passed": 2,
+  "changed_full_probe": {
+    "passed": 2,
+    "cases": 10,
+    "failed": 8
+  },
+  "baseline_full_probe": {
+    "passed": 6,
+    "cases": 10,
+    "failed": 4,
+    "note": "Four mixed-empty partitions retain the original missing fallback bug; baseline is not claimed to pass the full new-repair probe."
+  },
+  "corrective_task_id": "970bb1e3-f3dd-476f-9d66-053d8282f2c2",
+  "productive_generation_before": 2,
+  "productive_generation_after": 3,
+  "review_canceled": false,
+  "parent_corrective_implementation_dispatch_count": 1,
+  "human_rescue_required": false
+}
