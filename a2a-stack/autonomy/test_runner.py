@@ -858,5 +858,131 @@ class Fixture(unittest.TestCase):
                     if pipe: pipe.close()
 
 
+class BackgroundWaitCeilingTests(unittest.TestCase):
+    """The native print-background idle wait is pinned to 0 in the child only.
+
+    Only the selected flag and the --settings override are inspected; the
+    inherited environment is never dumped.
+    """
+    FLAG = "CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS"
+
+    def setUp(self):
+        SCRATCH.mkdir(parents=True, exist_ok=True)
+        self.temp = tempfile.TemporaryDirectory(dir=SCRATCH)
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name).resolve()
+        self.workspace = self.root / "workspace"
+        self.workspace.mkdir()
+        self.goal = self.root / "goal"
+        self.goal.mkdir()
+        self.spec = {"id": "goal", "workspace": str(self.workspace), "goal": "Fixture goal",
+            "acceptance": ["Tests pass"], "write_paths": [],
+            "checks": [{"id": "unit", "argv": [sys.executable, "-c", "print('ok')"], "cwd": str(self.workspace)}],
+            "mcp_config": str(self.root / "mcp.json"), "owner_prompt": str(self.root / "owner.txt"),
+            "supervisor_prompt": str(self.root / "supervisor.txt"), "state_root": str(self.root / "host")}
+
+    def _settings_payload(self, argv):
+        """The env map carried by the child-only --settings argument."""
+        self.assertIn("--settings", argv)
+        payload = json.loads(argv[argv.index("--settings") + 1])
+        self.assertEqual(payload, {"env": {self.FLAG: "0"}})
+        return payload["env"]
+
+    def test_owner_argv_carries_the_child_only_settings_override(self):
+        argv = runner.claude_argv(self.spec, "session-1", executable="claude.exe")
+        self._settings_payload(argv)
+
+    def test_supervisor_argv_carries_the_child_only_settings_override(self):
+        argv = runner.claude_argv(self.spec, supervisor=True, executable="claude.exe")
+        self._settings_payload(argv)
+
+    def test_claude_argv_preserves_every_other_field(self):
+        argv = runner.claude_argv(self.spec, "session-1", executable="claude.exe")
+        self.assertEqual(argv[0], "claude.exe")
+        self.assertEqual(argv[argv.index("--resume") + 1], "session-1")
+        self.assertEqual(argv[argv.index("--tools") + 1], "Read,Glob")
+        self.assertEqual(argv[argv.index("--permission-mode") + 1], "acceptEdits")
+        self.assertEqual(argv[argv.index("--mcp-config") + 1], self.spec["mcp_config"])
+        self.assertEqual(argv[argv.index("--output-format") + 1], "stream-json")
+
+    def _child_flag_value(self, channel):
+        """Run one native child that reports the single flag it sees."""
+        if channel == "check":
+            script = ("import os,sys; sys.stdin.read(); "
+                      "print('FLAG=' + os.environ.get(%r, '<ABSENT>'))" % self.FLAG)
+            journal = runner.Journal(self.goal, self.spec)
+            backend = runner.NativeBackend(self.spec, journal)
+            result = backend.process([sys.executable, "-c", script], None, channel)
+            self.assertEqual(result["exit_code"], 0)
+            return result["output"].strip()
+        script = ("import os,sys,json; sys.stdin.read(); "
+                  "print(json.dumps({'type':'result','subtype':'success','is_error':False,"
+                  "'result':'fixture','structured_output':{'FLAG':os.environ.get(%r,'<ABSENT>')}}))"
+                  % self.FLAG)
+        journal = runner.Journal(self.goal, self.spec)
+        backend = runner.NativeBackend(self.spec, journal)
+        result = backend.process([sys.executable, "-c", script], "fixture prompt", channel)
+        return "FLAG=" + result["FLAG"]
+
+    def test_owner_child_receives_the_flag_without_mutating_the_parent(self):
+        for parent_value in (None, "parent-sentinel-value"):
+            with self.subTest(parent_value=parent_value):
+                with mock.patch.dict(os.environ):
+                    if parent_value is None:
+                        os.environ.pop(self.FLAG, None)
+                    else:
+                        os.environ[self.FLAG] = parent_value
+                    observed = self._child_flag_value("owner")
+                    self.assertEqual(observed, "FLAG=0")
+                    self.assertEqual(self.FLAG in os.environ, parent_value is not None)
+                    self.assertEqual(os.environ.get(self.FLAG), parent_value)
+
+    def test_supervisor_child_receives_the_flag_without_mutating_the_parent(self):
+        for parent_value in (None, "parent-sentinel-value"):
+            with self.subTest(parent_value=parent_value):
+                with mock.patch.dict(os.environ):
+                    if parent_value is None:
+                        os.environ.pop(self.FLAG, None)
+                    else:
+                        os.environ[self.FLAG] = parent_value
+                    observed = self._child_flag_value("supervisor")
+                    self.assertEqual(observed, "FLAG=0")
+                    self.assertEqual(self.FLAG in os.environ, parent_value is not None)
+                    self.assertEqual(os.environ.get(self.FLAG), parent_value)
+
+    def test_check_child_is_not_forced_to_carry_the_flag(self):
+        for parent_value in (None, "parent-sentinel-value"):
+            with self.subTest(parent_value=parent_value):
+                with mock.patch.dict(os.environ):
+                    if parent_value is None:
+                        os.environ.pop(self.FLAG, None)
+                    else:
+                        os.environ[self.FLAG] = parent_value
+                    observed = self._child_flag_value("check")
+                    expected = parent_value if parent_value is not None else "<ABSENT>"
+                    self.assertEqual(observed, "FLAG=" + expected)
+                    self.assertEqual(os.environ.get(self.FLAG), parent_value)
+
+    def test_check_command_argv_is_untouched(self):
+        journal = runner.Journal(self.goal, self.spec)
+        backend = runner.NativeBackend(self.spec, journal)
+        argv = [sys.executable, "-c", "print('ok')"]
+        captured = {}
+        real_popen = runner.subprocess.Popen
+        parent_value = os.environ.get(self.FLAG, "<ABSENT>")
+
+        def capture(command, **kwargs):
+            captured["argv"] = list(command)
+            captured["flag"] = kwargs.get("env", {}).get(self.FLAG, "<ABSENT>")
+            return real_popen(command, **kwargs)
+
+        with mock.patch.object(runner.subprocess, "Popen", side_effect=capture):
+            backend.check({"id": "probe", "argv": argv, "cwd": str(self.workspace)})
+        self.assertEqual(captured["argv"], argv)
+        self.assertNotIn("--settings", captured["argv"])
+        # A check child is never forced: it keeps exactly the inherited value.
+        self.assertEqual(captured["flag"], parent_value)
+
+
 if __name__ == "__main__":
     unittest.main()

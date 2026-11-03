@@ -73,6 +73,7 @@ if str(STACK_ROOT) not in sys.path:
     sys.path.insert(0, str(STACK_ROOT))
 
 import runner  # noqa: E402  existing lifecycle helper (Windows Job object, abort helpers)
+from autonomy import runner as goal_runner  # noqa: E402  existing formal review parser
 
 from a2a.server.agent_execution import AgentExecutor, RequestContext  # noqa: E402
 from a2a.server.request_handlers import DefaultRequestHandler  # noqa: E402
@@ -115,6 +116,12 @@ PERMISSION_MODES = {"default", "acceptEdits", "plan"}
 
 # CREATE_SUSPENDED (0x4) so the child can be attached to a Job object before it runs.
 CREATION_FLAGS = 0x4 | subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP
+
+# The native print-background idle wait defaults to 600000ms.  A Claude child
+# is pinned to 0 through its copied environment and through a child-only
+# --settings override; nothing else about the inherited configuration changes.
+BG_WAIT_FLAG = "CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS"
+BG_WAIT_SETTINGS = json.dumps({"env": {BG_WAIT_FLAG: "0"}})
 
 
 class JobRejected(Exception):
@@ -322,7 +329,22 @@ def _build_claude_argv(config: dict[str, Any]) -> list[str]:
         argv += ["--allowedTools", ",".join(allowed_tools)]
     if config.get("mcp_config") is not None:
         argv += ["--mcp-config", str(config["mcp_config"]), "--strict-mcp-config"]
+    # Child-only override: it outranks a higher-precedence profile setting and
+    # changes nothing else about the inherited model/auth/permission/tool setup.
+    argv += ["--settings", BG_WAIT_SETTINGS]
     return argv
+
+
+def _child_env(is_claude: bool) -> dict[str, str]:
+    """The environment one child process receives.
+
+    The parent environment is never mutated: the child gets a copy.  A
+    non-Claude command keeps exactly the environment it had before.
+    """
+    env = dict(os.environ, PYTHONIOENCODING="utf-8", CLAUDE_CODE_RETRY_WATCHDOG="1")
+    if is_claude:
+        env[BG_WAIT_FLAG] = "0"
+    return env
 
 
 def _parse_claude_stream(lines: list[str]) -> tuple[str | None, str | None]:
@@ -366,6 +388,11 @@ class _ActiveJob:
 
 class RegisteredJobExecutor(AgentExecutor):
     """Runs one registered job at a time; every job gets its own process tree."""
+
+    # The verdicts the existing formal review contract accepts.  A negative or
+    # unverifiable review is still a completed review; only Goal acceptance
+    # additionally requires READY.
+    FORMAL_REVIEW_VERDICTS = ("READY", "NOT READY", "NOT_READY", "UNVERIFIED")
 
     def __init__(self, job_loader=None, semaphore=None) -> None:
         self._job_loader = job_loader or (lambda name, task_id: load_job(name))
@@ -423,13 +450,54 @@ class RegisteredJobExecutor(AgentExecutor):
         return await self._wait_for_exit(entry)
 
     # -- execution ----------------------------------------------------------- #
+    def _validate_formal_review(self, config, text) -> None:
+        """Reject a formal review that is not a typed, candidate-bound result.
+
+        A successful native exit is not a completed formal review: the
+        reviewer owes one JSON object with the frozen candidate, one accepted
+        verdict and concrete evidence.  The existing parser and the existing
+        verdict/evidence rules are reused unchanged; nothing else about the
+        review contract is tightened here.
+        """
+        contract = config.get("formal_review")
+        if not isinstance(contract, dict):
+            return
+        candidate = contract.get("candidate")
+        try:
+            review = goal_runner.parse_object(text)
+        except (ValueError, TypeError):
+            raise JobFailed(self._formal_review_failure(contract, "the result was not one unambiguous JSON object"))
+        if not isinstance(review, dict):
+            raise JobFailed(self._formal_review_failure(contract, "the result was not one JSON object"))
+        if review.get("candidate") != candidate:
+            raise JobFailed(self._formal_review_failure(contract, "the result does not name the reviewed candidate"))
+        if review.get("verdict") not in self.FORMAL_REVIEW_VERDICTS:
+            raise JobFailed(self._formal_review_failure(contract, "the result has no accepted verdict"))
+        evidence = review.get("evidence")
+        if not (isinstance(evidence, list) and evidence
+                and all(isinstance(item, str) and item.strip() for item in evidence)):
+            raise JobFailed(self._formal_review_failure(contract, "the result has no concrete evidence"))
+
+    @staticmethod
+    def _formal_review_failure(contract, reason) -> str:
+        """The fixed, safe instruction for the main agent.
+
+        The invalid result itself is never echoed back: it can carry
+        credentials or unrelated content, and the main agent only needs to
+        know that a fresh review is required.
+        """
+        return ("Formal review result rejected because " + reason + ". "
+                "Create a NEW review Task in the SAME running Goal "
+                f"{contract.get('goal_id')} for the same frozen candidate; "
+                "do not resume or rewrite this terminal task and do not stop the Goal.")
+
     async def _run_job(self, config, entry, updater):
         task_dir = TASKS_DIR / str(updater.task_id)
         task_dir.mkdir(parents=True, exist_ok=True)
         is_claude = config["mode"] == "claude"
         argv = _build_claude_argv(config) if is_claude else list(config["command"])
         stdin_text = config["prompt_path"].read_text(encoding="utf-8") if is_claude else ""
-        env = dict(os.environ, PYTHONIOENCODING="utf-8", CLAUDE_CODE_RETRY_WATCHDOG="1")
+        env = _child_env(is_claude)
         entry.job = runner.Job()
         result_event = None
         stderr_lines = 0
@@ -515,8 +583,13 @@ class RegisteredJobExecutor(AgentExecutor):
                 result = result_event.get("result")
                 if not isinstance(result, str) or not result:
                     raise JobFailed("Claude returned no result text")
+                # A native success is not yet a completed formal review: the
+                # typed result is validated before any artifact is published,
+                # and the published text is the text that was validated.
+                handoff = runner._safe_handoff(result)
+                self._validate_formal_review(config, handoff)
                 completed = True
-                return True, runner._safe_handoff(result)
+                return True, handoff
             completed = True
             return True, "\n".join(text)
         finally:

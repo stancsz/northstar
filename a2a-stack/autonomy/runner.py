@@ -33,6 +33,12 @@ MCP_TOOLS = tuple("mcp__northstar_a2a__" + name for name in (
     "list_templates", "create_stack", "list_stacks", "get_stack", "discover_agent",
     "create_assignment", "submit_job", "get_task", "list_tasks", "cancel_task", "freeze_goal_candidate"))
 USER_GOAL_MUTATIONS = tuple("mcp__northstar_a2a__" + name for name in ("set_goal", "stop_goal", "resume_goal"))
+# The native print-background idle wait defaults to 600000ms.  The child is
+# pinned to 0 so background work can finish without an idle-wait ceiling; the flag
+# reaches the child both through the copied environment and through the
+# child-only --settings override, which outranks a higher-precedence profile.
+BG_WAIT_FLAG = "CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS"
+BG_WAIT_SETTINGS = json.dumps({"env": {BG_WAIT_FLAG: "0"}})
 OWNER_SCHEMA = {"type": "object", "additionalProperties": False, "properties": {
     "status": {"enum": ["complete", "continue", "needs_user"]},
     "summary": {"type": "string"}, "candidate_manifest": {"type": ["string", "null"]},
@@ -199,6 +205,7 @@ def claude_argv(spec, session_id=None, supervisor=False, executable=None):
         argv += ["--resume", session_id]
     argv += ["--disallowedTools", ",".join(("Bash", "Edit", "Write", *USER_GOAL_MUTATIONS,
                                          *(MCP_TOOLS if supervisor else ())))]
+    argv += ["--settings", BG_WAIT_SETTINGS]
     return argv
 
 
@@ -292,6 +299,10 @@ class NativeBackend:
         self.journal.cancel_check()
         env = os.environ.copy()
         env["CLAUDE_CODE_RETRY_WATCHDOG"] = "1"
+        if channel in ("owner", "supervisor"):
+            # Child-only: the parent environment is never mutated, and a plain
+            # check command keeps exactly the environment it had before.
+            env[BG_WAIT_FLAG] = "0"
         job = runtime.Job() if os.name == "nt" else None
         proc = None
         try:

@@ -429,10 +429,17 @@ class StackManager:
                                 "--spec", str(goal_dir / "spec.json"),
                                 "--candidate", assignment["candidate"],
                                 "--output", str(goal_dir / "artifacts" / f"verification-{job_name}.json")]}
-        return {"name": job_name, "mode": "claude", "cwd": self.workspace,
-                "prompt_path": prompt_path, "tools": list(profile["tools"]),
-                "allowed_tools": list(profile["tools"]), "permission_mode": profile["permission_mode"],
-                "max_turns": None, "timeout_seconds": None}
+        config = {"name": job_name, "mode": "claude", "cwd": self.workspace,
+                  "prompt_path": prompt_path, "tools": list(profile["tools"]),
+                  "allowed_tools": list(profile["tools"]), "permission_mode": profile["permission_mode"],
+                  "max_turns": None, "timeout_seconds": None}
+        # A Goal-bound candidate reviewer owes a typed formal review.  The
+        # trusted candidate comes from the bound assignment record, never from
+        # the request, and it is only published for that one job shape.
+        if role["profile"] == "reviewer" and stack.get("goal_id") and assignment.get("candidate"):
+            config["formal_review"] = {"goal_id": stack["goal_id"],
+                                       "candidate": assignment["candidate"]}
+        return config
 
     def loader_for(self, stack_id: str, role_id: str) -> Callable[[str, str], dict]:
         return lambda job_name, task_id: self._load_assignment(stack_id, role_id, job_name, task_id)

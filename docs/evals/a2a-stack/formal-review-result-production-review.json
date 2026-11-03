@@ -1,0 +1,48 @@
+{
+  "verdict": "READY",
+  "reviewer": "review_agent_workflow",
+  "scope": "Independent integrated-candidate rebind for the formal-review-result and Claude child background-wait increment. This does not certify a new live Goal or continuous soak.",
+  "candidate": "f1da3c20ec59b46707dec201419c770daa9b81682a4af6e1142dbc84d7229d12",
+  "source_file_count": 51,
+  "artifact_manifest_sha256": "833a35963bdd31dc8f27d3fee010ba00358189b2280995e79e86c7cb598c389c",
+  "summary_sha256": "9ef7b152769b66b4cc9b2c05857dae19edaead02b73a58c822862e3336b99b67",
+  "checks_passed": true,
+  "all_manifest_hashes_match_current_tree": true,
+  "handoff_sha256": "21c1ec6dd7cbc3b8590151274f148242f09fb3e38ac658616537956825ed8363",
+  "private_review_sha256": "583b534c112114f3f0f8850e2bf2434754c3d3fddbb40c69bf26fba0ce3c5b40",
+  "reviewed_five_file_sha256": {
+    "a2a-stack/agent/service.py": "d5267571eadab4b8ff936627378be196db69e594425cbf1952b2db385605e192",
+    "a2a-stack/agent/stacks.py": "81969b1f450f92fe2298a1a8d9f6912fafe2eb4a6d8c30b728a9a36cfff7d277",
+    "a2a-stack/agent/test_formal_review_result.py": "6e4bbe5402aad1f9a0897fb5edffd5b629929e6ca33ef4fd66524ea33230a452",
+    "a2a-stack/autonomy/runner.py": "dc7b087c0f758e3873b1136c5a87a95993124d5adf7fe16f1a297957b3096768",
+    "a2a-stack/autonomy/test_runner.py": "6361427b3d398906a4f69314d9a5e69ed3f90e1d494381cd0084aedf3c07869a"
+  },
+  "manifest_reconciliation": {
+    "candidate_matches_summary_manifest_and_verification": true,
+    "file_count": 51,
+    "missing_paths": 0,
+    "hash_mismatches": 0,
+    "five_privately_reviewed_files_match_current_production": true,
+    "source_unchanged": true,
+    "host_reloaded": false
+  },
+  "original_checks": [
+    {"id": "northstar-workspace-isolation-contract", "exit_code": 0},
+    {"id": "northstar-host-workspace-contract", "exit_code": 0},
+    {"id": "northstar-candidate-scope-contract", "exit_code": 0},
+    {"id": "northstar-agent-tests", "exit_code": 0, "observed": "101 tests passed"},
+    {"id": "northstar-autonomy-tests", "exit_code": 0, "observed": "90 tests passed"},
+    {"id": "northstar-runtime-tests", "exit_code": 0, "observed": "14 tests passed"},
+    {"id": "northstar-independent-scope-matrix", "exit_code": 0, "observed": "8 tests passed"}
+  ],
+  "verification_artifact_sha256": "a7022a23cc973f149ae641df6ff55d6e74fc1d52b4d6f4f83e2b2454aabeefe0",
+  "scope_exception": {
+    "status": "DISCLOSED_NONCOMPLIANCE; do not claim perfect execution isolation",
+    "detail": "The author handoff reports three native Claude CLI Write events to shared project memory outside Q. The private review records those events and states those files were not inspected or rolled back. This integrated candidate remains byte-identical to the privately reviewed five-file code and passed the seven recorded checks; no additional shared-memory content was inspected in this production rebind."
+  },
+  "limits": [
+    "The seven checks are the actual recorded integration results; none were rerun by this reviewer.",
+    "The host was not reloaded; this review is for the current integrated source candidate only.",
+    "This does not establish the next Instacart Goal outcome, live host behavior after deployment, or long-running soak acceptance."
+  ]
+}
