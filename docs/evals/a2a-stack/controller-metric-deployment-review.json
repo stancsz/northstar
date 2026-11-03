@@ -1,0 +1,62 @@
+{
+  "verdict": "READY",
+  "reviewer": "review_agent_workflow",
+  "observed_at": "2026-11-03T17:21:46.142958+00:00",
+  "candidate": "2562d8f450e66020fee26b543f421d4ab12d8c3a0fee788502b1b6fd8a963166",
+  "source_file_count": 50,
+  "git_commit": "9b8b4d0fde92a05b77ddebc218ddf1328e64506f",
+  "all_manifest_hashes_match_current_tree": true,
+  "manifest_sha256": "6b0d933264f467dc0c38f195b07902a97ff92058d47683d3e717b8a9b47b43ec",
+  "deployment_receipt_sha256": "e7d0fcf01e32bb661c1531916e2d37e3efeb6fb04a43242de029b64bccf76264",
+  "host": {
+    "pid": 45952,
+    "creation_identity": "01dd6bb78d06ea39",
+    "current_identity_independently_matched": true,
+    "old_host_identity_absent": true
+  },
+  "workspace": "C:\\Users\\stanc\\github\\instacart-screen-inventory",
+  "state_namespace": "efb6ad4af18731ae",
+  "mcp": {
+    "tool_count": 17,
+    "required_tool_count": 11,
+    "required_tools_present": true,
+    "goal_id": "g-b2ff9e4665d64e418705f2436d4916c5",
+    "goal_status": "COMPLETE",
+    "controller_running": false,
+    "accepted": true,
+    "preserved_goal_candidate": "f78b4c17e971ee97a5b77911bd15be129730edc4de26cb97d4d3a601cb956a3d"
+  },
+  "controller_metrics": {
+    "host_event_file_sha256": "67aafdf86a03d82297ca724a4aa20aca86d9cc1881dca63d4e61bb5d9608bbd8",
+    "valid_event_line_count": 3,
+    "controller_started_events": 2,
+    "controller_exited_events": 1,
+    "expected_restart_count": 1,
+    "reported_start_count": 2,
+    "reported_restart_count": 1,
+    "metrics_match_event_log": true,
+    "nullable_semantics": {
+      "missing_journal_returns_zero": true,
+      "unreadable_or_malformed_journal_returns_null": true,
+      "source_and_maintained_tests_reviewed": true,
+      "fault_injection_performed": false
+    }
+  },
+  "scheduled_task": {
+    "task_identity_hash": "50bbc966136af9f159905b50a5b1fe0c5d1af9bc258841beddfc35824e0baab5",
+    "receipt_run_time": "2026-11-03T17:19:58.0000000Z",
+    "task_relaunch_observed": true,
+    "workspace_argument_targets_C_checkout": true
+  },
+  "verification": {
+    "framework_source_manifest_matches": true,
+    "mcp_complete_and_accepted": true,
+    "mcp_candidate_preserved": true,
+    "mcp_tools_present": true,
+    "metrics_match_event_journal": true
+  },
+  "limitations": [
+    "This verifies the single pinned scheduled-task host relaunch and live report metrics only; no new fault was injected and no full framework suite was rerun.",
+    "The separate legacy host_restart_count remains 0 in Goal3 even though the deployment receipt proves a host restart; this is not conflated with controller_start_count/controller_restart_count."
+  ]
+}
