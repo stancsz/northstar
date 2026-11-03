@@ -1,0 +1,14 @@
+{
+  "type": "SIBLING_NONEMPTY_PRESERVATION_OWNER_PROBE",
+  "cases": 10,
+  "passed": 10,
+  "failed": 0,
+  "sourceSha256": {
+    "offline/cart-api.js": "069447cd672d38d06f867df28228b94b36c7c8347e9dcd9bfb82a33a0a19d0b1",
+    "offline/checkout-api.js": "18c483a9a9e6b973c405b7104a227bc3d15c8b939de7cdc60f1c83c5817fb078"
+  },
+  "failingPartitions": [],
+  "probe_sha256": "662437dd3ba80b476af1b70f308bad44c4852eee87d5e8914f032fc5c1c633a3",
+  "corrective_task_id": "970bb1e3-f3dd-476f-9d66-053d8282f2c2",
+  "acceptance_scope": "Owner public-API VM ten-partition probe, exact two source hashes; not formal full11/current-candidate Goal acceptance."
+}
