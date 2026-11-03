@@ -70,6 +70,51 @@ class StreamDetectionTests(unittest.TestCase):
         self.assertNotIn(embedded_token, json.dumps(event))
         self.assertGreaterEqual(len(long_handoff), len(body))
 
+    def test_python_mapping_secret_key_values(self):
+        secrets = {"EXAMPLE_API_KEY": "sk_abcdefghijk123456", "SERVICE_TOKEN": "synthetic-token-data",
+                   "PASSWORD": "synthetic password with spaces", "CLIENT_SECRET": "synthetic-secret-data"}
+        for key, secret in secrets.items():
+            with self.subTest(key=key):
+                result = runner._safe_handoff(repr({key: secret, "check_id": "adapter-boundary", "exit_code": 1}))
+                self.assertNotIn(secret, result)
+                self.assertIn("'check_id': 'adapter-boundary'", result)
+                self.assertIn("'exit_code': 1", result)
+
+    def test_json_mapping_and_escaped_quotes(self):
+        original = {"EXAMPLE_API_KEY": 'synthetic \\ value "with quotes"', "nested": {"refresh_token": "synthetic-refresh"}, "exit_code": 3}
+        result = json.loads(runner._safe_handoff(json.dumps(original)))
+        self.assertEqual(result["EXAMPLE_API_KEY"], "[REDACTED]")
+        self.assertEqual(result["nested"]["refresh_token"], "[REDACTED]")
+        self.assertEqual(result["exit_code"], 3)
+
+    def test_generic_provider_tokens_and_bearer(self):
+        for secret in ("sk_syntheticabcdefgh12345", "sk-ant-syntheticabcdefgh12345", "ghp_syntheticabcdefgh12345"):
+            with self.subTest(prefix=secret[:6]):
+                self.assertNotIn(secret, runner._safe_handoff("provider=" + secret))
+        bearer = "syntheticJwt.header-signature_123"
+        self.assertNotIn(bearer, runner._safe_handoff("Authorization: Bearer " + bearer))
+
+    def test_unquoted_secrets_preserve_neighboring_fields(self):
+        for key in ("api_key", "SERVICE_API_KEY", "token", "PASSWORD", "CLIENT_SECRET"):
+            with self.subTest(key=key):
+                result = runner._safe_handoff(key + "=synthetic-value, check_id=adapter-boundary exit_code=7")
+                self.assertNotIn("synthetic-value", result)
+                self.assertIn("check_id=adapter-boundary exit_code=7", result)
+
+    def test_long_tail_and_nonsensitive_content_preserved(self):
+        ordinary = "check_id=adapter-contract exit_code=1 namespace=local " * 80
+        self.assertEqual(runner._safe_handoff(ordinary), ordinary)
+        result = runner._safe_handoff(ordinary + repr({"API_KEY": "synthetic-private-value"}) + " END_OF_HANDOFF")
+        self.assertNotIn("synthetic-private-value", result)
+        self.assertTrue(result.endswith(" END_OF_HANDOFF"))
+        self.assertTrue(result.startswith(ordinary))
+
+    def test_native_handoff_uses_same_redaction(self):
+        event = runner.sanitized_event(json.dumps({"type": "result", "result": repr({"TEST_API_KEY": "synthetic-native-value"}) + " END_OF_HANDOFF"}))
+        self.assertNotIn("synthetic-native-value", json.dumps(event))
+        self.assertTrue(event["handoff"].endswith("END_OF_HANDOFF"))
+
+
 
 @unittest.skipUnless(os.name == "nt", "Windows process lifecycle required")
 class BrokerTests(unittest.TestCase):

@@ -183,9 +183,12 @@ def claude_executable(configured=None):
 
 def _safe_handoff(value):
     value = str(value)
-    value = re.sub(r"(?i)\b(?:sk-ant-|sk-proj-|ghp_|github_pat_)[A-Za-z0-9_-]{8,}\b", "[REDACTED_TOKEN]", value)
+    value = re.sub(r"(?i)\b(?:sk-ant-|sk-proj-|sk_|ghp_|github_pat_)[A-Za-z0-9_-]{8,}\b", "[REDACTED_TOKEN]", value)
     value = re.sub(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", "[REDACTED_EMAIL]", value, flags=re.I)
-    value = re.sub(r"(?i)(api[_ -]?key|token|password)\s*[:=]\s*\S+", r"\1=[REDACTED]", value)
+    value = re.sub(r'''(?i)(['"]?[\w.-]*(?:api[_ -]?key|token|password|secret)[\w.-]*['"]?\s*[:=]\s*)("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s,;}\]]+)''',
+                   lambda match: match[1] + (match[2][0] + '[REDACTED]' + match[2][-1]
+                       if match[2][0] in ('"', "'") and match[2][-1] == match[2][0] else '[REDACTED]'), value)
+    value = re.sub(r"(?i)(\bBearer\s+)[A-Za-z0-9._~+/-]+=*", r"\1[REDACTED_TOKEN]", value)
     # Keep the whole sanitized result: truncation dropped real acceptance/handoff
     # evidence (including the trailing handoff marker) from otherwise successful jobs.
     return value

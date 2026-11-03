@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import asyncio
-import hashlib
 import importlib.util
 import inspect
 import json
@@ -19,6 +18,10 @@ STACK = Path(__file__).resolve().parents[1]
 _spec = importlib.util.spec_from_file_location("goal_host_runtime", STACK / "runtime/runner.py")
 runtime = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(runtime)
+_scope_spec = importlib.util.spec_from_file_location(
+    "goal_candidate_scope", STACK / "autonomy/candidate_scope.py")
+candidate_scope = importlib.util.module_from_spec(_scope_spec)
+_scope_spec.loader.exec_module(candidate_scope)
 ID = re.compile(r"^g-[a-f0-9]{32}$")
 TERMINAL = {"COMPLETE", "CANCELED", "NEEDS_USER"}
 
@@ -109,8 +112,7 @@ class GoalManager:
                 raise ValueError("required input must be in the authorized workspace")
             inputs.append(str(path))
         scope = self._scope(request.get("write_paths", []))
-        baseline = {name: hashlib.sha256((self.workspace / name).read_bytes()).hexdigest()
-                    if (self.workspace / name).is_file() else None for name in scope}
+        baseline = candidate_scope.baseline_snapshot(self.workspace, scope)
         spec = {"id": goal_id, "workspace": str(self.workspace), "goal": goal.strip(),
                 "acceptance": [a.strip() for a in acceptance],
                 "write_paths": scope, "baseline": baseline,
@@ -335,6 +337,16 @@ class GoalManager:
                             or path.is_relative_to(directory / "artifacts"))):
                 raise ValueError("candidate file outside immutable goal scope")
             names.append(path.relative_to(self.workspace).as_posix())
+        # The requested list alone may omit a real scoped change, so the frozen
+        # candidate always covers every scoped file that changed against the
+        # immutable pre-Goal baseline.
+        changes = candidate_scope.scope_changes(
+            self.workspace, spec["write_paths"], spec.get("baseline", {}))
+        deleted = sorted(name for name, digest in changes.items() if digest is None)
+        if deleted:
+            raise ValueError("Scoped file was deleted and cannot be represented in a candidate: "
+                             + ", ".join(deleted))
+        names = sorted(set(names) | set(changes))
         module_spec = importlib.util.spec_from_file_location("goal_freeze", STACK / "runtime/review.py")
         helper = importlib.util.module_from_spec(module_spec)
         module_spec.loader.exec_module(helper)

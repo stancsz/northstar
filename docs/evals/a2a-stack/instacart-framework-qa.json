@@ -1,0 +1,75 @@
+{
+  "reviewer": "review_agent_workflow",
+  "author": "claude-code task efd21bac-b7ff-4b4f-91e9-0dcbd3992b09 + integration coordinator",
+  "verdict": "READY",
+  "scope": "Task-store receipt publication ordering and its 48-file combined framework candidate. This is framework code/test readiness only; an actual Instacart soak was not run.",
+  "candidate": {
+    "id": "9d569992332cdbe2704b404fcd478e0d06791bf7a0a1f222069221c010a81a49",
+    "file_count": 48,
+    "manifest_path": "tmp/a2a-stack/instacart-soak/receipt-ordering-integration/artifacts/candidate-combined.json",
+    "manifest_sha256": "0deb63112ac2e3c8dedeed30a7b39ebce6b92e91836a73822ea543cfef2d5997",
+    "verification_path": "tmp/a2a-stack/instacart-soak/receipt-ordering-integration/artifacts/verification-combined.json",
+    "verification_sha256": "93eefea4096a1bb1f0ab8e55eebebae12498d86f7c1c2b9f070e090fdef4f0eb",
+    "summary_sha256": "900cae346b8efa6dc05fdd675d503996e5467a16bad4dd992e39013821bff3b6",
+    "manifest_recomputed": {
+      "entries": 48,
+      "missing": [],
+      "mismatches": []
+    },
+    "task_store_sha256": "bc8390fd0cf8be0ad8534dd0bc0c5c2dbb2f6e1bf92407a068ddadf19184377e",
+    "task_store_test_sha256": "2db12622134103ddf7b266c589c336fbadffe1e4031064df234dc838012866aa"
+  },
+  "evidence": [
+    "Reviewed only task_store.py and test_task_store.py after writer reached TASK_STATE_COMPLETED and native PID 41824 was confirmed absent. Both changed files match the combined manifest hashes.",
+    "Both terminal paths await super().save(task, context) before atomically writing terminal.json: startup recovery and native-process monitor. get() takes the same _write_lock as monitor writes, so callers wait through an in-progress terminal update.",
+    "Authored gated-save regression tests pause DatabaseTaskStore.save and assert terminal.json is absent until the database save is released, then verify FAILED task state and expected receipt. Original store isolation, recovery, process identity, and artifact assertions remain; teardown tracks all opened stores, closes each even if one close raises, and then surfaces the first error.",
+    "Independent negative controls ran both authored gated tests against baseline task_store.py from HEAD in private scratch copies. Each failed at the intended assertion that receipt was absent before commit; the monitor control exited with the expected test failure and no WinError32 cleanup error.",
+    "Independent scratch concurrency check of get() during a gated monitor save passed on candidate code: the reader remained pending until save/recovery finished and then observed FAILED.",
+    "The frozen combined manifest contains 48 source files; independent recomputation found 48 entries, no missing files, and no mismatches. All seven combined checks passed: workspace isolation 1, host workspace 2, candidate scope 7, agent suite 59, autonomy 55, runtime 14, independent scope matrix 8 (146 total tests).",
+    "Previously reviewed runtime redaction files remain runner.py 84ff4c6465b4a1e4a3e0feb00753062c5c9968606807adbcafd02c2db630252f and test_runner.py 89bb8af06cd65001eba29deaf35d2f1f7b8b84a01ad8d3146ba3eb6af6dc5d52."
+  ],
+  "limitations": [
+    "This review covers code, deterministic regression tests, and the combined local checks. The actual Instacart multi-process soak has not been dispatched or accepted.",
+    "No live worker stream, raw environment data, credentials, or separate task-store worker artifacts were inspected."
+  ],
+  "checks": [
+    {
+      "id": "northstar-workspace-isolation-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-host-workspace-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-candidate-scope-contract",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-agent-tests",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-autonomy-tests",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-runtime-tests",
+      "exit_code": 0
+    },
+    {
+      "id": "northstar-independent-scope-matrix",
+      "exit_code": 0
+    }
+  ],
+  "result": {
+    "checks_passed": true,
+    "writer_exited": true,
+    "business_goal_created": false
+  },
+  "negative_control_scratch": [
+    "tmp/a2a-stack/instacart-soak/task-store-integration-review/negative-control",
+    "tmp/a2a-stack/instacart-soak/task-store-integration-review/official-monitor-baseline"
+  ],
+  "additional_scratch_check": "tmp/a2a-stack/instacart-soak/task-store-integration-review/get-lock"
+}

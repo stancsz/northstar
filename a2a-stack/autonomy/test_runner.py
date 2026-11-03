@@ -1,14 +1,17 @@
 """Offline controller tests: no native model, service, or provider calls."""
 import importlib.util
 import asyncio
+import hashlib
 import json
 import os
 from pathlib import Path
+import shutil
 import sys
 import tempfile
 import threading
 import time
 import unittest
+from unittest import mock
 
 SPEC = importlib.util.spec_from_file_location("autonomous_runner", Path(__file__).with_name("runner.py"))
 runner = importlib.util.module_from_spec(SPEC)
@@ -22,17 +25,22 @@ class Fixture(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(dir=SCRATCH)
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name).resolve()
+        # The project workspace is kept apart from this fixture's operational
+        # goal state, so a workspace-root scope sees only project files.
+        self.workspace = self.root / "workspace"
+        self.workspace.mkdir()
         self.goal = self.root / "goal"
-        self.spec = {"id": "goal", "workspace": str(self.root), "goal": "Implement tested change",
+        self.goal.mkdir()
+        self.spec = {"id": "goal", "workspace": str(self.workspace), "goal": "Implement tested change",
             "acceptance": ["Tests pass", "Exact candidate independently reviewed"], "write_paths": ["source.py"],
-            "checks": [{"id": "unit", "argv": [sys.executable, "-c", "print('ok')"], "cwd": str(self.root)}],
+            "checks": [{"id": "unit", "argv": [sys.executable, "-c", "print('ok')"], "cwd": str(self.workspace)}],
             "mcp_config": str(self.root / "mcp.json"), "owner_prompt": str(self.root / "owner.txt"),
             "supervisor_prompt": str(self.root / "supervisor.txt"), "state_root": str(self.root / "host")}
         self.spec.update(baseline={"source.py": None}, required_inputs=[], user_gates=[])
-        (self.root / "source.py").write_text("version = 1\n")
-        runner.review_helpers.ROOT = self.root
+        (self.workspace / "source.py").write_text("version = 1\n")
+        runner.review_helpers.ROOT = self.workspace
         self.manifest = runner.review_helpers.candidate(["source.py"])
-        self.manifest_path = self.root / "candidate.json"
+        self.manifest_path = self.goal / "candidate.json"
         self.manifest_path.write_text(json.dumps(self.manifest))
         self.reference = {"stack_id": "team", "role_id": "critic", "task_id": "qa-1"}
         self.assignments = self.root / "host/stacks/team/assignments"
@@ -61,7 +69,7 @@ class Fixture(unittest.TestCase):
 
     def test_actual_review_and_stale_candidate(self):
         self.assertTrue(self.validate()["accepted"])
-        (self.root / "source.py").write_text("version = 2\n")
+        (self.workspace / "source.py").write_text("version = 2\n")
         with self.assertRaisesRegex(ValueError, "STALE"):
             runner.freeze_current(self.spec, self.goal, str(self.manifest_path))
 
@@ -89,6 +97,170 @@ class Fixture(unittest.TestCase):
         self.spec["write_paths"] = []
         with self.assertRaisesRegex(ValueError, "outside explicit"):
             runner.freeze_current(self.spec, self.goal, str(self.manifest_path))
+
+    def test_partial_manifest_omitting_a_scoped_change_rejected(self):
+        (self.workspace / "other.py").write_text("other = 1\n")
+        self.spec["write_paths"] = ["source.py", "other.py"]
+        self.spec["baseline"] = {"source.py": None, "other.py": None}
+        (self.workspace / "source.py").write_text("version = 2\n")
+        (self.workspace / "other.py").write_text("other = 2\n")
+        partial = runner.review_helpers.candidate(["source.py"])
+        partial_path = self.goal / "partial.json"
+        partial_path.write_text(json.dumps(partial))
+
+        with self.assertRaisesRegex(ValueError, "(?i)(scope|omit|incomplete|coverage|candidate)"):
+            runner.freeze_current(self.spec, self.goal, str(partial_path))
+
+    def test_late_change_to_unchanged_scoped_file_invalidates_candidate(self):
+        (self.workspace / "other.py").write_bytes(b"other = 1\n")
+        self.spec["write_paths"] = ["source.py", "other.py"]
+        self.spec["baseline"] = {"source.py": None, "other.py": hashlib.sha256(
+            (self.workspace / "other.py").read_bytes()).hexdigest()}
+        (self.workspace / "source.py").write_text("version = 2\n")
+        current = runner.review_helpers.candidate(["source.py"])
+        current_path = self.goal / "current.json"
+        current_path.write_text(json.dumps(current))
+        self.assertEqual(runner.freeze_current(self.spec, self.goal, str(current_path)), current)
+
+        (self.workspace / "other.py").write_bytes(b"other = changed after freeze\n")
+
+        with self.assertRaisesRegex(ValueError, "(?i)(scope|omit|incomplete|coverage|stale|candidate)"):
+            runner.freeze_current(self.spec, self.goal, str(current_path))
+
+    def test_root_scope_candidate_omitting_a_change_is_rejected(self):
+        (self.workspace / "other.py").write_text("other = 1\n")
+        self.spec["write_paths"] = ["."]
+        self.spec["baseline"] = {"source.py": None, "other.py": None}
+        (self.workspace / "source.py").write_text("version = 2\n")
+        (self.workspace / "other.py").write_text("other = 2\n")
+        partial = runner.review_helpers.candidate(["source.py"])
+        partial_path = self.goal / "root-partial.json"
+        partial_path.write_text(json.dumps(partial))
+
+        with self.assertRaisesRegex(ValueError, "(?i)(scope|omit|incomplete|coverage|candidate)"):
+            runner.freeze_current(self.spec, self.goal, str(partial_path))
+
+    def test_root_scope_late_change_invalidates_an_accepted_candidate(self):
+        (self.workspace / "other.py").write_text("other = 1\n")
+        self.spec["write_paths"] = ["."]
+        self.spec["baseline"] = {"source.py": None, "other.py": hashlib.sha256(
+            (self.workspace / "other.py").read_bytes()).hexdigest()}
+        (self.workspace / "source.py").write_text("version = 2\n")
+        current = runner.review_helpers.candidate(["source.py"])
+        current_path = self.goal / "root-current.json"
+        current_path.write_text(json.dumps(current))
+        self.assertEqual(runner.freeze_current(self.spec, self.goal, str(current_path)), current)
+
+        (self.workspace / "other.py").write_text("other = changed after freeze\n")
+
+        with self.assertRaisesRegex(ValueError, "(?i)(scope|omit|incomplete|coverage|stale|candidate)"):
+            runner.freeze_current(self.spec, self.goal, str(current_path))
+
+    def test_root_scope_deleted_file_fails_closed(self):
+        (self.workspace / "gone.py").write_text("remove me\n")
+        self.spec["write_paths"] = ["."]
+        self.spec["baseline"] = {"source.py": None, "gone.py": hashlib.sha256(
+            (self.workspace / "gone.py").read_bytes()).hexdigest()}
+        (self.workspace / "gone.py").unlink()
+        manifest = {"candidate": "frozen", "files": {"source.py": "frozen"}}
+        path = self.goal / "root-deleted.json"
+        path.write_text(json.dumps(manifest))
+
+        with self.assertRaises(ValueError) as raised:
+            runner.freeze_current(self.spec, self.goal, str(path))
+
+        message = str(raised.exception)
+        self.assertIn("gone.py", message)
+        self.assertTrue(message.strip())
+
+    def test_root_scope_unchanged_dirty_file_is_not_goal_work(self):
+        (self.workspace / "other.py").write_text("already dirty before the goal\n")
+        self.spec["write_paths"] = ["."]
+        self.spec["baseline"] = {"source.py": None, "other.py": hashlib.sha256(
+            (self.workspace / "other.py").read_bytes()).hexdigest()}
+        current = runner.review_helpers.candidate(["source.py"])
+        current_path = self.goal / "root-unchanged.json"
+        current_path.write_text(json.dumps(current))
+
+        self.assertEqual(runner.freeze_current(self.spec, self.goal, str(current_path)), current)
+
+    def test_deleted_scoped_file_fails_closed_with_a_message(self):
+        self.spec["baseline"] = {"source.py": hashlib.sha256(
+            (self.workspace / "source.py").read_bytes()).hexdigest()}
+        (self.workspace / "source.py").unlink()
+
+        with self.assertRaises(ValueError) as raised:
+            runner.freeze_current(self.spec, self.goal, str(self.manifest_path))
+
+        self.assertIn("source.py", str(raised.exception))
+        self.assertTrue(str(raised.exception).strip())
+
+    def test_deleted_scoped_directory_fails_closed_with_a_message(self):
+        (self.workspace / "src").mkdir()
+        (self.workspace / "src/a.py").write_text("a = 0\n")
+        (self.workspace / "src/b.py").write_text("b = 0\n")
+        self.spec["write_paths"] = ["src"]
+        self.spec["baseline"] = {
+            "src/a.py": hashlib.sha256((self.workspace / "src/a.py").read_bytes()).hexdigest(),
+            "src/b.py": hashlib.sha256((self.workspace / "src/b.py").read_bytes()).hexdigest(),
+        }
+        shutil.rmtree(self.workspace / "src")
+        manifest = {"candidate": "frozen", "files": {"src/a.py": "frozen"}}
+        path = self.goal / "deleted-dir.json"
+        path.write_text(json.dumps(manifest))
+
+        with self.assertRaises(ValueError) as raised:
+            runner.freeze_current(self.spec, self.goal, str(path))
+
+        message = str(raised.exception)
+        self.assertIn("src/a.py", message)
+        self.assertIn("src/b.py", message)
+
+    def test_scoped_directory_replaced_by_a_file_keeps_nested_deletions_visible(self):
+        (self.workspace / "src").mkdir()
+        (self.workspace / "src/a.py").write_text("a = 0\n")
+        (self.workspace / "src/b.py").write_text("b = 0\n")
+        self.spec["write_paths"] = ["src"]
+        self.spec["baseline"] = {
+            "src/a.py": hashlib.sha256((self.workspace / "src/a.py").read_bytes()).hexdigest(),
+            "src/b.py": hashlib.sha256((self.workspace / "src/b.py").read_bytes()).hexdigest(),
+        }
+        shutil.rmtree(self.workspace / "src")
+        (self.workspace / "src").write_text("now a regular file\n")
+        manifest = {"candidate": "frozen", "files": {"src": "frozen"}}
+        path = self.goal / "replaced-dir.json"
+        path.write_text(json.dumps(manifest))
+
+        with self.assertRaises(ValueError) as raised:
+            runner.freeze_current(self.spec, self.goal, str(path))
+
+        message = str(raised.exception)
+        self.assertIn("src/a.py", message)
+        self.assertIn("src/b.py", message)
+
+    def test_provenance_sees_a_scoped_change_omitted_from_the_manifest(self):
+        (self.workspace / "other.py").write_text("other = 1\n")
+        self.spec["write_paths"] = ["source.py", "other.py"]
+        self.spec["baseline"] = {"source.py": None, "other.py": None}
+        (self.workspace / "source.py").write_text("version = 2\n")
+        (self.workspace / "other.py").write_text("other = 2\n")
+        partial = runner.review_helpers.candidate(["source.py"])
+        (self.assignments / "producer.json").write_text(json.dumps({"stack_id": "team", "role_id": "coder",
+            "task_id": "code-1", "write_paths": ["source.py"]}))
+
+        with self.assertRaisesRegex(ValueError, "coder provenance"):
+            runner.producer_receipts(self.spec, self.reference, partial, self.stack, [])
+
+    def test_unchanged_preexisting_scoped_file_is_not_goal_work(self):
+        self.spec["baseline"] = {"source.py": hashlib.sha256(
+            (self.workspace / "source.py").read_bytes()).hexdigest()}
+        current = runner.review_helpers.candidate(["source.py"])
+        current_path = self.goal / "unchanged.json"
+        current_path.write_text(json.dumps(current))
+
+        self.assertEqual(runner.freeze_current(self.spec, self.goal, str(current_path)), current)
+        receipts = runner.producer_receipts(self.spec, self.reference, current, self.stack, [])
+        self.assertEqual(receipts, [], "unchanged baseline content must not be attributed to this goal")
 
     def test_session_resume_no_default_ceilings(self):
         argv = runner.claude_argv(self.spec, "same-native-session", executable="claude.exe")
@@ -169,7 +341,7 @@ class Fixture(unittest.TestCase):
                 return fixture.proposal()
             def fetch_review(self, reference): return fixture.task, fixture.stack
             def check(self, check):
-                (fixture.root / "source.py").write_text("changed during verification\n")
+                (fixture.workspace / "source.py").write_text("changed during verification\n")
                 return {"exit_code": 0, "output": "check passed but changed candidate"}
             def supervisor(self, facts):
                 self.diagnosed = facts
@@ -372,6 +544,10 @@ class Fixture(unittest.TestCase):
         self.assertIsNone(runner.runtime.process_token(pid), "Grandchild survived closed per-process Job")
 
     def test_real_local_check_and_native_stream_metadata(self):
+        # The host may legitimately inherit CLAUDE_CODE_RETRY_WATCHDOG; the invariant
+        # is that the child receives 1 and the parent value is left untouched.
+        parent_present = "CLAUDE_CODE_RETRY_WATCHDOG" in os.environ
+        parent_value = os.environ.get("CLAUDE_CODE_RETRY_WATCHDOG")
         journal = runner.Journal(self.goal, self.spec)
         backend = runner.NativeBackend(self.spec, journal)
         result = backend.check(self.spec["checks"][0])
@@ -386,7 +562,36 @@ class Fixture(unittest.TestCase):
         log = (self.goal / "owner.jsonl").read_text()
         self.assertIn("api_retry", log)
         self.assertNotIn("secret arbitrary payload", log)
-        self.assertNotIn("CLAUDE_CODE_RETRY_WATCHDOG", os.environ)
+        self.assertEqual("CLAUDE_CODE_RETRY_WATCHDOG" in os.environ, parent_present)
+        self.assertEqual(os.environ.get("CLAUDE_CODE_RETRY_WATCHDOG"), parent_value)
+
+    def _child_watchdog_value(self):
+        """Run one native child that reports the CLAUDE_CODE_RETRY_WATCHDOG it sees."""
+        script = ("import os,sys; sys.stdin.read(); "
+                  "print('WATCHDOG=' + os.environ.get('CLAUDE_CODE_RETRY_WATCHDOG', '<ABSENT>'))")
+        check = {"id": "watchdog-probe", "argv": [sys.executable, "-c", script], "cwd": str(self.workspace)}
+        journal = runner.Journal(self.goal, self.spec)
+        backend = runner.NativeBackend(self.spec, journal)
+        result = backend.check(check)
+        self.assertEqual(result["exit_code"], 0)
+        return result["output"].strip()
+
+    def test_native_child_sets_watchdog_flag_without_mutating_parent(self):
+        sentinel = "parent-sentinel-value"
+        for parent_value in (None, sentinel):
+            with self.subTest(parent_value=parent_value):
+                # patch.dict restores the parent environment exactly as it was.
+                with mock.patch.dict(os.environ):
+                    if parent_value is None:
+                        os.environ.pop("CLAUDE_CODE_RETRY_WATCHDOG", None)
+                    else:
+                        os.environ["CLAUDE_CODE_RETRY_WATCHDOG"] = parent_value
+                    observed = self._child_watchdog_value()
+                    # The native child always receives the watchdog flag enabled.
+                    self.assertEqual(observed, "WATCHDOG=1")
+                    # The parent keeps exactly the state it had before the run.
+                    self.assertEqual("CLAUDE_CODE_RETRY_WATCHDOG" in os.environ, parent_value is not None)
+                    self.assertEqual(os.environ.get("CLAUDE_CODE_RETRY_WATCHDOG"), parent_value)
 
     def test_mcp_preflight_unavailable_then_ready_preserves_session(self):
         journal = runner.Journal(self.goal, self.spec)

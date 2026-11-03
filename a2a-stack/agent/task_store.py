@@ -129,12 +129,12 @@ class RecoveringDatabaseTaskStore(DatabaseTaskStore):
                         self._watched_processes[task.id] = process_record
                     else:
                         task.status.CopyFrom(_status_message(TaskState.TASK_STATE_FAILED, INTERRUPTED_MESSAGE))
+                        await super().save(task, context)
                         _atomic_json(self._receipt_dir(task.id) / "terminal.json", {
                             "task_id": task.id,
                             "state": "TASK_STATE_FAILED",
                             "recovery": "native_worker_not_alive_or_identity_mismatch",
                         })
-                        await super().save(task, context)
                 page_token = page.next_page_token or None
                 if not page_token:
                     break
@@ -158,12 +158,12 @@ class RecoveringDatabaseTaskStore(DatabaseTaskStore):
                         self._watched_processes.pop(task_id, None)
                         continue
                     task.status.CopyFrom(_status_message(TaskState.TASK_STATE_FAILED, INTERRUPTED_MESSAGE))
+                    await super().save(task, context)
                     _atomic_json(self._receipt_dir(task_id) / "terminal.json", {
                         "task_id": task_id,
                         "state": "TASK_STATE_FAILED",
                         "recovery": "monitored_native_worker_exited_without_terminal_task_result",
                     })
-                    await super().save(task, context)
                     self._watched_processes.pop(task_id, None)
 
     def _task_dir(self, task_id: str) -> Path:
@@ -196,7 +196,8 @@ class RecoveringDatabaseTaskStore(DatabaseTaskStore):
 
     async def get(self, task_id: str, context: ServerCallContext) -> Task | None:
         await self._recover_once(context)
-        return await super().get(task_id, context)
+        async with self._write_lock:
+            return await super().get(task_id, context)
 
     async def list(self, params: ListTasksRequest, context: ServerCallContext):
         await self._recover_once(context)

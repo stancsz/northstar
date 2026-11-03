@@ -7,6 +7,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -83,7 +84,7 @@ class GoalManagerTests(unittest.TestCase):
         self.assertEqual(spec["write_paths"], ["notes.txt", "src"])
         self.assertEqual(spec["baseline"], {
             "notes.txt": hashlib.sha256((self.workspace / "notes.txt").read_bytes()).hexdigest(),
-            "src": None,
+            "src/main.py": hashlib.sha256((self.workspace / "src/main.py").read_bytes()).hexdigest(),
         })
         self.assertEqual(spec["checks"], [{
             "id": "unit",
@@ -137,6 +138,143 @@ class GoalManagerTests(unittest.TestCase):
             self.manager.freeze(result["goal_id"], ["unlisted.py"])
         with self.assertRaisesRegex(ValueError, "outside immutable goal scope"):
             self.manager.freeze(result["goal_id"], ["../outside.py"])
+
+    def test_freeze_covers_every_changed_scoped_file(self):
+        (self.workspace / "src").mkdir()
+        (self.workspace / "src/a.py").write_text("a = 0\n", encoding="utf-8")
+        (self.workspace / "src/b.py").write_text("b = 0\n", encoding="utf-8")
+        result, _ = self.create_without_launch(self.request(write_paths=["src"]))
+        (self.workspace / "src/a.py").write_text("a = 1\n", encoding="utf-8")
+        (self.workspace / "src/b.py").write_text("b = 1\n", encoding="utf-8")
+
+        frozen = self.manager.freeze(result["goal_id"], ["src/a.py"])
+
+        self.assertEqual(set(frozen["files"]), {"src/a.py", "src/b.py"},
+                         "a frozen candidate must cover every changed scoped file")
+        manifest = json.loads(Path(frozen["manifest_path"]).read_text(encoding="utf-8"))
+        self.assertEqual(manifest["files"], frozen["files"])
+        self.assertEqual(frozen["candidate"], manifest["candidate"])
+
+    def test_freeze_rejects_a_deleted_scoped_file(self):
+        (self.workspace / "src").mkdir()
+        (self.workspace / "src/gone.py").write_text("remove me\n", encoding="utf-8")
+        (self.workspace / "src/kept.py").write_text("keep me\n", encoding="utf-8")
+        result, _ = self.create_without_launch(self.request(write_paths=["src"]))
+        (self.workspace / "src/gone.py").unlink()
+        (self.workspace / "src/kept.py").write_text("changed\n", encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "deleted") as raised:
+            self.manager.freeze(result["goal_id"], ["src/kept.py"])
+
+        self.assertIn("src/gone.py", str(raised.exception))
+        self.assertTrue(str(raised.exception).strip())
+
+    def test_freeze_rejects_an_entirely_deleted_scoped_directory(self):
+        (self.workspace / "src").mkdir()
+        (self.workspace / "src/a.py").write_text("a = 0\n", encoding="utf-8")
+        (self.workspace / "src/b.py").write_text("b = 0\n", encoding="utf-8")
+        result, _ = self.create_without_launch(self.request(write_paths=["src"]))
+        shutil.rmtree(self.workspace / "src")
+
+        with self.assertRaisesRegex(ValueError, "deleted") as raised:
+            self.manager.freeze(result["goal_id"], ["src/a.py"])
+
+        message = str(raised.exception)
+        self.assertIn("src/a.py", message)
+        self.assertIn("src/b.py", message)
+
+    def test_freeze_rejects_a_scoped_directory_replaced_by_a_file(self):
+        (self.workspace / "src").mkdir()
+        (self.workspace / "src/a.py").write_text("a = 0\n", encoding="utf-8")
+        (self.workspace / "src/b.py").write_text("b = 0\n", encoding="utf-8")
+        result, _ = self.create_without_launch(self.request(write_paths=["src"]))
+        shutil.rmtree(self.workspace / "src")
+        (self.workspace / "src").write_text("now a regular file\n", encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "deleted") as raised:
+            self.manager.freeze(result["goal_id"], ["src"])
+
+        message = str(raised.exception)
+        self.assertIn("src/a.py", message)
+        self.assertIn("src/b.py", message)
+
+    def test_root_scope_freeze_covers_every_changed_workspace_file(self):
+        (self.workspace / "a.py").write_text("a = 0\n", encoding="utf-8")
+        (self.workspace / "b.py").write_text("b = 0\n", encoding="utf-8")
+        result, _ = self.create_without_launch(self.request(write_paths=["."]))
+        (self.workspace / "a.py").write_text("a = 1\n", encoding="utf-8")
+        (self.workspace / "b.py").write_text("b = 1\n", encoding="utf-8")
+
+        frozen = self.manager.freeze(result["goal_id"], ["a.py"])
+
+        self.assertEqual(set(frozen["files"]), {"a.py", "b.py"},
+                         "a workspace-root scope must cover every changed project file")
+        spec = json.loads(Path(result["spec_path"]).read_text(encoding="utf-8"))
+        self.assertEqual(spec["write_paths"], ["."])
+        self.assertEqual(sorted(spec["baseline"]), ["a.py", "b.py"])
+        self.assertFalse(Path(result["state_dir"]).is_relative_to(self.workspace),
+                         "operational goal state must stay outside the root-scoped workspace")
+
+    def test_root_scope_freeze_detects_nested_and_hidden_path_changes(self):
+        (self.workspace / "src").mkdir()
+        (self.workspace / "src" / "a.py").write_text("a = 0\n", encoding="utf-8")
+        (self.workspace / ".generated").mkdir()
+        (self.workspace / ".generated" / "out.txt").write_text("out = 0\n", encoding="utf-8")
+        result, _ = self.create_without_launch(self.request(write_paths=["."]))
+        (self.workspace / "src" / "a.py").write_text("a = 1\n", encoding="utf-8")
+        (self.workspace / ".generated" / "out.txt").write_text("out = 1\n", encoding="utf-8")
+
+        frozen = self.manager.freeze(result["goal_id"], ["src/a.py"])
+
+        self.assertEqual(set(frozen["files"]), {".generated/out.txt", "src/a.py"},
+                         "a workspace-root scope must not hide generated or nested path changes")
+
+    def test_root_scope_freeze_rejects_a_deleted_workspace_file(self):
+        (self.workspace / "a.py").write_text("a = 0\n", encoding="utf-8")
+        (self.workspace / "gone.py").write_text("remove me\n", encoding="utf-8")
+        result, _ = self.create_without_launch(self.request(write_paths=["."]))
+        (self.workspace / "gone.py").unlink()
+
+        with self.assertRaisesRegex(ValueError, "deleted") as raised:
+            self.manager.freeze(result["goal_id"], ["a.py"])
+
+        self.assertIn("gone.py", str(raised.exception))
+
+    def test_directory_scope_baseline_records_contained_original_hashes(self):
+        (self.workspace / "src").mkdir()
+        (self.workspace / "src/main.py").write_text("original main\n", encoding="utf-8")
+        (self.workspace / "src/nested").mkdir()
+        (self.workspace / "src/nested/deep.py").write_text("original deep\n", encoding="utf-8")
+        result, _ = self.create_without_launch(self.request(write_paths=["src"]))
+        spec = json.loads(Path(result["spec_path"]).read_text(encoding="utf-8"))
+
+        self.assertEqual(spec["baseline"], {
+            "src/main.py": hashlib.sha256((self.workspace / "src/main.py").read_bytes()).hexdigest(),
+            "src/nested/deep.py": hashlib.sha256((self.workspace / "src/nested/deep.py").read_bytes()).hexdigest(),
+        })
+
+    def test_unchanged_preexisting_file_is_not_goal_work(self):
+        (self.workspace / "src").mkdir()
+        (self.workspace / "src/legacy.py").write_text("legacy = 1\n", encoding="utf-8")
+        result, _ = self.create_without_launch(self.request(write_paths=["src/legacy.py"]))
+
+        frozen = self.manager.freeze(result["goal_id"], ["src/legacy.py"])
+
+        self.assertEqual(set(frozen["files"]), {"src/legacy.py"})
+
+    def test_exact_file_goal_path_keeps_working(self):
+        (self.workspace / "notes.txt").write_text("baseline notes\n", encoding="utf-8")
+        original = hashlib.sha256((self.workspace / "notes.txt").read_bytes()).hexdigest()
+        result, _ = self.create_without_launch(self.request(write_paths=["notes.txt"]))
+        spec = json.loads(Path(result["spec_path"]).read_text(encoding="utf-8"))
+        (self.workspace / "notes.txt").write_text("changed notes\n", encoding="utf-8")
+        changed = hashlib.sha256((self.workspace / "notes.txt").read_bytes()).hexdigest()
+
+        frozen = self.manager.freeze(result["goal_id"], ["notes.txt"])
+
+        self.assertEqual(spec["baseline"], {"notes.txt": original})
+        self.assertEqual(set(frozen["files"]), {"notes.txt"})
+        self.assertEqual(frozen["files"]["notes.txt"], changed)
 
     def test_complete_report_waits_for_human_to_set_next_goal(self):
         result, launch = self.create_without_launch(self.request())

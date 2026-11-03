@@ -13,9 +13,11 @@ Trust model:
 
 from __future__ import annotations
 
+import argparse
 import asyncio
 from contextlib import asynccontextmanager
 import ctypes
+import hashlib
 import json
 import os
 import re
@@ -28,8 +30,42 @@ from pathlib import Path
 from typing import Any
 
 STACK_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_WORKSPACE = STACK_ROOT.parent
+# The original Northstar state tree. The default repository workspace keeps
+# using it verbatim; every other authorized workspace gets its own durable
+# namespace underneath it.
+SHARED_STATE_ROOT = STACK_ROOT.parent / "tmp" / "a2a-stack"
+NAMESPACE_ROOT = SHARED_STATE_ROOT / "workspaces"
+
+
+def workspace_token(workspace: Path) -> str:
+    """Derive the durable state namespace token for one canonical workspace.
+
+    The token is a pure function of the resolved path, so it is stable across
+    restarts and across path spelling aliases (trailing separator, "." or
+    ".." components, different drive-letter case).  Case folding keeps Windows
+    drive-letter spelling from producing two namespaces for one directory.
+    """
+    canonical = str(Path(workspace).resolve()).casefold()
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
+
+
+def state_root_for(workspace: Path) -> Path:
+    """Return the durable state root that belongs to one authorized workspace.
+
+    The default repository workspace keeps the original Northstar state tree
+    exactly as it is.  Every other workspace gets its own namespace inside
+    that same ignored tree, so one workspace can never read, resume or
+    enumerate another workspace's goals, stacks, jobs or tasks.
+    """
+    resolved = Path(workspace).resolve()
+    if resolved == DEFAULT_WORKSPACE.resolve():
+        return SHARED_STATE_ROOT
+    return NAMESPACE_ROOT / workspace_token(resolved)
+
+
 REPO_ROOT = Path(os.environ.get("A2A_WORKSPACE", STACK_ROOT.parent)).resolve()
-STATE_ROOT = STACK_ROOT.parent / "tmp" / "a2a-stack"
+STATE_ROOT = state_root_for(REPO_ROOT)
 RUNTIME_DIR = STACK_ROOT / "runtime"
 if str(RUNTIME_DIR) not in sys.path:
     sys.path.insert(0, str(RUNTIME_DIR))
@@ -70,7 +106,9 @@ CARD_URL = "/.well-known/agent-card.json"
 
 JOBS_DIR = STATE_ROOT / "jobs"
 TASKS_DIR = STATE_ROOT / "tasks"
-LOCK_PATH = STATE_ROOT / "control" / "owner.lock"
+# One owner lock for the whole listener, shared by every workspace choice, so a
+# second host process can never start competing host work.
+LOCK_PATH = SHARED_STATE_ROOT / "control" / "owner.lock"
 
 JOB_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
 PERMISSION_MODES = {"default", "acceptEdits", "plan"}
@@ -567,6 +605,71 @@ class RegisteredJobExecutor(AgentExecutor):
 
 
 # --------------------------------------------------------------------------- #
+# Workspace selection
+# --------------------------------------------------------------------------- #
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="service.py",
+        description="Run the local A2A host service for one authorized workspace.",
+    )
+    parser.add_argument(
+        "--workspace",
+        default=None,
+        help=(
+            "Existing directory the host may work in. Overrides A2A_WORKSPACE; "
+            "the default is the repository root."
+        ),
+    )
+    return parser
+
+
+def resolve_workspace(cli_value: str | None) -> Path:
+    """Resolve the authorized workspace: --workspace wins over A2A_WORKSPACE.
+
+    The workspace decides where jobs may run, so it is validated as an existing
+    directory before anything else happens.
+    """
+    if cli_value is not None:
+        source = "--workspace"
+        candidate = Path(cli_value)
+    else:
+        env_value = os.environ.get("A2A_WORKSPACE")
+        source = "A2A_WORKSPACE" if env_value else "the default repository workspace"
+        candidate = Path(env_value) if env_value else DEFAULT_WORKSPACE
+    resolved = candidate.resolve()
+    if not resolved.is_dir():
+        raise ValueError(f"{source} must be an existing directory: {candidate}")
+    return resolved
+
+
+def select_state_root(workspace: Path) -> Path:
+    """Point the module at the state namespace of the selected workspace.
+
+    JOBS_DIR, TASKS_DIR, the stack manager, the goal manager and every
+    per-agent task store derive from the selected state root, so switching
+    workspaces switches the whole durable state tree at once.
+    """
+    global STATE_ROOT, JOBS_DIR, TASKS_DIR
+    STATE_ROOT = state_root_for(workspace)
+    JOBS_DIR = STATE_ROOT / "jobs"
+    TASKS_DIR = STATE_ROOT / "tasks"
+    return STATE_ROOT
+
+
+def ensure_namespace_directory(state_root: Path) -> None:
+    """Make sure the selected namespace exists so the owner can drop state in.
+
+    A namespace whose directory cannot be created (a vanished workspace, a
+    read-only tree) must not take the whole host down: the state is simply
+    absent for that namespace.
+    """
+    try:
+        state_root.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass
+
+
+# --------------------------------------------------------------------------- #
 # App assembly
 # --------------------------------------------------------------------------- #
 def build_agent_card() -> AgentCard:
@@ -675,11 +778,35 @@ def build_app(executor: AgentExecutor | None = None):
 
 
 def main() -> None:
+    # The workspace is resolved before the owner lock is taken and before the
+    # application is built: an unusable workspace must fail while nothing has
+    # been started yet, so the live owner lock is never taken for a bad value.
+    args = build_parser().parse_args()
+    try:
+        workspace = resolve_workspace(args.workspace)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    globals()["REPO_ROOT"] = workspace
+    # The selected workspace owns a durable state namespace: the default
+    # repository workspace keeps the original Northstar state tree, every
+    # other workspace gets its own namespace inside it.  The namespace is
+    # selected before the app is built, so jobs, tasks, stacks, goals and the
+    # per-agent task stores all follow it.
+    selected_state_root = select_state_root(workspace)
+    ensure_namespace_directory(selected_state_root)
+    # Child processes read A2A_WORKSPACE themselves, so the selected workspace
+    # is exported to keep the whole process tree on the same authorized root.
+    os.environ["A2A_WORKSPACE"] = str(workspace)
+
     # pythonw (per-user Scheduled Task) has no console streams. Uvicorn's
     # logging formatters still need a writable stream with isatty().
     if sys.stdout is None or sys.stderr is None:
-        log_path = STATE_ROOT / "control" / "host-service.log"
-        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_path = selected_state_root / "control" / "host-service.log"
+        try:
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            log_path = SHARED_STATE_ROOT / "control" / "host-service.log"
+            log_path.parent.mkdir(parents=True, exist_ok=True)
         background_log = log_path.open("a", encoding="utf-8", buffering=1)
         if sys.stdout is None:
             sys.stdout = background_log

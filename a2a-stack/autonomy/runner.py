@@ -28,6 +28,7 @@ def load_module(name, path):
 STACK = Path(__file__).resolve().parents[1]
 runtime = load_module("goal_runtime", STACK / "runtime/runner.py")
 review_helpers = load_module("goal_review", STACK / "runtime/review.py")
+candidate_scope = load_module("goal_candidate_scope", STACK / "autonomy/candidate_scope.py")
 MCP_TOOLS = tuple("mcp__northstar_a2a__" + name for name in (
     "list_templates", "create_stack", "list_stacks", "get_stack", "discover_agent",
     "create_assignment", "submit_job", "get_task", "list_tasks", "cancel_task", "freeze_goal_candidate"))
@@ -472,6 +473,10 @@ def freeze_current(spec, directory, manifest_path):
         file = (workspace / name).resolve()
         if not (any(file == p or within(file, p) for p in allowed) or within(file, directory / "artifacts")):
             raise ValueError("Reviewed file outside explicit goal scope: " + name)
+    # A candidate that lists only part of the scope would hide a real scoped
+    # change from review, so coverage is checked against the immutable baseline.
+    candidate_scope.validate_scope_coverage(
+        workspace, spec["write_paths"], spec.get("baseline", {}), manifest["files"])
     # Existing helper owns canonical hashing and stale-candidate rules.
     review_helpers.ROOT = workspace
     if review_helpers.candidate(manifest["files"]) != manifest:
@@ -499,8 +504,12 @@ def bound_assignments(spec, stack_id):
 
 def producer_receipts(spec, reference, manifest, stack, assignments):
     workspace = Path(spec["workspace"]).resolve()
-    baseline = {(workspace / name).resolve(): digest for name, digest in spec.get("baseline", {}).items()}
-    changed = {name for name, digest in manifest["files"].items() if baseline.get((workspace / name).resolve()) != digest}
+    # The changed set comes from the scope versus the immutable baseline, not
+    # from the manifest's listed entries; a file omitted from the manifest must
+    # not escape the provenance rule.
+    changes = candidate_scope.scope_changes(
+        workspace, spec["write_paths"], spec.get("baseline", {}))
+    changed = set(changes)
     receipts, covered = [], set()
     tasks = stack.get("all_goal_producers", stack.get("_producer_tasks", []))
     owned_assignments = []
