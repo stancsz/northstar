@@ -27,7 +27,8 @@ TERMINAL = {"COMPLETE", "CANCELED", "NEEDS_USER"}
 
 
 class GoalManager:
-    def __init__(self, state_root: Path, workspace: Path):
+    def __init__(self, state_root: Path, workspace: Path, registry=None, task_reader=None,
+                 active_task=None, process_matches=None):
         self.state_root = Path(state_root).resolve()
         self.workspace = Path(workspace).resolve()
         self.directory = self.state_root / "autonomy" / "goals"
@@ -35,6 +36,10 @@ class GoalManager:
         self.processes = {}
         self.cancel_watchers = {}
         self.closing = False
+        self.registry, self.task_reader = registry, task_reader
+        self.active_task, self.process_matches = active_task, process_matches
+        self.completion_tickets = {}
+        self.completion_validator = None
 
     def _dir(self, goal_id):
         if not isinstance(goal_id, str) or not ID.fullmatch(goal_id):
@@ -365,6 +370,141 @@ class GoalManager:
         return {"goal_id": goal_id, "candidate": manifest["candidate"],
                 "manifest_path": str(destination), "files": manifest["files"]}
 
+    async def _producer_facts(self, goal_id, review=None):
+        if self.registry is None or self.task_reader is None or self.active_task is None:
+            raise ValueError("Host productive-boundary wiring is unavailable; completion refused")
+        with self.registry.boundary_lock:
+            generation = self.registry.goal_generation(goal_id)["generation"]
+            records = self.registry.goal_assignments(goal_id)
+        facts = {}
+        references = [(r["stack"]["stack_id"], r["assignment"]["role_id"], r["assignment"].get("task_id"))
+                      for r in records if r["profile"] == "coder" and r["assignment"].get("task_id")]
+        if review:
+            references.append((review["stack_id"], review["role_id"], review["task_id"]))
+        for reference in references:
+            try:
+                facts[reference] = await self.task_reader(*reference)
+            except Exception:
+                facts[reference] = {"id": reference[2], "status": {"state": "UNKNOWN"}}
+        return generation, records, facts
+
+    def _productive_quiescence(self, goal_id, generation, records, facts):
+        # Entire function and final publish are synchronous under the SAME
+        # registry lock as productive binding. No await crosses this boundary.
+        if self.closing:
+            return {"status": "wait", "reason": "Host is closing; retry after recovery"}
+        self.registry.goal_active(goal_id)
+        if self.registry.goal_generation(goal_id)["generation"] != generation:
+            return {"status": "wait", "reason": "Producer admission changed during observation; retry current facts"}
+        for record in records:
+            assignment = record["assignment"]
+            task_id = assignment.get("task_id")
+            if record["profile"] != "coder" or not task_id:
+                continue
+            key = (record["stack"]["stack_id"], assignment["role_id"], task_id)
+            if self.active_task(*key):
+                return {"status": "wait", "reason": "Productive executor is queued or running", "task_id": task_id}
+            path = self.state_root / "tasks" / task_id / "process.json"
+            process = self._read(path, {})
+            if process:
+                if self.process_matches is None:
+                    return {"status": "refresh", "reason": "Native identity reader unavailable; reconcile task"}
+                if (type(process.get("pid")) is not int or not 0 < process["pid"] <= 0xffffffff
+                        or not isinstance(process.get("process_token"), str)
+                        or not re.fullmatch(r"[0-9a-f]{16}", process["process_token"])):
+                    return {"status": "refresh", "reason": "Malformed native identity; reconcile original task"}
+                if self.process_matches(process.get("pid"), process.get("process_token")):
+                    return {"status": "wait", "reason": "Protocol terminal state still has a live native identity", "task_id": task_id}
+            task = facts.get(key)
+            if task is None:
+                # A bound task lost before protocol persistence cannot later run
+                # in this recovered host: no executor or native identity exists.
+                # Preserve binding and write a separate truthful recovery receipt.
+                runtime.atomic_json(self.state_root / "tasks" / task_id / "admission-recovery.json", {
+                    "task_id": task_id, "reason": "no_protocol_task_executor_or_native_identity"})
+                continue
+            state = task.get("status", {}).get("state", "").upper()
+            if state == "UNKNOWN":
+                return {"status": "wait", "reason": "Protocol state unavailable; retry original task observation"}
+            if state in ("SUBMITTED", "WORKING", "TASK_STATE_SUBMITTED", "TASK_STATE_WORKING"):
+                return {"status": "wait", "reason": "Productive task is pending; reconcile original task", "task_id": task_id}
+            if state not in ("COMPLETED", "FAILED", "CANCELED", "REJECTED", "TASK_STATE_COMPLETED",
+                             "TASK_STATE_FAILED", "TASK_STATE_CANCELED", "TASK_STATE_REJECTED"):
+                return {"status": "refresh", "reason": "Productive task needs reconciliation", "task_id": task_id}
+        return None
+
+    async def freeze_quiescent(self, goal_id, files):
+        generation, records, facts = await self._producer_facts(goal_id)
+        with self.registry.boundary_lock:
+            pending = self._productive_quiescence(goal_id, generation, records, facts)
+            if pending:
+                raise ValueError(pending["reason"] + "; retry freeze after original productive work finishes")
+            frozen = self.freeze(goal_id, files)
+            frozen["producer_epoch"] = self.registry.stamp_candidate(goal_id, frozen["candidate"])
+            return frozen
+
+    async def completion(self, goal_id, payload):
+        existing = self._read(self._dir(goal_id) / "state.json", {})
+        if existing.get("status") == "COMPLETE":
+            receipt = existing.get("accepted_receipt", {})
+            if payload.get("operation") == "commit" and receipt.get("completion_ticket") == payload.get("ticket"):
+                return {"status": "complete", "state": existing}
+            return {"status": "refresh", "reason": "Goal already complete; do not admit more work"}
+        proposal = payload.get("proposal", {})
+        reference = proposal.get("review")
+        if not isinstance(reference, dict) or set(reference) != {"stack_id", "role_id", "task_id"}:
+            raise ValueError("Actual review reference is required")
+        generation, records, facts = await self._producer_facts(goal_id, reference)
+        if self.completion_validator is None:
+            helper_spec = importlib.util.spec_from_file_location("host_completion_validation", STACK / "autonomy/runner.py")
+            self.completion_validator = importlib.util.module_from_spec(helper_spec)
+            helper_spec.loader.exec_module(self.completion_validator)
+        helper = self.completion_validator
+        with self.registry.boundary_lock:
+            pending = self._productive_quiescence(goal_id, generation, records, facts)
+            if pending:
+                return pending
+            directory = self._dir(goal_id)
+            spec = self._read(directory / "spec.json")
+            manifest = helper.freeze_current(spec, directory, proposal.get("candidate_manifest"))
+            epoch = self.registry.goal_generation(goal_id)
+            stamp = epoch.get("freeze", {})
+            review_assignment = next((r["assignment"] for r in records if
+                r["stack"]["stack_id"] == reference["stack_id"] and r["assignment"].get("role_id") == reference["role_id"]
+                and r["assignment"].get("task_id") == reference["task_id"]), {})
+            if (stamp.get("candidate") != manifest["candidate"] or stamp.get("generation") != generation
+                    or review_assignment.get("freeze_id") != stamp.get("id")
+                    or review_assignment.get("producer_generation") != generation):
+                return {"status": "refresh", "reason": "Fresh quiescent freeze and independent review required for current producer generation"}
+            stack = self.registry.get_stack(reference["stack_id"])
+            stack["all_goal_producers"] = [{"stack_id": r["stack"]["stack_id"], "goal_id": goal_id,
+                "profile": "coder", "role_id": r["assignment"]["role_id"], "task_id": r["assignment"]["task_id"],
+                "task": facts.get((r["stack"]["stack_id"], r["assignment"]["role_id"], r["assignment"]["task_id"])) or
+                        {"id": r["assignment"]["task_id"], "status": {"state": "FAILED"}}}
+                for r in records if r["profile"] == "coder" and r["assignment"].get("task_id")]
+            review = facts.get((reference["stack_id"], reference["role_id"], reference["task_id"]))
+            receipt = helper.validate_review(spec, reference, manifest, review or {}, stack)
+            proof = {"generation": generation, "freeze_id": stamp["id"], "candidate": manifest["candidate"], "review": reference}
+            if payload.get("operation") == "prepare":
+                ticket = uuid.uuid4().hex
+                self.completion_tickets[ticket] = proof
+                return {"status": "ready", "ticket": ticket, **proof}
+            if payload.get("operation") != "commit" or self.completion_tickets.get(payload.get("ticket")) != proof:
+                return {"status": "refresh", "reason": "Prepared evidence changed or host restarted; repeat current checks/review"}
+            checks = self._read(directory / "checks.json", [])
+            if (checks != payload.get("checks") or [c.get("id") for c in checks] != [c["id"] for c in spec["checks"]]
+                    or any(type(c.get("exit_code")) is not int or c["exit_code"] != 0 for c in checks)):
+                raise ValueError("Actual immutable full check receipt is missing or failing")
+            # Writer admission cannot interleave between this final fact/hash
+            # check, draft retirement and durable COMPLETE publication.
+            self.registry.retire_drafts(goal_id)
+            state = self._read(directory / "state.json", {})
+            state.update(status="COMPLETE", accepted_receipt={**receipt, **proof, "checks": checks,
+                "completion_ticket": payload["ticket"]}, last_error=None, updated_at=runtime.now())
+            runtime.atomic_json(directory / "state.json", state)
+            self.completion_tickets.pop(payload["ticket"], None)
+            return {"status": "complete", "state": state}
+
     async def _api(self, request):
         try:
             goal_id = request.path_params.get("goal_id")
@@ -379,7 +519,9 @@ class GoalManager:
             if not goal_id:
                 return JSONResponse(await self.create(await request.json()), status_code=201)
             if operation == "candidate":
-                return JSONResponse(self.freeze(goal_id, (await request.json()).get("files")))
+                return JSONResponse(await self.freeze_quiescent(goal_id, (await request.json()).get("files")))
+            if operation == "complete":
+                return JSONResponse(await self.completion(goal_id, await request.json()))
             return JSONResponse(await (self.cancel(goal_id) if operation == "cancel" else self.resume(goal_id)))
         except KeyError:
             return JSONResponse({"error": "unknown autonomous goal"}, status_code=404)
@@ -393,4 +535,5 @@ class GoalManager:
                 Route("/control/goals/{goal_id}/report", self._api, methods=["GET"]),
                 Route("/control/goals/{goal_id}/cancel", self._api, methods=["POST"]),
                 Route("/control/goals/{goal_id}/resume", self._api, methods=["POST"]),
-                Route("/control/goals/{goal_id}/candidate", self._api, methods=["POST"])]
+                Route("/control/goals/{goal_id}/candidate", self._api, methods=["POST"]),
+                Route("/control/goals/{goal_id}/complete", self._api, methods=["POST"])]

@@ -417,6 +417,44 @@ class NativeBackend:
         prompt += "\nIMMUTABLE GOAL SPEC:\n" + json.dumps(self.spec) + "\nCURRENT FACTS / RECOVERY:\n" + feedback
         return self.process(claude_argv(self.spec, self.journal.state.get("session_id")), prompt)
 
+    def _host_completion(self, payload):
+        from urllib.request import Request, urlopen
+        from urllib.error import HTTPError
+        request = Request("http://127.0.0.1:18890/control/goals/" + self.spec["id"] + "/complete",
+            data=json.dumps(payload).encode("utf-8"), headers={"content-type": "application/json"}, method="POST")
+        try:
+            with urlopen(request) as response:
+                return json.load(response)
+        except HTTPError as error:
+            if 400 <= error.code < 500:
+                detail = json.loads(error.read().decode("utf-8"))
+                return {"status": "refresh", "reason": runtime._safe_handoff(detail.get("error", "Host rejected completion evidence"))}
+            raise
+
+    def _completion(self, payload):
+        while True:
+            self.journal.cancel_check()
+            try:
+                result = self._host_completion(payload)
+            except Exception:
+                result = {"status": "wait", "reason": "Host completion transport unavailable"}
+            if result.get("status") in ("ready", "complete"):
+                return result
+            if result.get("status") != "wait":
+                raise InfrastructureUnavailable("Completion evidence refresh required: " + runtime._safe_handoff(result.get("reason", "Reconcile current candidate")))
+            # Do not overwrite state.json after an ambiguously completed host
+            # commit. Keep waits auditable without clobbering host COMPLETE.
+            with (self.journal.directory / "events.jsonl").open("a", encoding="utf-8") as out:
+                out.write(json.dumps({"event": "completion_wait", "at": runtime.now(),
+                    "reason": runtime._safe_handoff(result.get("reason", "Pending productive work"))}) + "\n")
+            time.sleep(.2)
+
+    def prepare_completion(self, proposal):
+        return self._completion({"operation": "prepare", "proposal": proposal})["ticket"]
+
+    def commit_completion(self, proposal, ticket, checks):
+        return self._completion({"operation": "commit", "proposal": proposal, "ticket": ticket, "checks": checks})
+
     def supervisor(self, facts):
         prompt = Path(self.spec["supervisor_prompt"]).read_text(encoding="utf-8")
         prompt += "\nREADONLY DIAGNOSIS. No tools beyond Read/Glob.\n" + json.dumps({"spec": self.spec, "facts": facts})
@@ -641,10 +679,11 @@ def run_goal(spec, journal, backend, pause=time.sleep):
                 continue
             if proposal["status"] == "needs_user":
                 raise ValueError("Owner proposed blocker; independent classification required")
-            manifest = freeze_current(spec, journal.directory, proposal["candidate_manifest"])
             reference = proposal["review"]
             if not isinstance(reference, dict):
                 raise ValueError("Candidate review reference required")
+            ticket = backend.prepare_completion(proposal)
+            manifest = freeze_current(spec, journal.directory, proposal["candidate_manifest"])
             task, stack = backend.fetch_review(reference)
             receipt = validate_review(spec, reference, manifest, task, stack)
             journal.record("review_verified", checked_candidate=manifest, review={**reference, **receipt})
@@ -661,7 +700,12 @@ def run_goal(spec, journal, backend, pause=time.sleep):
             if freeze_current(spec, journal.directory, proposal["candidate_manifest"]) != manifest:
                 raise ValueError("Candidate changed during checks")
             journal.cancel_check()
-            journal.record("accepted", status="COMPLETE", accepted_receipt={**receipt, "review": reference, "checks": checks}, last_error=None)
+            committed = backend.commit_completion(proposal, ticket, checks)
+            state = committed.get("state", {})
+            if (committed.get("status") != "complete" or state.get("status") != "COMPLETE"
+                    or state.get("id") != spec["id"] or (state.get("accepted_receipt") or {}).get("accepted") is not True):
+                raise ValueError("Host did not durably accept this Goal")
+            journal.state = state
             return 0
         except Canceled:
             journal.record("canceled", status="CANCELED")

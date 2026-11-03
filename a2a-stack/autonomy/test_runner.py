@@ -63,6 +63,26 @@ class Fixture(unittest.TestCase):
             "roles": [{"id": "critic", "profile": "reviewer"}, {"id": "coder", "profile": "coder"}],
             "_producer_tasks": [{"role_id": "coder", "task_id": "code-1", "task": {
                 "id": "code-1", "status": {"state": "TASK_STATE_COMPLETED"}, "artifacts": [{"parts": [{"text": "Implemented exact scoped source"}]}]}}]}
+        # Unit backends model owner decisions; host serialization is exercised
+        # separately through real SDK handler/store integration tests.
+        self._original_run_goal = runner.run_goal
+        gate = mock.patch.object(runner, "run_goal", self._run_with_unit_completion)
+        gate.start()
+        self.addCleanup(gate.stop)
+
+    def _run_with_unit_completion(self, spec, journal, backend, *args, **kwargs):
+        if hasattr(backend, "prepare_completion"):
+            return self._original_run_goal(spec, journal, backend, *args, **kwargs)
+        def commit(proposal, ticket, checks):
+            state = dict(journal.state)
+            receipt = dict(state["review"])
+            receipt.update(review=proposal["review"], checks=checks)
+            state.update(status="COMPLETE", accepted_receipt=receipt, last_error=None)
+            runner.runtime.atomic_json(journal.directory / "state.json", state)
+            return {"status": "complete", "state": state}
+        with mock.patch.object(backend, "prepare_completion", create=True, return_value="unit-host-ticket"), \
+             mock.patch.object(backend, "commit_completion", create=True, side_effect=commit):
+            return self._original_run_goal(spec, journal, backend, *args, **kwargs)
 
     def save_assignment(self):
         (self.assignments / "review.json").write_text(json.dumps(self.assignment))

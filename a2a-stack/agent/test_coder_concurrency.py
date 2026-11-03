@@ -30,10 +30,10 @@ def assembly(path):
                         lambda name, task_id: {"name": name})
         def routes(self): return []
     class Goals:
-        def __init__(self, *args): pass
+        def __init__(self, *args, **kwargs): pass
         def routes(self): return []
     class Updater:
-        def __init__(self, *args): pass
+        def __init__(self, *args, **kwargs): pass
         async def start_work(self): pass
         async def add_artifact(self, **kwargs): pass
         async def complete(self): pass
@@ -52,11 +52,11 @@ def assembly(path):
         "runner": SimpleNamespace(atomic_json=lambda path, value: receipts.append(value), now=lambda: "fixture-time"),
         "TASKS_DIR": HERE / "unused-no-write", "STATE_ROOT": HERE / "unused-no-write", "REPO_ROOT": HERE,
         "DefaultRequestHandler": Handler, "build_agent_card": card, "RPC_URL": "/fixture",
-        "create_agent_card_routes": lambda card: [], "create_jsonrpc_routes": lambda *args, **kwargs: []}
+        "productive_process_matches": lambda *args: False, "create_agent_card_routes": lambda card: [], "create_jsonrpc_routes": lambda *args, **kwargs: []}
     future = ast.ImportFrom(module="__future__", names=[ast.alias(name="annotations")], level=0)
     exec(compile(ast.fix_missing_locations(ast.Module(body=[future, *selected], type_ignores=[])), str(path), "exec"), namespace)
     modules = {"starlette.applications": SimpleNamespace(Starlette=App), "stacks": SimpleNamespace(StackManager=StackManager),
-        "task_store": SimpleNamespace(create_task_store=lambda *args: object()), "autonomy.manager": SimpleNamespace(GoalManager=Goals)}
+        "task_store": SimpleNamespace(create_task_store=lambda *args: object(), _process_matches=lambda *args: False), "autonomy.manager": SimpleNamespace(GoalManager=Goals)}
     with patch.dict("sys.modules", modules): namespace["build_app"]()
     return handlers, receipts
 

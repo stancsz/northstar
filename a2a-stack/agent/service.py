@@ -698,6 +698,39 @@ def build_agent_card() -> AgentCard:
     )
 
 
+def productive_process_matches(pid, expected_token):
+    """False proves identity absence; query/access errors must never mean dead."""
+    from ctypes import wintypes
+    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    kernel.OpenProcess.restype = wintypes.HANDLE
+    kernel.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+    kernel.WaitForSingleObject.restype = wintypes.DWORD
+    kernel.GetProcessTimes.argtypes = [wintypes.HANDLE, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
+    kernel.GetProcessTimes.restype = wintypes.BOOL
+    kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+    handle = kernel.OpenProcess(0x100000 | 0x1000, False, pid)
+    if not handle:
+        error = ctypes.get_last_error()
+        if error == 87:  # No process with this PID.
+            return False
+        raise ctypes.WinError(error)
+    class FileTime(ctypes.Structure):
+        _fields_ = [("low", wintypes.DWORD), ("high", wintypes.DWORD)]
+    try:
+        status = kernel.WaitForSingleObject(handle, 0)
+        if status == 0:
+            return False
+        if status != 0x102:
+            raise ctypes.WinError(ctypes.get_last_error())
+        created, exited, cpu, user = FileTime(), FileTime(), FileTime(), FileTime()
+        if not kernel.GetProcessTimes(handle, ctypes.byref(created), ctypes.byref(exited), ctypes.byref(cpu), ctypes.byref(user)):
+            raise ctypes.WinError(ctypes.get_last_error())
+        return f"{created.high:08x}{created.low:08x}" == expected_token
+    finally:
+        kernel.CloseHandle(handle)
+
+
 def build_app(executor: AgentExecutor | None = None):
     from starlette.applications import Starlette
     from stacks import StackManager
@@ -708,6 +741,23 @@ def build_app(executor: AgentExecutor | None = None):
     root_executor = executor or RegisteredJobExecutor()
     root_store = create_task_store(STATE_ROOT, "legacy-root")
     stores = [root_store]
+    role_stores, role_executors = {}, {}
+    def role_store(stack_id, role_id):
+        key = (stack_id, role_id)
+        if key not in role_stores:
+            role_stores[key] = create_task_store(STATE_ROOT, f"stack:{stack_id}:role:{role_id}")
+            stores.append(role_stores[key])
+        return role_stores[key]
+
+    async def read_role_task(stack_id, role_id, task_id):
+        from a2a.server.context import ServerCallContext
+        from google.protobuf.json_format import MessageToDict
+        task = await role_store(stack_id, role_id).get(task_id, ServerCallContext())
+        return MessageToDict(task, preserving_proto_field_name=True) if task is not None else None
+
+    def role_task_active(stack_id, role_id, task_id):
+        executor = role_executors.get((stack_id, role_id))
+        return bool(executor and task_id in executor._active)
     handler = DefaultRequestHandler(
         agent_executor=root_executor,
         task_store=root_store,
@@ -728,6 +778,7 @@ def build_app(executor: AgentExecutor | None = None):
         role_executor = RegisteredJobExecutor(
             job_loader=scoped_loader,
         )
+        role_executors[(stack["stack_id"], role["id"])] = role_executor
         role_card = build_agent_card()
         role_card.name = f"northstar/{stack['stack_id']}/{role['id']}/{role['profile']}"
         role_card.description = (
@@ -745,11 +796,10 @@ def build_app(executor: AgentExecutor | None = None):
         role_card.skills[0].ClearField("tags")
         role_card.skills[0].tags.append(role["profile"])
         role_card.supported_interfaces[0].url = role["agent_url"] + RPC_URL
-        role_store = create_task_store(STATE_ROOT, f"stack:{stack['stack_id']}:role:{role['id']}")
-        stores.append(role_store)
+        store = role_store(stack["stack_id"], role["id"])
         role_handler = DefaultRequestHandler(
             agent_executor=role_executor,
-            task_store=role_store,
+            task_store=store,
             agent_card=role_card,
         )
         return Starlette(routes=[
@@ -758,7 +808,8 @@ def build_app(executor: AgentExecutor | None = None):
         ])
 
     manager = StackManager(STATE_ROOT, REPO_ROOT, role_app_factory)
-    goals = GoalManager(STATE_ROOT, REPO_ROOT)
+    goals = GoalManager(STATE_ROOT, REPO_ROOT, registry=manager, task_reader=read_role_task,
+                        active_task=role_task_active, process_matches=productive_process_matches)
 
     @asynccontextmanager
     async def lifespan(_app):

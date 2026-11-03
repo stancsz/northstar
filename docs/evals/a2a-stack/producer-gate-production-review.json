@@ -1,0 +1,109 @@
+{
+  "verdict": "READY",
+  "reviewer": "review_agent_workflow",
+  "author": "root+autonomous_goal_runner",
+  "candidate": "46ae175c44601668f72884c474be69523e16f8e4af14ab2d8d40d3dbda4e01c5",
+  "source_file_count": 50,
+  "git_base_commit": "09b7ed3277cf17d16864849ba0aadfab3364a4ef",
+  "all_manifest_hashes_match_current_tree": true,
+  "artifact_manifest_sha256": "7c358ee486044bcd341a8dc59030975096b9d17bc4672ef8ab6911c0cb78ce0b",
+  "summary_sha256": "74103acf7d8b721b3de7fc4b9fecde68c86460d468e61db12de673868cc026bc",
+  "verification_sha256": "4ae05eb71fb4ad1c4791159d6a1c1c309610e752f0f593faf16bdce629232975",
+  "checks_passed": true,
+  "checks": [
+    {
+      "id": "northstar-workspace-isolation-contract",
+      "exit_code": 0,
+      "tests": 1
+    },
+    {
+      "id": "northstar-host-workspace-contract",
+      "exit_code": 0,
+      "tests": 2
+    },
+    {
+      "id": "northstar-candidate-scope-contract",
+      "exit_code": 0,
+      "tests": 7
+    },
+    {
+      "id": "northstar-agent-tests",
+      "exit_code": 0,
+      "tests": 80
+    },
+    {
+      "id": "northstar-autonomy-tests",
+      "exit_code": 0,
+      "tests": 67
+    },
+    {
+      "id": "northstar-runtime-tests",
+      "exit_code": 0,
+      "tests": 14
+    },
+    {
+      "id": "northstar-independent-scope-matrix",
+      "exit_code": 0,
+      "tests": 8
+    }
+  ],
+  "observed_test_total": 179,
+  "private_approved_source_bindings": {
+    "a2a-stack/autonomy/runner.py": {
+      "sha256": "f6f27c98ed0f26ddc0d0997df47364bc3db303e9900eb87689560c39bff1f769",
+      "approved_private_sha256": "f6f27c98ed0f26ddc0d0997df47364bc3db303e9900eb87689560c39bff1f769",
+      "matches": true
+    },
+    "a2a-stack/autonomy/manager.py": {
+      "sha256": "1c219b827fdac119634e03e33207ffc013c4c442a0b6e9d3e332213ede9ed7fe",
+      "approved_private_sha256": "1c219b827fdac119634e03e33207ffc013c4c442a0b6e9d3e332213ede9ed7fe",
+      "matches": true
+    },
+    "a2a-stack/agent/service.py": {
+      "sha256": "60af6c4895183691bf7215c3283eba7600ef5f2d7b30d6a692f52d2eb72c01e7",
+      "approved_private_sha256": "60af6c4895183691bf7215c3283eba7600ef5f2d7b30d6a692f52d2eb72c01e7",
+      "matches": true
+    },
+    "a2a-stack/agent/stacks.py": {
+      "sha256": "2f7cf7a04f1f28a26f10b209a2594bb02aa6b408a585c8b2091faf8e144edf49",
+      "approved_private_sha256": "2f7cf7a04f1f28a26f10b209a2594bb02aa6b408a585c8b2091faf8e144edf49",
+      "matches": true
+    },
+    "a2a-stack/agent/task_store.py": {
+      "sha256": "bc8390fd0cf8be0ad8534dd0bc0c5c2dbb2f6e1bf92407a068ddadf19184377e",
+      "approved_private_sha256": "bc8390fd0cf8be0ad8534dd0bc0c5c2dbb2f6e1bf92407a068ddadf19184377e",
+      "matches": true
+    },
+    "a2a-stack/autonomy/test_runner.py": {
+      "sha256": "e7436ad20f19be474469900a47c3c670b3b6be286892899e3ec7b970b97d3ca9",
+      "approved_private_sha256": "e7436ad20f19be474469900a47c3c670b3b6be286892899e3ec7b970b97d3ca9",
+      "matches": true
+    },
+    "a2a-stack/autonomy/test_manager.py": {
+      "sha256": "31f5d8b330d3f699bb331ec667a79346083fcb6e2957c5515afa95445999a596",
+      "approved_private_sha256": "31f5d8b330d3f699bb331ec667a79346083fcb6e2957c5515afa95445999a596",
+      "matches": true
+    },
+    "a2a-stack/agent/test_coder_concurrency.py": {
+      "sha256": "ca28df2ffeda8c7ebbff20350453e4cb58dc65efcdcdb2c88b54b34f86d758c5",
+      "approved_private_sha256": "ca28df2ffeda8c7ebbff20350453e4cb58dc65efcdcdb2c88b54b34f86d758c5",
+      "matches": true
+    },
+    "a2a-stack/agent/test_goal_completion.py": {
+      "sha256": "337b494292958e52c6e9e7be6970151a94dc6f6f4945f66c1435fcf8335f329b",
+      "approved_private_sha256": "337b494292958e52c6e9e7be6970151a94dc6f6f4945f66c1435fcf8335f329b",
+      "matches": true
+    }
+  },
+  "evidence": [
+    "The exact 50-file candidate manifest matches the current tree. The R1 reviewed source/test hashes and the R2 two-file delta hashes match the integrated candidate; the other R1-reviewed files retain their approved hashes.",
+    "The seven check IDs are unchanged from the prior accepted watcher integration; all seven exit 0. Captured outputs report 1, 2, 7, 80, 67, 14, and 8 tests respectively (179 total).",
+    "The integrated assignment path checks immutable Goal acceptance strings in create_assignment before dependency processing or assignment/prompt writes. The final validate_review acceptance subset, candidate binding, completed-task identity, and READY evidence checks remain present.",
+    "The R1 manager completion path retains producer-generation binding, quiescence checks, native/process and task reconciliation, locked final validation, and immutable full-check receipt verification. The R2 private test report records an R1 negative control (2/2 scoped assertions fail before the fix) and R2 pass (2/2), while the unchanged runner final guard remains intact.",
+    "The integrated watcher candidate includes the previously reviewed watcher recovery increment. Integration reports source_unchanged=true and host_reloaded=false."
+  ],
+  "limitations": [
+    "This is a source and seven-check integration acceptance for the 50-file candidate only; it is not deployment, live Goal, or soak acceptance.",
+    "Prior private R1/R2 and watcher focused-test evidence is reused because exact source hashes match; no duplicate full suite or host reload was performed."
+  ]
+}

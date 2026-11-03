@@ -91,6 +91,7 @@ class StackManager:
         self.role_app_factory = role_app_factory
         self._apps: dict[tuple[str, str], Any] = {}
         self.stacks_dir = self.state_root / "stacks"
+        self.boundary_lock = _REGISTRY_LOCK
 
     def _stack_dir(self, stack_id: str) -> Path:
         if not isinstance(stack_id, str) or not ID_RE.fullmatch(stack_id):
@@ -221,6 +222,59 @@ class StackManager:
             raise ValueError("invalid assignment ID")
         return self._stack_dir(stack_id) / "assignments" / f"{assignment_id}.json"
 
+    def goal_active(self, goal_id):
+        directory = self.state_root / "autonomy" / "goals" / goal_id
+        state = json.loads((directory / "state.json").read_text(encoding="utf-8"))
+        if (directory / "cancel.request").exists() or state.get("status") not in ("RUNNING", "RECOVERING"):
+            raise ValueError("Goal is not active; productive assignment was not admitted")
+
+    def goal_generation(self, goal_id):
+        path = self.state_root / "autonomy" / "goals" / goal_id / "producer-generation.json"
+        return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"generation": 0}
+
+    def advance_generation(self, goal_id):
+        # Called under registry lock, BEFORE binding can grant write tools.
+        value = {"generation": self.goal_generation(goal_id)["generation"] + 1}
+        _atomic_json(self.state_root / "autonomy" / "goals" / goal_id / "producer-generation.json", value)
+        return value["generation"]
+
+    def stamp_candidate(self, goal_id, candidate):
+        value = self.goal_generation(goal_id)
+        value["freeze"] = {"id": uuid.uuid4().hex, "candidate": candidate,
+                           "generation": value["generation"]}
+        _atomic_json(self.state_root / "autonomy" / "goals" / goal_id / "producer-generation.json", value)
+        return value["freeze"]
+
+    def current_review(self, goal_id, candidate, freeze_id=None):
+        epoch = self.goal_generation(goal_id)
+        stamp = epoch.get("freeze", {})
+        if (stamp.get("candidate") != candidate or stamp.get("generation") != epoch["generation"]
+                or (freeze_id is not None and freeze_id != stamp.get("id"))):
+            raise ValueError("Candidate generation is stale; wait for productive work, freeze current files, then assign fresh review")
+        return stamp
+
+    def goal_assignments(self, goal_id):
+        records = []
+        for path in sorted(self.stacks_dir.glob("*/stack.json")):
+            stack = self.get_stack(path.parent.name)
+            if stack.get("goal_id") != goal_id:
+                continue
+            roles = {role["id"]: role["profile"] for role in stack["roles"]}
+            for assignment_path in sorted((path.parent / "assignments").glob("*.json")):
+                value = json.loads(assignment_path.read_text(encoding="utf-8"))
+                records.append({"stack": stack, "profile": roles[value["role_id"]],
+                                "path": assignment_path, "assignment": value})
+        return records
+
+    def retire_drafts(self, goal_id):
+        # Retirement never changes a protocol Task: only unbound intent is
+        # discharged. A submission paused before binding will reject later.
+        for record in self.goal_assignments(goal_id):
+            assignment = record["assignment"]
+            if record["profile"] == "coder" and assignment.get("task_id") is None:
+                assignment.update(phase="retired", retired_reason="goal_completed_before_productive_binding")
+                _atomic_json(record["path"], assignment)
+
     def _scope_paths(self, value: Any, profile: str) -> list[str]:
         if not isinstance(value, list) or any(not isinstance(item, str) or not item.strip() for item in value):
             raise ValueError("write_paths must be an array of non-empty paths")
@@ -275,6 +329,8 @@ class StackManager:
             raise ValueError("task is required")
         write_paths = self._scope_paths(payload.get("write_paths", []), role["profile"])
         if stack.get("goal_id"):
+            if role["profile"] == "coder":
+                self.goal_active(stack["goal_id"])
             goal_dir = self.state_root / "autonomy" / "goals" / stack["goal_id"]
             goal_spec = json.loads((goal_dir / "spec.json").read_text(encoding="utf-8"))
             allowed = [(self.workspace / value).resolve() for value in goal_spec["write_paths"]]
@@ -293,6 +349,10 @@ class StackManager:
                 not stack.get("goal_id") or not isinstance(candidate, str)
                 or not re.fullmatch(r"[a-f0-9]{64}", candidate)):
             raise ValueError("verifier requires an autonomous goal and its frozen candidate hash")
+        if stack.get("goal_id") and role["profile"] == "reviewer" and candidate:
+            self.current_review(stack["goal_id"], candidate)
+            if not set(goal_spec["acceptance"]).issubset(item.strip() for item in acceptance):
+                raise ValueError("Formal Goal review must cover immutable acceptance; copy every original Goal.acceptance string verbatim, then add review-specific criteria")
         dependencies = payload.get("depends_on", [])
         if not isinstance(dependencies, list) or any(not isinstance(item, dict) for item in dependencies):
             raise ValueError("depends_on must be an array of metadata objects")
@@ -309,6 +369,11 @@ class StackManager:
                       "acceptance": [item.strip() for item in acceptance], "candidate": candidate,
                       "depends_on": dependencies, "task_id": None, "phase": "assigned",
                       "created_at": self._now()}
+        if stack.get("goal_id"):
+            epoch = self.goal_generation(stack["goal_id"])
+            stamp = epoch.get("freeze", {})
+            assignment["producer_generation"] = epoch["generation"]
+            assignment["freeze_id"] = stamp.get("id") if stamp.get("candidate") == candidate else None
         stack_dir = self._stack_dir(stack_id)
         prompt_path = stack_dir / "prompts" / f"{assignment_id}.txt"
         _atomic_text(prompt_path, self._prompt(stack, role, assignment))
@@ -339,11 +404,18 @@ class StackManager:
         original = assignment.get("task_id")
         if original is not None:
             raise ValueError(f"assignment is already bound to original task ID {original}")
+        if assignment.get("phase") == "retired":
+            raise ValueError("Unsubmitted intent retired at Goal completion; create fresh scoped work only for an active Goal")
         prompt_path = Path(assignment.get("prompt_path", "")).resolve(strict=True)
         expected_prompt = (self._stack_dir(stack_id) / "prompts" / f"{job_name}.txt").resolve(strict=True)
         if prompt_path != expected_prompt or not prompt_path.is_file():
             raise ValueError("assignment prompt path is invalid")
         profile = PROFILES[role["profile"]]
+        if stack.get("goal_id") and role["profile"] == "reviewer" and assignment.get("candidate"):
+            self.current_review(stack["goal_id"], assignment["candidate"], assignment.get("freeze_id"))
+        if stack.get("goal_id") and role["profile"] == "coder":
+            self.goal_active(stack["goal_id"])
+            assignment["producer_generation"] = self.advance_generation(stack["goal_id"])
         assignment.update(task_id=task_id, phase="bound", bound_at=self._now())
         _atomic_json(path, assignment)
         if role["profile"] == "verifier":
