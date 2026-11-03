@@ -1,0 +1,11 @@
+{
+  "observed_at": "2026-11-03T18:03:11.032289+00:00",
+  "pid": 23684,
+  "kernel_creation_identity": "01dd6bbabac988bd",
+  "kernel_handle_alive": true,
+  "cim_creation_time_filetime": "01dd6bbabac988b6",
+  "cim_is_identity_authority": false,
+  "control_action_taken": false,
+  "difference_in_100ns_units": 7,
+  "scope": "Read-only diagnostic precision reproduction; not a runtime worker failure or a reason to reset it."
+}
