@@ -1,0 +1,44 @@
+{
+  "goal_id": "g-44c4057270364fb2acf228cf490114c8",
+  "queried_at_utc": "2026-11-03T02:31:37.006725+00:00",
+  "status": "COMPLETE",
+  "controller_running": false,
+  "accepted_result": {
+    "accepted": true,
+    "candidate": "01fa04015c422244d41c71516f2111f6c9da123ed89b5a07a2328156deb8ce81",
+    "reviewer": "reviewer/dac6e070-b6d4-4e43-9651-be451fc32cab"
+  },
+  "candidate": {
+    "candidate": "01fa04015c422244d41c71516f2111f6c9da123ed89b5a07a2328156deb8ce81",
+    "files": {
+      "tmp/council-delivery/ledger.py": "632953b68bddc8d8276eabaa0d99f9efef2e88dc508c9263fc4541826cb563e9"
+    }
+  },
+  "review": {
+    "accepted": true,
+    "candidate": "01fa04015c422244d41c71516f2111f6c9da123ed89b5a07a2328156deb8ce81",
+    "reviewer": "reviewer/dac6e070-b6d4-4e43-9651-be451fc32cab",
+    "task_id": "dac6e070-b6d4-4e43-9651-be451fc32cab"
+  },
+  "checks": [
+    {
+      "id": "council-ledger-contract",
+      "exit_code": 0,
+      "summary": "four original contract tests reported OK"
+    },
+    {
+      "id": "council-ledger-endurance",
+      "exit_code": 0,
+      "checks_passed": true,
+      "identity": "ebdc45476ad11ad002113753fc53deb90d318fda37becdb52470ec997619c351",
+      "workload_seconds": 7200.553314298391,
+      "rounds": 11764,
+      "completed_tasks": 282336,
+      "process_sessions": 11
+    }
+  ],
+  "native_exitcode": null,
+  "owner_pid": null,
+  "recovery_count": 0,
+  "terminal_source": "official MCP get_goal_report supplied status/controller_running/accepted_result; candidate/review/check summaries were compacted from the persisted terminal state and task/check receipts for details omitted by the MCP report wrapper."
+}

@@ -1,5 +1,7 @@
 # Northstar
 
+Owner-requested optional runtime: [A2A stack with Claude Code](a2a-stack/README.md), isolated from the five-skill package. Its active integration tests and remaining gaps are tracked [here](docs/goal/a2a-stack/GOAL.md).
+
 ### Give your AI team a mission. Let it own the decisions. Inspect the result.
 
 **Five coordinated skills for delegated AI work.** Northstar connects your intent to accountable execution: clear authority, local initiative, proportionate acceptance, and learning that carries into the next assignment.

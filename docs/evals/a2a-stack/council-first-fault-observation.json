@@ -1,0 +1,94 @@
+{
+  "reviewer": "review_agent_workflow",
+  "observed_at": "2026-11-02T23:54:12.316676+00:00",
+  "goal_id": "g-44c4057270364fb2acf228cf490114c8",
+  "verdict": "FIRST_FAULT_RECOVERY_OBSERVED_TRIAL_PENDING",
+  "goal_state": {
+    "status": "RUNNING",
+    "session_id": "21a4dcef-4cd5-42b4-92bc-22ecfe9cb693",
+    "spec_digest": "14ac14bc8db547da7c1e1e629a8d454266d45471ffc17c793c33f20f59c4b724",
+    "recovery_count": 0
+  },
+  "fault": {
+    "host_fault_receipt": "tmp/a2a-stack/qa/council-review/endurance-trial/fault.json",
+    "fault_at": "2026-11-02T23:50:27.929155+00:00",
+    "gateway_outage_receipt": "tmp/a2a-stack/qa/council-review/endurance-trial/gateway-outage.json",
+    "gateway_unavailable_started": "2026-11-02T23:50:32.676232+00:00",
+    "host_reachable": "2026-11-02T23:50:35.717029+00:00",
+    "gateway_released": "2026-11-02T23:51:11.752669+00:00",
+    "corrective_goal_intervention": false
+  },
+  "recovery": {
+    "infrastructure_wait_attempts": 10,
+    "categories": [
+      "transport_unavailable"
+    ],
+    "required_tools_missing_during_wait": 11,
+    "mcp_capability_ready_at": "2026-11-02T23:51:09.897022+00:00",
+    "mcp_required_tool_count": 11,
+    "native_owner_activity_during_outage": "No native owner tool/assistant events were recorded between gateway outage start and the first post-recovery native init at 23:51:09.897; Goal event log shows infrastructure_wait probes only during outage."
+  },
+  "worker_transition": {
+    "interrupted_task_id": "5d8faf41-1bc0-439e-a3c2-4b4d42ffcb0b",
+    "interrupted_pid": 27788,
+    "interrupted_terminal": {
+      "state": "TASK_STATE_FAILED",
+      "recovery": "native_worker_not_alive_or_identity_mismatch",
+      "observed_at": "2026-11-02T23:51:12.868197+00:00"
+    },
+    "continuation_task_id": "01ab51fc-7acb-425d-81cd-8257ec1a97c9",
+    "continuation_pid": 25620,
+    "continuation_started_at": "2026-11-02T23:51:36.283600+00:00",
+    "continuation_terminal": {
+      "state": "TASK_STATE_COMPLETED",
+      "exit_code": 0,
+      "finished_at": "2026-11-02T23:53:08.566372+00:00"
+    },
+    "pid_checks": {
+      "27788_alive": false,
+      "25620_alive": false
+    }
+  },
+  "frozen_marker": {
+    "path": "tmp/a2a-stack/qa/council-review/endurance-fixture-ready.json",
+    "hashes": {
+      "a2a-stack/autonomy/runner.py": {
+        "expected": "4ac70f89b6bafd371cf1fd21187e49c3c65e199b4141043b8387466f11e20748",
+        "actual": "4ac70f89b6bafd371cf1fd21187e49c3c65e199b4141043b8387466f11e20748",
+        "match": true
+      },
+      "a2a-stack/autonomy/test_runner.py": {
+        "expected": "80b4ebc87386b4523aedeee18c0814ebf0138f893a0469ce656da504b2c2187a",
+        "actual": "80b4ebc87386b4523aedeee18c0814ebf0138f893a0469ce656da504b2c2187a",
+        "match": true
+      },
+      "a2a-stack/agent/stacks.py": {
+        "expected": "cc809a2ff9dd6c5947923a906b964bfcc41526b9ba5e80db021b9136be469934",
+        "actual": "cc809a2ff9dd6c5947923a906b964bfcc41526b9ba5e80db021b9136be469934",
+        "match": true
+      },
+      "a2a-stack/prompts/autonomous-main.md": {
+        "expected": "3296031363aa55d721243427010d1f1da55457655ae32e21ee03fcb017eb4c48",
+        "actual": "3296031363aa55d721243427010d1f1da55457655ae32e21ee03fcb017eb4c48",
+        "match": true
+      },
+      "tmp/a2a-stack/qa/council-review/check_endurance.py": {
+        "expected": "36b41751d4db356634c58d08344f2922b30c7537c121aaf94473783731e39c41",
+        "actual": "36b41751d4db356634c58d08344f2922b30c7537c121aaf94473783731e39c41",
+        "match": true
+      },
+      "tmp/a2a-stack/qa/council-review/check_ledger.py": {
+        "expected": "594cb42a3f51e354ac68abdb4cb7fc4e998217c00e0a58acb73080ff476cf480",
+        "actual": "594cb42a3f51e354ac68abdb4cb7fc4e998217c00e0a58acb73080ff476cf480",
+        "match": true
+      },
+      "tmp/a2a-stack/trusted-checks.json": {
+        "expected": "22543da8106ba740f790b7adc7cf15ba0a2226eea2453a320efc4bf04951c9c3",
+        "actual": "22543da8106ba740f790b7adc7cf15ba0a2226eea2453a320efc4bf04951c9c3",
+        "match": true
+      }
+    },
+    "all_match": true
+  },
+  "overall_acceptance": "Not yet established: this snapshot does not verify the original checks, independent READY review, or >=7200 credited workload seconds and >=1440 rounds. Continue observing the same Goal."
+}

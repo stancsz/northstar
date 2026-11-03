@@ -1,0 +1,53 @@
+{
+  "goal_id": "g-f5f54adc0ad44f9990862aa4a1f79f2c",
+  "goal": "Implement normalize_label(value) in tmp/autonomy-acceptance/labels.py. It must strip surrounding whitespace and Unicode-casefold string labels, reject every non-string with TypeError, remain pure, and pass the registered contract checks. Complete this local Goal through your own selected A2A agents and independent review; report the result and then wait for the next human Goal.",
+  "status": "COMPLETE",
+  "summary": "Goal g-f5f54adc0ad44f9990862aa4a1f79f2c completed via a self-selected A2A stack (s-f2c389dd302a43d5835c79cd83b0782b, goal_id-bound) with three roles: implementer (coder), verifier (trusted-checks), reviewer (independent, read-only).\n\nIMPLEMENTATION (task 2c99ae00-2288-49f1-85a8-16122edd66f5, COMPLETED): tmp/autonomy-acceptance/labels.py now implements normalize_label(value) as: raises TypeError when not isinstance(value, str); otherwise returns value.strip().casefold(). Pure - no imports, no IO, no mutation of the input, no globals. Only labels.py was modified; check_labels.py, registry, harness, and goal state were left untouched.\n\nFROZEN CANDIDATE: bb0003547e637857cb9a02b60cb8eac373df38af0f28c48e83d8da413707d122; file sha256 167bae05bd3125717cb26a6357c67c9b4deb5ed97225f7c03b10ccaf697b5788; manifest at D:\\github\\northstar\\tmp\\a2a-stack\\autonomy\\goals\\g-f5f54adc0ad44f9990862aa4a1f79f2c\\artifacts\\candidate-7f1ef2d10e054e0a87067a110c1b1ba4.json.\n\nVERIFICATION (verifier role): the first verification attempt (task 238db86c-5edb-4797-b7f9-b383e21041f7) hit the goal's deliberately injected one-time transient failure - exit_code 75, 'Injected temporary verifier unavailability; retry this check.' I recovered autonomously by dispatching a fresh verifier assignment against the same candidate (task 2bf88e64-28f4-410d-8635-f3a08eb05d90): check 'autonomy-label-contract' exit_code 0, output 'Ran 3 tests in 0.001s' + 'OK', checks_passed=true. No check, assertion, or acceptance was modified to obtain the pass.\n\nINDEPENDENT REVIEW (reviewer role, task 6fe24701-bd42-4efc-944b-6e79eddaee8a, COMPLETED): verdict READY, bound to candidate bb0003547e637857cb9a02b60cb8eac373df38af0f28c48e83d8da413707d122, with a non-empty evidence array covering all four acceptance conditions: (1) string handling is literally value.strip().casefold() including '' and sharp-s; (2) the isinstance(value, str) guard raises TypeError for None/0/False/[]/{}, with bool rejected since it is not a str; (3) no imports, no IO, strip()/casefold() are non-mutating so the input is unchanged; (4) check_labels.py re-read and confirmed unmodified - full case table, assertRaises(TypeError) over exactly (None, 0, False, [], {}) with no surrounding try/except, purity test intact, no skip decorator.\n\nACCEPTANCE STATUS: all four original acceptance conditions are satisfied against the exact frozen candidate. No commits, pushes, deployments, messages, auth/provider changes, or transactions were performed. The goal is finished and I am awaiting the next human Goal.",
+  "acceptance": [
+    "For every string, normalize_label returns value.strip().casefold(), including empty strings and Unicode sharp-s.",
+    "Every non-string input raises TypeError.",
+    "The function performs no external IO or mutation of its input.",
+    "The original registered label contract checks pass without modifying the checker or weakening assertions."
+  ],
+  "accepted_result": {
+    "accepted": true,
+    "candidate": "bb0003547e637857cb9a02b60cb8eac373df38af0f28c48e83d8da413707d122",
+    "reviewer": "reviewer/6fe24701-bd42-4efc-944b-6e79eddaee8a",
+    "producers": [
+      {
+        "stack_id": "s-f2c389dd302a43d5835c79cd83b0782b",
+        "role_id": "implementer",
+        "task_id": "2c99ae00-2288-49f1-85a8-16122edd66f5",
+        "files": [
+          "tmp/autonomy-acceptance/labels.py"
+        ]
+      }
+    ],
+    "author": "s-f2c389dd302a43d5835c79cd83b0782b/implementer/2c99ae00-2288-49f1-85a8-16122edd66f5",
+    "review": {
+      "role_id": "reviewer",
+      "stack_id": "s-f2c389dd302a43d5835c79cd83b0782b",
+      "task_id": "6fe24701-bd42-4efc-944b-6e79eddaee8a"
+    },
+    "checks": [
+      {
+        "id": "autonomy-label-contract",
+        "exit_code": 0,
+        "output": "...\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n"
+      }
+    ]
+  },
+  "candidate": {
+    "candidate": "bb0003547e637857cb9a02b60cb8eac373df38af0f28c48e83d8da413707d122",
+    "files": {
+      "tmp/autonomy-acceptance/labels.py": "167bae05bd3125717cb26a6357c67c9b4deb5ed97225f7c03b10ccaf697b5788"
+    }
+  },
+  "recovery_count": 0,
+  "host_restart_count": 0,
+  "session_reset_count": 0,
+  "blocker": null,
+  "next_user_action": "查看结果后，由你设置下一条 Goal。",
+  "controller_running": false,
+  "evidence_dir": "D:\\github\\northstar\\tmp\\a2a-stack\\autonomy\\goals\\g-f5f54adc0ad44f9990862aa4a1f79f2c"
+}

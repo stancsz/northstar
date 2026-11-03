@@ -10,6 +10,10 @@ Northstar's core package has five coordinated skills: Northstar, Subagent Orches
 
 Keep this repository skills-only. Prioritize concise skill instructions, examples, necessary supporting tools and skill validation. Application code, interfaces, app specifications, deployment plans and app-specific execution records belong in separate repositories. Do not turn this package into an application or runtime platform.
 
+**Owner-authorized exception (2026-11-02):** The user explicitly requested the reusable A2A stack in `D:\github\northstar`. Keep its optional runtime, protocol adapters, Compose configuration, tests and usage documentation isolated under `a2a-stack/`; use `tmp/a2a-stack/` for local state and test artifacts. This scoped exception does not move application code or unrelated project execution records into Northstar, or change the five-skill package's normal purpose.
+
+**A2A 自主完成原则（用户明确要求）：** 人工注意力是最稀缺的资源。Harness 的目标是 Agent 自主完成已授权目标：主 Agent 动态选模板/组队/派发，执行 Agent 自行修复和重试，独立 Agent 相互监督，宿主自动恢复会话与任务状态。普通工具错误、测试失败、暂时网络错误或一两次失败都不得成为整条工作流停止或要求人工救场的默认理由。恢复信号用于改变方法、复位并继续，不是次数/预算/时长熔断器。不得首次 `api_retry` 就杀任务，不得为省钱设置目标执行上限。只有证据表明确实缺少权限、凭据、外部材料或必须由用户作出的不可逆决定，才请求人工。验收必须包含无人纠偏的目标完成和故障后自主恢复；手动取消、改配置、重新派发救通不算该项通过。原有发布/真实交易/捕获限制仍然有效。
+
 ## Start here
 
 1. Start from the current task state and [Northstar](skills/northstar/SKILL.md); take its next useful action.

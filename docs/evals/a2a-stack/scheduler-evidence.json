@@ -1,0 +1,74 @@
+{
+  "SameTaskAcrossSchedulerRestart": true,
+  "Before": {
+    "job_name": "timer-hold",
+    "phase": "running",
+    "status": "TASK_STATE_WORKING",
+    "task_id": "fa110bfb-6e80-4080-998c-d93ae97fffd9",
+    "updated_at": "2026-11-02T12:57:30.421676-07:00"
+  },
+  "After": {
+    "job_name": "timer-hold",
+    "phase": "running",
+    "status": "TASK_STATE_WORKING",
+    "task_id": "fa110bfb-6e80-4080-998c-d93ae97fffd9",
+    "updated_at": "2026-11-02T12:57:54.630814-07:00"
+  },
+  "TimerResult": {
+    "Artifacts": [
+      {
+        "artifactId": "9fe8bcf3-86fd-4a3f-9547-084169a69fd1",
+        "name": "result",
+        "parts": [
+          {
+            "text": "scheduled-restart-artifact"
+          }
+        ]
+      }
+    ],
+    "TaskId": "fa110bfb-6e80-4080-998c-d93ae97fffd9",
+    "Status": {
+      "state": "TASK_STATE_COMPLETED",
+      "timestamp": "2026-11-02T19:58:05.713208Z"
+    }
+  },
+  "ScheduledClaude": {
+    "TaskId": "1e35a647-52f3-4d48-9816-69df45c77b6a",
+    "ChangedFiles": [
+      "a2a-stack/runtime/runner.py",
+      "a2a-stack/runtime/test_runner.py"
+    ],
+    "Verification": [
+      "runtime8/8",
+      "config9/9"
+    ],
+    "Status": {
+      "state": "TASK_STATE_COMPLETED",
+      "timestamp": "2026-11-02T19:59:51.380539Z"
+    },
+    "NativeReceipt": {
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_content": "omitted",
+      "result_subtype": "success"
+    }
+  },
+  "HostService": {
+    "Agent": "northstar-claude-code",
+    "ListenerPid": 44024,
+    "TaskState": "Running",
+    "Runtime": "PT0S"
+  },
+  "RunningSchedule": {
+    "TestRolesReconciledAndArchived": true,
+    "SupervisorSeconds": 1800,
+    "DeliveryJob": "",
+    "SupervisorJob": "northstar-supervisor"
+  },
+  "Limits": [
+    "Local hybrid only",
+    "In-memory A2A TaskStore; host restart requires reconciliation",
+    "Owner and independent QA outside worker queue",
+    "Native Codex timed wakeup unverified; backups paused"
+  ]
+}

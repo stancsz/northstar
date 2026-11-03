@@ -1,0 +1,13 @@
+{
+  "reviewer": "review_agent_workflow",
+  "verdict": "READY_FOR_PROMPT_DELTA_ONLY",
+  "files": {
+    "a2a-stack/agent/stacks.py": "cc809a2ff9dd6c5947923a906b964bfcc41526b9ba5e80db021b9136be469934",
+    "a2a-stack/prompts/autonomous-main.md": "501e2c8c2d6f5fb611014a9add5cb996b3bd66f7e5a4a588f97bf743ad795f88"
+  },
+  "evidence": [
+    "Independent static rebind: child no-ceiling propagation, main-owned independent QA and finite scope handoff preserve all original acceptance.",
+    "Parent focused stack tests 6/6 after final change, 0.363s."
+  ],
+  "limits": "No clean outage or two-hour pass yet."
+}

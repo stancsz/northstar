@@ -1,0 +1,9 @@
+{
+  "goal_id": "g-1b1537b45ba44c46bfcc925b46f3e255",
+  "fault": "single goal-controller Python termination",
+  "pid": 52160,
+  "process_token": "01dd6b1542914843",
+  "pre_fault_session_id": "e4db6065-5358-478a-8728-d4649545c7d3",
+  "at": "2026-11-02T21:58:31.531176+00:00",
+  "corrective_intervention": false
+}

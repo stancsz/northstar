@@ -1,0 +1,20 @@
+FROM python:3.13-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    A2A_URL=http://host.docker.internal:18890
+
+WORKDIR /srv
+
+COPY mcp/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY mcp/gateway.py ./gateway.py
+
+RUN useradd --create-home --uid 10001 --shell /usr/sbin/nologin gateway \
+    && chown -R gateway:gateway /srv
+USER 10001
+
+EXPOSE 18892
+
+CMD ["python", "gateway.py"]

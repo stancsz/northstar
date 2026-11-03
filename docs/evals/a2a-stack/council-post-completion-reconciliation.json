@@ -1,0 +1,57 @@
+{
+  "verified_at": "2026-11-03T02:34:30.521798+00:00",
+  "owning_workspace": "D:\\github\\northstar",
+  "goal_id": "g-44c4057270364fb2acf228cf490114c8",
+  "status": "COMPLETE",
+  "controller_running": false,
+  "accepted": true,
+  "candidate": "01fa04015c422244d41c71516f2111f6c9da123ed89b5a07a2328156deb8ce81",
+  "source_binding": {
+    "identity": "45baccb235f20e9f28a52760eeb88f4257d4327b96601951947a0205987b5928",
+    "files": 41,
+    "mismatches": []
+  },
+  "frozen_input_binding": {
+    "files": 7,
+    "mismatches": []
+  },
+  "workload": {
+    "seconds": 7200.553314298391,
+    "rounds": 11764,
+    "tasks": 282336,
+    "complete": true
+  },
+  "read_only_live_protocol": {
+    "discover_agent_upstream": "http://host.docker.internal:18890/stacks/s-c2909050dfcc454eb88f0a262ebb6d40/agents/reviewer",
+    "agent_name": "northstar/s-c2909050dfcc454eb88f0a262ebb6d40/reviewer/reviewer",
+    "reviewer_task_id": "dac6e070-b6d4-4e43-9651-be451fc32cab",
+    "task_status": {
+      "state": "TASK_STATE_COMPLETED",
+      "timestamp": "2026-11-03T02:26:59.445930Z"
+    },
+    "artifacts": 1
+  },
+  "schedule_scope": "Observed Windows host task Running, logon+PT1M indefinite health triggers, IgnoreNew, PT0S. Docker MCP healthy; optional fixed scheduler stopped. No native Codex timed-trigger or whole-OS reboot claim.",
+  "source_evidence": [
+    "council-first-fault-observation.json",
+    "council-midpoint-fault-observation.json",
+    "council-final-independent-review.json",
+    "council-runtime-acceptance.json"
+  ],
+  "actions": "Read-only current MCP/A2A checks and source/evidence reconciliation only; no redispatch or rerun.",
+  "schedule_requirement_decision": {
+    "original": "two Codex schedules explored",
+    "owner_authorization": "design may change; dynamic main-selected team; human sets Goal via MCP",
+    "current_mechanism": "continuous Goal owner plus Windows logon/PT1M host recovery",
+    "codex_native_timer": "unverified, not required by this replacement mechanism",
+    "outcomes_retained": [
+      "actual work advancement",
+      "supervision",
+      "independent QA",
+      "same-Goal recovery",
+      "protocol interoperation"
+    ],
+    "mapping": "council-long-running-review.md#requirement-reconciliation-scheduling-supervision-and-qa",
+    "additional_worker_dispatched": false
+  }
+}

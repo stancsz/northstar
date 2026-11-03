@@ -1,0 +1,44 @@
+name: northstar-a2a
+
+services:
+  mcp-gateway:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.gateway
+    image: northstar-a2a/mcp-gateway:local
+    container_name: northstar-a2a-mcp-gateway
+    environment:
+      A2A_URL: http://host.docker.internal:18890
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "127.0.0.1:18892:18892"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 18892), 3).close()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  scheduler:
+    build:
+      context: ./scheduler
+    image: northstar-a2a/scheduler:local
+    container_name: northstar-a2a-scheduler
+    profiles: [scheduled]
+    environment:
+      MCP_URL: http://mcp-gateway:18892/mcp
+      DELIVERY_JOB: ${DELIVERY_JOB:-}
+      SUPERVISOR_JOB: ${SUPERVISOR_JOB:-}
+      DELIVERY_INTERVAL_SECONDS: ${DELIVERY_INTERVAL_SECONDS:-3600}
+      SUPERVISOR_INTERVAL_SECONDS: ${SUPERVISOR_INTERVAL_SECONDS:-1800}
+    volumes:
+      - scheduler-state:/state
+    depends_on:
+      mcp-gateway:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  scheduler-state:

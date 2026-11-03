@@ -1,0 +1,68 @@
+# Goal: Human-directed autonomous A2A delivery and long-running review
+
+- Ask (Locked): 人通过 MCP 看报告、设置 Goal；主 Agent 在当前 Goal 内用 Claude Code 动态选择模板或自定义 A2A 团队，实施、检查、独立审查、修复和恢复。完成后等待人的下一条指令。stack 在 D:\github\northstar，Docker Compose 提供 MCP 入口。最大化减少人工救援；不设费用、轮数、执行总时长/重试次数上限，不把一两次普通错误或 api_retry 当成停止理由。
+- Current user goal (2026-11-03): Commit and push the accepted A2A stack; use it for real repeated Instacart tasks, repair encountered product/harness defects, research primary-source best practices, and evaluate robustness/reliability. No budget/turn/runtime cap. Latest user instruction authorizes new Goals for this soak; prior "await next human Goal" boundary remains the default after the authorized workload.
+- Done (Verified): Previous local two-hour/fault trial and independent READY remain accepted for source45bacc... and product01fa0401...; current41source hashes matched. Pre-push audit and read-only Instacart audit found publish-label ambiguity, persistent host-workspace configuration gap, and concrete malformed-response adapter defects.
+- Remaining: Push reviewed baseline; persist/select authorized Instacart workspace across host recovery; execute real product repair Goals through A2A with original immutable checks and independent QA; improve encountered harness defects; commit/push reviewed repairs and evidence; retain explicit browser/capture limitations.
+- Next Action: Finish pre-push review and push baseline; then one concrete host-workspace configuration improvement through the existing Claude A2A workflow. Preserve the dirty Instacart baseline and limit each product assignment to an exact adapter/test pair.
+
+
+## Completed fresh trial (historical handles below)
+
+- Goal **g-44c4057270364fb2acf228cf490114c8**. Adds atomic enqueue_many to an actual SQLite ledger/JSONCLI and requires original4-test acceptance plus two-hour concurrent SQLite/CLI workload. Created once by coordinator46820; that coordinator exited0. No additional Goal submitter remains.
+- Native session **21a4dcef-4cd5-42b4-92bc-22ecfe9cb693**; immutable spec digest **14ac14bc8db547da7c1e1e629a8d454266d45471ffc17c793c33f20f59c4b724**.
+- Code candidate **01fa04015c422244d41c71516f2111f6c9da123ed89b5a07a2328156deb8ce81**.
+- Workload input identity **ebdc45476ad11ad002113753fc53deb90d318fda37becdb52470ec997619c351**, binding ledger.py + check_endurance.py + immutable check_ledger.py. `tmp/a2a-stack/qa/council-review/endurance/latest.json` selects the namespace. Progress/DB/events are namespaced by exact identity; old-source work is not reused. Cached complete rechecks all hashes/duration/rounds/integrity.
+- Final read-only monitor observation 2026-11-03T02:28:01Z: COMPLETE,7200.6s/11764rounds/282336tasks/11checker process sessions,complete=true,frozen mismatches[]. Monitor30394 exited0. Terminal observer recorded COMPLETE at02:27:30Z. Final formal report/independent review, not this note alone, bind acceptance.
+- Actual final acceptance signals: original host contract + endurance pass, source/check manifest still exact, actual independent A2A reviewer READY, program acceptance receipt, Goal COMPLETE and controller exit. A2A verifier task COMPLETED alone is not check success.
+
+## Completed observer handles (do not restart)
+
+- **exec session30394** runs `tmp/a2a-stack/qa/council-review/watch_endurance_goal.py`. It is a real read-only process, emits a fresh observation every50s, records `endurance-trial/status-observations.jsonl`, and exits only on actual Goal COMPLETE/NEEDS_USER/CANCELED or frozen-input mismatch. Use write_stdin on this handle with waits <=60s, inspect terminal output. It reads using FILE_SHARE_DELETE to avoid measurement locking; no task/control/source mutations.
+- First planned fault + terminal observer is background process **34820**, creation token **01dd6b2486298da7**; exact script `endurance-trial/inject_host_fault.py`, stdout `inject_host_fault.py.log`. After initial fault it waits actual Goal terminal and writes `observed-terminal.json`. Verify actual process identity or final output, not a state/lock file alone.
+- Gateway outage observer process54268 completed normally; release exit0 recorded. Mid-workload observer **exec49101 exited0**, injected exactly once at600.953 credited seconds. Do not restart either.
+- Original diagnostic observer14338 and coordinator46820 exited0. Superseded prep helper4985 was intentionally retired (launcher+child PIDs54168/53776); no prep upgrade remains pending. `apply_handoff_upgrade.py` completed one controlled diagnostic-source upgrade earlier; never rerun it during this clean trial.
+- MCP actual URL http://127.0.0.1:18892/mcp, 17 tools. Host Windows Scheduled Task Northstar-A2A-Host health/logon triggers remain running; optional fixed scheduler + old Codex backup automations paused. No native Codex timed trigger proof, no whole OS reboot.
+
+## Clean trial evidence already collected
+
+- `tmp/a2a-stack/qa/council-review/reviewer/fresh/first-fault-observation.json`: initial host+MCP outage23:50:32–23:51:11; 10 unavailable local readiness probes, no native model-call loop while MCP down. Same Goal/spec/session preserved. Interrupted coder5d8faf41-... failed with dead-process receipt; continuation01ab51fc-... completed92s later; old process identities absent. All7 frozen hashes matched.
+- `reviewer/fresh/verifier-retry-observation.json`: seven sequential verifier attempts passed the original4 tests but the endurance checker reported WinError5 on os.replace(progress.pending,progress.json). No timeout or imposed ceiling. Main autonomously retried the unchanged checks and retained progress; no operator fix, no source edits, no user escalation. Cause unknown. Read-only attrs/RM snapshot showed normal writable file and no holder at that instant, not proof against transient locking. Do not attribute it without evidence.
+- `reviewer/fresh/midpoint-fault-observation.json`: exact host kill00:14:10.55UTC after600.953s/981rounds/23544tasks; auto-host restart by00:14:34.85. Same Goal/session/spec, 11 tools ready. Checker a482... PID54096 markedFAILED and absent; continuation48ba79ac... PID4160 resumed same workload. Progress reached665.6s/1089rounds/26136tasks with9 sessions. All7 frozen hashes matched. This is recovery evidence only, not two-hour pass.
+- `endurance-trial/` holds fault/outage receipts, process tokens and logs. `endurance-fixture-ready.json` freezes7 runtime/check/registry file hashes before trial. **Do not change those inputs, registry, test fixtures or framework source during this trial.** Docs/eval observations are allowed. Root has made no corrective Goal dispatch/resume/cancel or code/check changes in this trial.
+
+## Source fixes and independent reviews before clean trial
+
+- runner.py/test_runner.py: actual MCP SDK required-tool readiness before owner launch; structured native init validates11 tools; incapable owner reconnects SAME session without model supervisor calls while infra unavailable; responsive cancel, no retry/runtime cap; ready restores RUNNING and clears stale wait. Targeted23 tests + independent review, real readiness handshake passed.
+- stacks.py: leaf returns after required acceptance/self-checks; main owns independent review and extra role dispatch; no ceilings propagate to child CLI. SHA **cc809a2ff9dd6c5947923a906b964bfcc41526b9ba5e80db021b9136be469934**, focused6 tests + independent static rebind.
+- autonomous-main.md: same leaf ownership; fresh get_task status before stale logs (bound != WORKING); original schemas/checks unchanged, blocker on complete must JSONnull, not{}. SHA **3296031363aa55d721243427010d1f1da55457655ae32e21ee03fcb017eb4c48**, independent static rebind.
+- Earlier 41-file manifest/review55616... is historical. Final reviewer must bind CURRENT candidate, reuse valid unchanged evidence and verify actual end-to-end outcomes. Current code versions differ from that old manifest only in reviewed fixes; recompute final hashes.
+
+## Assisted diagnostic history (not unattended acceptance)
+
+- Goal g-24f186b05bc14f76bcc743622a04c796 completed23:47:30UTC with unchanged sessiond89b851e-70e5-489b-807e-15cea211033c. Actual ledger code+4tests succeeded; parent provisional verifier707cc7bf... and separate reviewer0f7bd227... READY were real. Operator source upgrades/provisional QA make this assisted.
+- Coder-created optional nested reviewer hit error_max_turns after41turns/911078ms; outer native worker kept exploring. Actual evidence `nested-ceiling-observation.json`; never declared whole Goal failed or canceled for elapsed time.
+- Updated contracts delivered to continuation02d8a84a... (a-76017...): real success36102ms/8turns, no nested reviewer, preserved ledger SHA fcd9f75f... and first candidateccd4... . `new-contract-delivery.json` proves new clauses in actual prompt.
+- Main output blocker{} failed native schema; three native retries ended error_max_structured_output_retries. Harness independently supervised, resumed SAME Goal/session, then returned valid complete in54.512s/10turns. Owner schema itself was never weakened. Diagnostic final report `first-complete-report.json`.
+
+## Council, authority and deliverables
+
+- User explicitly requested advisor-council. Default route returned400 because model=default absent. After user said check Subroute, actual D:\github\subroute\config\active_model.json + live4040 /v1/models identified **codex-gpt-6.1-sol-advisor**; explicit independent council used **gemini-4-argon-advisor**. Both said prior smoke evidence insufficient and requested real long-running/fault tests. No global model/auth/Subroute config changed. One distinct follow-up recommended prompt ownership before new same-task steering integration; no larger protocol/control feature was built.
+- `docs/evals/a2a-stack/council-long-running-review.md` is the completed READY report; council response/value receipts and final acceptance records are nearby. Source setup: `a2a-stack/docs/SETUP.md`; autonomous contract: `a2a-stack/AUTONOMY.md`.
+- Preserve user scope: human chooses each Goal via MCP, framework completes that Goal then waits. Framework pass does NOT complete Instacart T103/same-viewport render acceptance or authorize alternate capture routes, publishing, pushes, production deployment or transactions. Current host configured workspace is D:\github\northstar only.
+- Stop hook currently audits Instacart checkoutC: and cannot inspect D:; this is a review-scope mismatch, NOT evidence of an external executor blocker. Parent has explicit D: authority and full host permissions. Keep actual work in D:, do not copy framework evidence into the application repo merely to appease that hook.
+- Finish: final nonauthor review by review_agent_workflow (has not authored product/check sources), current-source manifest, actual complete report/progress/fault receipts. Keep test sources/light evidence; optional later cleanup of only owned temporary check IDs must be AFTER trial/final evidence capture. No commit/push requested.
+
+## Source pre-final acceptance, now closed by final review
+
+Independent reviewer recomputed all41 originalmanifestpaths: onlyfourexpected sourcefileschanged; all matchfrozenmarker/priorreview. Isolated copiedsource tests **agent22 + autonomy33 + runtime8 =63/63 PASS**. Evidence reviewer/pre-final/SourceChecksReady.json + current-source-manifest.json, promoted underdocs/evals/a2a-stack/council-source-checks-ready.json and council-current-source-manifest.json. Exactlocalrecomputationdigest **45baccb235f20e9f28a52760eeb88f4257d4327b96601951947a0205987b5928** (notGoalMCPfreeze). No source/test edits during QA; initialscratchfixture/pathlengthissues correctedonlyinQA scratch. Do not rerun these tests without changedsource/failure/newconcern; append actualGoal/runtimeproof oncecomplete and performfinalnonauthorrebind. That pre-final pending status is historical; final acceptance below closes it.
+
+## Final acceptance — 2026-11-03
+
+Formal post-terminal MCP report confirms controller_running=false and accepted_result.accepted=true. Final independent reviewer READY binds local framework identity45baccb235f20e9f28a52760eeb88f4257d4327b96601951947a0205987b5928 and product01fa04015c422244d41c71516f2111f6c9da123ed89b5a07a2328156deb8ce81. All required runtime outcomes above are complete. Earlier sections preserve historical pending observations only; they are not current work instructions. See docs/evals/a2a-stack/council-long-running-review.md and its durable receipts. Native summary speculation about WinError5 being caused by a concurrent reader is not established; actual cause remains unknown. No corrective intervention during the fresh trial. Human sets the next Goal via MCP.
+
+## Scheduling acceptance decision
+
+The owner authorized redesign and a dynamic main-selected stack. The original two fixed Codex business schedules are replaced by continuous per-Goal supervision/QA plus the existing Windows timed host recovery; human MCP submission starts each Goal. Actual scheduling/restart outcomes remain required and are proven by historical timed-work receipts and current same-Goal resumed-work fault receipts, not health status alone. Codex-native timed triggering is unverified and is not an acceptance requirement for this replacement mechanism. The completed report contains the explicit outcome/evidence matrix. No duplicate work is dispatched.
+
+Owning-repository direct-mode Task Completion Review returned COMPLETE after reading the actual Goal and designated evaluation evidence. Exact result: docs/evals/a2a-stack/council-completion-audit.json. Original global event-mode hook remains unchanged; no missing runtime work was inferred from its earlier wrong-directory scope.

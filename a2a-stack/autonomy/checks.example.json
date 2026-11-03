@@ -1,0 +1,17 @@
+{
+  "northstar-agent-tests": {
+    "description": "A2A job configuration, retry receipts, dynamic roles and durable task-store regressions",
+    "argv": ["D:/github/northstar/tmp/a2a-stack/venv/Scripts/python.exe", "-B", "-m", "unittest", "discover", "-s", "a2a-stack/agent", "-p", "test_*.py", "-v"],
+    "cwd": "D:/github/northstar"
+  },
+  "northstar-autonomy-tests": {
+    "description": "Autonomous goal, recovery, acceptance, host lifecycle and trusted-check regressions",
+    "argv": ["D:/github/northstar/tmp/a2a-stack/venv/Scripts/python.exe", "-B", "-m", "unittest", "discover", "-s", "a2a-stack/autonomy", "-p", "test_*.py", "-v"],
+    "cwd": "D:/github/northstar"
+  },
+  "northstar-runtime-tests": {
+    "description": "Windows process-tree ownership, cancellation and candidate review guard regressions",
+    "argv": ["D:/github/northstar/tmp/a2a-stack/venv/Scripts/python.exe", "-B", "-m", "unittest", "discover", "-s", "a2a-stack/runtime", "-p", "test_*.py", "-v"],
+    "cwd": "D:/github/northstar"
+  }
+}

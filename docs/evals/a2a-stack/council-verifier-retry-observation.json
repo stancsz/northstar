@@ -1,0 +1,170 @@
+{
+  "reviewer": "review_agent_workflow",
+  "observed_at": "2026-11-03T00:09:40.679686+00:00",
+  "goal_id": "g-44c4057270364fb2acf228cf490114c8",
+  "verdict": "REPEATED_CHECK_FAILURE; MIDPOINT_FAULT_PENDING",
+  "candidate": "01fa04015c422244d41c71516f2111f6c9da123ed89b5a07a2328156deb8ce81",
+  "tasks": [
+    {
+      "task_id": "69149f19-6bca-4625-bb62-77e7f36cd573",
+      "pid": 19804,
+      "mode": "check",
+      "started_at_utc": "2026-11-02T23:53:35.197713+00:00",
+      "terminal": {
+        "task_id": "69149f19-6bca-4625-bb62-77e7f36cd573",
+        "state": "TASK_STATE_COMPLETED",
+        "finished_at": "2026-11-02T23:58:35.010613+00:00"
+      },
+      "receipt": {
+        "exit_code": 0,
+        "completed": true,
+        "stderr_lines": 0,
+        "stderr_content": "omitted",
+        "result_subtype": null
+      }
+    },
+    {
+      "task_id": "580a1055-08ba-496e-af6c-d06a63f1a977",
+      "pid": 26252,
+      "mode": "check",
+      "started_at_utc": "2026-11-03T00:01:38.399509+00:00",
+      "terminal": {
+        "task_id": "580a1055-08ba-496e-af6c-d06a63f1a977",
+        "state": "TASK_STATE_COMPLETED",
+        "finished_at": "2026-11-03T00:02:56.315982+00:00"
+      },
+      "receipt": {
+        "exit_code": 0,
+        "completed": true,
+        "stderr_lines": 0,
+        "stderr_content": "omitted",
+        "result_subtype": null
+      }
+    },
+    {
+      "task_id": "41a71a30-4459-41b4-b6d3-0507aa3315ee",
+      "pid": 35048,
+      "mode": "check",
+      "started_at_utc": "2026-11-03T00:03:40.415114+00:00",
+      "terminal": {
+        "task_id": "41a71a30-4459-41b4-b6d3-0507aa3315ee",
+        "state": "TASK_STATE_COMPLETED",
+        "finished_at": "2026-11-03T00:04:16.455033+00:00"
+      },
+      "receipt": {
+        "exit_code": 0,
+        "completed": true,
+        "stderr_lines": 0,
+        "stderr_content": "omitted",
+        "result_subtype": null
+      }
+    },
+    {
+      "task_id": "e321b1cb-0c59-435f-8d8d-3b2df38b0015",
+      "pid": 51108,
+      "mode": "check",
+      "started_at_utc": "2026-11-03T00:06:57.956194+00:00",
+      "terminal": {
+        "task_id": "e321b1cb-0c59-435f-8d8d-3b2df38b0015",
+        "state": "TASK_STATE_COMPLETED",
+        "finished_at": "2026-11-03T00:08:20.505501+00:00"
+      },
+      "receipt": {
+        "exit_code": 0,
+        "completed": true,
+        "stderr_lines": 0,
+        "stderr_content": "omitted",
+        "result_subtype": null
+      }
+    },
+    {
+      "task_id": "0a13152f-3fac-4a24-b9ef-9b349cb61cf6",
+      "pid": 25524,
+      "mode": "check",
+      "started_at_utc": "2026-11-03T00:08:39.537877+00:00",
+      "terminal": {
+        "task_id": "0a13152f-3fac-4a24-b9ef-9b349cb61cf6",
+        "state": "TASK_STATE_COMPLETED",
+        "finished_at": "2026-11-03T00:08:45.088623+00:00"
+      },
+      "receipt": {
+        "exit_code": 0,
+        "completed": true,
+        "stderr_lines": 0,
+        "stderr_content": "omitted",
+        "result_subtype": null
+      }
+    },
+    {
+      "task_id": "bb7e0f67-6161-4b57-a63e-625d19134bbb",
+      "pid": 40348,
+      "mode": "check",
+      "started_at_utc": "2026-11-03T00:09:21.232907+00:00",
+      "terminal": null,
+      "receipt": null
+    },
+    {
+      "task_id": "0fab9b9d-b83c-4119-bca6-c486b0ecbb5c",
+      "pid": 34128,
+      "mode": "claude",
+      "started_at_utc": "2026-11-03T00:06:58.209907+00:00",
+      "terminal": null,
+      "receipt": null
+    }
+  ],
+  "common_failure": "Verifier tasks 69149..., 580a..., 41a..., e321..., and 0a131... each report checks_passed=false: original four ledger tests pass, endurance exits 1 with the same PermissionError [WinError 5] replacing progress.pending with progress.json at check_endurance.py:13/91. Runs were sequential (each terminal before next check process started), all against same candidate and unchanged source/checker manifest. Cause of access denial not established.",
+  "current_progress": {
+    "identity": "ebdc45476ad11ad002113753fc53deb90d318fda37becdb52470ec997619c351",
+    "manifest": {
+      "tmp/council-delivery/ledger.py": "632953b68bddc8d8276eabaa0d99f9efef2e88dc508c9263fc4541826cb563e9",
+      "tmp/a2a-stack/qa/council-review/check_endurance.py": "36b41751d4db356634c58d08344f2922b30c7537c121aaf94473783731e39c41",
+      "tmp/a2a-stack/qa/council-review/check_ledger.py": "594cb42a3f51e354ac68abdb4cb7fc4e998217c00e0a58acb73080ff476cf480"
+    },
+    "source_sha256": "632953b68bddc8d8276eabaa0d99f9efef2e88dc508c9263fc4541826cb563e9",
+    "workload_seconds": 498.32188960089115,
+    "rounds": 816,
+    "completed_tasks": 19584,
+    "process_sessions": 6,
+    "last_progress_at": "2026-11-03T00:09:40.613809+00:00"
+  },
+  "marker_hashes": {
+    "a2a-stack/autonomy/runner.py": {
+      "expected": "4ac70f89b6bafd371cf1fd21187e49c3c65e199b4141043b8387466f11e20748",
+      "actual": "4ac70f89b6bafd371cf1fd21187e49c3c65e199b4141043b8387466f11e20748",
+      "match": true
+    },
+    "a2a-stack/autonomy/test_runner.py": {
+      "expected": "80b4ebc87386b4523aedeee18c0814ebf0138f893a0469ce656da504b2c2187a",
+      "actual": "80b4ebc87386b4523aedeee18c0814ebf0138f893a0469ce656da504b2c2187a",
+      "match": true
+    },
+    "a2a-stack/agent/stacks.py": {
+      "expected": "cc809a2ff9dd6c5947923a906b964bfcc41526b9ba5e80db021b9136be469934",
+      "actual": "cc809a2ff9dd6c5947923a906b964bfcc41526b9ba5e80db021b9136be469934",
+      "match": true
+    },
+    "a2a-stack/prompts/autonomous-main.md": {
+      "expected": "3296031363aa55d721243427010d1f1da55457655ae32e21ee03fcb017eb4c48",
+      "actual": "3296031363aa55d721243427010d1f1da55457655ae32e21ee03fcb017eb4c48",
+      "match": true
+    },
+    "tmp/a2a-stack/qa/council-review/check_endurance.py": {
+      "expected": "36b41751d4db356634c58d08344f2922b30c7537c121aaf94473783731e39c41",
+      "actual": "36b41751d4db356634c58d08344f2922b30c7537c121aaf94473783731e39c41",
+      "match": true
+    },
+    "tmp/a2a-stack/qa/council-review/check_ledger.py": {
+      "expected": "594cb42a3f51e354ac68abdb4cb7fc4e998217c00e0a58acb73080ff476cf480",
+      "actual": "594cb42a3f51e354ac68abdb4cb7fc4e998217c00e0a58acb73080ff476cf480",
+      "match": true
+    },
+    "tmp/a2a-stack/trusted-checks.json": {
+      "expected": "22543da8106ba740f790b7adc7cf15ba0a2226eea2453a320efc4bf04951c9c3",
+      "actual": "22543da8106ba740f790b7adc7cf15ba0a2226eea2453a320efc4bf04951c9c3",
+      "match": true
+    }
+  },
+  "all_marker_hashes_match": true,
+  "midpoint_fault": "No receipt present yet; current progress remains below 600 credited workload seconds. Observer has not been altered.",
+  "overall_acceptance": "Pending; do not treat completed verifier jobs with checks_passed=false as acceptance. Do not modify frozen source/checker/registry."
+}

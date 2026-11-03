@@ -4,7 +4,9 @@ Each supervisor owns its `docs/goal/<goal>/GOAL.md` and index entry. Read the or
 
 ## Current execution focus
 
-**Active goal:** [REA reference and skill-stack soak](rea-skill-stack/GOAL.md) — start directly from the top state anchor (`Checkpoint / Next Action`) in `docs/goal/rea-skill-stack/GOAL.md`. Do not read parked or historical goal records unless a task explicitly depends on them.
+**Current owner-requested execution focus:** [A2A stack with Claude Code](a2a-stack/GOAL.md) — commit/push the reviewed stack, then exercise it on real Instacart tasks, repair encountered defects, and measure autonomous delivery/recovery. The optional runtime remains isolated under `a2a-stack/`.
+
+**Retained separate commitment:** [REA reference and skill-stack soak](rea-skill-stack/GOAL.md) — its existing checkpoint and unfinished scope remain intact; it is not the work queue for the current A2A/Instacart run. Do not read parked or historical records unless the task depends on them.
 
 The skill stack is unified into five coordinated core skills (`northstar`, `subagent-orchestration`, `independent-qa`, `advisor-council`, `task-completion-review`) plus two standalone skills (`agent-soak-testing`, `windows-app-watchdog`). The current commander handles covered decisions and approvals; platform permission boundaries and required independent QA apply.
 
