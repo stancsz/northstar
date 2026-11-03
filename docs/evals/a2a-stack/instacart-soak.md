@@ -2,6 +2,19 @@
 
 Status: **ACTIVE**. User authorized commit/push, real repeated A2A work on Instacart, continued defect repair and best-practice research. No self-imposed budget, turn, retry-count or total-runtime cap. This does not waive capture restrictions or authorize real transactions/private APIs.
 
+## Verified real workload outcomes
+
+These are accepted source-repair Goals on the actual Instacart workspace, not synthetic ledger rounds. Every row reached accepted COMPLETE and controller exit. Tasks and framework revisions differ, so the table is not a reliability-rate estimate.
+
+| Real workload | Passing immutable check groups | Recorded upper-parent coding corrections | Evidence |
+| --- | ---: | ---: | --- |
+| Catalog/Clementine/snapshot adapters | 9 | 0 | [First trial](instacart-first-trial.json) |
+| Adapter boundaries and real process integration | 10 | 1 | [Accepted boundary repair](instacart-boundary-accepted.json) |
+| Cart/checkout empty service fields | 11 | 1 | [Terminal audit](instacart-sibling-terminal-review.json), [corrective dispatch](instacart-sibling-nonempty-regression.json) |
+| Checkout operation-state validation | 12 | 0 | [Accepted checkout repair](instacart-checkout-step-accepted.json), [terminal audit](instacart-checkout-step-terminal-review.json) |
+
+Four completed deliveries do not mean four unassisted native-main deliveries: the middle two required an upper agent's corrective coding dispatch. The latest run used one coder, verifier and reviewer without corrective dispatch, cancellation, fault injection or user rescue. Its705.050472-second submission-intent-to-terminal-observation interval covers that specific clean local-simulation workload; it is not an unattended24-hour guarantee. Preserve the failed and assisted evidence rather than reporting only the final green results.
+
 ## Current checkpoint
 
 - Current action after Goal4 delivery: keep the host online and finish the existing private formal-review/Claude-wait repair, then independent private QA and guarded integration/deployment. First native invocation21312/exec68860 exited0 after134turns; author reports original80+new16 actualSDK/native-process tests96PASS. Its baseline characterization has12 expected assertion failures plus2 missing-contract KeyErrors, so it is not advertised as16 clean fail-before controls. SAME native session59f3cf2d-330a-4d58-9d5e-3624da58345f resumed in exec58695/native23684/token01dd6bbabac988bd for the already-agreed child-only BG-wait0 extension and clean one-case red/green receipt. Final private handoff, nonauthor QA and production integration are still pending. No active private output/source was accepted before actual process exit.
