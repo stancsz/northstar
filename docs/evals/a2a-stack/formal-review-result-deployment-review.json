@@ -1,0 +1,63 @@
+{
+  "verdict": "READY",
+  "candidate": "f1da3c20ec59b46707dec201419c770daa9b81682a4af6e1142dbc84d7229d12",
+  "source_file_count": 51,
+  "git_base_commit": "baf2f8a623963081fbf703e49fbad21809f55b33",
+  "all_manifest_hashes_match_current_tree": true,
+  "manifest_hash_mismatches": [],
+  "artifact_manifest_sha256": "833a35963bdd31dc8f27d3fee010ba00358189b2280995e79e86c7cb598c389c",
+  "summary_sha256": "9ef7b152769b66b4cc9b2c05857dae19edaead02b73a58c822862e3336b99b67",
+  "checks_passed": true,
+  "deployment_receipt_sha256": "ebc7198941936d67ba491740325016a1bcbc2452fe44726f7d7083b3ece361ad",
+  "deployment_receipt_matches_expected": "ebc7198941936d67ba491740325016a1bcbc2452fe44726f7d7083b3ece361ad",
+  "host": {
+    "pid": 18948,
+    "creation_identity": "01dd6bc5ccc19c83",
+    "receipt_identity": "01dd6bc5ccc19c83",
+    "listener_18890": true,
+    "old_pid_absent": true
+  },
+  "gateway": {
+    "listener_18892": true,
+    "loopback_only": true
+  },
+  "mcp": {
+    "endpoint": "http://127.0.0.1:18892/mcp",
+    "tools_list_success": true,
+    "actual_tool_count": 17,
+    "required_tool_count": 11,
+    "missing_required_tools": [],
+    "discover_agent_success": true,
+    "agent_name": "northstar-claude-code",
+    "protocol_version": null
+  },
+  "scheduled_task": {
+    "same_identity_before_after": true,
+    "before_last_run": "2026-11-03T19:00:57Z",
+    "after_last_run": "2026-11-03T19:01:57Z",
+    "last_run_advanced": true
+  },
+  "prior_goals": [
+    {
+      "goal_id": "g-2ab099f9f9424d93917be136905cf3da",
+      "status": "COMPLETE"
+    },
+    {
+      "goal_id": "g-3b8df7466b76431c9b8b872d3536ec03",
+      "status": "COMPLETE"
+    },
+    {
+      "goal_id": "g-759acc25206241c9a8783541855fdd6a",
+      "status": "COMPLETE"
+    },
+    {
+      "goal_id": "g-b2ff9e4665d64e418705f2436d4916c5",
+      "status": "COMPLETE"
+    }
+  ],
+  "limitations": [
+    "Deployment and current host/MCP health only; the receipt records live parallel and snapshot-recovery probes as false.",
+    "No new Instacart Goal or continuous soak acceptance is claimed.",
+    "Prior private review discloses three author writes to shared Claude memory outside the isolated Q workspace; those files were not inspected here."
+  ]
+}
