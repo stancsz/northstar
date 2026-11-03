@@ -1,0 +1,235 @@
+{
+  "verdict": "READY",
+  "reviewer": "review_agent_workflow",
+  "observed_at": "2026-11-03T17:44:27.749337+00:00",
+  "goal_id": "g-3b8df7466b76431c9b8b872d3536ec03",
+  "goal_status": "COMPLETE",
+  "accepted": true,
+  "controller_running": false,
+  "goal_candidate": "0a9fb4d07bb6eb0a96742583e6de5e7030a89981cd281ff2dd9b31e40941a20a",
+  "producer_generation": 1,
+  "freeze_id": "11cb2a605c4b4c49a44d9da0a8036fd4",
+  "current_generation_matches": true,
+  "workspace": "C:\\Users\\stanc\\github\\instacart-screen-inventory",
+  "write_paths": [
+    "offline/checkout-api.js",
+    "offline/checkout-api.test.mjs"
+  ],
+  "candidate_file_count": 2,
+  "candidate_artifact": "candidate-e9fdb8b192a5463da06c274c2bfdaa9f.json",
+  "candidate_artifact_sha256": "6feec82017a5be2eca70918ec09da8c19d36a291d5e51fcdfc74263d4f56e7d2",
+  "candidate_file_hashes": {
+    "offline/checkout-api.js": "bcb5e6dee0e3a9194eaccab37abc8655e9ed6c12a161029208cad0f9724a11f0",
+    "offline/checkout-api.test.mjs": "c3ddaf1bae1604cb6bf7a642bb4b83ea750022ebced07f46e22d81a203e54d7a"
+  },
+  "candidate_hashes_match_current_workspace": true,
+  "checks": {
+    "count": 12,
+    "all_exit_zero": true,
+    "results": [
+      {
+        "id": "instacart-catalog-contract",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-catalog-regressions",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-clementine-contract",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-clementine-regressions",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-snapshots-contract",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-snapshots-regressions",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-replacement-process-integration",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-node-regressions",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-go-regressions",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-empty-error-fields",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-sibling-empty-error-fields",
+        "exit_code": 0
+      },
+      {
+        "id": "instacart-checkout-step-contract",
+        "exit_code": 0
+      }
+    ],
+    "matches_immutable_spec_order": true,
+    "owner_frozen_checkout_gate": {
+      "cases": [
+        {
+          "operation": "begin",
+          "step": "interstitial",
+          "expected": "resolve",
+          "passed": true
+        },
+        {
+          "operation": "begin",
+          "step": "summary",
+          "expected": "reject",
+          "passed": true
+        },
+        {
+          "operation": "begin",
+          "step": "simulated_confirmation",
+          "expected": "reject",
+          "passed": true
+        },
+        {
+          "operation": "begin",
+          "disabled": true,
+          "passed": true
+        },
+        {
+          "operation": "continueToSummary",
+          "step": "interstitial",
+          "expected": "reject",
+          "passed": true
+        },
+        {
+          "operation": "continueToSummary",
+          "step": "summary",
+          "expected": "resolve",
+          "passed": true
+        },
+        {
+          "operation": "continueToSummary",
+          "step": "simulated_confirmation",
+          "expected": "reject",
+          "passed": true
+        },
+        {
+          "operation": "continueToSummary",
+          "disabled": true,
+          "passed": true
+        },
+        {
+          "operation": "read",
+          "step": "interstitial",
+          "expected": "resolve",
+          "passed": true
+        },
+        {
+          "operation": "read",
+          "step": "summary",
+          "expected": "resolve",
+          "passed": true
+        },
+        {
+          "operation": "read",
+          "step": "simulated_confirmation",
+          "expected": "resolve",
+          "passed": true
+        },
+        {
+          "operation": "read",
+          "disabled": true,
+          "passed": true
+        }
+      ],
+      "passed": 12,
+      "failed": 0
+    }
+  },
+  "review": {
+    "task_id": "4a45d3d0-d9a9-4b7a-b32b-7f054e70f158",
+    "role_id": "reviewer",
+    "task_state": "TASK_STATE_COMPLETED",
+    "candidate": "0a9fb4d07bb6eb0a96742583e6de5e7030a89981cd281ff2dd9b31e40941a20a",
+    "verdict": "READY",
+    "evidence_count": 23,
+    "all_evidence_nonempty": true,
+    "artifact_sha256": "31f1eb770fb4b99f97633a8cbba03dbe9a10f586a53623d1b0ec98c0b4ba430f",
+    "assignment_file": "a-review-checkout-step-candidate.json",
+    "assignment_candidate": "0a9fb4d07bb6eb0a96742583e6de5e7030a89981cd281ff2dd9b31e40941a20a",
+    "assignment_generation": 1,
+    "assignment_freeze_id": "11cb2a605c4b4c49a44d9da0a8036fd4",
+    "write_paths": [],
+    "acceptance_criteria_count": 7,
+    "all_immutable_acceptance_included": true
+  },
+  "writer_and_checker_tasks": [
+    {
+      "task_id": "1613a06a-8cef-4f44-bf8a-1e775ca0aba2",
+      "pid": 3276,
+      "process_token": "01dd6bb8e05998cd",
+      "task_state": "TASK_STATE_COMPLETED",
+      "exit_code": 0,
+      "native_identity_absent": true
+    },
+    {
+      "task_id": "520aa124-22fa-4425-a5ec-c490d06bd5c8",
+      "pid": 53272,
+      "process_token": "01dd6bb9235d11c5",
+      "task_state": "TASK_STATE_COMPLETED",
+      "exit_code": 0,
+      "native_identity_absent": true
+    },
+    {
+      "task_id": "4a45d3d0-d9a9-4b7a-b32b-7f054e70f158",
+      "pid": 47192,
+      "process_token": "01dd6bb938945dc7",
+      "task_state": "TASK_STATE_COMPLETED",
+      "exit_code": 0,
+      "native_identity_absent": true
+    }
+  ],
+  "no_corrective_dispatch_or_human_rescue_at_launch": {
+    "submitted_as_new_goal": true,
+    "actual_coder_task_count": 1,
+    "actual_final_producer_count": 1
+  },
+  "preservation": {
+    "request_sha256": "09c24c0097eeda15bfffbcc67c00741ad1bcbdcdb24b8afdb8d7c35eff5fb7ef",
+    "baseline_request_sha256": "09c24c0097eeda15bfffbcc67c00741ad1bcbdcdb24b8afdb8d7c35eff5fb7ef",
+    "fixture_sha256": "84d462bbc7888356396f4131a1351338ac28e76b90f56c59bc2efcba6e96cf8f",
+    "baseline_fixture_sha256": "84d462bbc7888356396f4131a1351338ac28e76b90f56c59bc2efcba6e96cf8f",
+    "original_test_sha256": "9b899c629bd759cd705c9cdeb6eef0ba81d4228e67d28d58d5cd92f4da95adc6",
+    "original_test_prefix_bytes": 5210,
+    "current_test_prefix_matches_baseline": true,
+    "recovered_baseline_test_sha256": "9b899c629bd759cd705c9cdeb6eef0ba81d4228e67d28d58d5cd92f4da95adc6",
+    "current_test_length": 7729,
+    "original_eleven_check_definitions_unchanged": true,
+    "only_added_check_id": [
+      "instacart-checkout-step-contract"
+    ]
+  },
+  "framework_source": {
+    "candidate": "2562d8f450e66020fee26b543f421d4ab12d8c3a0fee788502b1b6fd8a963166",
+    "source_file_count": 50,
+    "all_manifest_hashes_match_current_tree": true,
+    "manifest_sha256": "6b0d933264f467dc0c38f195b07902a97ff92058d47683d3e717b8a9b47b43ec"
+  },
+  "launch_record": {
+    "attached_existing": false,
+    "original_registry_definitions_unchanged": true,
+    "no_manual_corrective_dispatch_or_human_rescue": true
+  },
+  "limitations": [
+    "This accepts the terminal Goal candidate, provenance, twelve immutable checks, fresh nonauthor review, and preserved baselines only.",
+    "No tests were rerun, and no new Goal, host action, source edit, or worker dispatch was performed.",
+    "The checkout flow remains the local simulated adapter; no real order, payment, external API, or browser-fidelity claim is included."
+  ]
+}
