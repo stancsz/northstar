@@ -6,6 +6,8 @@ Owner-requested optional runtime: [A2A stack with Claude Code](a2a-stack/README.
 
 **Five coordinated skills for delegated AI work.** Northstar connects your intent to accountable execution: clear authority, local initiative, proportionate acceptance, and learning that carries into the next assignment.
 
+**Stable, reliable, simple.** Choose the smallest complete workflow that preserves the user's intent and works under real conditions. Prove delivery and recovery with evidence; add an agent, integration, dependency, or process only when it addresses a demonstrated need. Remove or consolidate redundant machinery without weakening required behavior or disrupting active work. These are decision standards, not claims that every workflow is already reliable. See the [project direction](NORTHSTAR.md).
+
 Start with [one delivery contract](skills/northstar/SKILL.md#delivery-contract): improve the highest-value existing workflow, finish and verify it before expanding, let one commander handle covered approvals, and stop optional work at diminishing returns. The five skills support that loop; they are not five stages to run.
 
 This repository stays focused on simple, reusable skills and their necessary supporting tools. Applications and their implementation plans belong in separate repositories.

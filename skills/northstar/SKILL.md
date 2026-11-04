@@ -48,7 +48,7 @@ Shared rules across all five coordinated Northstar skills (`northstar`, `subagen
 
 1. **Resume the actual request.** Read existing records and diffs; do not restart accepted work or create empty Northstar directories. (Use [business planning](references/business-planning.md) only when asked for market/financial/GTM strategy.)
 2. **Define the finish.** State the target workflow, environment, quantitative/binary acceptance check, and scope bounds ([goal quality bar](references/goal-driven-engineering.md#define-the-goal)).
-3. **Build the next complete step.** Reuse existing code and tools. Cap read-only exploration at **5 tool calls** before making a concrete edit or running a distinguishing check. When delegating to a subagent or CLI worker (Codex or Claude Code), assign one target artifact, exact writable paths, one verification check, and a firm deadline (5-minute artifact checkpoint, 10-minute handoff), terminating immediately on any `api_retry` (HTTP 429) or `unrecognized_model` event.
+3. **Build the next complete step.** Reuse existing code and tools. Cap read-only exploration at **5 tool calls** before making a concrete edit or running a distinguishing check. When delegating, assign one target artifact, exact writable paths and a verification check. Unless the owner or project specifies otherwise, use a 5-minute artifact checkpoint and 10-minute handoff, and terminate the worker on `api_retry` (HTTP 429) or `unrecognized_model`. Explicit owner/project recovery rules take precedence; an observation checkpoint is not proof that a task stopped.
 4. **Verify and repair.** Run the actual check once and inspect the changed behavior. Repair failures in scope. Once the required check passes and affected files are verified, **stop calling tools and deliver the handoff**—do not run redundant status/timestamp/diff checks after verification. If a criterion requires missing credentials, external network/services, or out-of-scope access, **do not probe the network, credentials, or parent directories**—stop immediately and mark it `unverified`. A passing build, HTTP 200, mock, or worker summary alone is not verification.
 5. **Deliver the requested outcome.** Reconcile every item in `Ask` against real evidence (`passed`, `unmet`, or `unverified`). Report material limits and stop—do not invent a new phase after completion.
 
@@ -57,7 +57,7 @@ Shared rules across all five coordinated Northstar skills (`northstar`, `subagen
 Do not loop on the same error or run unbounded diagnostics:
 
 1. **Cap investigation at 5 calls or 10 minutes.** Name the unmet criterion and run one distinguishing check.
-2. **2-strike rule on failures.** Test one causal change at a time while preserving working diffs. After **2 consecutive attempts** with the same failure or no progress, stop patching and enter **one recovery window** (counts carry across agents and context resets).
+2. **Change method on repeated failures.** Test one causal change at a time while preserving working diffs. Unless the owner or project specifies otherwise, after **2 consecutive attempts** with the same failure or no progress, stop patching and enter **one recovery window** (counts carry across agents and context resets). An explicit autonomous-recovery policy may require continuing the goal rather than applying a fixed failure limit.
 3. **Isolate or simplify.** Reproduce the minimal failure, test one simpler implementation, or consult [Advisor Council](../advisor-council/SKILL.md) for a concrete capability gap. Never retry an unchanged command or rejected approach.
 
 ### Decide after exhausted recovery
@@ -79,7 +79,7 @@ Load a companion skill **only** when its trigger applies:
 
 ## Use with other agents
 
-These practices work across Codex, Claude Code, OpenCode, and other coding agents. Adapt tool calls to the host while keeping intent locking, single-commander authority, 2-strike recovery, and evidence verification intact. (For bilingual buyer-facing slide decks, use `bilingual-product-demo-deck` when installed and ensure slides stand alone visually.)
+These practices work across Codex, Claude Code, OpenCode, and other coding agents. Adapt tool calls and recovery to the host and owner's instructions while keeping intent locking, single-commander authority, and evidence verification intact. (For bilingual buyer-facing slide decks, use `bilingual-product-demo-deck` when installed and ensure slides stand alone visually.)
 
 ## Coordinate proportionately
 

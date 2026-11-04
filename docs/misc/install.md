@@ -75,7 +75,7 @@ At the start of every nontrivial task, check whether Advisor Council or Subagent
 - Before substantial work, assess whether a bounded subagent, Codex CLI worker, or Claude Code CLI worker assignment would add useful independent review or parallel progress. Delegate when likely benefit justifies coordination and cost; use distinct write scopes (or Git worktrees) and preserve independent acceptance. Check availability and follow `subagent-orchestration`. If unavailable or not useful, proceed directly and state a material limitation when relevant.
 ```
 
-The bundled `advisor-council` skill explains how to configure primary and distinct council model identifiers and their limits without prescribing a vendor or backend model. The `subagent-orchestration` skill describes when and how to delegate across native subagents, Codex CLI, and Claude Code CLI. This global instruction guides Codex; it does not install services or configure external applications.
+The bundled `advisor-council` skill explains how to configure primary and distinct council model identifiers and their limits without prescribing a vendor or backend model. The `subagent-orchestration` skill describes when and how to delegate across native subagents, Codex CLI, and Claude Code CLI. Follow the applicable owner's routing and sandbox requirements. This global instruction guides Codex; it does not install services or configure external applications.
 
 ## Invoke the central coordinator or a companion
 

@@ -94,7 +94,7 @@ Connect Claude Code without changing global settings:
 claude --mcp-config a2a-stack/mcp/client-config.json --strict-mcp-config
 ```
 
-MCP endpoint: `http://127.0.0.1:18892/mcp`. A container healthcheck does not establish project acceptance. The hybrid topology and in-memory task-store limitations above still apply.
+MCP endpoint: `http://127.0.0.1:18892/mcp`. A container healthcheck does not establish project acceptance. The hybrid topology and persistence boundaries described above still apply.
 
 ## Acceptance and current goal
 

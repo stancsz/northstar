@@ -6,6 +6,8 @@ For substantive work, use `/northstar` and its [delivery contract](skills/norths
 
 # Working on Northstar
 
+**Owner's enduring priority:** Stable, reliable, simple. Follow the decision standard in [NORTHSTAR.md](NORTHSTAR.md#核心思路稳定可靠简单): deliver and verify the smallest complete workflow; add machinery only for a demonstrated need; remove duplication without weakening required behavior or disturbing active work.
+
 Northstar's core package has five coordinated skills: Northstar, Subagent Orchestration, Independent QA, Advisor Council, and Task Completion Review. It also ships the standalone Agent Soak Testing skill and Windows App Watchdog utility. Keep engineering judgment, practices, and useful documentation at the center of changes.
 
 Keep this repository skills-only. Prioritize concise skill instructions, examples, necessary supporting tools and skill validation. Application code, interfaces, app specifications, deployment plans and app-specific execution records belong in separate repositories. Do not turn this package into an application or runtime platform.
@@ -16,7 +18,7 @@ Keep this repository skills-only. Prioritize concise skill instructions, example
 
 ## Start here
 
-**Owner focus correction (2026-11-03):** The main chat's 30-minute supervision and subsequent Worker goals advance Northstar A2A itself. Instacart is only an optional validation workload. Do not create an ongoing application-maintenance queue to keep agents busy. Name the framework capability gap, evidence, write scope and distinguishing acceptance for every new goal; preserve and safely close already active work.
+**Owner focus correction (2026-11-03):** The main chat's 15-minute, three-Worker supervision and subsequent Worker goals advance Northstar A2A itself. Instacart is only an optional validation workload. Do not create an ongoing application-maintenance queue to keep agents busy. Name the framework capability gap, evidence, write scope and distinguishing acceptance for every new goal; preserve and safely close already active work.
 
 1. Start from the current task state and [Northstar](skills/northstar/SKILL.md); take its next useful action.
 2. For sustained Northstar work, use the [active goal](docs/goal/README.md). Read project direction, linked evidence or companion guidance only when it can change scope, the next action, or acceptance; a small one-turn task can proceed from its request.

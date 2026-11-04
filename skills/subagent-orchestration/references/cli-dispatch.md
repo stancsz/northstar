@@ -2,6 +2,8 @@
 
 > On-demand host-specific setup for the [Subagent Orchestration skill](../SKILL.md). Use this reference when dispatching a local Codex CLI worker.
 
+Owner and project recovery rules take precedence over the default deadlines and stop-on-retry examples below. An observation timeout alone does not establish that a worker stopped.
+
 Run a bounded child assignment with an explicit target working directory. The parent must set the worker's directory explicitly: launching from another directory can mis-scope relative task paths. Resolve and validate that the directory exists before launch, then pass it with `--cd` (or `-C`). Keep the brief focused on necessary context, exact paths, and acceptance; keep the worker's file scope narrow. Choose the sandbox mode from the task's authorization, and capture the child's output as a handoff. Never modify global or user-level Codex configuration to launch a worker.
 
 **Write-enabled implementation** — when the assigned task authorizes edits within a bounded write scope:
@@ -67,12 +69,16 @@ function Invoke-CodexChild {
         [Parameter(Mandatory)] [AllowEmptyString()] [string] $Assignment,
         [Parameter(Mandatory)] [string] $WorkingDirectory,
         [ValidateSet('read-only', 'workspace-write')] [string] $Sandbox = 'read-only',
+        [string] $Profile,
         [string] $Model,
         [switch] $DisablePlugins,
         [switch] $SkipHostSkillDiscovery
     )
     if ([string]::IsNullOrWhiteSpace($Assignment)) {
         throw 'Assignment must not be empty or whitespace-only: provide the work item for the delegated Codex worker.'
+    }
+    if ($PSBoundParameters.ContainsKey('Profile') -and [string]::IsNullOrWhiteSpace($Profile)) {
+        throw 'Profile must not be empty or whitespace-only: provide a valid profile identifier.'
     }
     if ($PSBoundParameters.ContainsKey('Model') -and [string]::IsNullOrWhiteSpace($Model)) {
         throw 'Model must not be empty or whitespace-only: provide a valid model identifier.'
@@ -107,6 +113,9 @@ function Invoke-CodexChild {
             'exec', '--json', '--cd', $resolvedWorkingDirectory,
             '--ephemeral', '--skip-git-repo-check', '--sandbox', $Sandbox
         )
+        if ($PSBoundParameters.ContainsKey('Profile')) {
+            $codexArguments += @('--profile', $Profile)
+        }
         if ($PSBoundParameters.ContainsKey('Model')) {
             $codexArguments += @('--model', $Model)
         }
@@ -139,12 +148,45 @@ Invoke-CodexChild -Assignment $assignment -WorkingDirectory $workingDirectory -S
 
 `-DisablePlugins` is an opt-in that appends `-c features.plugins=false` for tasks that do not rely on plugin-provided integrations. Omitting it preserves the default arguments.
 
+`-Profile` is an optional per-child configuration profile override (`--profile <identifier>`, layering `$CODEX_HOME/<identifier>.config.toml` on top of the base user configuration so delegated workers can use a separate provider or model configuration while the parent session keeps its default provider). Omit it to preserve the host's default configuration.
+
 `-Model` is an optional per-child override (`--model <identifier>`). Omit it to preserve the host's configured model selection.
 
 `-SkipHostSkillDiscovery` is a separate opt-in that appends `--enable skip_host_skill_discovery` to that single child invocation. Because `skip_host_skill_discovery` is an experimental Codex CLI feature, enable it only per assignment when needed and inline any required skill instructions in the worker brief.
 
 **Windows sandbox home prerequisite.** The Codex CLI sandbox on Windows needs a resolvable home directory. Without one the CLI can fail to start the sandbox with `windows sandbox failed: no home dir`. The helper keeps a valid existing `HOME`; when `HOME` is missing or does not resolve to an existing directory it uses an existing `USERPROFILE` for that child invocation only, and restores the caller's exact prior `HOME` state afterwards. When neither `HOME` nor `USERPROFILE` resolves to an existing directory the helper fails before dispatch.
 
+
+## Split provider routing (parent subscription + worker API profile)
+
+One local loopback experiment with Codex CLI `0.154.0` observed in-process agent threads using the parent route despite a provider setting in a role file. That simulation does not establish Desktop behavior, real provider identity or billing. When an owner authorizes a separate Responses API profile for CLI workers, keep the supervisor's configuration separate and verify the effective route and sandbox:
+
+1. **Base configuration (`~/.codex/config.toml`):** If applicable, register the external provider under `[model_providers.<provider-id>]` with a dedicated `env_key` (never overwriting `OPENAI_API_KEY` globally). Leaving the top-level provider unset does not by itself verify the supervisor's authentication or billing:
+   ```toml
+   [model_providers.<provider-id>]
+   name = "<Provider Display Name>"
+   base_url = "<https-responses-v1-endpoint>"
+   env_key = "<PROVIDER_API_KEY_ENV>"
+   wire_api = "responses"
+   requires_openai_auth = false
+   ```
+2. **Profile overlay (`~/.codex/<profile-name>.config.toml`):** Define the worker provider and model in a standalone profile file (in `codex-cli 0.154.0`, `--profile <profile-name>` requires `$CODEX_HOME/<profile-name>.config.toml` and rejects legacy `[profiles.<profile-name>]` tables in `config.toml`):
+   ```toml
+   model_provider = "<provider-id>"
+   model = "<worker-model-id>"
+   ```
+
+### Direct CLI worker dispatch
+
+The Orchestrator or Supervisor can dispatch bounded worker tasks directly through `Invoke-CodexChild -Profile '<profile-name>'` (or `codex exec -p <profile-name>`), subject to the owner's routing and sandbox requirements. A configured profile or simulated endpoint does not by itself prove the upstream provider, billing, or successful native tool execution:
+
+```powershell
+Invoke-CodexChild -Assignment $assignment -WorkingDirectory $workingDirectory `
+    -Profile '<profile-name>' -Sandbox workspace-write -DisablePlugins `
+    2> $stderrPath | Tee-Object -FilePath $jsonlPath | Out-Null
+```
+
+Do not bypass an inner sandbox on the assumption that an outer sandbox enforces the intended boundary. Native dispatcher experiments are not an accepted default route.
 
 ## Configuration comparisons
 

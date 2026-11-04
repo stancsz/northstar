@@ -145,7 +145,9 @@ def normalize(arguments) -> list:
     return normalized
 
 
-def expected_arguments(working_directory, sandbox="read-only", overrides=(), extra=(), model=None) -> list:
+def expected_arguments(
+    working_directory, sandbox="read-only", overrides=(), extra=(), profile=None, model=None
+) -> list:
     arguments = [
         "exec",
         "--json",
@@ -156,6 +158,8 @@ def expected_arguments(working_directory, sandbox="read-only", overrides=(), ext
         "--sandbox",
         sandbox,
     ]
+    if profile is not None:
+        arguments.extend(["--profile", profile])
     if model is not None:
         arguments.extend(["--model", model])
     for override in overrides:
@@ -174,6 +178,7 @@ def run_helper(
     sandbox=None,
     disable_plugins=False,
     skip_host_skill_discovery=False,
+    profile=None,
     model=None,
     setup=(),
     location=None,
@@ -190,6 +195,8 @@ def run_helper(
     ]
     if sandbox is not None:
         invocation.append(f"-Sandbox {ps_literal(sandbox)}")
+    if profile is not None:
+        invocation.append(f"-Profile {ps_literal(profile)}")
     if model is not None:
         invocation.append(f"-Model {ps_literal(model)}")
     if disable_plugins:
@@ -362,6 +369,35 @@ def test_explicit_blank_model_selection_fails_before_launch(workspace):
     )
     assert payload["error"]["message"] == (
         "Model must not be empty or whitespace-only: provide a valid model identifier."
+    )
+    assert payload["invocations"] == []
+
+
+def test_profile_override_passes_the_profile_flag_to_the_child(workspace):
+    selected = "worker-provider-profile"
+    payload = run_helper(
+        workspace["root"],
+        name="explicit-profile",
+        working_directory=workspace["project"],
+        profile=selected,
+        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
+    )
+    assert payload["error"] is None, payload["error"]
+    arguments = payload["invocations"][0]["arguments"]
+    assert arguments.count("--profile") == 1
+    assert normalize(arguments) == expected_arguments(workspace["project"], profile=selected)
+
+
+def test_explicit_blank_profile_selection_fails_before_launch(workspace):
+    payload = run_helper(
+        workspace["root"],
+        name="blank-profile",
+        working_directory=workspace["project"],
+        profile="   ",
+        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
+    )
+    assert payload["error"]["message"] == (
+        "Profile must not be empty or whitespace-only: provide a valid profile identifier."
     )
     assert payload["invocations"] == []
 

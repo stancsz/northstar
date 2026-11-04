@@ -27,7 +27,7 @@ Follow the [Northstar delivery contract](../northstar/SKILL.md#delivery-contract
 - **Unified route & environment preflight:**
   1. **Parent owns CLI verification:** Verify any new or reconfigured CLI setup once in the parent (1-turn read-only smoke) before dispatching write work, and pass the baseline context in the worker brief so workers never repeat setup checks.
   2. **Prevent profile model leakage:** When isolating child configuration (`CLAUDE_CONFIG_DIR`, `--bare`, `--setting-sources ""`, or custom `CODEX_HOME`), pass the intended model explicitly so user-profile defaults do not leak into or drop from the child run.
-  3. **Stop immediately on retry storms or bad routes:** Terminate a CLI worker immediately on the first native `api_retry` (HTTP 429) or `unrecognized_model` event rather than burning budget in backoff loops.
+  3. **Handle retry storms and bad routes:** Unless an explicit owner or project recovery policy says otherwise, terminate a CLI worker on the first native `api_retry` (HTTP 429) or `unrecognized_model` event. Follow the applicable recovery policy and never silently change models or routes.
 - **CLI dispatch adapters:**
   - **Codex CLI workers:** Follow [local Codex CLI dispatch](references/cli-dispatch.md) (`Invoke-CodexChild`).
   - **Claude Code CLI workers:** Follow [local Claude Code CLI dispatch](references/claude-cli-dispatch.md) (`claude -p` with explicit `--allowedTools`, `--max-turns`, and `--max-budget-usd`).
@@ -43,7 +43,7 @@ Under [Northstar ownership](../northstar/SKILL.md#ownership-north-star--goals--t
 
 ### Orchestrator
 - Owns user intent, cross-goal interfaces, team shape, and final integration.
-- Sets each delegate's exact writable paths, forbidden paths, verification command, and deadline.
+- Sets each delegate's exact writable paths, forbidden paths, verification command, and applicable checkpoints or deadline.
 - Exercises the standing grant for covered actions and escalates only genuinely missing authority or user-retained decisions.
 
 ### Supervisors
@@ -67,7 +67,7 @@ Every worker brief must be self-contained so a fast model can execute without re
 - Write Scope: [Exact allowed file paths + tmp/<task-id>/ scratch; all other paths read-only]
 - Context & Baseline: [Relevant facts, base commit SHA, baseline test/error, and verified CLI setup]
 - Verification: [Exact command that must pass before handoff]
-- Bounds: [5-min artifact checkpoint, 10-min handoff deadline, max 5 read-only calls before first edit/check, no nested CLI]
+- Bounds: [Applicable owner/project recovery rules; otherwise 5-min artifact checkpoint and 10-min handoff deadline; max 5 read-only calls before first edit/check, no nested CLI]
 ```
 
 - **Search & output discipline:** Stay strictly inside the assigned working directory (never walk `..` into parent repositories), exclude generated/log/cache directories from searches, cap command output, and read focused line ranges.
@@ -88,4 +88,4 @@ Follow Northstar's [repository rules](../northstar/SKILL.md#keep-records-and-the
 
 ## Failure, retries, and final integration
 
-Delegation never weakens acceptance or resets the 2-strike recovery count. If CLI dispatch fails, continue directly in the parent within authority or report the exact blocker using Northstar's [delivery loop](../northstar/SKILL.md#deliver-a-usable-mvp-then-improve-in-increments) and [stall recovery](../northstar/SKILL.md#recover-from-a-stall).
+Delegation never weakens acceptance or resets recovery history. Apply the owner's and project's recovery policy, or Northstar's default when none is specified. If CLI dispatch fails, continue directly in the parent within authority or report the exact blocker using Northstar's [delivery loop](../northstar/SKILL.md#deliver-a-usable-mvp-then-improve-in-increments) and [stall recovery](../northstar/SKILL.md#recover-from-a-stall).
