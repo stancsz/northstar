@@ -117,6 +117,13 @@ class GoalManager:
                 raise ValueError("required input must be in the authorized workspace")
             inputs.append(str(path))
         scope = self._scope(request.get("write_paths", []))
+        for value in scope:
+            path = (self.workspace / value).resolve()
+            if path.is_relative_to(self.state_root) or self.state_root.is_relative_to(path):
+                raise ValueError(
+                    f"write path {value!r} and operational state root {str(self.state_root)!r} overlap; "
+                    "choose explicit source paths outside the state root, or run the host against a "
+                    "workspace whose state namespace lies outside it")
         baseline = candidate_scope.baseline_snapshot(self.workspace, scope)
         spec = {"id": goal_id, "workspace": str(self.workspace), "goal": goal.strip(),
                 "acceptance": [a.strip() for a in acceptance],

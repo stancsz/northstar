@@ -2,13 +2,15 @@
 
 ## A2A root scopes containing live operational state
 
-Status: open; priority: P2. Observed during the 2026-11-03 Instacart readiness work.
+Status: partially closed; priority: P2. Observed during the 2026-11-03 Instacart readiness work.
 
 The default Northstar workspace contains its own `tmp/a2a-stack` state tree. A whole-workspace `.` scope therefore includes changing journals and live lock files; snapshotting can fail with `PermissionError`, and operational changes invalidate candidates. The corrected root matcher deliberately includes all authorized files and fails closed. It does not silently omit state or `.git`.
 
 The current eight-file framework Goal and prepared nine-file Instacart Goal use explicit paths and avoid this overlap. Their acceptance does not establish stable self-hosted whole-root execution.
 
-Follow-up: provide a clear admission diagnostic for an operational-state overlap, or an explicitly configured external state location with a reviewed migration that preserves existing default-workspace data. Preserve completeness: do not quietly skip unreadable or changing scoped files. Verify with isolated lock/state fixtures before broadening the supported configuration.
+Closed on 2026-11-04: `GoalManager.create` now rejects a write scope that overlaps the operational state root, in both containment directions, before any baseline read and before any Goal is persisted. The refusal is a clear diagnostic, not a silent trim, so scope completeness is preserved. Verified by independent nonauthor review (READY) plus a supervisor live-service check over the real HTTP surface: an overlapping scope returns HTTP 400 with the diagnostic while a state file is held under a real exclusive Windows lock, and no goal directory or goal record is created; a safe scope still returns HTTP 201 with a baseline holding only the scoped source files.
+
+Still open: there is no dedicated state-root setting. `SHARED_STATE_ROOT` is a hard-coded constant, so the only way to move the state tree outside the workspace is to select a workspace whose namespace already lives outside it. The diagnostic says so explicitly rather than promising a configuration that does not exist. An explicitly configured external state location, with a reviewed migration that preserves existing default-workspace data, remains the separate follow-up. Preserve completeness: do not quietly skip unreadable or changing scoped files. Verify with isolated lock/state fixtures before broadening the supported configuration.
 
 ## Windows checkpoint replacement contention
 
