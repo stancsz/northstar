@@ -35,6 +35,7 @@ class GoalManager:
         self.watchers = {}
         self.processes = {}
         self.cancel_watchers = {}
+        self.suspended_goals = {}
         self.closing = False
         self.registry, self.task_reader = registry, task_reader
         self.active_task, self.process_matches = active_task, process_matches
@@ -52,6 +53,13 @@ class GoalManager:
     def _event(self, goal_id, event, **fields):
         with (self._dir(goal_id) / "host-events.jsonl").open("a", encoding="utf-8") as stream:
             stream.write(json.dumps({"event": event, "at": runtime.now(), **fields}) + "\n")
+
+    def _lifecycle_event(self, goal_id, event, **fields):
+        """Best-effort journal write; lifecycle logging cannot own the process."""
+        try:
+            self._event(goal_id, event, **fields)
+        except OSError:
+            pass
 
     def check_catalog(self):
         data = self._read(self.state_root / "trusted-checks.json", {})
@@ -148,7 +156,14 @@ class GoalManager:
         spec = self._read(directory / "spec.json")
         if not spec:
             raise KeyError("unknown autonomous goal")
-        state = self._read(directory / "state.json", {"status": "RECOVERING"})
+        try:
+            state = self._read(directory / "state.json", {"status": "RECOVERING"})
+        except (OSError, ValueError):
+            # An unreadable state file must not make the goal unreportable:
+            # the report is the only way the owner learns what happened.
+            state = {"status": "RECOVERING"}
+        if not isinstance(state, dict):
+            state = {"status": "RECOVERING"}
         process = self.processes.get(goal_id)
         return {"goal_id": goal_id, "goal": spec["goal"], "state": state,
                 "controller_running": bool(process and process[0].poll() is None),
@@ -203,6 +218,53 @@ class GoalManager:
                    "NEEDS_USER": "处理报告中的已核实外部依赖后，调用 resume_goal。",
                    "CANCELED": "已按指令停止，可恢复同一 Goal 或设置新 Goal。",
                    "CANCELING": "正在清理本 Goal 的任务，系统会自动继续清理。"}
+        supervision_lost = self._supervision_lost_state(goal_id, state)
+        cancel_lost = bool(state.get("cancel_lost")) and status != "CANCELED"
+        # `last_error` is a shared field also written by the controller and by
+        # `resume()`, so it can name a stale or benign cause.  The loss has
+        # its own reason field.
+        loss_reason = state.get("supervision_lost_reason") if supervision_lost else None
+        blocker = state.get("blocker") if status == "NEEDS_USER" else None
+        if cancel_lost:
+            # The cleanup stopped, so the goal is not being cleaned up and no
+            # automatic continuation is happening.  Saying otherwise would be
+            # the same deception the supervision loss fixed.
+            status = "NEEDS_USER"
+            actions["NEEDS_USER"] = ("本 Goal 的宿主清理已中断，Goal 停在 CANCELING。"
+                                     "请先处理报告中的 cancel_lost 原因，再调用 resume_goal。")
+            blocker = state.get("blocker") or {
+                "kind": "host_cancel_lost",
+                "message": ("The host cleanup for this goal stopped without "
+                            "finishing; the goal is stuck in CANCELING."),
+                "evidence": ([state["cancel_lost_reason"]] if state.get("cancel_lost_reason") else []),
+            }
+        if supervision_lost:
+            status = "NEEDS_USER"
+            suspended = bool(state.get("host_suspended") or goal_id in self.suspended_goals)
+            actions["NEEDS_USER"] = (
+                "控制器结果不确定，已暂停自动重放；请先核实外部结果。"
+                if suspended else
+                "本 Goal 的宿主监督已中断，Goal 未在自主执行。"
+                "请先处理报告中的 supervision_lost 原因，再调用 resume_goal。")
+            # The live watcher holds the exception that actually ended the
+            # supervision, so it is the most direct cause available.  The
+            # persisted reason is the fallback for the case where the durable
+            # write failed, or where the loss was recorded for a watcher that
+            # is no longer the goal's owner.
+            live_reason = self._live_supervision_error(goal_id)
+            if live_reason is not None:
+                loss_reason = live_reason
+            if blocker is None:
+                if suspended:
+                    blocker = {"kind": "host_outcome_uncertain",
+                               "message": ("The controller may have performed external work; "
+                                           "automatic replay is suspended to avoid duplication."),
+                               "evidence": [loss_reason] if loss_reason else []}
+                else:
+                    blocker = {"kind": "host_supervision_lost",
+                               "message": ("The host supervisor for this goal stopped without "
+                                           "supervising it; the goal is not running autonomously."),
+                               "evidence": [loss_reason] if loss_reason else []}
         return {"goal_id": goal_id, "goal": spec["goal"], "status": status,
                 "summary": state.get("last_summary"), "acceptance": spec["acceptance"],
                 "accepted_result": state.get("accepted_receipt"),
@@ -212,22 +274,168 @@ class GoalManager:
                 "controller_start_count": starts,
                 "controller_restart_count": None if starts is None else max(0, starts - 1),
                 "session_reset_count": len(state.get("previous_session_ids", [])),
-                "blocker": state.get("blocker") if status == "NEEDS_USER" else None,
+                "blocker": blocker,
                 "next_user_action": actions.get(status, "查看进度。"),
+                "supervision_lost": supervision_lost,
+                "supervision_lost_reason": loss_reason,
                 "controller_running": record["controller_running"], "evidence_dir": str(self._dir(goal_id))}
+
+    def _live_supervision_error(self, goal_id):
+        """The sanitized cause of the current watcher's failure, if any.
+
+        Used when the durable loss write failed, so the report can still name
+        the cause instead of pointing the owner at an absent field.
+        """
+        watcher = self.watchers.get(goal_id)
+        if watcher is None or not watcher.done() or watcher.cancelled():
+            return None
+        error = watcher.exception()
+        if error is None:
+            return None
+        return runtime._safe_handoff(f"{type(error).__name__}: {error}")
+
+    def _supervision_lost_state(self, goal_id, state):
+        """True when the goal is not actually supervised right now.
+
+        Derived from the live watcher task, not only from persisted state, so a
+        report cannot claim autonomous execution after supervision died even if
+        the durable state update failed too.
+        """
+        status = state.get("status")
+        if status in ("COMPLETE", "CANCELED"):
+            # The goal already reached its own outcome; a watcher that died
+            # afterwards supervised nothing that still needed supervising, and
+            # an accepted result must never be hidden behind a false blocker.
+            return False
+        if state.get("supervision_lost") or state.get("host_suspended"):
+            return True
+        if goal_id in self.suspended_goals:
+            return True
+        if status in TERMINAL:
+            # The goal already stopped for its own reason.
+            return False
+        watcher = self.watchers.get(goal_id)
+        if watcher is None or not watcher.done() or watcher.cancelled():
+            return False
+        return watcher.exception() is not None
 
     def _launch(self, goal_id):
         if goal_id not in self.watchers or self.watchers[goal_id].done():
-            self.watchers[goal_id] = asyncio.create_task(self._watch(goal_id))
+            watcher = asyncio.create_task(self._watch(goal_id))
+            self.watchers[goal_id] = watcher
+            watcher.add_done_callback(
+                lambda finished, goal_id=goal_id: self._record_supervision_loss(goal_id, finished))
+
+    def _record_supervision_loss(self, goal_id, watcher):
+        """Record that a goal's supervisor stopped without supervising anything.
+
+        A watcher that finishes normally (terminal goal, explicit cancellation,
+        host shutdown) is not a loss. A watcher that dies with an unhandled
+        exception is: the goal would otherwise keep reporting RUNNING with
+        nothing supervising it and nothing able to relaunch the controller.
+
+        A loss that belongs to a watcher which has already been superseded is
+        history, not the goal's current state: recording it would undo a
+        resume that the owner just performed.
+        """
+        if self.closing or watcher.cancelled():
+            return
+        error = watcher.exception()
+        if error is None:
+            return
+        if self.watchers.get(goal_id) is not watcher:
+            # A newer watcher owns this goal now; this loss is already history.
+            return
+        directory = self._dir(goal_id)
+        if (directory / "cancel.request").exists():
+            return
+        # This callback is the last thing that can record the loss, so it must
+        # not itself die.  A corrupt or locked state file must not stop the
+        # event and the durable update from being written.
+        state = self._read_loss_state(directory)
+        if state.get("status") in TERMINAL:
+            return
+        detail = runtime._safe_handoff(f"{type(error).__name__}: {error}")
+        try:
+            self._event(goal_id, "host_supervision_lost", error_type=type(error).__name__,
+                        error=detail)
+        except OSError:
+            pass
+        # The goal is no longer supervised. Say so durably instead of leaving
+        # a RUNNING goal that claims autonomous progress nobody is delivering.
+        # The update is MERGED into the on-disk state: a degraded read must
+        # never be written back, or the goal's id and recovery count would be
+        # destroyed along with the rest of its state.
+        try:
+            self._merge_state(directory, {
+                "status": "NEEDS_USER", "supervision_lost": True,
+                "supervision_lost_at": runtime.now(),
+                "supervision_lost_reason": detail,
+                "blocker": {
+                    "kind": "host_supervision_lost",
+                    "message": ("The host supervisor for this goal stopped without "
+                                "supervising it; the goal is not running autonomously."),
+                    "evidence": [detail],
+                }})
+        except OSError:
+            pass
+
+    def _read_loss_state(self, directory):
+        """Read the goal's state for the loss callback, never raising.
+
+        The loss callback is the only thing that can record that supervision
+        ended, so a corrupt or locked state file must degrade to an empty
+        state rather than kill the callback and lose the loss.
+
+        The result is NOT safe to write back: a degraded read is empty, so
+        writing it would replace the goal's real state with a five-field
+        stub.  Callers must merge into the on-disk state instead.
+        """
+        try:
+            state = self._read(directory / "state.json", {})
+        except (OSError, ValueError):
+            return {}
+        return state if isinstance(state, dict) else {}
+
+    def _merge_state(self, directory, changes, remove=()):
+        """Merge changes into the goal's on-disk state, never dropping fields.
+
+        A read-modify-write is used instead of writing the dict the caller
+        happened to hold, because the caller's copy may be a degraded empty
+        read: writing that back would destroy every field the read failed to
+        return.
+
+        `remove` names fields to delete, for the case where a merge must also
+        clear a stale field rather than merely overwrite it.
+
+        If the read itself fails, nothing is written.  A degraded read that
+        is written back as a stub is worse than no durable update at all:
+        the goal's id, recovery count and session history are exactly what
+        the controller needs to make progress.  The caller keeps its event
+        record, and the report still derives the loss from the live watcher.
+        """
+        path = directory / "state.json"
+        try:
+            current = self._read(path, {})
+        except (OSError, ValueError):
+            return None
+        if not isinstance(current, dict):
+            return None
+        for field in remove:
+            current.pop(field, None)
+        current.update(changes)
+        runtime.atomic_json(path, current)
+        return current
+
 
     async def _watch(self, goal_id):
         directory = self._dir(goal_id)
         while not self.closing:
-            state = self._read(directory / "state.json", {})
-            if (directory / "cancel.request").exists() or state.get("status") in TERMINAL:
-                return
             job, proc = runtime.Job(), None
             try:
+                state = self._read(directory / "state.json", {})
+                if (directory / "cancel.request").exists() or state.get("status") in TERMINAL:
+                    return
                 with (directory / "runner-stderr.log").open("a", encoding="utf-8") as err:
                     python = Path(sys.executable)
                     if python.name.lower() == "pythonw.exe":
@@ -238,37 +446,91 @@ class GoalManager:
                         cwd=self.workspace, stdin=subprocess.DEVNULL,
                         stdout=subprocess.DEVNULL, stderr=err,
                         creationflags=0x4 | subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP)
-                    job.assign(proc)
                     self.processes[goal_id] = (proc, job)
-                    runtime.atomic_json(directory / "process.json", {
-                        "pid": proc.pid, "process_token": runtime.process_token(proc.pid)})
-                    self._event(goal_id, "controller_started", pid=proc.pid)
+                    job.assign(proc)
+                    process_record = {
+                        "pid": proc.pid, "process_token": runtime.process_token(proc.pid)}
+                    metadata_written = False
+                    while proc.poll() is None and not metadata_written and not self.closing:
+                        try:
+                            runtime.atomic_json(directory / "process.json", process_record)
+                            metadata_written = True
+                        except OSError as exc:
+                            self._lifecycle_event(
+                                goal_id, "host_process_metadata_recovery",
+                                error_type=type(exc).__name__)
+                            await asyncio.sleep(.1)
+                    # Continue supervising the same process even if it exits
+                    # before metadata is published; proc.wait() and the
+                    # terminal-state check below remain authoritative.
+                    self._lifecycle_event(goal_id, "controller_started", pid=proc.pid)
                     code = await asyncio.to_thread(proc.wait)
-                    self._event(goal_id, "controller_exited", exit_code=code)
+                    self._lifecycle_event(goal_id, "controller_exited", exit_code=code)
             except asyncio.CancelledError:
                 raise
             except Exception as exc:
-                self._event(goal_id, "host_recovery", error_type=type(exc).__name__)
+                # A transient host-side failure must not permanently orphan
+                # this goal. Do not launch another controller until the
+                # existing process boundary has been cleaned up and state can
+                # be read again.
+                try:
+                    self._event(goal_id, "host_recovery", error_type=type(exc).__name__)
+                except OSError:
+                    pass
+                if proc is not None:
+                    # Once a controller may have run, its external effects
+                    # are uncertain. Do not replay it automatically. Mark the
+                    # same goal suspended; returning normally would make the
+                    # report claim autonomous progress with no watcher.
+                    detail = runtime._safe_handoff(f"{type(exc).__name__}: {exc}")
+                    self.suspended_goals[goal_id] = detail
+                    while not self.closing:
+                        try:
+                            merged = self._merge_state(directory, {
+                                "status": "NEEDS_USER", "host_suspended": True,
+                                "host_suspended_at": runtime.now(),
+                                "host_suspended_reason": detail,
+                                "blocker": {
+                                    "kind": "host_outcome_uncertain",
+                                    "message": ("The controller may have performed external work; "
+                                                "automatic replay is suspended to avoid duplication."),
+                                    "evidence": [detail],
+                                }})
+                            if merged is None:
+                                raise OSError("goal state unreadable while recording uncertain outcome")
+                            break
+                        except OSError:
+                            await asyncio.sleep(.2)
+                    return
             finally:
-                job.close()
-                if proc is not None and proc.poll() is None:
-                    proc.kill()
-                    await asyncio.to_thread(proc.wait)
-                self.processes.pop(goal_id, None)
+                try:
+                    job.close()
+                except Exception as exc:
+                    self._lifecycle_event(goal_id, "host_job_close_recovery",
+                                          error_type=type(exc).__name__)
+                if proc is not None and proc.poll() is not None:
+                    self.processes.pop(goal_id, None)
             while True:
                 if self.closing or (directory / "cancel.request").exists():
                     return
-                state = self._read(directory / "state.json", {})
-                if state.get("status") in TERMINAL:
-                    return
-                state.update(status="RECOVERING", host_restart_count=state.get("host_restart_count", 0) + 1)
                 try:
-                    runtime.atomic_json(directory / "state.json", state)
+                    current = self._read(directory / "state.json", {})
+                    if current.get("status") in TERMINAL:
+                        return
+                    current.update(status="RECOVERING",
+                                   host_restart_count=current.get("host_restart_count", 0) + 1)
+                    runtime.atomic_json(directory / "state.json", current)
                     break
-                except PermissionError as exc:
-                    if getattr(exc, "winerror", None) not in (5, 32, 33):
+                except OSError as exc:
+                    if isinstance(exc, PermissionError) and getattr(exc, "winerror", None) not in (5, 32, 33):
                         raise
-                    self._event(goal_id, "host_snapshot_recovery", winerror=exc.winerror)
+                    try:
+                        fields = ({"winerror": exc.winerror} if isinstance(exc, PermissionError)
+                                  and getattr(exc, "winerror", None) is not None
+                                  else {"error_type": type(exc).__name__})
+                        self._event(goal_id, "host_snapshot_recovery", **fields)
+                    except OSError:
+                        pass
                     await asyncio.sleep(.2)
             # Yield to other goals between real process-exit events; never a retry ceiling.
             await asyncio.sleep(.2)
@@ -289,8 +551,14 @@ class GoalManager:
 
         unresolved = []
         for path in (self.state_root / "stacks").glob("*/stack.json"):
-            stack = self._read(path)
-            if stack.get("goal_id") != goal_id:
+            try:
+                stack = self._read(path)
+            except (OSError, ValueError):
+                # A stack file that cannot be read must not end the cleanup:
+                # the goal would stay in CANCELING forever with no way out.
+                unresolved.append(f"unreadable_stack:{path.parent.name}")
+                continue
+            if not isinstance(stack, dict) or stack.get("goal_id") != goal_id:
                 continue
             for role in stack["roles"]:
                 assignments = [self._read(p) for p in (path.parent / "assignments").glob("*.json")]
@@ -323,16 +591,114 @@ class GoalManager:
 
     def _launch_cancel(self, goal_id):
         if goal_id not in self.cancel_watchers or self.cancel_watchers[goal_id].done():
-            self.cancel_watchers[goal_id] = asyncio.create_task(self._finish_cancel(goal_id))
+            watcher = asyncio.create_task(self._finish_cancel(goal_id))
+            self.cancel_watchers[goal_id] = watcher
+            watcher.add_done_callback(
+                lambda finished, goal_id=goal_id: self._record_cancel_loss(goal_id, finished))
+
+    async def _terminate_controller(self, goal_id):
+        """Keep ownership and retry until the registered controller is exited."""
+        while not self.closing:
+            registered = self.processes.get(goal_id)
+            if registered is None:
+                return True
+            proc, job = registered
+            try:
+                if proc.poll() is not None:
+                    try:
+                        job.close()
+                    except Exception:
+                        pass
+                    self.processes.pop(goal_id, None)
+                    return True
+                try:
+                    job.close()
+                except Exception:
+                    pass
+                if proc.poll() is None:
+                    proc.kill()
+                await asyncio.to_thread(proc.wait)
+                if proc.poll() is not None:
+                    self.processes.pop(goal_id, None)
+                    return True
+            except asyncio.CancelledError:
+                raise
+            except Exception as exc:
+                try:
+                    self._event(goal_id, "host_process_termination_recovery",
+                                error_type=type(exc).__name__)
+                except OSError:
+                    pass
+            await asyncio.sleep(.2)
+        return False
+
+    def _record_cancel_loss(self, goal_id, watcher):
+        """Record that a goal's cleanup watcher stopped without cleaning up.
+
+        The same defect class as the supervision watcher: a background task
+        whose exception is never observed ends the cleanup with no trace,
+        leaving the goal stuck in CANCELING with the report promising an
+        automatic continuation that has already stopped.
+        """
+        if self.closing or watcher.cancelled():
+            return
+        error = watcher.exception()
+        if error is None:
+            return
+        if self.cancel_watchers.get(goal_id) is not watcher:
+            return
+        directory = self._dir(goal_id)
+        detail = runtime._safe_handoff(f"{type(error).__name__}: {error}")
+        try:
+            self._event(goal_id, "host_cancel_lost", error_type=type(error).__name__,
+                        error=detail)
+        except OSError:
+            pass
+        try:
+            state = self._read_loss_state(directory)
+            if state.get("status") in ("COMPLETE", "CANCELED"):
+                return
+            self._merge_state(directory, {
+                "status": "NEEDS_USER", "cancel_lost": True,
+                "cancel_lost_at": runtime.now(), "cancel_lost_reason": detail,
+                "blocker": {
+                    "kind": "host_cancel_lost",
+                    "message": ("The host cleanup for this goal stopped without "
+                                "finishing; the goal is stuck in CANCELING."),
+                    "evidence": [detail],
+                }})
+        except OSError:
+            pass
 
     async def _finish_cancel(self, goal_id):
         while not self.closing:
-            unresolved = await self._cancel_owned_tasks(goal_id)
-            state = self._read(self._dir(goal_id) / "state.json", {})
-            state.update(status="CANCELING" if unresolved else "CANCELED", unresolved_task_ids=unresolved)
-            runtime.atomic_json(self._dir(goal_id) / "state.json", state)
-            if not unresolved:
-                return
+            try:
+                # Publish the canceling state under the already-installed
+                # cleanup owner. A transient read/write error must not escape
+                # the initial cancel() call and orphan durable cancel intent.
+                state = self._merge_state(self._dir(goal_id), {"status": "CANCELING"})
+                if state is None:
+                    raise OSError("goal state unavailable while publishing cancellation")
+                if not await self._terminate_controller(goal_id):
+                    return
+                unresolved = await self._cancel_owned_tasks(goal_id)
+                # MERGED, not written from the dict that was read: a degraded read
+                # must never be written back, or the cleanup would destroy the
+                # goal's id and recovery count on its way to the terminal state.
+                merged = self._merge_state(self._dir(goal_id), {
+                    "status": "CANCELING" if unresolved else "CANCELED",
+                    "unresolved_task_ids": unresolved})
+                if merged is None:
+                    raise OSError("goal state is unreadable; cancellation remains pending")
+                if not unresolved:
+                    return
+            except asyncio.CancelledError:
+                raise
+            except Exception as exc:
+                try:
+                    self._event(goal_id, "host_cancel_recovery", error_type=type(exc).__name__)
+                except OSError:
+                    pass
             await asyncio.sleep(1)
 
     async def cancel(self, goal_id):
@@ -342,17 +708,22 @@ class GoalManager:
         directory = self._dir(goal_id)
         (directory / "cancel.request").write_text("explicit controller cancellation\n", encoding="utf-8")
         process = self.processes.get(goal_id)
-        if process:
-            process[1].close()
         watcher = self.watchers.get(goal_id)
-        if watcher:
-            await asyncio.gather(watcher, return_exceptions=True)
-        unresolved = await self._cancel_owned_tasks(goal_id)
-        state = self._read(directory / "state.json", {})
-        state.update(status="CANCELING" if unresolved else "CANCELED", unresolved_task_ids=unresolved)
-        runtime.atomic_json(directory / "state.json", state)
-        if unresolved:
-            self._launch_cancel(goal_id)
+        # Install the retry owner before any fallible task query or state
+        # publication. The cancel.request is durable intent and startup also
+        # restores this owner after a host restart.
+        self._launch_cancel(goal_id)
+        if process:
+            try:
+                process[1].close()
+            except Exception as exc:
+                try:
+                    self._event(goal_id, "host_job_close_recovery",
+                                error_type=type(exc).__name__)
+                except OSError:
+                    pass
+        if watcher and not watcher.done():
+            watcher.cancel()
         return self.get(goal_id)
 
     async def resume(self, goal_id):
@@ -360,12 +731,32 @@ class GoalManager:
         if record["controller_running"] or record["state"].get("status") == "COMPLETE":
             return record
         if record["state"].get("status") == "CANCELING":
-            raise ValueError("Owned task cancellation is still recovering; resume after it finishes")
+            # A cleanup that is still running must be waited out.  A cleanup
+            # that DIED is not still recovering: refusing the resume there
+            # would leave the owner with no operation that works at all.
+            if not record["state"].get("cancel_lost"):
+                raise ValueError("Owned task cancellation is still recovering; resume after it finishes")
         directory = self._dir(goal_id)
+        # The stale-loss fields are REMOVED, not just overwritten, so the
+        # update is a merge with explicit deletions rather than a merge with
+        # additions.  The state is read from the FILE again rather than from
+        # the report's copy, because the report degrades to a stub when the
+        # file cannot be read, and writing that stub back would destroy the
+        # goal's id and recovery count.
+        merged = self._merge_state(directory, {
+            "status": "RUNNING",
+            "last_error": ("Controller explicitly resumed this same goal; "
+                           "re-check current evidence.")},
+            remove=("supervision_lost", "supervision_lost_at",
+                    "supervision_lost_reason", "cancel_lost",
+                    "cancel_lost_at", "cancel_lost_reason", "blocker"))
+        if merged is None:
+            # The state file could not be read, so it cannot be updated
+            # without risking a truncation.  The goal stays as it was and the
+            # owner is told, rather than being handed a stubbed goal.
+            raise ValueError("Goal state could not be read; resume the goal again "
+                             "once its state file is readable")
         (directory / "cancel.request").unlink(missing_ok=True)
-        state = record["state"]
-        state.update(status="RUNNING", last_error="Controller explicitly resumed this same goal; re-check current evidence.")
-        runtime.atomic_json(directory / "state.json", state)
         self._launch(goal_id)
         return self.get(goal_id)
 
