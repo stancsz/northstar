@@ -816,6 +816,22 @@ def productive_process_matches(pid, expected_token):
         kernel.CloseHandle(handle)
 
 
+async def _close_resources(goals, stores):
+    """Attempt every owned close even if an earlier resource fails."""
+    first_error = None
+    for resource in (goals, *stores):
+        try:
+            await resource.close()
+        except BaseException as error:
+            if first_error is None:
+                first_error = error
+            else:
+                print(f"Additional resource close failed: {type(error).__name__}: {error}",
+                      file=sys.stderr, flush=True)
+    if first_error is not None:
+        raise first_error
+
+
 def build_app(executor: AgentExecutor | None = None):
     from starlette.applications import Starlette
     from stacks import StackManager
@@ -902,9 +918,7 @@ def build_app(executor: AgentExecutor | None = None):
         try:
             yield
         finally:
-            await goals.close()
-            for store in stores:
-                await store.close()
+            await _close_resources(goals, stores)
 
     app = Starlette(routes=[*routes, *manager.routes(), *goals.routes()], lifespan=lifespan)
     app.state.stack_manager = manager
