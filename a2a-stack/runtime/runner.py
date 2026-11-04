@@ -33,6 +33,12 @@ STATE = CONTROL / "status.json"
 LOCK = CONTROL / "owner.lock"
 RUNS = (STATE_ROOT / "runtime-tests" / "runs") if _TEST_CONTROL else (STATE_ROOT / "runs")
 POLL = 0.2
+# Native auto-memory reads and writes land in the shared Claude project-memory
+# directory, which is outside a worker's private source write scope.  The flag
+# is pinned child-only; it suppresses that automatic memory access and is not a
+# sandbox for arbitrary tool access.
+AUTO_MEMORY_FLAG = "CLAUDE_CODE_DISABLE_AUTO_MEMORY"
+AUTO_MEMORY_SETTINGS = json.dumps({"env": {AUTO_MEMORY_FLAG: "1"}})
 
 
 def now():
@@ -280,6 +286,9 @@ def claude_command(executable, prompt, allowed=None, max_turns=None):
         command += ["--max-turns", str(max_turns)]
     if allowed:
         command += ["--allowedTools", ",".join(allowed)]
+    # Child-only override: it outranks a higher-precedence profile setting and
+    # changes nothing else about the inherited model/auth/permission/tool setup.
+    command += ["--settings", AUTO_MEMORY_SETTINGS]
     command += ["--", prompt]
     return command
 
@@ -318,6 +327,9 @@ def broker(run_id, kind, command, prompt_file=None, timeout=None, max_turns=None
         if kind == "claude":
             cmd = claude_command(cmd[0], Path(prompt_file).read_text(encoding="utf-8"), allowed, max_turns)
         env = os.environ.copy()
+        if kind == "claude":
+            # Child-only: the parent environment is never mutated.
+            env[AUTO_MEMORY_FLAG] = "1"
         creation = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW | 0x00000004  # CREATE_SUSPENDED
         proc = subprocess.Popen(cmd, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE, text=True, encoding="utf-8", errors="replace",
