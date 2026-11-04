@@ -865,6 +865,7 @@ class BackgroundWaitCeilingTests(unittest.TestCase):
     inherited environment is never dumped.
     """
     FLAG = "CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS"
+    AUTO_MEMORY_FLAG = "CLAUDE_CODE_DISABLE_AUTO_MEMORY"
 
     def setUp(self):
         SCRATCH.mkdir(parents=True, exist_ok=True)
@@ -885,7 +886,7 @@ class BackgroundWaitCeilingTests(unittest.TestCase):
         """The env map carried by the child-only --settings argument."""
         self.assertIn("--settings", argv)
         payload = json.loads(argv[argv.index("--settings") + 1])
-        self.assertEqual(payload, {"env": {self.FLAG: "0"}})
+        self.assertEqual(payload, {"env": {self.FLAG: "0", self.AUTO_MEMORY_FLAG: "1"}})
         return payload["env"]
 
     def test_owner_argv_carries_the_child_only_settings_override(self):
@@ -962,6 +963,56 @@ class BackgroundWaitCeilingTests(unittest.TestCase):
                     expected = parent_value if parent_value is not None else "<ABSENT>"
                     self.assertEqual(observed, "FLAG=" + expected)
                     self.assertEqual(os.environ.get(self.FLAG), parent_value)
+
+    def _child_auto_memory_value(self, channel):
+        """Run one native child that reports the single auto-memory flag it sees."""
+        script = ("import os,sys; sys.stdin.read(); "
+                  "print('FLAG=' + os.environ.get(%r, '<ABSENT>'))" % self.AUTO_MEMORY_FLAG)
+        journal = runner.Journal(self.goal, self.spec)
+        backend = runner.NativeBackend(self.spec, journal)
+        result = backend.process([sys.executable, "-c", script], None, channel)
+        self.assertEqual(result["exit_code"], 0)
+        return result["output"].strip()
+
+    def test_owner_child_disables_auto_memory_without_mutating_the_parent(self):
+        """Native auto-memory would write into the shared project-memory directory."""
+        for parent_value in (None, "parent-sentinel-value"):
+            with self.subTest(parent_value=parent_value):
+                with mock.patch.dict(os.environ):
+                    if parent_value is None:
+                        os.environ.pop(self.AUTO_MEMORY_FLAG, None)
+                    else:
+                        os.environ[self.AUTO_MEMORY_FLAG] = parent_value
+                    observed = self._child_auto_memory_value("owner")
+                    self.assertEqual(observed, "FLAG=1")
+                    self.assertEqual(self.AUTO_MEMORY_FLAG in os.environ, parent_value is not None)
+                    self.assertEqual(os.environ.get(self.AUTO_MEMORY_FLAG), parent_value)
+
+    def test_supervisor_child_disables_auto_memory_without_mutating_the_parent(self):
+        for parent_value in (None, "parent-sentinel-value"):
+            with self.subTest(parent_value=parent_value):
+                with mock.patch.dict(os.environ):
+                    if parent_value is None:
+                        os.environ.pop(self.AUTO_MEMORY_FLAG, None)
+                    else:
+                        os.environ[self.AUTO_MEMORY_FLAG] = parent_value
+                    observed = self._child_auto_memory_value("supervisor")
+                    self.assertEqual(observed, "FLAG=1")
+                    self.assertEqual(self.AUTO_MEMORY_FLAG in os.environ, parent_value is not None)
+                    self.assertEqual(os.environ.get(self.AUTO_MEMORY_FLAG), parent_value)
+
+    def test_check_child_does_not_disable_auto_memory(self):
+        for parent_value in (None, "parent-sentinel-value"):
+            with self.subTest(parent_value=parent_value):
+                with mock.patch.dict(os.environ):
+                    if parent_value is None:
+                        os.environ.pop(self.AUTO_MEMORY_FLAG, None)
+                    else:
+                        os.environ[self.AUTO_MEMORY_FLAG] = parent_value
+                    observed = self._child_auto_memory_value("check")
+                    expected = parent_value if parent_value is not None else "<ABSENT>"
+                    self.assertEqual(observed, "FLAG=" + expected)
+                    self.assertEqual(os.environ.get(self.AUTO_MEMORY_FLAG), parent_value)
 
     def test_check_command_argv_is_untouched(self):
         journal = runner.Journal(self.goal, self.spec)

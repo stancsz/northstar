@@ -121,7 +121,18 @@ CREATION_FLAGS = 0x4 | subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCE
 # is pinned to 0 through its copied environment and through a child-only
 # --settings override; nothing else about the inherited configuration changes.
 BG_WAIT_FLAG = "CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS"
-BG_WAIT_SETTINGS = json.dumps({"env": {BG_WAIT_FLAG: "0"}})
+# Native auto-memory would write into the shared Claude project-memory
+# directory, which is outside a worker's private source write scope.  The flag
+# is pinned child-only; measured on Claude Code CLI 2.1.251 it suppressed those
+# native memory writes in an A/B run.  It is not a sandbox for arbitrary tool
+# access, it does not cover other writers to that directory, and the flagged
+# run did not separately measure memory reads or the user-level CLAUDE.md write.
+AUTO_MEMORY_FLAG = "CLAUDE_CODE_DISABLE_AUTO_MEMORY"
+# The child-only --settings payload handed to a Claude child.  It carries BOTH
+# child flags in ONE occurrence: the CLI honors only the LAST --settings
+# argument and discards earlier ones instead of merging them, so splitting
+# these flags across two occurrences would silently drop one of them.
+CHILD_SETTINGS = json.dumps({"env": {BG_WAIT_FLAG: "0", AUTO_MEMORY_FLAG: "1"}})
 
 
 class JobRejected(Exception):
@@ -331,7 +342,7 @@ def _build_claude_argv(config: dict[str, Any]) -> list[str]:
         argv += ["--mcp-config", str(config["mcp_config"]), "--strict-mcp-config"]
     # Child-only override: it outranks a higher-precedence profile setting and
     # changes nothing else about the inherited model/auth/permission/tool setup.
-    argv += ["--settings", BG_WAIT_SETTINGS]
+    argv += ["--settings", CHILD_SETTINGS]
     return argv
 
 
@@ -344,6 +355,7 @@ def _child_env(is_claude: bool) -> dict[str, str]:
     env = dict(os.environ, PYTHONIOENCODING="utf-8", CLAUDE_CODE_RETRY_WATCHDOG="1")
     if is_claude:
         env[BG_WAIT_FLAG] = "0"
+        env[AUTO_MEMORY_FLAG] = "1"
     return env
 
 

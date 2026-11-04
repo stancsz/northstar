@@ -38,7 +38,18 @@ USER_GOAL_MUTATIONS = tuple("mcp__northstar_a2a__" + name for name in ("set_goal
 # reaches the child both through the copied environment and through the
 # child-only --settings override, which outranks a higher-precedence profile.
 BG_WAIT_FLAG = "CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS"
-BG_WAIT_SETTINGS = json.dumps({"env": {BG_WAIT_FLAG: "0"}})
+# Native auto-memory would write into the shared Claude project-memory
+# directory, which is outside a worker's private source write scope.  The flag
+# is pinned child-only; measured on Claude Code CLI 2.1.251 it suppressed those
+# native memory writes in an A/B run.  It is not a sandbox for arbitrary tool
+# access, it does not cover other writers to that directory, and the flagged
+# run did not separately measure memory reads or the user-level CLAUDE.md write.
+AUTO_MEMORY_FLAG = "CLAUDE_CODE_DISABLE_AUTO_MEMORY"
+# The child-only --settings payload handed to a Claude child.  It carries BOTH
+# child flags in ONE occurrence: the CLI honors only the LAST --settings
+# argument and discards earlier ones instead of merging them, so splitting
+# these flags across two occurrences would silently drop one of them.
+CHILD_SETTINGS = json.dumps({"env": {BG_WAIT_FLAG: "0", AUTO_MEMORY_FLAG: "1"}})
 OWNER_SCHEMA = {"type": "object", "additionalProperties": False, "properties": {
     "status": {"enum": ["complete", "continue", "needs_user"]},
     "summary": {"type": "string"}, "candidate_manifest": {"type": ["string", "null"]},
@@ -205,7 +216,7 @@ def claude_argv(spec, session_id=None, supervisor=False, executable=None):
         argv += ["--resume", session_id]
     argv += ["--disallowedTools", ",".join(("Bash", "Edit", "Write", *USER_GOAL_MUTATIONS,
                                          *(MCP_TOOLS if supervisor else ())))]
-    argv += ["--settings", BG_WAIT_SETTINGS]
+    argv += ["--settings", CHILD_SETTINGS]
     return argv
 
 
@@ -303,6 +314,7 @@ class NativeBackend:
             # Child-only: the parent environment is never mutated, and a plain
             # check command keeps exactly the environment it had before.
             env[BG_WAIT_FLAG] = "0"
+            env[AUTO_MEMORY_FLAG] = "1"
         job = runtime.Job() if os.name == "nt" else None
         proc = None
         try:

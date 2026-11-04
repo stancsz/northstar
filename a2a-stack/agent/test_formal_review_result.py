@@ -364,6 +364,7 @@ class FormalReviewResultTests(unittest.IsolatedAsyncioTestCase):
 
 
 FLAG = "CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS"
+AUTO_MEMORY_FLAG = "CLAUDE_CODE_DISABLE_AUTO_MEMORY"
 
 
 def claude_config(**overrides):
@@ -382,7 +383,7 @@ class ClaudeChildSettingsTests(unittest.TestCase):
         """The env map carried by the child-only --settings argument."""
         self.assertIn("--settings", argv)
         payload = json.loads(argv[argv.index("--settings") + 1])
-        self.assertEqual(payload, {"env": {FLAG: "0"}})
+        self.assertEqual(payload, {"env": {FLAG: "0", AUTO_MEMORY_FLAG: "1"}})
         return payload["env"]
 
     def test_claude_argv_carries_the_child_only_settings_override(self):
@@ -422,6 +423,54 @@ class ClaudeChildSettingsTests(unittest.TestCase):
         # A check child is never forced: it keeps exactly the inherited value.
         self.assertEqual(env.get(FLAG, "<ABSENT>"), parent_value)
         self.assertEqual(os.environ.get(FLAG, "<ABSENT>"), parent_value)
+
+    def test_claude_child_environment_disables_auto_memory_without_mutating_the_parent(self):
+        """Native auto-memory would write into the shared project-memory directory."""
+        for parent_value in (None, "parent-sentinel-value"):
+            with self.subTest(parent_value=parent_value):
+                with mock.patch.dict(os.environ):
+                    if parent_value is None:
+                        os.environ.pop(AUTO_MEMORY_FLAG, None)
+                    else:
+                        os.environ[AUTO_MEMORY_FLAG] = parent_value
+                    env = service._child_env(True)
+                    self.assertEqual(env[AUTO_MEMORY_FLAG], "1")
+                    # The parent keeps exactly the state it had before.
+                    self.assertEqual(AUTO_MEMORY_FLAG in os.environ, parent_value is not None)
+                    self.assertEqual(os.environ.get(AUTO_MEMORY_FLAG), parent_value)
+
+    def test_check_child_environment_does_not_disable_auto_memory(self):
+        parent_value = os.environ.get(AUTO_MEMORY_FLAG, "<ABSENT>")
+        env = service._child_env(False)
+        # A check child is never forced: it keeps exactly the inherited value.
+        self.assertEqual(env.get(AUTO_MEMORY_FLAG, "<ABSENT>"), parent_value)
+        self.assertEqual(os.environ.get(AUTO_MEMORY_FLAG, "<ABSENT>"), parent_value)
+
+    def test_run_job_hands_the_disabled_auto_memory_environment_to_the_claude_child(self):
+        """The real execution path builds the child environment, not a copy."""
+        FIXTURES.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=FIXTURES) as scratch:
+            root = Path(scratch)
+            prompt = root / "prompt.txt"
+            prompt.write_text("fixture prompt\n", encoding="utf-8")
+            captured = {}
+
+            def popen(argv, **kwargs):
+                captured["argv"] = list(argv)
+                captured["env"] = kwargs.get("env")
+                raise OSError("synthetic launch stop")
+
+            config = claude_config(cwd=str(root), prompt_path=prompt)
+            updater = mock.Mock()
+            updater.task_id = "auto-memory-fixture"
+            with mock.patch.object(service, "TASKS_DIR", root / "tasks"), \
+                 mock.patch.object(service.subprocess, "Popen", side_effect=popen):
+                with self.assertRaises(OSError):
+                    asyncio.run(service.RegisteredJobExecutor._run_job(
+                        service.RegisteredJobExecutor.__new__(service.RegisteredJobExecutor),
+                        config, service._ActiveJob(), updater))
+        self.assertEqual(captured["env"][AUTO_MEMORY_FLAG], "1")
+        self.settings_env(captured["argv"])
 
     def test_run_job_hands_the_pinned_environment_to_the_claude_child(self):
         """The real execution path builds the child environment, not a copy."""
