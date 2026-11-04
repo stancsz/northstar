@@ -677,16 +677,69 @@ class RegisteredJobExecutor(AgentExecutor):
             raise
         finally:
             self._active.pop(task_id, None)
-            runner.atomic_json(TASKS_DIR / str(task_id) / "terminal.json", {
-                "task_id": task_id, "state": terminal_state,
-                "finished_at": runner.now(),
-            })
+            self._write_terminal_receipt(task_id, terminal_state)
 
     async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         entry = self._active.get(context.task_id)
         if entry is None:
             return
         await self._terminate(entry)
+
+    def _write_terminal_receipt(self, task_id, terminal_state):
+        """Write the executor's terminal receipt without contradicting the host.
+
+        The task store owns the receipt.  It publishes the receipt from
+        inside the same critical section as the commit that made the task
+        terminal, so the receipt's `state` always matches the database.
+
+        The executor's own finally-hook runs before the A2A request handler
+        has persisted the terminal task event, so what it knows is its own
+        local outcome.  Its write is therefore provisional: it supplies the
+        receipt when the store has not published one yet, and it never
+        overwrites a `state` the store has already published.  The store's
+        later publication corrects the receipt to the authoritative state.
+
+        The write is a CREATE, not a read-modify-write.  A read-modify-write
+        would read the receipt, build a new one, and write it, and the store
+        could publish between the read and the write -- so the executor's
+        write would land last and overwrite the authoritative state with the
+        executor's stale opinion.  Publishing the receipt by an exclusive
+        link makes the executor's write win only when there is no receipt
+        yet, and leaves the store's receipt untouched otherwise.
+
+        The write is additive only.  It never revives recovery evidence the
+        store has dropped because a later commit superseded it.
+        """
+        path = TASKS_DIR / str(task_id) / "terminal.json"
+        receipt = {
+            "task_id": task_id,
+            "state": terminal_state,
+            "finished_at": runner.now(),
+        }
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            staging = path.with_name(f".{path.name}.executor.tmp")
+            staging.write_text(
+                json.dumps(receipt, ensure_ascii=False, sort_keys=True) + "\n",
+                encoding="utf-8")
+            try:
+                # The link is the publish: it fails if the receipt already
+                # exists, so the executor's write cannot clobber the state
+                # the store published.
+                path.hardlink_to(staging)
+            except FileExistsError:
+                # The store already published a receipt, or an earlier write
+                # of this receipt landed.  Either way the receipt on disk is
+                # the one to keep: the executor's state is provisional and
+                # must never overwrite the host's published state.
+                return
+            finally:
+                staging.unlink(missing_ok=True)
+        except OSError:
+            # The receipt could not be written.  The store publishes the
+            # authoritative receipt from the terminal commit, so a missing
+            # provisional receipt is not a lost outcome.
+            return
 
 
 # --------------------------------------------------------------------------- #
