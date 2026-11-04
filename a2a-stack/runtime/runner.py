@@ -42,19 +42,56 @@ def now():
 def atomic_json(path: Path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_name(path.name + f".{os.getpid()}.{uuid.uuid4().hex}.tmp")
-    temp.write_text(json.dumps(data, indent=2), encoding="utf-8")
-    deadline = time.monotonic() + 1.0
+    pending = None
     try:
-        while True:
-            try:
-                os.replace(temp, path)
-                return
-            except PermissionError:
-                if time.monotonic() >= deadline:
-                    raise
-                time.sleep(0.025)
+        try:
+            temp.write_text(json.dumps(data, indent=2), encoding="utf-8")
+            deadline = time.monotonic() + 1.0
+            while True:
+                try:
+                    os.replace(temp, path)
+                    return
+                except PermissionError:
+                    if time.monotonic() >= deadline:
+                        raise
+                    time.sleep(0.025)
+        except BaseException as exc:
+            # The exception THIS frame is unwinding, captured here rather than
+            # read from sys.exc_info().  When this frame has its own exception
+            # in flight, sys.exc_info() names that same one, so the two agree.
+            # They differ only when this frame has NOTHING in flight -- the
+            # success path -- where sys.exc_info() names whatever the THREAD
+            # is handling, and an outer except handler's error was therefore
+            # mistaken for one to preserve: the cleanup failure was swallowed
+            # and lost.  Capturing the frame's own exception makes the two
+            # cases distinguishable: pending is None exactly when there is
+            # nothing to preserve.
+            pending = exc
+            raise
     finally:
-        temp.unlink(missing_ok=True)
+        # Cleanup must never replace an in-flight failure, and must never be
+        # swallowed either.  The callers classify the reported winerror to
+        # decide whether a snapshot write is a recoverable Windows sharing
+        # violation, so the reported error must be the writer's own; and on
+        # the success path there is nothing to preserve, so a failing cleanup
+        # has to be raised rather than lost.
+        try:
+            temp.unlink(missing_ok=True)
+        except OSError as cleanup_error:
+            if pending is None:
+                raise
+            if hasattr(pending, "add_note"):
+                pending.add_note(f"checkpoint temp cleanup failed: {cleanup_error}")
+            else:
+                # BaseException.add_note is 3.11+ and a2a-sdk admits 3.10, so
+                # the cleanup failure is attached as an attribute instead of
+                # being lost.  Some exception types reject arbitrary
+                # attributes, and this assignment must not itself raise and
+                # replace the in-flight error.
+                try:
+                    pending.cleanup_error = cleanup_error
+                except Exception:  # noqa: BLE001 - the in-flight error wins
+                    pass
 
 
 def process_token(pid: int):
