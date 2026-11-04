@@ -749,7 +749,8 @@ class GoalManager:
                            "re-check current evidence.")},
             remove=("supervision_lost", "supervision_lost_at",
                     "supervision_lost_reason", "cancel_lost",
-                    "cancel_lost_at", "cancel_lost_reason", "blocker"))
+                    "cancel_lost_at", "cancel_lost_reason", "host_suspended",
+                    "host_suspended_at", "host_suspended_reason", "blocker"))
         if merged is None:
             # The state file could not be read, so it cannot be updated
             # without risking a truncation.  The goal stays as it was and the
@@ -757,6 +758,7 @@ class GoalManager:
             raise ValueError("Goal state could not be read; resume the goal again "
                              "once its state file is readable")
         (directory / "cancel.request").unlink(missing_ok=True)
+        self.suspended_goals.pop(goal_id, None)
         self._launch(goal_id)
         return self.get(goal_id)
 

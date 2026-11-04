@@ -122,6 +122,35 @@ class SupervisionLossTests(unittest.IsolatedAsyncioTestCase):
     def state(self):
         return json.loads(self.state_path.read_text(encoding="utf-8"))
 
+    async def test_explicit_resume_clears_uncertain_suspension_after_state_commit(self):
+        self.real_atomic(self.state_path, {
+            **self.state(), "status": "NEEDS_USER", "host_suspended": True,
+            "host_suspended_at": "earlier", "host_suspended_reason": "uncertain",
+            "blocker": {"kind": "host_outcome_uncertain"},
+        })
+        self.manager.suspended_goals[self.goal_id] = "uncertain"
+        with patch.object(self.manager, "_launch") as launch:
+            await self.manager.resume(self.goal_id)
+        launch.assert_called_once_with(self.goal_id)
+        self.assertNotIn(self.goal_id, self.manager.suspended_goals)
+        for field in ("host_suspended", "host_suspended_at", "host_suspended_reason"):
+            self.assertNotIn(field, self.state())
+        self.assertFalse(self.manager.report(self.goal_id)["supervision_lost"])
+
+    async def test_failed_resume_keeps_uncertain_suspension(self):
+        self.real_atomic(self.state_path, {
+            **self.state(), "status": "NEEDS_USER", "host_suspended": True,
+            "host_suspended_reason": "uncertain",
+        })
+        self.manager.suspended_goals[self.goal_id] = "uncertain"
+        with patch.object(self.manager, "_merge_state", return_value=None), \
+                patch.object(self.manager, "_launch") as launch:
+            with self.assertRaises(ValueError):
+                await self.manager.resume(self.goal_id)
+        launch.assert_not_called()
+        self.assertTrue(self.state()["host_suspended"])
+        self.assertIn(self.goal_id, self.manager.suspended_goals)
+
     async def test_assignment_failure_keeps_live_controller_owned_for_cancel(self):
         class LiveProcess(FakeProcess):
             def __init__(self):
