@@ -1,6 +1,6 @@
 # Goal: Clear, economical subagent dispatch context
 
-Status: Active. A Codex implementation increment added an empty-assignment fail-fast guard and two synthetic cases; parent acceptance and rerun passed 24/24. A separate CLI reviewer read the assigned files but was stopped at 90 seconds without a verdict or report. The implementation worker used 929,662 input tokens and exceeded its exact read ranges once. The experimental skill-discovery flag's context effect is unproven. Cross-run adherence, reliability and economy remain open; current Claude process configuration does not provide a verified Subroute inference credential.
+Status: Active. A Codex implementation increment added an empty-assignment fail-fast guard and two synthetic cases; parent acceptance and rerun passed 24/24. A separate CLI reviewer read the assigned files but was stopped at 90 seconds without a verdict or report. The implementation worker used 929,662 input tokens and exceeded its exact read ranges once. The experimental skill-discovery flag's context effect is unproven. Cross-run adherence, reliability and economy remain open; the recorded Claude process configuration did not provide a verified inference credential for local LiteLLM on port 4000.
 
 ## Outcome and acceptance
 

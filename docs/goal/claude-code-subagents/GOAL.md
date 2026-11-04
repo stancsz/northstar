@@ -1,6 +1,6 @@
 # Goal: Claude Code Subagents skill
 
-Status: source and installed skill updated; Codex CLI/Subroute implementation and independent source review succeeded. Current Claude process environment points to Badlands with `apiKeyHelper`; no process-scoped Subroute inference key is present, so Claude implementation acceptance remains unverified.
+Status at the recorded evaluation: source and installed skill updated; the Codex CLI integration with local LiteLLM on port 4000 and independent source review succeeded. The Claude process environment pointed to Badlands with `apiKeyHelper`; no process-scoped local LiteLLM inference key was present, so Claude implementation acceptance remained unverified.
 
 ## Outcome
 
