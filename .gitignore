@@ -24,3 +24,6 @@ Thumbs.db
 
 # A2A test scratch trees are disposable and must not be tracked
 /a2a-stack/scratchtmp/
+
+# Local Wrangler cache only; keep other project configuration visible
+/.wrangler/cache/
