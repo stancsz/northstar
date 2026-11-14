@@ -44,6 +44,8 @@ For ordinary consultation outside capability/visual triggers, **all four conditi
 
 Configure `EXPERTS_BASE_URL` (or `--base-url`) and `EXPERTS_API_KEY` in the caller environment, and select models via `NORTHSTAR_ADVISOR_MODEL` / `NORTHSTAR_COUNCIL_MODEL` (or `--model` / `--council-model`). On Windows, the caller can read a saved user `EXPERTS_API_KEY` for a local loopback service only when the process environment variable is absent. Never place credentials in a packet or file; on HTTP 401, fix the environment key rather than retrying.
 
+`ask_expert.py` sends a direct OpenAI-compatible Chat Completions request to `{base_url}/chat/completions`. Set the base URL to the service's API prefix, usually including `/v1` (for example, `http://127.0.0.1:PORT/v1`), and make sure that URL is reachable from the process running the script. A Docker service name works only from a container on the matching network; a host process needs a published host port. The caller does not invoke a gateway's model-selected Advisor tool or inherit its saved model selection. Choose a model identifier or alias exposed by the selected Chat Completions service. The default model name is `default`, which works only if that service defines it. A service that exposes Advisor solely as a native tool inside another protocol is not compatible with this direct caller.
+
 Keep the packet under **4,000 characters** (hard limit **6,000**), stripping chronology, raw logs, full files, speculation, and secrets:
 1. **Decision or blocker** in one sentence.
 2. **3–6 observed facts** as single bullets (at most one exact error/code excerpt ≤ 400 characters).

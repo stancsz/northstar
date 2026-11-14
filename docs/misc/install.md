@@ -120,7 +120,7 @@ Use your host's configured skills directory if it differs. The skill includes a 
 
 ## Advisor prerequisites
 
-Ordinary compact consultation requires Python 3.10+ and an already-configured Chat Completions service (`EXPERTS_BASE_URL` and `EXPERTS_API_KEY`). Copying the skills does not deploy a service, supply credentials or grant spending/data-transmission authority.
+Ordinary compact consultation requires Python 3.10+ and an already-configured OpenAI-compatible Chat Completions service (`EXPERTS_BASE_URL` and `EXPERTS_API_KEY`). The base URL is the API prefix, usually ending in `/v1`; it must be reachable from the process running the caller. A gateway's native tool-only Advisor route is not a Chat Completions endpoint. Copying the skills does not deploy a service, supply credentials or grant spending/data-transmission authority. See the [Advisor Council connection contract](../../skills/advisor-council/SKILL.md#make-a-compact-advice-request).
 
 On Windows, the caller can read a saved user `EXPERTS_API_KEY` for a local loopback service when the process environment variable is absent. See the [authentication behavior](../../skills/advisor-council/SKILL.md#make-a-compact-advice-request). HTTP 401 requires correcting the key in the environment, not disabling authentication.
 
