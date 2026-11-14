@@ -120,7 +120,7 @@ flowchart TD
     L --> N
 ```
 
-核心工作方法以 Markdown 提供。Task Completion Review 附带可选的 Stop hook 适配器；复制技能不会自动启用 hook，也不会提升平台权限。包内另附 Advisor 调用器和可选 reader；[Advisor 服务](install.md#advisor-prerequisites)需单独配置，安装不会启动服务或发起模型调用。非视觉执行、协调和 QA 无需该服务即可使用。未决的视觉或审美分歧使用 [Advisor Council 截图指导](../../skills/advisor-council/SKILL.md#mandatory-visual-and-aesthetic-guidance)（主动用 `--image` 附上图片），而常规功能与页面视觉验收由 [Independent QA](../../skills/independent-qa/SKILL.md) 完成。
+核心工作方法以 Markdown 提供。Task Completion Review 附带可选的 Stop hook 适配器；复制技能不会自动启用 hook，也不会提升平台权限。包内另附 Advisor 调用器和可选 reader；普通文本咨询默认优先使用已配置的 [Advisor 服务](install.md#advisor-prerequisites)，当服务地址未配置或预检连接失败时，可通过现有 Codex 登录回退到 GPT-6.1 Terra 或 Sol。复杂 council、多模型、图片和 reader 请求仍需该服务。安装不会启动服务或发起模型调用。非视觉执行、协调和 QA 无需该服务即可使用。未决的视觉或审美分歧使用 [Advisor Council 截图指导](../../skills/advisor-council/SKILL.md#mandatory-visual-and-aesthetic-guidance)（主动用 `--image` 附上图片），而常规功能与页面视觉验收由 [Independent QA](../../skills/independent-qa/SKILL.md) 完成。
 
 ## 从项目交付，延伸到持续经营
 
