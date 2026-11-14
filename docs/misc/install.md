@@ -126,6 +126,22 @@ On Windows, the caller can read a saved user `EXPERTS_API_KEY` for a local loopb
 
 Advisor model selection is model-agnostic: pass any supported model identifier or alias with `--model` or `NORTHSTAR_ADVISOR_MODEL`. Set a separate `--council-model` or `NORTHSTAR_COUNCIL_MODEL` for Council; the two selections must be distinct. Failed selections remain visible; the caller does not substitute another model.
 
+### Example: connect from Windows to Subroute
+
+Subroute's Compose setup publishes its production private experts listener on host loopback port 4040. When the Northstar caller runs on the Windows host with the skill installed under `.agents\skills`, use the published host address and the OpenAI-compatible `/v1` API prefix:
+
+```powershell
+$advisorHome = Join-Path $env:USERPROFILE '.agents\skills\advisor-council' # Change this if the skill is installed elsewhere.
+$env:EXPERTS_BASE_URL = 'http://127.0.0.1:4040/v1'
+$env:NORTHSTAR_ADVISOR_MODEL = 'gemini-4-hydrogen-advisor'
+$env:NORTHSTAR_COUNCIL_MODEL = 'codex-gpt-6.1-terra-advisor'
+python (Join-Path $advisorHome 'scripts\ask_expert.py') --input-file .\advisor-packet.txt --council
+```
+
+The model names above are example aliases from Subroute's private experts catalog; choose two distinct aliases that the running service exposes. Keep `EXPERTS_API_KEY` in the process or Windows user environment. The caller can read the saved user value for this loopback URL, so do not place the key in a script or packet.
+
+Do not copy `EXPERTS_BASE_URL=http://experts:4040` from the gateway container environment. That Docker service name is resolvable only on the Compose network, and the Northstar caller appends `/chat/completions` to its base URL. The host-published `127.0.0.1:4040` currently reaches production experts; `experts-staging` has no host port mapping. This direct call selects the requested expert alias itself. Subroute's native model-selected Advisor tool on the public Messages route is a separate flow and does not supply this caller's endpoint or model selection.
+
 Optional [expert-directed reading](../../skills/advisor-council/references/reader.md) additionally requires its documented Node/Pi/Git/ripgrep setup and `READER_BASE_URL` (or `EXPERTS_BASE_URL`). Nonvisual execution, QA and coordination do not require these services.
 
 [Mandatory visual consultation](../../skills/advisor-council/SKILL.md#mandatory-visual-and-aesthetic-guidance) uses repeatable `--image` arguments to send actual image bytes to the configured Advisor service. A text-only backend rejects these requests visibly. Optional Pi reading stays text-only: the Advisor sees attached screenshots and can dispatch Pi for source evidence. Missing image access leaves required visual consultation unverified.
