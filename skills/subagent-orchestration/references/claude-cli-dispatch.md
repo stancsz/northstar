@@ -29,28 +29,30 @@ Run preflight once in the parent before dispatching:
   - For **read-only audits or reviews**, use `--permission-mode plan` (or `--allowedTools Read,Grep,Glob`).
   - For **scoped implementation**, explicitly enable only the required native tools: `--allowedTools "Read,Edit,Write,Bash"`.
 - **Enforce hard execution bounds:** Always pass `--max-turns` and `--max-budget-usd` alongside a parent wall-clock timeout.
-- **Capture structured streams separately:** Run with `--output-format stream-json --verbose` (or `--output-format json`), redirecting stdout to a task-scoped `.jsonl` file and stderr to a separate `.stderr.log` file under `tmp/<task-id>/`.
+- **Capture structured streams separately:** Run with `--output-format stream-json --verbose` (or `--output-format json`), redirecting stdout to a task-scoped `.jsonl` file and stderr to a separate `.stderr.log` file under the task's scratch directory.
 - **Terminate immediately on retry storms or bad routes:** Monitor the live `.jsonl` file while the background job runs. **Kill the child process immediately on the first `api_retry` (HTTP 429) or `unrecognized_model` event**—never let a worker burn budget or wall-clock time in exponential backoff loops.
 - **Wait for process exit before judging:** Do not grade partial artifacts while the child process is still running. Wait for exit code `0` and stream completion before inspecting diffs and test outputs.
 
+Before dispatch, allocate `$runDirectory` for parent logs and `$workerDirectory` beneath it for the write-enabled worker's disposable output. Use the absolute paths from [artifact storage](../../northstar/references/artifact-storage.md#1-choose-a-location-before-writing). The worker receives only its directory as the extra path via `--add-dir`. A read-only assignment can omit it.
+
 ```powershell
-$taskId = 'issue-42-claude-worker'
-$scratchDir = Join-Path (Resolve-Path '.').Path "tmp\$taskId"
-New-Item -ItemType Directory -Force -Path $scratchDir | Out-Null
-$jsonlPath = Join-Path $scratchDir 'events.jsonl'
-$stderrPath = Join-Path $scratchDir 'stderr.log'
-$promptPath = Join-Path $scratchDir 'prompt.txt'
-Set-Content -LiteralPath $promptPath -Value $assignment -Encoding utf8
+$jsonlPath = Join-Path $runDirectory 'events.jsonl'
+$stderrPath = Join-Path $runDirectory 'stderr.log'
+$assignment = "$assignment`nUse '$workerDirectory' for disposable output."
 $workingDirectory = (Resolve-Path -LiteralPath '<target-working-directory>' -ErrorAction Stop).Path
 $targetModel = '<model-or-alias>' # Optional: set when overriding or isolating settings
 $deadline = (Get-Date).AddMinutes(10)
 
 $job = Start-Job -ScriptBlock {
-    param($wd, $pPath, $jPath, $ePath, $mdl)
+    param($wd, $brief, $jPath, $ePath, $mdl, $scratch)
     Set-Location -LiteralPath $wd
+    $env:TMPDIR = $scratch
+    $env:TMP = $scratch
+    $env:TEMP = $scratch
     $argsList = @(
         '--bare', '--setting-sources', '',
         '-p', '--allowedTools', 'Read,Edit,Write,Bash',
+        '--add-dir', $scratch,
         '--max-turns', '15', '--max-budget-usd', '2.00',
         '--output-format', 'stream-json', '--verbose'
     )
@@ -61,14 +63,14 @@ $job = Start-Job -ScriptBlock {
         $env:ANTHROPIC_SMALL_FAST_MODEL = $mdl
         $argsList += @('--model', $mdl)
     }
-    Get-Content -LiteralPath $pPath -Raw | & claude @argsList 1> $jPath 2> $ePath
+    & claude @argsList $brief 1> $jPath 2> $ePath
     return $LASTEXITCODE
-} -ArgumentList $workingDirectory, $promptPath, $jsonlPath, $stderrPath, $targetModel
+} -ArgumentList $workingDirectory, $assignment, $jsonlPath, $stderrPath, $targetModel, $workerDirectory
 
 while ($job.State -eq 'Running') {
-    if ((Get-Date) -gt $deadline) { Stop-Job $job; throw "Claude worker timed out ($taskId)" }
+    if ((Get-Date) -gt $deadline) { Stop-Job $job; throw "Claude worker timed out: $workerDirectory" }
     if ((Test-Path $jsonlPath) -and (Select-String -Path $jsonlPath -Pattern '"api_retry"|"unrecognized_model"' -Quiet)) {
-        Stop-Job $job; throw "Claude worker aborted on api_retry or unrecognized_model ($taskId)"
+        Stop-Job $job; throw "Claude worker aborted on api_retry or unrecognized_model: $workerDirectory"
     }
     Start-Sleep -Milliseconds 500
 }
@@ -79,16 +81,21 @@ Remove-Job $job -Force
 For POSIX / Git Bash environments:
 
 ```bash
-mkdir -p "tmp/$TASK_ID"
-printf '%s' "$ASSIGNMENT" | claude -p --allowedTools "Read,Edit,Write,Bash" \
+claude -p --allowedTools "Read,Edit,Write,Bash" \
+  --add-dir "$worker_directory" \
   --max-turns 15 --max-budget-usd 2.00 --output-format stream-json --verbose \
-  > "tmp/$TASK_ID/events.jsonl" 2> "tmp/$TASK_ID/stderr.log"
+  "$ASSIGNMENT
+Use '$worker_directory' for disposable output." \
+  > "$run_directory/events.jsonl" 2> "$run_directory/stderr.log"
 ```
+
+The assigned tool and the host's permission policy determine what the worker can write. Check them for the selected path before sending large outputs there.
 
 ## 4. Accept and integrate
 
 1. **Audit scope and native provenance:** Inspect `git status --short` and `git diff` after the process exits. Verify from the captured JSONL stream that the child used its native tools (`Read`, `Edit`, `Write`, `Bash`) rather than fabricating tool output in prose, and reject any out-of-scope file modifications.
 2. **Independent verification:** Run the required verification command yourself in the parent (or route to a nonauthor [Independent QA](../../independent-qa/SKILL.md) reviewer when required). A Claude CLI worker cannot certify its own authored work.
 3. **Record the receipt:** Log the changed paths, verification output, reported token/cost usage from the JSONL result event, remaining gaps, and next action in the project's existing record.
+4. **Close out scratch:** Once the worker has exited and the parent has inspected the logs, the cleanup owner handles each directory. [Storage closeout](../../northstar/references/artifact-storage.md#3-close-out-owned-scratch)
 
 See local `claude --help`, the official [Claude Code CLI reference](https://code.claude.com/docs/en/cli-reference), and [environment variables](https://code.claude.com/docs/en/env-vars).

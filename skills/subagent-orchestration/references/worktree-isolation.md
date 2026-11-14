@@ -15,10 +15,13 @@ A new `git worktree` starts from a committed Git revision—it does **not** carr
 2. If dirty or untracked files exist in the main checkout:
    - **Unrelated user changes:** Leave them untouched in the main checkout (never run `git reset --hard`, `git checkout -- .`, or `git clean -fd` on user state).
    - **Required task inputs:** Commit them to a task branch or explicitly copy the needed task-scoped files into the new worktree before launching the worker.
-3. Create the isolated worktree under `tmp/worktrees/<task-id>` (or a sibling directory outside the checkout if build tools scan parent directories):
+3. Choose the worktree location and record its cleanup owner before creation. Prefer a subdirectory of the approved external run directory where the Git or app lifecycle supports it. Keep generated output in task scratch. [Artifact storage](../../northstar/references/artifact-storage.md)
+
+   For a Git CLI worktree, use the already allocated `$runDirectory`:
+
    ```powershell
    $baseSha = (git rev-parse HEAD).Trim()
-   $worktreePath = Join-Path (Resolve-Path '.').Path "tmp\worktrees\$taskId"
+   $worktreePath = Join-Path $runDirectory 'worktree'
    git worktree add -b "ns/$taskId" $worktreePath $baseSha
    ```
 
@@ -54,8 +57,12 @@ To prevent stale approvals when branches rebase, squash, or move:
 ## 4. Integrate and clean up safely
 
 1. **Integrate into the target branch:** Cherry-pick, fast-forward, or apply the verified commit into the integration branch, then confirm the resulting tree matches `$candidateTree` (or run the integrated verification suite when combining multiple tasks).
-2. **Remove only owned disposable worktrees:** Once the candidate commit is integrated (or its branch/SHA is recorded in the goal/task record for later recovery), remove the temporary worktree:
+2. **Remove only owned disposable worktrees:** Confirm the candidate commit is integrated or recoverable from the recorded branch and commit. Stop the worker and inspect the worktree for tracked changes, untracked files, and ignored output, including anything the task still needs. Use the host app's lifecycle for app-managed worktrees. For a Git CLI worktree, inspect before invoking the native removal:
+
    ```powershell
+   git -C $worktreePath status --short --ignored=matching --untracked-files=all
+   # Review the output and verify any retained files before running the removal.
    git worktree remove $worktreePath
    ```
-   Never delete a worktree that still holds the only copy of uncheckpointed work.
+
+   If Git refuses because the tree contains changes, inspect and resolve them within scope. Verify removal from both the filesystem and the tool's worktree list. Report blocked cleanup and any remaining bytes. [Storage closeout](../../northstar/references/artifact-storage.md#3-close-out-owned-scratch)

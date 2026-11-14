@@ -1,6 +1,6 @@
 ---
 name: northstar
-description: Deliver verified outcomes with zero silent drift. Central workflow for intent locking, multi-agent orchestration, independent QA, advisor council, stall recovery, and completion review.
+description: Deliver verified outcomes with zero silent drift. Central workflow for intent locking, multi-agent orchestration, independent QA, advisor council, stall recovery, artifact cleanup, and completion review.
 ---
 
 # Northstar
@@ -48,8 +48,8 @@ Shared rules across all five coordinated Northstar skills (`northstar`, `subagen
 
 1. **Resume the actual request.** Read existing records and diffs; do not restart accepted work or create empty Northstar directories. (Use [business planning](references/business-planning.md) only when asked for market/financial/GTM strategy.)
 2. **Define the finish.** State the target workflow, environment, quantitative/binary acceptance check, and scope bounds ([goal quality bar](references/goal-driven-engineering.md#define-the-goal)).
-3. **Build the next complete step.** Reuse existing code and tools. Cap read-only exploration at **5 tool calls** before making a concrete edit or running a distinguishing check. When delegating to a subagent or CLI worker (Codex or Claude Code), assign one target artifact, exact writable paths, one verification check, and a firm deadline (5-minute artifact checkpoint, 10-minute handoff), terminating immediately on any `api_retry` (HTTP 429) or `unrecognized_model` event.
-4. **Verify and repair.** Run the actual check once and inspect the changed behavior. Repair failures in scope. Once the required check passes and affected files are verified, **stop calling tools and deliver the handoff**—do not run redundant status/timestamp/diff checks after verification. If a criterion requires missing credentials, external network/services, or out-of-scope access, **do not probe the network, credentials, or parent directories**—stop immediately and mark it `unverified`. A passing build, HTTP 200, mock, or worker summary alone is not verification.
+3. **Build the next complete step.** Reuse existing code and tools. Before generating disposable output, [choose its destination](references/artifact-storage.md#1-choose-a-location-before-writing); on Codex, use an active permission profile that includes the scratch root or grant a CLI worker its exact directory. Cap read-only exploration at **5 tool calls** before making a concrete edit or running a distinguishing check. When delegating to a subagent or CLI worker (Codex or Claude Code), assign one target artifact, exact writable paths, one verification check, and a firm deadline (5-minute artifact checkpoint, 10-minute handoff), terminating immediately on any `api_retry` (HTTP 429) or `unrecognized_model` event.
+4. **Verify, repair, and close out.** Run the actual check once and inspect the changed behavior. Repair failures in scope. [Close out owned scratch](references/artifact-storage.md#3-close-out-owned-scratch) when the task produced it. Once the required checks and closeout are done, deliver the handoff without redundant checks. If a criterion requires missing credentials, external network/services, or out-of-scope access, **do not probe the network, credentials, or parent directories**—stop immediately and mark it `unverified`. A passing build, HTTP 200, mock, or worker summary alone is not verification.
 5. **Deliver the requested outcome.** Reconcile every item in `Ask` against real evidence (`passed`, `unmet`, or `unverified`). Report material limits and stop—do not invent a new phase after completion.
 
 ## Recover from a stall
@@ -104,6 +104,7 @@ Return one concise handoff:
 - **Checks run & actual results** (link evidence instead of pasting long logs)
 - **Remaining gaps / unknowns** (`passed`, `unmet`, `unverified`)
 - **Next action**
+- **Storage** (when relevant): owned paths, measured sizes, and what was removed, retained, or handed off to a named cleanup owner. [Artifact storage](references/artifact-storage.md#2-record-ownership-as-artifacts-are-created)
 
 ## Learn from every use
 
@@ -115,4 +116,4 @@ At handoff, note any reusable skill lesson and optionally suggest reporting sani
 
 ## Keep records and the repository small
 
-Update records only at material decisions and handoffs, with one editor per shared file. Use `tmp/<task>/` for disposable scratch, stage only intentional files, and follow [goal lifecycle](references/goal-driven-engineering.md), [goal template](templates/GOAL.md), or [examples](references/examples.md) only when needed.
+Update records only at material decisions and handoffs, with one editor per shared file. Use a task directory under the approved [scratch root](references/artifact-storage.md), stage only intentional files, and follow [goal lifecycle](references/goal-driven-engineering.md), [goal template](templates/GOAL.md), or [examples](references/examples.md) only when needed.
