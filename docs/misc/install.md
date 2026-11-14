@@ -123,11 +123,27 @@ Use your host's configured skills directory if it differs. The skill includes a 
 For this repository's local worker route and process-scoped Advisor setup, see
 [local LiteLLM routing](litellm-routing.md).
 
-The shared caller works from either Codex or Claude Code and requires Python 3.10+. `--transport auto` uses the configured Chat Completions service (`EXPERTS_BASE_URL`, plus `EXPERTS_API_KEY` when that service requires authentication). If the gateway URL is unset or the input-token preflight cannot connect or times out, a simple text consultation can use the existing Codex sign-in directly. Direct Codex reads `CODEX_AUTH_FILE` or `$CODEX_HOME/auth.json` (`~/.codex/auth.json` by default), and supports `gpt-6.1-terra` and `gpt-6.1-sol`. Use `--transport gateway` to require the configured service or `--transport codex` to select direct Codex.
+The shared caller works from either Codex or Claude Code and requires Python 3.10+. `--transport auto` uses the configured OpenAI-compatible Chat Completions service (`EXPERTS_BASE_URL`; `EXPERTS_API_KEY` is needed when that service requires authentication). The base URL is the API prefix, usually ending in `/v1`, and must be reachable from the process running the caller. A gateway's native tool-only Advisor route is not a Chat Completions endpoint. Auto mode falls back to the local Codex sign-in only when the gateway URL is unset or the input-token preflight cannot connect or times out. Direct Codex reads `CODEX_AUTH_FILE` or `$CODEX_HOME/auth.json` (`~/.codex/auth.json` by default), and supports `gpt-6.1-terra` and `gpt-6.1-sol`. Use `--transport gateway` to require the configured service or `--transport codex` to select direct Codex. Copying the skills does not deploy a service, supply credentials or grant spending/data-transmission authority. See the [Advisor Council connection contract](../../skills/advisor-council/SKILL.md#make-a-compact-advice-request).
 
 On Windows, the caller can read a saved user `EXPERTS_API_KEY` for a local loopback service when the process environment variable is absent. See the [authentication behavior](../../skills/advisor-council/SKILL.md#make-a-compact-advice-request). HTTP 401 requires correcting the key in the environment, not disabling authentication.
 
 Advisor defaults use the owner's exact model names: `gpt-6.1-terra` (simple/primary), `gemini-3.8-flash-low` (complex reviewer), and `Claude Sonnet 5.5 Medium` (additional very-complex reviewer). Every request asks for low reasoning effort. Choose `--complexity simple` (Terra), `complex` (Gemini then Terra), or `very-complex` (Gemini, Sonnet, then Terra). Override selections with `--model`, `--council-model`, `--sonnet-model` or their `NORTHSTAR_*_MODEL` environment variables. Gateway requests require a successful exact-model input-token count of at most 32,000. Direct Codex does not provide that count endpoint, so it caps the complete UTF-8 request body at 24,000 bytes and reports provider usage after completion. Direct Codex supports only simple text consultations; images, multi-model tiers, and reader mode require the gateway. Failed selections remain visible; the caller does not substitute another model.
+
+### Example: connect from Windows to Subroute
+
+Subroute's Compose setup publishes its production private experts listener on host loopback port 4040. When the Northstar caller runs on the Windows host with the skill installed under `.agents\skills`, use the published host address and the OpenAI-compatible `/v1` API prefix:
+
+```powershell
+$advisorHome = Join-Path $env:USERPROFILE '.agents\skills\advisor-council' # Change this if the skill is installed elsewhere.
+$env:EXPERTS_BASE_URL = 'http://127.0.0.1:4040/v1'
+$env:NORTHSTAR_ADVISOR_MODEL = 'gemini-4-hydrogen-advisor'
+$env:NORTHSTAR_COUNCIL_MODEL = 'codex-gpt-6.1-terra-advisor'
+python (Join-Path $advisorHome 'scripts\ask_expert.py') --input-file .\advisor-packet.txt --complexity complex
+```
+
+The model names above are example aliases from Subroute's private experts catalog; choose two distinct aliases that the running service exposes. Keep `EXPERTS_API_KEY` in the process or Windows user environment. The caller can read the saved user value for this loopback URL, so do not place the key in a script or packet.
+
+Do not copy `EXPERTS_BASE_URL=http://experts:4040` from the gateway container environment. That Docker service name is resolvable only on the Compose network, and the Northstar caller appends `/chat/completions` to its base URL. The host-published `127.0.0.1:4040` currently reaches production experts; `experts-staging` has no host port mapping. This direct call selects the requested expert alias itself. Subroute's native model-selected Advisor tool on the public Messages route is a separate flow and does not supply this caller's endpoint or model selection.
 
 Optional [expert-directed reading](../../skills/advisor-council/references/reader.md) additionally requires its documented Node/Pi/Git/ripgrep setup and `READER_BASE_URL` (or `EXPERTS_BASE_URL`). Nonvisual execution, QA and coordination do not require these services.
 

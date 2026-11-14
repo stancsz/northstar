@@ -16,8 +16,9 @@ Default to one owner. Delegate builders or reviewers only when required or when 
 1. Lock the requested outcome, constraints, and verification commands before dispatching.
 2. Split only disjoint, bounded deliverables. Assign **one task and one exact write scope** per worker, with its own verification check.
 3. For parallel write workers or shared build/test outputs, isolate each worker using [Git worktree and changeset isolation](references/worktree-isolation.md) so concurrent edits never collide and reviews bind to exact tree SHAs (`git rev-parse HEAD^{tree}`).
-4. Add a supervisor only when a multi-task workstream needs dedicated coordination; otherwise the orchestrator manages workers directly.
-5. Apply Northstar's review threshold: the commander accepts small, reversible, attributable work directly from test/diff evidence; use one independent nonauthor reviewer ([Independent QA](../independent-qa/SKILL.md)) only when required. See [role profiles](references/role-profiles.md) and [agent handoffs](references/agent-handoffs.md).
+4. If a worker needs scratch, select its directory before dispatch and direct its temporary output there. Keep parent capture logs in a directory the parent owns. [Artifact storage](../northstar/references/artifact-storage.md)
+5. Add a supervisor only when a multi-task workstream needs dedicated coordination; otherwise the orchestrator manages workers directly.
+6. Apply Northstar's review threshold: the commander accepts small, reversible, attributable work directly from test/diff evidence; use one independent nonauthor reviewer ([Independent QA](../independent-qa/SKILL.md)) only when required. See [role profiles](references/role-profiles.md) and [agent handoffs](references/agent-handoffs.md).
 
 ## Allocate capability and cost
 
@@ -55,7 +56,7 @@ Under [Northstar ownership](../northstar/SKILL.md#ownership-north-star--goals--t
 - Do not spawn nested agents, edit outside scope, or broaden the task.
 - If blocked, report the exact dependency and finish any independent in-scope work.
 
-When peers disagree on an interface, route to the approval owner via a compact [decision exchange](../northstar/references/operating-system.md#resolve-disagreement) or consult [expertise](../northstar/references/operating-system.md#bring-in-expertise).
+When peers disagree on an interface, route to the approval owner via a compact [decision exchange](../northstar/references/operating-system.md#3-resolve-disagreement) or consult [expertise](../northstar/references/operating-system.md#4-bring-in-expertise).
 
 ## Task brief and handoff
 
@@ -64,16 +65,18 @@ Every worker brief must be self-contained so a fast model can execute without re
 ```markdown
 - Outcome & Why: [Single deliverable and its purpose]
 - First Action: [Exact file to read/edit or command to run first]
-- Write Scope: [Exact allowed file paths + tmp/<task-id>/ scratch; all other paths read-only]
+- Write Scope: [Exact allowed file paths + the task scratch directory; all other paths read-only]
+- Scratch: [If needed, absolute directory for temporary output, who removes it, and what to keep]
 - Context & Baseline: [Relevant facts, base commit SHA, baseline test/error, and verified CLI setup]
 - Verification: [Exact command that must pass before handoff]
 - Bounds: [Applicable owner/project recovery rules; otherwise 5-min artifact checkpoint and 10-min handoff deadline; max 5 read-only calls before first edit/check, no nested CLI]
 ```
 
-- **Search & output discipline:** Stay strictly inside the assigned working directory (never walk `..` into parent repositories), exclude generated/log/cache directories from searches, cap command output, and read focused line ranges.
+- **Search & output discipline:** Stay within the assigned workspace and named scratch paths. Exclude generated, log, and cache directories from searches unless the task needs them. Cap command output and read focused line ranges.
 - **Single-tool-call pacing on rate-limited routes:** When executing against a concurrency-limited gateway, emit one tool call per turn rather than parallel tool batches so in-flight concurrency slots are never exhausted.
 - **Native tools only:** CLI workers must use their native tools (`command_execution`/`file_change` in Codex; `Read`/`Edit`/`Write`/`Bash` in Claude Code), never nested CLI invocations or parent wrappers.
 - **Required handoff:** Return `Artifact/paths changed` (with base and candidate commit/tree SHA when using worktrees), `Checks run & results`, `Unmet/unknown items`, and `Next action` (plus failure/recovery count if any).
+- **Storage:** Include the scratch paths used, any output elsewhere, measured sizes, and remaining cleanup. The assigned cleanup owner verifies the handoff and retires disposable output after the last consumer finishes. [Artifact storage](../northstar/references/artifact-storage.md#3-close-out-owned-scratch)
 
 ## Coordinate to a working result
 
@@ -84,7 +87,7 @@ Every worker brief must be self-contained so a fast model can execute without re
 
 ## Documentation and repository hygiene
 
-Follow Northstar's [repository rules](../northstar/SKILL.md#keep-records-and-the-repository-small): update existing records only at material decisions and handoffs, keep one editor per shared file, and use `tmp/<task>/` for disposable outputs.
+Follow Northstar's [repository rules](../northstar/SKILL.md#keep-records-and-the-repository-small). Update existing records at material decisions and handoffs and keep one editor per shared file.
 
 ## Failure, retries, and final integration
 

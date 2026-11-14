@@ -12,12 +12,13 @@ Follow Northstar's [delivery contract](../northstar/SKILL.md#delivery-contract).
 
 ## Decide from current evidence
 
-Before accepting a proposed stop, reconcile four facts:
+Before accepting a proposed stop, reconcile five facts:
 
 1. **Destination:** Compare against the original request, user-authorized scope changes, and required acceptance. A passing mock, partial slice, or limitations paragraph never silently replaces the promised outcome (though an explicitly local task needs no invented deployment gate).
 2. **Result:** Inspect the current artifacts and verification outputs in the intended environment. A worker summary, stale build, or HTTP 200 alone is insufficient. Keep unmet and unverified criteria explicit.
 3. **Authority:** Recover standing grants from trusted instructions and handoffs (delegated decisions, targets, budgets) and exercise them without re-asking the user. Managers resolve internal dependencies; an unavailable subagent is not an owner blocker.
 4. **Facts vs. assumptions:** Distinguish an observed failure from an unverified assumption. Check project/tool inventory and primary docs when they could change the next action, and run the smallest permitted distinguishing check without probing secrets or repeating denied actions.
+5. **Storage:** When the task produced disposable output, check the recorded paths, cleanup owner, and verified disposition. Return **Continue** if authorized cleanup is still actionable. If host policy blocks it, keep required cleanup open and record incidental leftovers in the handoff. [Storage closeout](../northstar/references/artifact-storage.md#3-close-out-owned-scratch)
 
 Classify the proposed stop and take the required action:
 

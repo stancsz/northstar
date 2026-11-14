@@ -30,28 +30,28 @@ On Windows, use forward slashes or literal-safe quoting for paths embedded in JS
 
 Neither mode expands the assigned write scope: the sandbox and permissions express the scope the orchestrator already granted, and the worker stays inside the paths named in its brief. A read-only worker cannot implement, and a write-enabled worker does not gain writes beyond its brief. The parent keeps independent acceptance: a worker's own claim that its changes are correct is not acceptance, and the accepting role still inspects the result against the criteria.
 
+**Worker scratch.** For a write-enabled child that needs external scratch, pass only its approved directory with `--add-dir <path>` when starting the session. Name the directory in its brief and verify access with the intended profile. The host's permission policy still applies. [Codex CLI global flags](https://learn.chatgpt.com/docs/cli/reference#global-flags)
+
 Classify tool provenance from the CLI's structured events — for example `command_execution` and `file_change` entries — not from the model's prose. Reasoning that mentions a tool is not an invocation. Stop a worker on an actual unauthorized wrapper call in the structured events, not on speculative text that merely names one.
 
 A Codex CLI child must use its own structured native `command_execution` for bounded shell work. A shell command that launches `codex exec` or another CLI is a nested agent, not evidence of this child's native tool path; allow that subdelegation only when the brief explicitly assigns it. If the native tool path is unavailable, or a nested CLI fails at startup, stop and report the exact event and error without retrying unchanged.
 
 The noninteractive invocations in this section use `--json`: retain and parse stdout as JSONL to capture actual `command_execution` and `file_change` events, the final handoff, and `turn.completed` usage fields. Capture stderr separately; it is diagnostic output, not the structured event stream.
 
-**Capture every dispatch.** Dispatch through the helper into task-scoped `.jsonl` and `.stderr.log` files under `tmp/<task-id>/`, enforcing a parent wall-clock deadline and stopping immediately if the stream emits `api_retry` (HTTP 429) or `unrecognized_model`:
+**Capture every dispatch.** Use separate `.jsonl` and `.stderr.log` files in the parent's run directory. In this example, `$runDirectory` and `$workerDirectory` are already allocated. Keep the worker directory as a child of the run directory so the worker's extra write grant covers its own output. [Artifact storage](../../northstar/references/artifact-storage.md#1-choose-a-location-before-writing)
 
 ```powershell
-$taskId = 'issue-42-doc-write'
-$scratchDir = Join-Path (Resolve-Path '.').Path "tmp\$taskId"
-New-Item -ItemType Directory -Force -Path $scratchDir | Out-Null
-$jsonlPath = Join-Path $scratchDir "$taskId.jsonl"
-$stderrPath = Join-Path $scratchDir "$taskId.stderr.log"
-$assignment = 'Update the scoped documentation and return a concise handoff.'
-$workingDirectory = 'D:\work\my-project'
+$jsonlPath = Join-Path $runDirectory 'events.jsonl'
+$stderrPath = Join-Path $runDirectory 'stderr.log'
+$assignment = "$assignment`nUse '$workerDirectory' for disposable output."
 
 Invoke-CodexChild -Assignment $assignment -WorkingDirectory $workingDirectory `
-    -Sandbox workspace-write -DisablePlugins `
+    -Sandbox workspace-write -ScratchDirectory $workerDirectory `
     2> $stderrPath | Tee-Object -FilePath $jsonlPath | Out-Null
 $childExitStatus = $LASTEXITCODE
 ```
+
+Omit `-ScratchDirectory` when the child does not need extra write access. The parent owns the capture logs and closes them out after inspection. [Storage closeout](../../northstar/references/artifact-storage.md#3-close-out-owned-scratch)
 
 Use a fresh path pair per run: `Tee-Object` overwrites its target, so reusing a path overwrites and destroys the earlier run's receipt. When running against a rate-limited or newly configured gateway, wrap the invocation in a background job (`Start-Job`) with a 10-minute deadline loop that watches `$jsonlPath` and kills the job immediately on the first `"api_retry"` or `"unrecognized_model"` event (matching the pattern in [Claude Code CLI dispatch](claude-cli-dispatch.md#3-run-bounded-work-safely)). Add `-DisablePlugins` only when the task needs no plugin integration, and leave it off otherwise. `Tee-Object` also passes the lines on to the parent; `| Out-Null` only keeps the parent console readable.
 
@@ -71,6 +71,7 @@ function Invoke-CodexChild {
         [ValidateSet('read-only', 'workspace-write')] [string] $Sandbox = 'read-only',
         [string] $Profile,
         [string] $Model,
+        [string] $ScratchDirectory,
         [switch] $DisablePlugins,
         [switch] $SkipHostSkillDiscovery
     )
@@ -86,6 +87,20 @@ function Invoke-CodexChild {
     $resolvedWorkingDirectory = (Resolve-Path -LiteralPath $WorkingDirectory -ErrorAction Stop).Path
     if (-not (Test-Path -LiteralPath $resolvedWorkingDirectory -PathType Container)) {
         throw "WorkingDirectory is not an existing directory: $WorkingDirectory"
+    }
+    $resolvedScratchDirectory = $null
+    if ($PSBoundParameters.ContainsKey('ScratchDirectory')) {
+        if ($Sandbox -ne 'workspace-write') {
+            throw 'ScratchDirectory requires workspace-write.'
+        }
+        if (-not $ScratchDirectory -or -not [IO.Path]::IsPathFullyQualified($ScratchDirectory)) {
+            throw 'ScratchDirectory must be an absolute path.'
+        }
+        $scratch = Get-Item -LiteralPath $ScratchDirectory -Force -ErrorAction Stop
+        if (-not $scratch.PSIsContainer -or ($scratch.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+            throw "ScratchDirectory must be a real directory: $ScratchDirectory"
+        }
+        $resolvedScratchDirectory = $scratch.FullName
     }
     if ($env:CODEX_HOME -and -not (Test-Path -LiteralPath $env:CODEX_HOME -PathType Container -ErrorAction SilentlyContinue)) {
         throw "CODEX_HOME must resolve to an existing directory: $env:CODEX_HOME"
@@ -119,6 +134,9 @@ function Invoke-CodexChild {
         if ($PSBoundParameters.ContainsKey('Model')) {
             $codexArguments += @('--model', $Model)
         }
+        if ($resolvedScratchDirectory) {
+            $codexArguments += @('--add-dir', $resolvedScratchDirectory)
+        }
         if ($DisablePlugins) {
             $codexArguments += @('-c', 'features.plugins=false')
         }
@@ -138,13 +156,7 @@ function Invoke-CodexChild {
 
 An empty or whitespace-only assignment is rejected up front — before the working directory is resolved, Codex-home or adapter state is inspected, the environment is mutated, or the Codex CLI is invoked — with the stable message `Assignment must not be empty or whitespace-only: provide the work item for the delegated Codex worker.` The parameter accepts an empty string at binding time so that this check, rather than the parameter binder, produces the same failure for an empty assignment and a whitespace-only assignment.
 
-Example call with an explicit assignment and working directory:
-
-```powershell
-$assignment = 'Update the scoped documentation and return a concise handoff.'
-$workingDirectory = 'D:\work\my-project'
-Invoke-CodexChild -Assignment $assignment -WorkingDirectory $workingDirectory -Sandbox workspace-write -DisablePlugins
-```
+`-ScratchDirectory` adds `--add-dir` for the write-enabled child. Supply the verified absolute path of its existing task directory. Set any needed output or cache options on the tools in the assignment.
 
 `-DisablePlugins` is an opt-in that appends `-c features.plugins=false` for tasks that do not rely on plugin-provided integrations. Omitting it preserves the default arguments.
 
