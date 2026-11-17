@@ -106,8 +106,9 @@ The design adapts ideas from mission command, reversible decision-making, lean d
 | [**Task Completion Review**](skills/task-completion-review/SKILL.md) | Audit a proposed stop, wait, or escalation against original requirements and authority; optional Stop-hook adapter. | An agent claims completion or wants to stop while requirements may remain. |
 | [**Agent Soak Testing**](skills/agent-soak-testing/SKILL.md) *(standalone)* | Plan, run, and evaluate bounded soak tests for agent harnesses and models. | You need evidence about repeated-use reliability and anti-drift performance over time. |
 | [**Windows App Watchdog**](skills/windows-app-watchdog/SKILL.md) *(standalone)* | Configure a per-user Windows scheduled task to monitor and relaunch a desktop app if its window closes. | You want automatic user-session recovery for a desktop app. |
+| [**Knowledge Work Plugins**](skills/knowledge-work-plugins/SKILL.md) *(standalone)* | Route role-based work to Anthropic's upstream plugins from Claude Cowork or Claude Code. | A matching plugin is installed in a supported Claude host. |
 
-Agent Soak Testing and Windows App Watchdog are standalone additions to the five-skill coordination workflow. Agent Soak Testing does not include the [Soak framework](https://github.com/stancsz/soak).
+Agent Soak Testing, Windows App Watchdog, and Knowledge Work Plugins are standalone additions to the five-skill coordination workflow. Agent Soak Testing does not include the [Soak framework](https://github.com/stancsz/soak); the Knowledge Work Plugins adapter does not bundle upstream plugins or add plugin execution to Codex.
 
 Use `$northstar` as the central entry point; each companion is also directly invocable. Install all five core skills, load what the task needs. One owner handles small, reversible changes; use one independent reviewer when the shared contract requires it. Add supervisors only when coordination warrants them.
 
