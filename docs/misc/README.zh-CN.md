@@ -103,6 +103,7 @@ Northstar 要解决的，就是这段管理断层：让 agent 接得住意图，
 | [**Task Completion Review**](../../skills/task-completion-review/SKILL.md) | 停止前检查完整目标、实际证据和已有授权，决定继续或停止；可选接入 Stop hook。 | agent 声称完成或准备过早停止。 |
 | [**Agent Soak Testing**](../../skills/agent-soak-testing/SKILL.md) *(独立可选)* | 规划、运行并评估面向 agent harness 与模型的有界浸泡测试。 | 需要检验多次重复运行下的可靠性与防偏移表现。 |
 | [**Windows App Watchdog**](../../skills/windows-app-watchdog/SKILL.md) *(独立可选)* | 在后台检查指定桌面应用的窗口，并在窗口消失后自动拉起应用。 | 需要保障桌面应用在用户会话内持续在线。 |
+| [**Knowledge Work Plugins**](../../skills/knowledge-work-plugins/SKILL.md) *(独立可选)* | 将岗位工作路由给 Anthropic 上游插件，并由 Northstar 负责交付验收。 | Claude Cowork 或 Claude Code 已安装对应插件时。 |
 
 `$northstar` 是总入口，其他技能也可直接调用。五个核心技能一起安装，按需加载。小改动可以只有一位构建者和一位独立 reviewer；确有协调需要时才增加主管。
 
