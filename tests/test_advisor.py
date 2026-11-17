@@ -253,3 +253,30 @@ def test_session_file_delta_context_and_round_budget(monkeypatch, capsys, tmp_pa
     out3 = json.loads(capsys.readouterr().out)
     assert out3["status"] == "budget_exhausted"
     assert len(seen_packets) == 2
+
+
+def test_auto_transport_prefers_direct_codex_first(monkeypatch, capsys, tmp_path):
+    auth = tmp_path / "auth.json"
+    auth.write_text(json.dumps({"tokens": {"access_token": "tok-1", "account_id": "acc-1"}}), encoding="utf-8")
+    monkeypatch.setenv("CODEX_AUTH_FILE", str(auth))
+
+    sse = (
+        'data: {"type":"response.output_text.delta","delta":"Verdict: Direct first.\\nNext: Go.\\nPrompt: Go.\\nRisk: none"}\n\n'
+        'data: {"type":"response.completed","response":{"id":"resp_1","model":"gpt-6.2-astra","status":"completed","usage":{"input_tokens":40,"output_tokens":15,"total_tokens":55}}}\n\n'
+        "data: [DONE]\n\n"
+    )
+    monkeypatch.setattr(ask_expert, "urlopen", lambda req, timeout=75.0: _fake_response(sse))
+    monkeypatch.setattr(
+        ask_expert,
+        "call_gateway",
+        lambda *a, **kw: (_ for _ in ()).throw(AssertionError("gateway should not be called first")),
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["ask_expert.py", "--question", "Decision: Test direct #1?", "--base-url", "http://127.0.0.1:4040/v1"],
+    )
+    assert ask_expert.main() == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["transport"] == "codex"
+    assert out["fallback_reason"] is None

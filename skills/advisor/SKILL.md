@@ -82,7 +82,7 @@ python3 "$ADVISOR_DIR/scripts/ask_expert.py" --input-file ./advisor-packet.txt
 ```
 
 ### Transport & options
-- `--transport auto` *(default)*: Uses `EXPERTS_BASE_URL` (`/chat/completions` + `/responses/input_tokens`) if configured and reachable; otherwise falls back to local Codex auth (`~/.codex/auth.json`) or local `claude` CLI (`claude -p --no-session-persistence --tools ""`).
+- `--transport auto` *(default)*: Prefers **Direct Codex subscription (`~/.codex/auth.json`) #1** for text consultations; uses `EXPERTS_BASE_URL` gateway for `--image` attachments or custom models, and falls back to local `claude` CLI (`claude -p --no-session-persistence --tools ""`).
 - `--transport gateway`: Require the configured OpenAI-compatible gateway (`EXPERTS_BASE_URL` and `EXPERTS_API_KEY`).
 - `--transport codex`: Direct Codex text consultation (`gpt-6.2-astra`, `gpt-6.2-sol`, or `gpt-6-luna`).
 - `--transport claude`: Direct Claude Code CLI text consultation (`claude -p`).

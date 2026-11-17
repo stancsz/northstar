@@ -51,7 +51,7 @@ Running a frontier model for every file read, edit, and test loop burns tokens f
 - **`codex` (Codex Subscription Directly):** Uses your existing Codex CLI sign-in (`~/.codex/auth.json` via `codex login`) directly—no separate gateway or API key needed.
 - **`gateway` (Custom URL):** Point `EXPERTS_BASE_URL` (and `EXPERTS_API_KEY`) to any OpenAI-compatible `/v1` endpoint (LiteLLM, Subroute, OpenRouter, etc.), with optional `--image` screenshot attachments.
 - **`claude`:** Invokes `claude -p --no-session-persistence --tools ""` for simple text consultations.
-- **`auto`** *(default)*: Uses `EXPERTS_BASE_URL` if configured and reachable; otherwise falls back to your Codex subscription or local `claude` CLI.
+- **`auto`** *(default)*: Prefers your **Codex subscription directly (`~/.codex/auth.json`) #1** for text consultations; uses `EXPERTS_BASE_URL` gateway for `--image` attachments or custom models, and falls back to local `claude` CLI.
 
 ---
 
