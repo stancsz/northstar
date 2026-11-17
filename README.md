@@ -40,7 +40,7 @@ Running a frontier model for every file read, edit, and test loop burns tokens f
    - `Next:` Up to 3 short, testable actions.
    - `Prompt:` One ready-to-execute instruction for the executor's next turn.
    - `Risk:` One material risk or stop condition (`none` if clear).
-3. **Executor runs the turn** and only re-consults if new evidence creates a new decision fork.
+3. **Executor runs the turn — and sends only a tiny delta if Round 2 is needed:** Passing `--session-file <path> --max-rounds 3` tracks your round budget and prepends only the compact `Prior Verdict` (~200 chars) on Round 2+, so follow-up rounds use even fewer input tokens than Round 1.
 
 ---
 

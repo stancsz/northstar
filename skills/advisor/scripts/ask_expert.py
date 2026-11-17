@@ -21,6 +21,8 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 
 MAX_PACKET_CHARS = 4_000
+MAX_DELTA_CONTEXT_CHARS = 350
+DEFAULT_MAX_ROUNDS = 3
 MAX_IMAGES = 8
 MAX_IMAGE_BYTES = 10_000_000
 MAX_TOTAL_IMAGE_BYTES = 20_000_000
@@ -45,25 +47,19 @@ class AdvisorGatewayUnavailable(RuntimeError):
 
 DEFAULT_ADVISOR_MODEL = os.environ.get("NORTHSTAR_ADVISOR_MODEL", "gpt-6.1-terra")
 
-ADVISOR_INSTRUCTION = """You are a concise, high-signal technical advisor, not the task executor.
-The caller agent will do all file reading, coding, and testing in short turns.
-Do NOT repeat the packet, lecture, write large code blocks, use tools, or claim verification.
-Return exactly these four lines, with no preamble or markdown fences:
-Verdict: one decisive sentence answering the question.
-Next: at most three short, testable actions for the caller.
-Prompt: one short, ready-to-execute next-turn instruction for the caller.
-Risk: one material risk or stop condition, or `none`.
-Keep the entire response under 150 words."""
+ADVISOR_INSTRUCTION = """Concise technical advisor (no tools, no code dumps, no packet echo).
+Caller executes all edits/tests. Reply in <=120 words with exact 4 lines:
+Verdict: 1 decisive sentence.
+Next: <=3 short, testable steps.
+Prompt: 1 short next-turn instruction for caller.
+Risk: 1 material risk/stop condition, or `none`."""
 
-VISUAL_INSTRUCTION = """You are a concise visual advisor, not the implementation worker.
-Inspect the attached images yourself. Name concrete observations tied to visible regions;
-do not infer unseen detail, write code, or claim verification.
-Return exactly these four lines, with no preamble or markdown fences:
-Verdict: visible observations and the current visual judgment.
-Next: concrete, prioritized UI fixes or exact crops/states needed next.
-Prompt: one short, ready-to-execute next-turn instruction for the caller.
-Risk: unreadable details, missing evidence, or a material stop condition, or `none`.
-Keep the response under 400 words."""
+VISUAL_INSTRUCTION = """Concise visual advisor (no code dumps, no unverified claims).
+Inspect attached images. Reply in <=250 words with exact 4 lines:
+Verdict: visible observations and visual judgment.
+Next: <=3 prioritized UI fixes or exact crops/states needed.
+Prompt: 1 short next-turn instruction for caller.
+Risk: unreadable details or stop condition, or `none`."""
 
 
 def configure_utf8_stdout(stdout: TextIO | None = None) -> None:
@@ -112,7 +108,62 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--image", type=Path, action="append", default=[],
                         help="Attach a local PNG/JPEG/WebP/GIF; repeat for views/crops.")
     parser.add_argument("--image-detail", choices=("auto", "low", "high"), default="high")
+    parser.add_argument("--session-file", type=Path,
+                        help="Optional JSON file to track round budget and compact delta context across turns.")
+    parser.add_argument("--max-rounds", type=int, default=DEFAULT_MAX_ROUNDS,
+                        help="Maximum advisor rounds allowed for --session-file (default: 3).")
     return parser.parse_args()
+
+
+def compact_packet(text: str) -> str:
+    """Trim trailing line whitespace and collapse excessive blank lines to save input tokens."""
+    lines = [line.rstrip() for line in text.strip().splitlines()]
+    compacted: list[str] = []
+    blank_run = 0
+    for line in lines:
+        if not line:
+            blank_run += 1
+            if blank_run <= 1:
+                compacted.append("")
+        else:
+            blank_run = 0
+            compacted.append(line)
+    return "\n".join(compacted)
+
+
+def load_session(path: Path | None, max_rounds: int) -> dict:
+    if path is None or not path.is_file():
+        return {"round": 0, "max_rounds": max_rounds, "total_input_tokens": 0, "total_output_tokens": 0, "last_verdict": ""}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise ValueError("Session state must be a JSON object.")
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(f"Unable to read advisor session file {path}: {exc}") from exc
+    return {
+        "round": int(data.get("round", 0)),
+        "max_rounds": max_rounds,
+        "total_input_tokens": int(data.get("total_input_tokens", 0)),
+        "total_output_tokens": int(data.get("total_output_tokens", 0)),
+        "last_verdict": str(data.get("last_verdict", ""))[:MAX_DELTA_CONTEXT_CHARS],
+    }
+
+
+def save_session(path: Path | None, state: dict) -> None:
+    if path is None:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    tmp.replace(path)
+
+
+def extract_verdict_summary(advice: str) -> str:
+    """Keep only the concise Verdict line (or first 350 chars) for delta context in the next round."""
+    for line in advice.splitlines():
+        if line.strip().lower().startswith("verdict:"):
+            return line.strip()[:MAX_DELTA_CONTEXT_CHARS]
+    return " ".join(advice.split())[:MAX_DELTA_CONTEXT_CHARS]
 
 
 def read_packet(args: argparse.Namespace) -> str:
@@ -123,7 +174,7 @@ def read_packet(args: argparse.Namespace) -> str:
         except OSError as exc:
             raise SystemExit(f"Unable to read advisor packet: {exc}") from exc
     assert packet is not None
-    packet = packet.strip()
+    packet = compact_packet(packet)
     if not packet:
         raise SystemExit("Advisor packet must not be empty.")
     if len(packet) > MAX_PACKET_CHARS:
@@ -571,6 +622,8 @@ def main() -> int:
     args = parse_args()
     if args.timeout_seconds <= 0:
         raise SystemExit("--timeout-seconds must be positive.")
+    if args.max_rounds < 1:
+        raise SystemExit("--max-rounds must be at least 1.")
 
     transport = getattr(args, "transport", "auto")
     if transport in {"codex", "claude"} and args.image:
@@ -579,18 +632,39 @@ def main() -> int:
         )
 
     packet = read_packet(args)
+    session_file = getattr(args, "session_file", None)
     try:
+        session = load_session(session_file, args.max_rounds)
+        if session["round"] >= args.max_rounds:
+            print(json.dumps({
+                "status": "budget_exhausted",
+                "error": f"Advisor round budget exhausted ({session['round']}/{args.max_rounds}). Proceed locally or start a new session.",
+                "round": session["round"],
+                "max_rounds": args.max_rounds,
+                "total_input_tokens": session["total_input_tokens"],
+                "total_output_tokens": session["total_output_tokens"],
+            }, ensure_ascii=False))
+            return 1
+
+        effective_packet = packet
+        if session["round"] > 0 and session["last_verdict"]:
+            effective_packet = f"Prior {session['last_verdict']}\n\n{packet}"
+            if len(effective_packet) > MAX_PACKET_CHARS:
+                raise ValueError(
+                    f"Delta packet + prior verdict is {len(effective_packet)} chars; limit is {MAX_PACKET_CHARS}."
+                )
+
         args.image_parts, images = prepare_images(args.image, args.image_detail)
         instruction = VISUAL_INSTRUCTION if images else ADVISOR_INSTRUCTION
         messages = [
             {"role": "developer", "content": instruction},
-            {"role": "user", "content": packet},
+            {"role": "user", "content": effective_packet},
         ]
 
         if transport == "codex":
             result = consult_codex(args, messages)
         elif transport == "claude":
-            result = consult_claude(args, instruction, packet)
+            result = consult_claude(args, instruction, effective_packet)
         else:
             try:
                 result = call_gateway(args, args.model, messages)
@@ -604,7 +678,7 @@ def main() -> int:
                 if args.model in DIRECT_CODEX_MODELS and codex_auth_path().is_file():
                     result = consult_codex(args, messages, fallback_reason=str(exc))
                 elif shutil.which("claude"):
-                    result = consult_claude(args, instruction, packet, fallback_reason=str(exc))
+                    result = consult_claude(args, instruction, effective_packet, fallback_reason=str(exc))
                 elif codex_auth_path().is_file():
                     result = consult_codex(args, messages, fallback_reason=str(exc))
                 else:
@@ -616,7 +690,23 @@ def main() -> int:
         result.setdefault("fallback_reason", None)
         if images:
             result["images"] = images
-        result["packet_chars"] = len(packet)
+        result["packet_chars"] = len(effective_packet)
+
+        usage = result.get("usage") or {}
+        in_tok = result.get("input_tokens") or usage.get("input_tokens") or usage.get("prompt_tokens") or 0
+        out_tok = usage.get("output_tokens") or usage.get("completion_tokens") or 0
+        session["round"] += 1
+        session["total_input_tokens"] += int(in_tok)
+        session["total_output_tokens"] += int(out_tok)
+        session["last_verdict"] = extract_verdict_summary(result["advice"])
+        save_session(session_file, session)
+        if session_file is not None:
+            result["round"] = session["round"]
+            result["max_rounds"] = args.max_rounds
+            result["cumulative_tokens"] = {
+                "input_tokens": session["total_input_tokens"],
+                "output_tokens": session["total_output_tokens"],
+            }
     except (RuntimeError, ValueError, OSError) as exc:
         print(json.dumps({"status": "unavailable", "error": str(exc)}, ensure_ascii=False))
         return 1

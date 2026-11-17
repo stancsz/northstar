@@ -47,16 +47,16 @@ Include **only**:
 > **Tried:** Added retry-once on 401, which still double-refreshes under concurrency.
 > **Question:** Should `refreshSession()` deduplicate via a module-level in-flight `Promise` singleton cleared in `finally`, or is a BroadcastChannel lock needed across tabs?
 
-## Work in turns
+## Work in turns (with delta rounds & budget)
 
-1. **Send 1 packet** via `scripts/ask_expert.py`.
+1. **Send Round 1** via `scripts/ask_expert.py --session-file ./tmp/advisor-session.json --max-rounds 3`.
 2. **Read the 4-line reply** (≤ 150 words):
    - `Verdict:` One decisive sentence.
    - `Next:` Up to 3 short, testable steps.
    - `Prompt:` A ready-to-execute instruction for your next turn.
    - `Risk:` One material risk or stop condition (`none` if clear).
 3. **Execute the turn yourself** (edit, run tests, verify).
-4. **Re-consult only if** new evidence creates a new decision fork. Never loop on the same unchanged state.
+4. **If another round is needed, send a tiny delta packet** (target <= 600 chars: only what you ran, what changed, and your new question). `--session-file` automatically prepends `Prior Verdict` (~200 chars) and enforces `--max-rounds` so Round 2+ uses **even fewer input tokens** than Round 1. Never re-send Round 1's background.
 
 ## Invoke from Codex CLI or Claude Code
 
@@ -87,4 +87,5 @@ python3 "$ADVISOR_DIR/scripts/ask_expert.py" --input-file ./advisor-packet.txt
 - `--transport codex`: Direct Codex text consultation (`gpt-6.1-terra` or `gpt-6.1-sol`).
 - `--transport claude`: Direct Claude Code CLI text consultation (`claude -p`).
 - `--model <name>`: Exact advisor model identifier (or set `NORTHSTAR_ADVISOR_MODEL`).
+- `--session-file <path>` & `--max-rounds <n>`: Optional round-budget tracker (default `3` rounds). Automatically prepends `Prior Verdict` on Round 2+ so you only send a short delta packet.
 - `--image <path>`: Attach up to 8 local PNG/JPEG/WebP/GIF screenshots for visual/UI advice (requires `--transport gateway` / `auto` with gateway).

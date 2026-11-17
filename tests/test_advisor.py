@@ -193,3 +193,63 @@ def test_direct_cli_transports_reject_images(monkeypatch):
     )
     with pytest.raises(SystemExit, match="text packets only"):
         ask_expert.main()
+
+
+def test_compact_packet_trims_whitespace_and_blank_runs():
+    raw = "Line 1   \n\n\n\nLine 2\t\n\nLine 3"
+    assert ask_expert.compact_packet(raw) == "Line 1\n\nLine 2\n\nLine 3"
+
+
+def test_session_file_delta_context_and_round_budget(monkeypatch, capsys, tmp_path):
+    session_file = tmp_path / "advisor-session.json"
+    seen_packets = []
+
+    def fake_claude(args, instruction, packet, fallback_reason=None):
+        seen_packets.append(packet)
+        return {
+            "model": "claude-cli-default",
+            "requested_model": args.model,
+            "transport": "claude",
+            "advice": f"Verdict: Round {len(seen_packets)} answer.\nNext: Step.\nPrompt: Do step.\nRisk: none",
+            "advice_words": 10,
+            "usage": {"input_tokens": 50, "output_tokens": 12},
+            "request_id": f"s_{len(seen_packets)}",
+            "elapsed_seconds": 0.1,
+        }
+
+    monkeypatch.setattr(ask_expert, "consult_claude", fake_claude)
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["ask_expert.py", "--transport", "claude", "--session-file", str(session_file),
+         "--max-rounds", "2", "--question", "Decision: R1 question?"],
+    )
+    assert ask_expert.main() == 0
+    out1 = json.loads(capsys.readouterr().out)
+    assert out1["round"] == 1
+    assert out1["max_rounds"] == 2
+    assert out1["cumulative_tokens"] == {"input_tokens": 50, "output_tokens": 12}
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["ask_expert.py", "--transport", "claude", "--session-file", str(session_file),
+         "--max-rounds", "2", "--question", "Delta: Ran step, saw X."],
+    )
+    assert ask_expert.main() == 0
+    out2 = json.loads(capsys.readouterr().out)
+    assert out2["round"] == 2
+    assert out2["cumulative_tokens"] == {"input_tokens": 100, "output_tokens": 24}
+    assert seen_packets[1].startswith("Prior Verdict: Round 1 answer.\n\nDelta: Ran step, saw X.")
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["ask_expert.py", "--transport", "claude", "--session-file", str(session_file),
+         "--max-rounds", "2", "--question", "Should not run"],
+    )
+    assert ask_expert.main() == 1
+    out3 = json.loads(capsys.readouterr().out)
+    assert out3["status"] == "budget_exhausted"
+    assert len(seen_packets) == 2
