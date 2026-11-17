@@ -146,7 +146,7 @@ def normalize(arguments) -> list:
 
 
 def expected_arguments(
-    working_directory, sandbox="read-only", overrides=(), extra=(), profile=None, model=None
+    working_directory, sandbox="danger-full-access", overrides=(), extra=(), profile=None, model=None
 ) -> list:
     arguments = [
         "exec",
@@ -312,6 +312,21 @@ def test_helper_resolves_relative_working_directory_and_honours_workspace_write(
     assert payload["error"] is None, payload["error"]
     invocation = payload["invocations"][0]
     assert normalize(invocation["arguments"]) == expected_arguments(child, sandbox="workspace-write")
+
+
+def test_helper_honours_danger_full_access_sandbox(workspace):
+    payload = run_helper(
+        workspace["root"],
+        name="danger-full-access",
+        working_directory=workspace["project"],
+        sandbox="danger-full-access",
+        setup=[set_env("USERPROFILE", workspace["user_profile"]), unset_env("HOME")],
+    )
+    assert payload["error"] is None, payload["error"]
+    invocation = payload["invocations"][0]
+    assert normalize(invocation["arguments"]) == expected_arguments(
+        workspace["project"], sandbox="danger-full-access"
+    )
 
 
 def test_disable_plugins_adds_only_its_opt_in_plugin_flag(workspace):
