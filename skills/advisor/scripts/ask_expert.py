@@ -45,7 +45,11 @@ class AdvisorGatewayUnavailable(RuntimeError):
     """The gateway cannot be reached before model inference begins."""
 
 
-DEFAULT_ADVISOR_MODEL = os.environ.get("NORTHSTAR_ADVISOR_MODEL", "gpt-6.2-astra")
+DEFAULT_ADVISOR_MODEL = (
+    os.environ.get("CODEX_ADVISOR_MODEL")
+    or os.environ.get("NORTHSTAR_ADVISOR_MODEL")
+    or "gpt-6.2-astra"
+)
 
 ADVISOR_INSTRUCTION = """Concise technical advisor (no tools, no code dumps, no packet echo).
 Caller executes all edits/tests. Reply in <=120 words with exact 4 lines:
@@ -460,7 +464,7 @@ def consult_codex(
     if model not in DIRECT_CODEX_MODELS:
         raise RuntimeError(
             "Direct Codex supports gpt-6.2-astra, gpt-6.2-sol, and gpt-6-luna; "
-            "select one with --model or NORTHSTAR_ADVISOR_MODEL."
+            "select one with --model or CODEX_ADVISOR_MODEL."
         )
     access_token, account_id = read_codex_credentials()
     payload = {

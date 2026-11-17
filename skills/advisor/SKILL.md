@@ -86,6 +86,6 @@ python3 "$ADVISOR_DIR/scripts/ask_expert.py" --input-file ./advisor-packet.txt
 - `--transport gateway`: Require the configured OpenAI-compatible gateway (`EXPERTS_BASE_URL` and `EXPERTS_API_KEY`).
 - `--transport codex`: Direct Codex text consultation (`gpt-6.2-astra`, `gpt-6.2-sol`, or `gpt-6-luna`).
 - `--transport claude`: Direct Claude Code CLI text consultation (`claude -p`).
-- `--model <name>`: Exact advisor model identifier (or set `NORTHSTAR_ADVISOR_MODEL`).
+- `--model <name>`: Exact advisor model identifier (or set `CODEX_ADVISOR_MODEL`).
 - `--session-file <path>` & `--max-rounds <n>`: Optional round-budget tracker (default `3` rounds). Automatically prepends `Prior Verdict` on Round 2+ so you only send a short delta packet.
 - `--image <path>`: Attach up to 8 local PNG/JPEG/WebP/GIF screenshots for visual/UI advice (requires `--transport gateway` / `auto` with gateway).
