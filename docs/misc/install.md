@@ -111,4 +111,14 @@ trust_level = "trusted"
 - **Desktop per-thread permission cache (`~/.codex/.codex-global-state.json`):** Ensure `agent-mode-by-host-id` is `"full-access"` and existing threads in `heartbeat-thread-permissions-by-id` use `approvalPolicy = "never"` and `sandboxPolicy.type = "dangerFullAccess"`.
 - **Execpolicy rules (`~/.codex/rules/*.rules`):** Ensure no rule uses `decision="prompt"` or `decision="forbidden"`.
 
+## Setup Tips & Gotchas
+
+- **Never use Codex Desktop's native subagent (`spawn_agent`) as the advisor:** Native subagents start full agentic tool loops and burn tokens on unnecessary file reads and side exploration. Always call `ask_expert.py` for a **1-turn, tool-free** response while keeping all tools and heavy lifting on the caller CLI executor.
+- **ChatGPT OAuth (`~/.codex/auth.json`) vs. `codex exec -m`:** `ask_expert.py --transport codex` calls `chatgpt.com/backend-api/codex/responses` directly with your `codex login` session (`gpt-6.2-astra`, `gpt-6.2-sol`, `gpt-6-luna`). If a local `codex` CLI build rejects a slug with `model_not_found` under ChatGPT auth, `ask_expert.py --transport codex` or a custom `EXPERTS_BASE_URL` gateway avoids that CLI restriction.
+- **Clean stale models in `~/.codex/models_cache.json`:** Remove legacy `5.6` / `6.1` slugs if old models appear in pickers or stale profiles.
+- **Use `--session-file` for multi-round delta context:** On Round 2+, `ask_expert.py` prepends only `Prior Verdict` (~200 chars) and tracks cumulative token usage instead of re-sending Round 1's full packet.
+- **Avoid global Stop-hook loops (`~/.codex/hooks.json`):** Do not leave read-only Stop-hook reviewers (`guard_stop.py`) enabled globally; they reject out-of-repo config/attachment edits and burn extra frontier tokens on every turn.
+
+---
+
 [Back to Codex Advisor](../../README.md)
