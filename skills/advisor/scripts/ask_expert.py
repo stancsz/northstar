@@ -665,26 +665,42 @@ def main() -> int:
             result = consult_codex(args, messages)
         elif transport == "claude":
             result = consult_claude(args, instruction, effective_packet)
+        elif transport == "gateway":
+            result = call_gateway(args, args.model, messages)
         else:
-            try:
+            # --transport auto: prefer Direct Codex (#1) for text when signed in;
+            # use gateway for --image or custom models, with claude CLI fallback.
+            if images:
                 result = call_gateway(args, args.model, messages)
-            except AdvisorGatewayUnavailable as exc:
-                if transport != "auto":
-                    raise
-                if images:
-                    raise RuntimeError(
-                        f"{exc} Direct CLI fallback supports text consultations only; images require the Advisor gateway."
-                    ) from exc
-                if args.model in DIRECT_CODEX_MODELS and codex_auth_path().is_file():
-                    result = consult_codex(args, messages, fallback_reason=str(exc))
-                elif shutil.which("claude"):
-                    result = consult_claude(args, instruction, effective_packet, fallback_reason=str(exc))
-                elif codex_auth_path().is_file():
-                    result = consult_codex(args, messages, fallback_reason=str(exc))
-                else:
-                    raise RuntimeError(
-                        f"{exc} No local Codex auth or Claude CLI fallback was available."
-                    ) from exc
+            elif args.model in DIRECT_CODEX_MODELS and codex_auth_path().is_file():
+                try:
+                    result = consult_codex(args, messages)
+                except RuntimeError as exc:
+                    if getattr(args, "base_url", None) and str(args.base_url).strip():
+                        result = call_gateway(args, args.model, messages)
+                        result["fallback_reason"] = str(exc)
+                    elif shutil.which("claude"):
+                        result = consult_claude(args, instruction, effective_packet, fallback_reason=str(exc))
+                    else:
+                        raise
+            elif getattr(args, "base_url", None) and str(args.base_url).strip():
+                try:
+                    result = call_gateway(args, args.model, messages)
+                except AdvisorGatewayUnavailable as exc:
+                    if shutil.which("claude"):
+                        result = consult_claude(args, instruction, effective_packet, fallback_reason=str(exc))
+                    elif codex_auth_path().is_file():
+                        result = consult_codex(args, messages, fallback_reason=str(exc))
+                    else:
+                        raise RuntimeError(
+                            f"{exc} No local Codex auth or Claude CLI fallback was available."
+                        ) from exc
+            elif shutil.which("claude"):
+                result = consult_claude(args, instruction, effective_packet, fallback_reason="Direct Codex auth not configured.")
+            else:
+                raise RuntimeError(
+                    "No Codex auth (~/.codex/auth.json), EXPERTS_BASE_URL gateway, or Claude CLI was available."
+                )
 
         result.setdefault("transport", "gateway")
         result.setdefault("fallback_reason", None)
