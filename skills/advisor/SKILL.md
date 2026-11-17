@@ -7,7 +7,7 @@ description: Consult a frontier advisor model in 1 fast turn with a minimal, non
 
 Get decisive judgment from a frontier advisor model **without wasting advisor tokens**. You (the caller CLI agent in Codex CLI or Claude Code) own all file reading, editing, builds, and tests. The advisor never runs multi-turn tool loops—you send a distilled summary, get a short `Verdict / Next / Prompt / Risk` reply, and execute the next turn yourself.
 
-> **Important:** Do **not** hand control to Codex Desktop's built-in connection for this workflow. Once Codex Desktop takes over a session, it tends to burn tokens on unnecessary tool calls and unrelated exploration. Keep the cheap CLI executor in control and call `scripts/ask_expert.py` directly for 1-turn advice.
+> **Important:** Do **not** use Codex Desktop's native subagent (`spawn_agent`) as the advisor. Native subagents spin up full agentic tool loops and waste tokens on unnecessary file reads and side exploration. Always call `scripts/ask_expert.py` for a **1-turn, tool-free** advisor response.
 
 ## When to consult (and when NOT to)
 

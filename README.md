@@ -4,7 +4,7 @@
 
 Running a frontier model for every file read, edit, and test loop burns tokens fast. **Codex Advisor** flips the pattern: your fast executor does all the local legwork, prepares a compact summary packet (under 2,000 characters), asks **one sharp question**, and gets back a 4-line reply (`Verdict`, `Next`, `Prompt`, `Risk`) to execute in its next turn. The advisor can use **your Codex subscription directly** or **any custom API/gateway URL** (`EXPERTS_BASE_URL`).
 
-> **Not for Codex Desktop's built-in session takeover:** Do **not** use this skill with Codex Desktop's native connection where Codex takes over the session—once Codex Desktop takes over, the advisor/host loop tends to burn tokens on unnecessary tool calls and side exploration. Keep a cheap **CLI** executor (**Codex CLI** or **Claude Code**) in the driver's seat and call [`ask_expert.py`](skills/advisor/scripts/ask_expert.py) only for 1-turn advice.
+> **Do NOT use Codex's native subagent as the advisor:** Never spawn a Codex Desktop / native subagent (`spawn_agent`) to act as the advisor—native subagents start full agentic tool loops and burn tokens on unnecessary file reads and side exploration. Always call [`ask_expert.py`](skills/advisor/scripts/ask_expert.py) directly for a **1-turn, tool-free** consultation.
 
 [Install & Setup](docs/misc/install.md) · [Advisor Skill](skills/advisor/SKILL.md) · [License](LICENSE)
 
