@@ -76,7 +76,6 @@ Load a companion skill **only** when its trigger applies:
 | Independent nonauthor QA, live runtime/browser verification, spec review, or visual inspection | [Independent QA](../independent-qa/SKILL.md) |
 | Concrete blocker, capability risk, or unresolved visual/design fork | [Advisor Council](../advisor-council/SKILL.md) |
 | Auditing whether substantive work may stop, wait, or continue (plus opt-in Stop hook) | [Task Completion Review](../task-completion-review/SKILL.md) |
-| Role-based business work supported by an installed Anthropic plugin | [Knowledge Work Plugins](../knowledge-work-plugins/SKILL.md) |
 
 ## Use with other agents
 
