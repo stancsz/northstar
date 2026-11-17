@@ -29,7 +29,7 @@ MAX_TOTAL_IMAGE_BYTES = 20_000_000
 MAX_INPUT_TOKENS = 32_000
 MAX_CODEX_REQUEST_BYTES = 24_000
 CODEX_API_BASE_URL = "https://chatgpt.com/backend-api/codex"
-DIRECT_CODEX_MODELS = frozenset({"gpt-6.1-terra", "gpt-6.1-sol"})
+DIRECT_CODEX_MODELS = frozenset({"gpt-6.2-astra", "gpt-6.2-sol", "gpt-6-luna"})
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -45,7 +45,7 @@ class AdvisorGatewayUnavailable(RuntimeError):
     """The gateway cannot be reached before model inference begins."""
 
 
-DEFAULT_ADVISOR_MODEL = os.environ.get("NORTHSTAR_ADVISOR_MODEL", "gpt-6.1-terra")
+DEFAULT_ADVISOR_MODEL = os.environ.get("NORTHSTAR_ADVISOR_MODEL", "gpt-6.2-astra")
 
 ADVISOR_INSTRUCTION = """Concise technical advisor (no tools, no code dumps, no packet echo).
 Caller executes all edits/tests. Reply in <=120 words with exact 4 lines:
@@ -459,7 +459,7 @@ def consult_codex(
     model = args.model
     if model not in DIRECT_CODEX_MODELS:
         raise RuntimeError(
-            "Direct Codex supports only gpt-6.1-terra and gpt-6.1-sol; "
+            "Direct Codex supports gpt-6.2-astra, gpt-6.2-sol, and gpt-6-luna; "
             "select one with --model or NORTHSTAR_ADVISOR_MODEL."
         )
     access_token, account_id = read_codex_credentials()

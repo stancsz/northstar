@@ -66,7 +66,7 @@ def test_gateway_happy_path_and_token_limit(monkeypatch):
             return _fake_response({"input_tokens": 120})
         return _fake_response({
             "id": "req_123",
-            "model": "gpt-6.1-terra",
+            "model": "gpt-6.2-astra",
             "choices": [{
                 "finish_reason": "stop",
                 "message": {"content": "Verdict: Use a lock.\nNext: Add singleton.\nPrompt: Implement singleton.\nRisk: none"},
@@ -77,7 +77,7 @@ def test_gateway_happy_path_and_token_limit(monkeypatch):
     monkeypatch.setattr(ask_expert, "urlopen", fake_urlopen)
     monkeypatch.setenv("EXPERTS_API_KEY", "sk-secret-test")
     args = SimpleNamespace(base_url="http://127.0.0.1:4040/v1", timeout_seconds=10.0, image_parts=[])
-    result = ask_expert.call_gateway(args, "gpt-6.1-terra", [{"role": "user", "content": "hi"}])
+    result = ask_expert.call_gateway(args, "gpt-6.2-astra", [{"role": "user", "content": "hi"}])
 
     assert calls == [
         "http://127.0.0.1:4040/v1/responses/input_tokens",
@@ -95,7 +95,7 @@ def test_gateway_happy_path_and_token_limit(monkeypatch):
         lambda req, timeout=75.0: _fake_response({"input_tokens": ask_expert.MAX_INPUT_TOKENS + 1}),
     )
     with pytest.raises(RuntimeError, match="no model request was sent"):
-        ask_expert.call_gateway(args, "gpt-6.1-terra", [{"role": "user", "content": "hi"}])
+        ask_expert.call_gateway(args, "gpt-6.2-astra", [{"role": "user", "content": "hi"}])
 
 
 def test_gateway_401_redacts_api_key(monkeypatch):
@@ -106,7 +106,7 @@ def test_gateway_401_redacts_api_key(monkeypatch):
     monkeypatch.setenv("EXPERTS_API_KEY", "sk-secret-xyz")
     args = SimpleNamespace(base_url="http://127.0.0.1:4040/v1", timeout_seconds=10.0, image_parts=[])
     with pytest.raises(RuntimeError, match="HTTP 401") as exc_info:
-        ask_expert.call_gateway(args, "gpt-6.1-terra", [{"role": "user", "content": "hi"}])
+        ask_expert.call_gateway(args, "gpt-6.2-astra", [{"role": "user", "content": "hi"}])
     assert "sk-secret-xyz" not in str(exc_info.value)
 
 
@@ -117,12 +117,12 @@ def test_consult_codex_sse_stream(monkeypatch, tmp_path):
 
     sse = (
         'data: {"type":"response.output_text.delta","delta":"Verdict: Keep it simple.\\nNext: Run pytest.\\nPrompt: Run pytest now.\\nRisk: none"}\n\n'
-        'data: {"type":"response.completed","response":{"id":"resp_1","model":"gpt-6.1-terra","status":"completed","usage":{"input_tokens":50,"output_tokens":20,"total_tokens":70}}}\n\n'
+        'data: {"type":"response.completed","response":{"id":"resp_1","model":"gpt-6.2-astra","status":"completed","usage":{"input_tokens":50,"output_tokens":20,"total_tokens":70}}}\n\n'
         "data: [DONE]\n\n"
     )
     monkeypatch.setattr(ask_expert, "urlopen", lambda req, timeout=75.0: _fake_response(sse))
 
-    args = SimpleNamespace(model="gpt-6.1-terra", timeout_seconds=10.0)
+    args = SimpleNamespace(model="gpt-6.2-astra", timeout_seconds=10.0)
     res = ask_expert.consult_codex(args, [{"role": "user", "content": "hi"}], fallback_reason="gateway down")
     assert res["transport"] == "codex"
     assert res["fallback_reason"] == "gateway down"
@@ -150,7 +150,7 @@ def test_consult_claude_cli(monkeypatch):
         )
 
     monkeypatch.setattr(ask_expert.subprocess, "run", fake_run)
-    args = SimpleNamespace(model="gpt-6.1-terra", timeout_seconds=10.0)
+    args = SimpleNamespace(model="gpt-6.2-astra", timeout_seconds=10.0)
     res = ask_expert.consult_claude(args, "SYS", "PKT")
 
     assert res["transport"] == "claude"

@@ -52,7 +52,7 @@ Add this short rule to `~/.codex/AGENTS.md` or `~/.claude/CLAUDE.md` so your cod
 `skills/advisor/scripts/ask_expert.py` supports four `--transport` modes (`auto` by default):
 
 1. **Gateway (`--transport gateway`):** Set `EXPERTS_BASE_URL` (e.g. `http://127.0.0.1:4040/v1`) and `EXPERTS_API_KEY` in your environment. Supports custom models (`--model` / `NORTHSTAR_ADVISOR_MODEL`) and `--image` attachments.
-2. **Direct Codex (`--transport codex`):** Uses your existing `~/.codex/auth.json` (`codex login`) for simple text consultations with `gpt-6.1-terra` or `gpt-6.1-sol`.
+2. **Direct Codex (`--transport codex`):** Uses your existing `~/.codex/auth.json` (`codex login`) for simple text consultations with `gpt-6.2-astra`, `gpt-6.2-sol`, or `gpt-6-luna`.
 3. **Direct Claude Code (`--transport claude`):** Invokes `claude -p --no-session-persistence --tools ""` for simple text consultations.
 4. **Auto (`--transport auto`, default):** Uses `EXPERTS_BASE_URL` if configured and reachable, otherwise falls back to local Codex auth or `claude` CLI.
 

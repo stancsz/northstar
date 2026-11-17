@@ -84,7 +84,7 @@ python3 "$ADVISOR_DIR/scripts/ask_expert.py" --input-file ./advisor-packet.txt
 ### Transport & options
 - `--transport auto` *(default)*: Uses `EXPERTS_BASE_URL` (`/chat/completions` + `/responses/input_tokens`) if configured and reachable; otherwise falls back to local Codex auth (`~/.codex/auth.json`) or local `claude` CLI (`claude -p --no-session-persistence --tools ""`).
 - `--transport gateway`: Require the configured OpenAI-compatible gateway (`EXPERTS_BASE_URL` and `EXPERTS_API_KEY`).
-- `--transport codex`: Direct Codex text consultation (`gpt-6.1-terra` or `gpt-6.1-sol`).
+- `--transport codex`: Direct Codex text consultation (`gpt-6.2-astra`, `gpt-6.2-sol`, or `gpt-6-luna`).
 - `--transport claude`: Direct Claude Code CLI text consultation (`claude -p`).
 - `--model <name>`: Exact advisor model identifier (or set `NORTHSTAR_ADVISOR_MODEL`).
 - `--session-file <path>` & `--max-rounds <n>`: Optional round-budget tracker (default `3` rounds). Automatically prepends `Prior Verdict` on Round 2+ so you only send a short delta packet.
