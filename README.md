@@ -1,25 +1,34 @@
 # Codex Advisor
 
-**A single, token-efficient advisor skill for Codex CLI and Claude Code.**
+**Pair a fast, low-cost executor (Luna Max in Codex CLI, or Qwen 3.8 27B in Claude Code) with a smart frontier advisor (Astra / Sol)—cutting task cost by up to 99% without losing frontier judgment.**
 
-Instead of letting an expensive frontier model run long, multi-turn tool loops or read raw logs, **Codex Advisor** teaches your coding agent to do the local legwork first, prepare a compact summary packet (under 2,000 characters), ask **one sharp question**, and receive a 4-line reply (`Verdict`, `Next`, `Prompt`, `Risk`) to execute in its next turn.
+Running a frontier model for every file read, edit, and test loop burns tokens fast. **Codex Advisor** flips the pattern: your fast executor does all the local legwork, prepares a compact summary packet (under 2,000 characters), asks **one sharp question**, and gets back a 4-line reply (`Verdict`, `Next`, `Prompt`, `Risk`) to execute in its next turn. The advisor can use **your Codex subscription directly** or **any custom API/gateway URL** (`EXPERTS_BASE_URL`).
 
 [Install & Setup](docs/misc/install.md) · [Advisor Skill](skills/advisor/SKILL.md) · [License](LICENSE)
 
 ---
 
-## Why Advisor?
+## The Pattern: Cheap Executor + Smart Advisor
 
-| Problem | How Advisor Solves It |
+| Setup | Executor (Does the Work) | Advisor (1-Turn Guidance) | Result |
+| :--- | :--- | :--- | :--- |
+| **Codex CLI** | **Luna Max** (reads files, edits, runs tests) | **Astra / Sol** (via Codex subscription or custom URL) | Up to **99% cost reduction** on multi-step coding tasks while keeping frontier architecture & debugging quality. |
+| **Claude Code** | **Qwen 3.8 27B** / fast local or open-weights model | **Astra / Sol** (via custom URL or Codex subscription) | Same low-cost execution loop in Claude Code with frontier unblocking on hard decisions. |
+
+### Why It Saves Tokens
+
+| Problem | How Codex Advisor Solves It |
 | :--- | :--- |
-| **Frontier models burn tokens reading files and logs** | The caller agent reads files and runs tests locally, sending only 3–5 verified facts + 1 error snippet (≤ 400 chars). |
+| **Frontier models burn tokens reading files and logs** | The executor reads files and runs tests locally, sending only 3–5 verified facts + 1 error snippet (≤ 400 chars). |
 | **Vague prompts produce bloated, unfocused advice** | [`SKILL.md`](skills/advisor/SKILL.md) enforces a strict 4-part packet (`Decision`, `Verified Facts`, `Tried & Constraints`, `1 Sharp Question`) with Good vs. Bad examples. |
-| **Multi-turn subagent loops stall on permissions & cache misses** | Every consultation is a **1-turn, tool-free call** returning `Verdict`, `Next`, `Prompt`, and `Risk` (≤ 150 words). The caller executes the turn. |
-| **Different tooling for Codex CLI vs. Claude Code** | One skill ([`skills/advisor/`](skills/advisor/SKILL.md)) and one Python caller ([`ask_expert.py`](skills/advisor/scripts/ask_expert.py)) work across both Codex CLI and Claude Code. |
+| **Multi-turn subagent loops stall on permissions & cache misses** | Every consultation is a **1-turn, tool-free call** returning `Verdict`, `Next`, `Prompt`, and `Risk` (≤ 150 words). The executor runs the turn itself. |
+| **Different tooling for Codex CLI vs. Claude Code** | One skill ([`skills/advisor/`](skills/advisor/SKILL.md)) and one Python caller ([`ask_expert.py`](skills/advisor/scripts/ask_expert.py)) work identically in both. |
+
+---
 
 ## How It Works
 
-1. **Caller prepares a minimal packet** (`≤ 2,000` chars target, `4,000` hard cap):
+1. **Executor prepares a minimal packet** (`≤ 2,000` chars target, `4,000` hard cap):
    - **Decision / Blocker:** 1 sentence.
    - **Verified Facts:** 3–5 bullets from actual files/tests (no raw log dumps).
    - **Tried & Constraints:** 1 bullet.
@@ -27,17 +36,22 @@ Instead of letting an expensive frontier model run long, multi-turn tool loops o
 2. **Advisor responds in 1 turn** (`≤ 150` words):
    - `Verdict:` One decisive sentence.
    - `Next:` Up to 3 short, testable actions.
-   - `Prompt:` One ready-to-execute instruction for the caller's next turn.
+   - `Prompt:` One ready-to-execute instruction for the executor's next turn.
    - `Risk:` One material risk or stop condition (`none` if clear).
-3. **Caller executes the turn** and only re-consults if new evidence creates a new decision fork.
+3. **Executor runs the turn** and only re-consults if new evidence creates a new decision fork.
 
-## Transports
+---
+
+## Advisor Backends (Custom URL or Codex Subscription)
 
 [`ask_expert.py`](skills/advisor/scripts/ask_expert.py) supports `--transport auto|gateway|codex|claude`:
-- **`gateway`**: OpenAI-compatible `/chat/completions` + `/responses/input_tokens` (`EXPERTS_BASE_URL`, `EXPERTS_API_KEY`), with optional `--image` attachments.
-- **`codex`**: Direct Codex CLI auth (`~/.codex/auth.json`) for text consultations (`gpt-6.1-terra` or `gpt-6.1-sol`).
-- **`claude`**: Direct Claude Code CLI (`claude -p --no-session-persistence --tools ""`) for text consultations.
-- **`auto`** *(default)*: Uses `EXPERTS_BASE_URL` when configured and reachable, otherwise falls back to local Codex auth or `claude` CLI.
+
+- **`codex` (Codex Subscription Directly):** Uses your existing Codex CLI sign-in (`~/.codex/auth.json` via `codex login`) directly—no separate gateway or API key needed.
+- **`gateway` (Custom URL):** Point `EXPERTS_BASE_URL` (and `EXPERTS_API_KEY`) to any OpenAI-compatible `/v1` endpoint (LiteLLM, Subroute, OpenRouter, etc.), with optional `--image` screenshot attachments.
+- **`claude`:** Invokes `claude -p --no-session-persistence --tools ""` for simple text consultations.
+- **`auto`** *(default)*: Uses `EXPERTS_BASE_URL` if configured and reachable; otherwise falls back to your Codex subscription or local `claude` CLI.
+
+---
 
 ## Install & Test
 
