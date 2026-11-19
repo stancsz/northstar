@@ -27,3 +27,18 @@ Thumbs.db
 
 # Local Wrangler cache only; keep other project configuration visible
 /.wrangler/cache/
+
+# Evaluation scratch runs (keep eval/tasks/ and eval/results/ tracked)
+/eval/runs/
+
+# LaTeX build artifacts (keep paper/*.tex and paper/*.bib tracked)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+paper/*.blg
+paper/*.bbl
+paper/*.pdf

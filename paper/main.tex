@@ -1,0 +1,145 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!60!black,
+    citecolor=blue!60!black,
+    urlcolor=blue!60!black
+}
+
+\title{\textbf{Spot Advisor: Decoupling Local Execution from Compressed, One-Turn Frontier Judgment for Small Coding Agents}}
+
+% TODO: Add full author affiliation and contact email before arXiv submission.
+\author{
+    Stan Chan \\
+    \texttt{https://github.com/stancsz/spot-advisor}
+}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\textbf{[DRAFT --- empirical values will be populated strictly from Phase 2 logged artifacts in \texttt{eval/results/}.]}
+Autonomous software engineering agents couple expensive frontier reasoning to repetitive local context churn: file discovery, routine edits, and test iterations re-send growing histories on every turn, while small or fast executors stall on the narrow subset of hard architectural or debugging forks. We present \textbf{Spot Advisor} (\texttt{spot-advisor}), a host-agnostic, tool-free consultation protocol that keeps 100\% of repository exploration, editing, and verification on a fast or small-parameter executor while escalating only at verified bottlenecks via a compact structured evidence packet, an effort-calibrated frontier inference pass, and an atomic \texttt{Verdict / Do / Verify / Risk} response schema. Unlike server-side full-transcript advisors, Spot Advisor enforces deterministic evidence extraction (\texttt{--snippet}, \texttt{--diff}, \texttt{--error-tail}), host-level escalation triggers, rolling delta state, and thinking-headroom-safe reasoning budgets (\texttt{medium} default). We pre-register a five-arm evaluation across public software engineering benchmarks and a curated hard-fork diagnostic suite, along with a factorial Effort $\times$ I/O Budget Pareto sweep and failure taxonomy.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Autonomous coding agents face a persistent coupling between execution churn and reasoning cost. Running a frontier reasoning model across every file search, edit attempt, and test retry wastes roughly 90\% of tokens on mechanical repository navigation and grows quadratic context histories that induce \emph{context rot} and exhaust rate limits. Conversely, small local or fast cloud models ($7\text{B}\text{--}27\text{B}$ parameters or Haiku-class models) execute local tools cheaply and rapidly, yet frequently get trapped in trial-and-error loops at a small fraction of hard decision forks: subtle concurrency races, misdiagnosed root causes, and multi-file architectural tradeoffs.
+
+Spawning native frontier subagents rarely resolves this tension because subagents either inherit bloated conversation logs or launch fresh multi-turn tool loops. Even native server-side advisor tools~\citep{anthropic2026advisor} forward the entire accumulated transcript to the frontier model on each escalation, leaving input token expenditure high and locking workflows to a single provider.
+
+This work investigates \textbf{Spot Advisor}, an open, provider-agnostic protocol built around a simple principle: \emph{buy frontier intelligence only where it counts, with minimal clean context in and concise verifiable judgment out.} Specifically, we make four contributions:
+\begin{enumerate}
+    \item \textbf{Compressed Evidence-Anchored Consultation Protocol:} A structured four-slot input schema enforced by a zero-cost local preflight linter, bounded deterministic evidence extractors (\texttt{--snippet}, \texttt{--diff}, \texttt{--error-tail}), and a compact rolling session ledger that eliminates multi-round context bloat.
+    \item \textbf{Tiny-Executor Safeguards:} Deterministic host escalation triggers, optional single-turn pre-flight spot planning, and an atomic \texttt{Verdict / Do / Verify / Risk} output contract specifically designed to mitigate small-model overconfidence and lossy prose summarization.
+    \item \textbf{Calibrated Reasoning Headroom vs.\ Visible Brevity:} A separation between concise \emph{visible} guidance ($150\text{--}400$ words) and effort-scaled API \texttt{max\_output\_tokens} headroom (\texttt{2048}/\texttt{4096}/\texttt{8192}) so hidden reasoning tokens never truncate replies mid-thought.
+    \item \textbf{Pre-Registered Empirical Evaluation:} A reproducible five-arm benchmark suite, Effort $\times$ I/O Budget Pareto sweep, and five-category failure taxonomy logged under a strict JSON telemetry schema.
+\end{enumerate}
+
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Small Language Models and Asymmetric Agent Collaboration.}
+\citet{belcak2025slm} argue that small language models (SLMs) are economically better suited for repetitive agentic steps than monolithic frontier models. Closest in spirit to our edge-cloud split, \emph{Minions} and \emph{MinionS}~\citep{narayan2025minions} keep bulky document contexts on local SLMs and coordinate with a cloud frontier model, cutting cloud token cost $5.7\times$ while preserving $97.9\%$ of frontier performance once instructions are structured and decomposed (versus $87\%$ under unstructured prose chat). Spot Advisor inverts control for interactive coding: the small executor retains control of the repository and tool loop (following SWE-agent~\citep{yang2024sweagent} and SWE-bench~\citep{jimenez2024swebench}) and invokes the frontier model purely as an on-demand advisor.
+
+\paragraph{Native Advisor Tools and Model Routing.}
+\citet{anthropic2026advisor} introduced a native server-side advisor primitive (\texttt{advisor\_20260301}) in which a fast executor calls a frontier advisor mid-generation, improving Haiku BrowseComp accuracy from $19.7\%$ to $41.2\%$ and raising Sonnet SWE-bench Multilingual accuracy by $+2.7\text{pp}$ at $11.9\%$ lower cost than frontier-only execution, with advisor turns typically producing $400\text{--}700$ visible tokens ($1{,}400\text{--}1{,}800$ total tokens including thinking). However, that primitive forwards the raw conversation history and is single-vendor. Prior routing and cascading systems such as FrugalGPT~\citep{chen2023frugalgpt} and RouteLLM~\citep{ong2024routellm} select a single model per query upfront, whereas Spot Advisor escalates \emph{mid-trajectory} using only verified local ground truth.
+
+\section{The Spot Advisor Protocol}
+\label{sec:protocol}
+
+\subsection{Structured Input Packet and Deterministic Evidence}
+Each consultation begins with a local preflight check requiring a bounded four-slot packet (\emph{Blocker}, \emph{Facts}, \emph{Tried}, \emph{Question}) capped at $4{,}000$ characters in Round~1 ($400\text{--}1{,}500$ target input tokens) and $1{,}000$ characters for Round~2+ deltas. Because small models frequently omit crucial lines when summarizing errors in prose, the CLI provides bounded deterministic extractors (\texttt{--snippet}, \texttt{--diff}, \texttt{--error-tail}) that strip ANSI noise and inject verifiable code and traceback tails directly. Across rounds, a rolling session ledger ($\le 400$ characters) summarizes prior verdicts and observed outcomes so the advisor does not repeat falsified hypotheses.
+
+\subsection{Escalation Policy for Low-Parameter Executors}
+Because small models often fail to recognize when they are stuck, Spot Advisor pairs optional pre-flight planning on multi-file tasks with deterministic host rules (escalating after two consecutive test failures or repeated edits to the same symbol) enforced via host instruction files (\texttt{AGENTS.md} / \texttt{CLAUDE.md}).
+
+\subsection{Atomic Output Contract and Reasoning Effort Calibration}
+The advisor executes in a single tool-free turn and returns four structured lines: \texttt{Verdict}, \texttt{Do} ($\le 3$ concrete actions), \texttt{Verify} (one exact command or assertion), and \texttt{Risk} (stop condition or \texttt{none}). Crucially, API providers charge hidden chain-of-thought tokens against \texttt{max\_output\_tokens}; capping API limits near the visible target ($250$ tokens) induces reasoning-budget truncation (\texttt{finish\_reason: length}). Spot Advisor therefore defaults to \texttt{--effort medium} (with \texttt{high} for stubborn Round~2+ deadlocks and \texttt{low} for baseline sweeps) paired with scaled API ceilings (\texttt{2048} / \texttt{4096} / \texttt{8192}), enforcing visible conciseness ($150\text{--}400$ words) via system instructions and structured output parsing.
+
+\section{Experimental Setup}
+\label{sec:setup}
+
+Following our pre-registered protocol (\texttt{docs/research-protocol.md}), we evaluate Spot Advisor across a stratified sample of SWE-bench Verified~\citep{jimenez2024swebench} and/or Terminal-Bench alongside a curated multi-file hard-fork diagnostic suite. We compare five arms under identical sandboxes and turn budgets:
+\begin{itemize}
+    \item \textbf{A1 (Small Solo):} Local SLM ($7\text{B}\text{--}27\text{B}$) or fast cloud executor without assistance.
+    \item \textbf{A2 (Compute-Matched Best-of-N):} Small executor given extra retries matching T1 API spend.
+    \item \textbf{A3 (Frontier Solo):} Frontier reasoning model running the entire agent loop.
+    \item \textbf{A4 (Full-Transcript 1-Turn Advisor):} Same small executor and trigger policy, sending the full raw conversation history to the frontier advisor.
+    \item \textbf{T1 (Spot Advisor):} Same small executor using compressed packets, deterministic evidence, rolling ledger, and \texttt{Verdict / Do / Verify / Risk}.
+\end{itemize}
+Expected cost per solved task is computed as $\mathbb{E}[\text{cost}] = C_{\text{attempt}} / p_{\text{success}}$, with pairwise significance assessed via exact two-sided McNemar's test ($\alpha = 0.05$) and $10{,}000$-sample bootstrap 95\% confidence intervals.
+
+\section{Results}
+\label{sec:results}
+
+Table~\ref{tab:main-results} summarizes placeholder columns for our Phase~2 benchmark evaluation across all five arms. All cells will be populated programmatically from committed JSONL logs in \texttt{eval/results/}.
+
+\begin{table}[t]
+\centering
+\caption{Main benchmark comparison across experimental arms (\textbf{placeholder schema} --- values generated from \texttt{eval/results/} in Phase~2).}
+\label{tab:main-results}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Arm & \texttt{pass@1} (\%) & Consults & Adv.\ In Tok & Adv.\ Out / Think & $\mathbb{E}[\text{Cost}]$ (\$) & Speedup \\
+\midrule
+A1: Small Solo                  & TBD & 0.0 & 0   & 0 / 0     & TBD & $1.0\times$ \\
+A2: Compute-Matched Best-of-N   & TBD & 0.0 & 0   & 0 / 0     & TBD & TBD \\
+A3: Frontier Solo               & TBD & --- & TBD & TBD / TBD & TBD & TBD \\
+A4: Full-Transcript Advisor     & TBD & TBD & TBD & TBD / TBD & TBD & TBD \\
+\textbf{T1: Spot Advisor}       & \textbf{TBD} & \textbf{TBD} & \textbf{TBD} & \textbf{TBD / TBD} & \textbf{TBD} & \textbf{TBD} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Ablation Study, Effort Sweep, and Failure Taxonomy}
+\label{sec:ablations}
+
+To isolate which design elements drive small-executor gains and quantify the Effort $\times$ I/O Budget Pareto curve, Table~\ref{tab:ablations} tracks four component ablations alongside a sweep across \texttt{reasoning\_effort} $\in \{\texttt{low}, \texttt{medium}, \texttt{high}\}$, visible targets, and input modes. Unresolved T1 trajectories are categorized into five mutually exclusive failure modes: \textbf{E1} missed escalation, \textbf{E2} lossy/missing evidence, \textbf{E3} wrong advisor verdict, \textbf{E4} executor patch failure, and \textbf{E5} budget/truncation exhaustion.
+
+\begin{table}[t]
+\centering
+\caption{Component ablations and Effort $\times$ Visible-Budget sweep (\textbf{placeholder schema} --- populated in Phase~2).}
+\label{tab:ablations}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Variant / Setting & \texttt{pass@1} (\%) & Visible Tok & Think Tok & Truncated (\%) & $\mathbb{E}[\text{Cost}]$ (\$) \\
+\midrule
+T1 Default (\texttt{medium}, evidence, schema) & TBD & TBD & TBD & TBD & TBD \\
+\quad $-$ Deterministic evidence (prose only)      & TBD & TBD & TBD & TBD & TBD \\
+\quad $-$ Host triggers (self-escalate only)     & TBD & TBD & TBD & TBD & TBD \\
+\quad $-$ Atomic schema (unstructured advice)    & TBD & TBD & TBD & TBD & TBD \\
+\quad Effort = \texttt{low}                      & TBD & TBD & TBD & TBD & TBD \\
+\quad Effort = \texttt{high}                     & TBD & TBD & TBD & TBD & TBD \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Threats to Validity and Limitations}
+\label{sec:threats}
+
+Key threats include potential benchmark contamination in public SWE-bench snapshots (mitigated via novel diagnostic hard-fork tasks), API model version drift (mitigated via full provider model ID, request ID, and timestamp telemetry), sensitivity to host trigger thresholds, and cost asymmetry across local SLM hardware versus metered API endpoints (mitigated by reporting raw separated token counts alongside versioned pricing projections).
+
+\section{Conclusion and Reproducibility Statement}
+\label{sec:conclusion}
+
+Spot Advisor formalizes a cross-provider, compressed 1-turn consultation protocol enabling small coding executors to reach near-frontier judgment without continuous frontier context churn. All schemas, task manifests, evaluation scripts, and raw JSONL telemetry will be released at \url{https://github.com/stancsz/spot-advisor}.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
