@@ -1,0 +1,18 @@
+[
+  {
+    "arms": [
+      "spot_advisor",
+      "astra_only"
+    ],
+    "reason": "outside the scope of autonomous repair",
+    "task_id": "instance_gravitational__teleport-eda668c30d9d3b56d9c69197b120b01013611186"
+  },
+  {
+    "arms": [
+      "spot_advisor",
+      "astra_only"
+    ],
+    "reason": "outside the scope of autonomous repair",
+    "task_id": "instance_navidrome__navidrome-874b17b8f614056df0ef021b5d4f977341084185"
+  }
+]

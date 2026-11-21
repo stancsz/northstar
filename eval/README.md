@@ -1,23 +1,28 @@
-# `spot-advisor` Evaluation Suite (`eval/`)
+# Paired evaluation
 
-This directory houses the reproducible evaluation contract, schemas, and (in Phase 2) frozen task manifests, runners, and logged experimental results for the `spot-advisor` arXiv paper.
+The runner drives the two Codex subscription arms through the same local tools. Model requests use the existing direct Responses transport. A separate App Server client reads plan and quota metadata. Docker holds task environments without credentials or outbound networking.
 
----
+## Prepare
 
-## Planned Directory Layout
+Use Python 3.11 or later, Docker with Linux containers, Git, and a Codex CLI session signed into ChatGPT. Install report dependencies with `python -m pip install jsonschema 'matplotlib>=3.8'`. From the repository root:
 
-- [`telemetry_schema.json`](telemetry_schema.json) — Canonical JSON Schema (`Draft 2020-12`) for every per-task and per-consultation telemetry record.
-- `tasks/` *(Phase 2)* — Frozen benchmark manifests (exact SWE-bench Verified / Terminal-Bench instance IDs + curated diagnostic hard-fork tasks).
-- `runners/` *(Phase 2)* — Automated harness executing all 5 experimental arms (`A1`–`A4`, `T1`) and RQ3 ablations/effort sweeps.
-- `results/` *(Phase 2)* — Summarized, auditable artifacts, pinned `pricing.json`, and scripts generating LaTeX tables/figures for [`../paper/main.tex`](../paper/main.tex).
-- `runs/` *(git-ignored)* — Raw scratch workspaces, sandbox logs, and intermediate trial artifacts.
+```powershell
+git -c core.autocrlf=false clone --depth 1 --filter=blob:none --sparse https://github.com/scaleapi/SWE-bench_Pro-os.git eval/runs/swe-bench-pro-source
+git -C eval/runs/swe-bench-pro-source sparse-checkout set v2
+git -C eval/runs/swe-bench-pro-source rev-parse HEAD
+```
 
----
+Use the revision listed in [the task manifest](swe_tasks.json). If upstream has advanced, fetch that revision and check it out in the evaluation clone. Selected images are fetched on demand. The Chromium image is built locally from [browser.Dockerfile](browser.Dockerfile).
 
-## Immutable Logging Rules
+## Run and regenerate
 
-1. **Every run emits a validated JSONL record** conforming to [`telemetry_schema.json`](telemetry_schema.json), including `git_commit`, `executor_model`, `advisor_model`, `reasoning_effort`, `seed`, and separated `visible_output` vs. `reasoning` token counts.
-2. **Never hand-edit `eval/results/` or `paper/` tables.** All metrics reported in [`../README.md`](../README.md) and [`../paper/main.tex`](../paper/main.tex) must be produced programmatically from committed JSONL logs.
-3. **Never confuse API token truncation with visible length.** Telemetry records explicitly track both `visible_output_tokens`, `reasoning_tokens`, and `truncated` (`finish_reason == "length"`).
+```powershell
+python -B eval/run.py --stage pilot --output eval/runs/pilot
+python -B eval/report.py eval/runs/pilot --output eval/runs/pilot-report
+python -B eval/run.py --stage formal --output eval/runs/formal
+python -B eval/report.py eval/runs/formal --output eval/runs/formal-report
+```
 
-See [Research Protocol](../docs/research-protocol.md) for pre-registered research questions (`RQ1–RQ4`), baselines, and statistical tests.
+Use `--suite diagnostic` or `--suite browser` for a targeted integration run. `--workers` runs up to four independent pairs concurrently, with the two arms of each pair still executed in order. Concurrency is part of the frozen run manifest. A run skips completed arms when resumed. Inspect any interrupted trial's journal before choosing whether to repeat it. The journal preserves dispatches, provider errors and unsuccessful outcomes alongside completed work. Use `regrade.py` to apply revised pilot grading to existing artifacts without new model calls. For a finished study, export the sanitized `evidence.jsonl`, metrics, and manifest with the frozen revision.
+
+The report emits LaTeX from the captured records. A complete formal study requires paired observations for all 50 public coding tasks, 16 diagnostics and eight browser scenarios, with verified model identity and token attribution. See the [research protocol](../docs/research-protocol.md) and [schema](telemetry_schema.json).

@@ -6,7 +6,7 @@
 
 ## 1. Install the Skill
 
-### Generic `.agents/skills` (Cross-Agent)
+### Codex and other hosts that discover `.agents/skills`
 
 From the repository root in PowerShell:
 
@@ -31,33 +31,56 @@ Copy-Item -Path '.\skills\advisor\*' -Destination $dest -Recurse -Force
 
 *(Bash on macOS/Linux: `mkdir -p "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/advisor" && cp -R ./skills/advisor/* "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/advisor/"`.)*
 
-### Codex CLI
+### Hosts configured to read `.codex/skills`
 
 From the repository root in PowerShell:
 
 ```powershell
-$dest = Join-Path $env:USERPROFILE '.codex\skills\advisor'
+$codexDir = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE '.codex' }
+$dest = Join-Path $codexDir 'skills\advisor'
 New-Item -ItemType Directory -Force $dest | Out-Null
 Copy-Item -Path '.\skills\advisor\*' -Destination $dest -Recurse -Force
 ```
 
 *(Bash on macOS/Linux: `mkdir -p ~/.codex/skills/advisor && cp -R ./skills/advisor/* ~/.codex/skills/advisor/`.)*
 
+Choose one discoverable Codex copy. An existing `SKILL.md.disabled` marks an inactive copy. Claude Code has its own skill directory.
+
 ---
 
-## 2. Global Agent Instructions (`AGENTS.md` / `CLAUDE.md`)
+## 2. Use the 2.0 text protocol
 
-Add this rule to your global agent instructions (`~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, or equivalent) so your fast executor knows when to escalate and keeps packets small:
+Save a task state JSON file. Update its revision when the workspace, evidence, or decision changes.
 
-```markdown
-## Use Spot Advisor for hard decisions (zero bloat)
-- Do all local file reading, edits, builds, and test runs yourself.
-- Never spawn a heavy subagent as the advisor; call `ask_expert.py` for a 1-turn, tool-free response.
-- Escalate when blocked by a design fork, 2 consecutive failed fix attempts, or a visual check (`--image`).
-- Send a compact packet (target <= 2,000 chars, hard cap 4,000): 1-sentence blocker, 3–5 verified facts (at most 1 short snippet <= 400 chars), what was tried, and 1 sharp question.
-- For multi-round debugging, pass `--session-file` and send only a short delta packet on Round 2+.
-- Execute the advisor's reply directly in your own next turn.
+```json
+{
+  "task_id": "cache-expiry-fix",
+  "revision": "1",
+  "goal": "Fix cache expiry at the deadline.",
+  "phase": "Reproduced the failure",
+  "constraints": ["Preserve the public cache interface."],
+  "acceptance": ["The focused expiry test and existing suite pass."],
+  "evidence": ["Two runs still returned the cached value at time == expiry."],
+  "last_advice_outcome": ""
+}
 ```
+
+From the task workspace, use the script from the installed skill. For example:
+
+```powershell
+$advisorScript = Join-Path $env:USERPROFILE '.agents\skills\advisor\scripts\ask_expert.py'
+python $advisorScript --state-file tmp/advisor-state.json --session-file tmp/advisor-session.json --trigger two_failed_checks --question "Which boundary condition should change?"
+```
+
+A state file selects v2 automatically. Check whether the intended test ran and whether its dependencies were available. A successful command with zero tests provides no evidence about the patch.
+
+After an interruption, `python $advisorScript --status --session-file tmp/advisor-session.json` reads the local round budget and receipt, including unknown usage. An unresolved dispatch blocks a duplicate. A completed journal entry can recover a round after a crash.
+
+Reuse the session file for the task. Its first invocation sets the persistent round limit. Advice that passes validation is available in `advice_fields`; use `status` to distinguish valid, stale, and unusable replies. The adjacent `.attempts.jsonl` records possible dispatches and provider token receipts. An explicit `--receipt-file` can choose a different journal.
+
+Append `--preview` to inspect the task packet before sending it. The Claude Code route adds a short reply-format reminder. The preview reads the current round and leaves the session and journal untouched. On a tight follow-up, the packer keeps the question, constraints and acceptance checks, and excerpts the head and tail of long evidence. Supply a short `decision_focus` in the task state if the full goal leaves insufficient space. A `packet_too_large` result identifies an input to shorten and has an empty attempts list.
+
+For exact local evidence, select `--snippet PATH:FIRST-LAST`, `--diff`, or `--error-tail PATH` from the repository root. Read the included evidence before sending it. Use `--protocol v1` for the original four-line format and image attachments.
 
 ---
 

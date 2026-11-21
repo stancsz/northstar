@@ -1,4 +1,4 @@
 interface:
   display_name: "Advisor"
-  short_description: "1-turn frontier advisor for Codex CLI and Claude Code with minimal-bloat packets"
-  default_prompt: "Use $advisor to ask a concise, zero-bloat question to a frontier advisor model. Summarize the decision, 3-5 verified facts, what was tried, and 1 sharp question (under 2,000 chars), then execute the returned Verdict/Next/Prompt in your own turn."
+  short_description: "One-turn frontier advice for Codex CLI and Claude Code"
+  default_prompt: "Use $advisor at a verified blocker. Preserve the goal, constraints and acceptance check in a short task state, ask one question, and verify the returned action locally."

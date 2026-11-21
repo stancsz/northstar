@@ -1,0 +1,273 @@
+{
+  "revision": "66f92766bba642462d4bbe5479e83f91f9211862",
+  "seed": 20261120,
+  "pilot": [
+    {
+      "id": "instance_ansible__ansible-e22e103cdf8edc56ff7d9b848a58f94f1471a263-v1055803c3a812189a1133297f7f5468579283f86",
+      "repository": "ansible__ansible",
+      "hard51": false
+    },
+    {
+      "id": "instance_internetarchive__openlibrary-e390c1212055dd84a262a798e53487e771d3fb64-v8717e18970bcdc4e0d2cea3b1527752b21e74866",
+      "repository": "internetarchive__openlibrary",
+      "hard51": false
+    },
+    {
+      "id": "instance_qutebrowser__qutebrowser-1943fa072ec3df5a87e18a23b0916f134c131016-vafb3e8e01b31319c66c4e666b8a3b1d8ba55db24",
+      "repository": "qutebrowser__qutebrowser",
+      "hard51": false
+    }
+  ],
+  "formal": [
+    {
+      "id": "instance_NodeBB__NodeBB-bad15643013ca15affe408b75eba9e47cc604bb2-vd59a5728dfc977f44533186ace531248c2917516",
+      "repository": "NodeBB__NodeBB",
+      "hard51": false
+    },
+    {
+      "id": "instance_NodeBB__NodeBB-8168c6c40707478f71b8af60300830fe554c778c-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "repository": "NodeBB__NodeBB",
+      "hard51": true
+    },
+    {
+      "id": "instance_ansible__ansible-a1569ea4ca6af5480cf0b7b3135f5e12add28a44-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "repository": "ansible__ansible",
+      "hard51": false
+    },
+    {
+      "id": "instance_ansible__ansible-d72025be751c894673ba85caa063d835a0ad3a8c-v390e508d27db7a51eece36bb6d9698b63a5b638a",
+      "repository": "ansible__ansible",
+      "hard51": true
+    },
+    {
+      "id": "instance_element-hq__element-web-2760bfc8369f1bee640d6d7a7e910783143d4c5f-vnan",
+      "repository": "element-hq__element-web",
+      "hard51": false
+    },
+    {
+      "id": "instance_element-hq__element-web-66d0b318bc6fee0d17b54c1781d6ab5d5d323135-vnan",
+      "repository": "element-hq__element-web",
+      "hard51": true
+    },
+    {
+      "id": "instance_flipt-io__flipt-492cc0b158200089dceede3b1aba0ed28df3fb1d",
+      "repository": "flipt-io__flipt",
+      "hard51": false
+    },
+    {
+      "id": "instance_flipt-io__flipt-c1728053367c753688f114ec26e703c8fdeda125",
+      "repository": "flipt-io__flipt",
+      "hard51": true
+    },
+    {
+      "id": "instance_future-architect__vuls-4b680b996061044e93ef5977a081661665d3360a",
+      "repository": "future-architect__vuls",
+      "hard51": false
+    },
+    {
+      "id": "instance_gravitational__teleport-78b0d8c72637df1129fb6ff84fc49ef4b5ab1288",
+      "repository": "gravitational__teleport",
+      "hard51": false
+    },
+    {
+      "id": "instance_gravitational__teleport-7744f72c6eb631791434b648ba41083b5f6d2278-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "repository": "gravitational__teleport",
+      "hard51": true
+    },
+    {
+      "id": "instance_internetarchive__openlibrary-7f6b722a10f822171501d027cad60afe53337732-ve8c8d62a2b60610a3c4631f5f23ed866bada9818",
+      "repository": "internetarchive__openlibrary",
+      "hard51": false
+    },
+    {
+      "id": "instance_internetarchive__openlibrary-53d376b148897466bb86d5accb51912bbbe9a8ed-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "repository": "internetarchive__openlibrary",
+      "hard51": true
+    },
+    {
+      "id": "instance_navidrome__navidrome-c90468b895f6171e33e937ff20dc915c995274f0",
+      "repository": "navidrome__navidrome",
+      "hard51": false
+    },
+    {
+      "id": "instance_navidrome__navidrome-69e0a266f48bae24a11312e9efbe495a337e4c84",
+      "repository": "navidrome__navidrome",
+      "hard51": true
+    },
+    {
+      "id": "instance_protonmail__webclients-944adbfe06644be0789f59b78395bdd8567d8547",
+      "repository": "protonmail__webclients",
+      "hard51": false
+    },
+    {
+      "id": "instance_protonmail__webclients-08bb09914d0d37b0cd6376d4cab5b77728a43e7b",
+      "repository": "protonmail__webclients",
+      "hard51": true
+    },
+    {
+      "id": "instance_qutebrowser__qutebrowser-85b867fe8d4378c8e371f055c70452f546055854-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "repository": "qutebrowser__qutebrowser",
+      "hard51": false
+    },
+    {
+      "id": "instance_qutebrowser__qutebrowser-c09e1439f145c66ee3af574386e277dd2388d094-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "repository": "qutebrowser__qutebrowser",
+      "hard51": true
+    },
+    {
+      "id": "instance_tutao__tutanota-51818218c6ae33de00cbea3a4d30daac8c34142e-vc4e41fd0029957297843cb9dec4a25c7c756f029",
+      "repository": "tutao__tutanota",
+      "hard51": false
+    },
+    {
+      "id": "instance_tutao__tutanota-f373ac3808deefce8183dad8d16729839cc330c1-v2939aa9f4356f0dc9f523ee5ce19d09e08ab979b",
+      "repository": "tutao__tutanota",
+      "hard51": true
+    },
+    {
+      "id": "instance_NodeBB__NodeBB-f1a80d48cc45877fcbadf34c2345dd9709722c7f-v4fbcfae8b15e4ce5d132c408bca69ebb9cf146ed",
+      "repository": "NodeBB__NodeBB",
+      "hard51": false
+    },
+    {
+      "id": "instance_ansible__ansible-622a493ae03bd5e5cf517d336fc426e9d12208c7-v906c969b551b346ef54a2c0b41e04f632b7b73c2",
+      "repository": "ansible__ansible",
+      "hard51": false
+    },
+    {
+      "id": "instance_ansible__ansible-c1f2df47538b884a43320f53e787197793b105e8-v906c969b551b346ef54a2c0b41e04f632b7b73c2",
+      "repository": "ansible__ansible",
+      "hard51": true
+    },
+    {
+      "id": "instance_element-hq__element-web-7c63d52500e145d6fff6de41dd717f61ab88d02f-vnan",
+      "repository": "element-hq__element-web",
+      "hard51": false
+    },
+    {
+      "id": "instance_element-hq__element-web-ecfd1736e5dd9808e87911fc264e6c816653e1a9-vnan",
+      "repository": "element-hq__element-web",
+      "hard51": true
+    },
+    {
+      "id": "instance_flipt-io__flipt-2ce8a0331e8a8f63f2c1b555db8277ffe5aa2e63",
+      "repository": "flipt-io__flipt",
+      "hard51": false
+    },
+    {
+      "id": "instance_flipt-io__flipt-524f277313606f8cd29b299617d6565c01642e15",
+      "repository": "flipt-io__flipt",
+      "hard51": true
+    },
+    {
+      "id": "instance_future-architect__vuls-b8db2e0b74f60cb7d45f710f255e061f054b6afc",
+      "repository": "future-architect__vuls",
+      "hard51": false
+    },
+    {
+      "id": "instance_gravitational__teleport-82185f232ae8974258397e121b3bc2ed0c3729ed-v626ec2a48416b10a88641359a169d99e935ff037",
+      "repository": "gravitational__teleport",
+      "hard51": false
+    },
+    {
+      "id": "instance_gravitational__teleport-65438e6e44b6ce51458d09b7bb028a2797cfb0ea-vce94f93ad1030e3136852817f2423c1b3ac37bc4",
+      "repository": "gravitational__teleport",
+      "hard51": true
+    },
+    {
+      "id": "instance_internetarchive__openlibrary-60725705782832a2cb22e17c49697948a42a9d03-v298a7a812ceed28c4c18355a091f1b268fe56d86",
+      "repository": "internetarchive__openlibrary",
+      "hard51": false
+    },
+    {
+      "id": "instance_internetarchive__openlibrary-6e889f4a733c9f8ce9a9bd2ec6a934413adcedb9-ve8c8d62a2b60610a3c4631f5f23ed866bada9818",
+      "repository": "internetarchive__openlibrary",
+      "hard51": true
+    },
+    {
+      "id": "instance_navidrome__navidrome-d8e794317f788198227e10fb667e10496b3eb99a",
+      "repository": "navidrome__navidrome",
+      "hard51": false
+    },
+    {
+      "id": "instance_navidrome__navidrome-874b17b8f614056df0ef021b5d4f977341084185",
+      "repository": "navidrome__navidrome",
+      "hard51": true
+    },
+    {
+      "id": "instance_protonmail__webclients-32ff10999a06455cb2147f6873d627456924ae13",
+      "repository": "protonmail__webclients",
+      "hard51": false
+    },
+    {
+      "id": "instance_protonmail__webclients-e65cc5f33719e02e1c378146fb981d27bc24bdf4",
+      "repository": "protonmail__webclients",
+      "hard51": true
+    },
+    {
+      "id": "instance_qutebrowser__qutebrowser-5fdc83e5da6222fe61163395baaad7ae57fa2cb4-v363c8a7e5ccdf6968fc7ab84a2053ac78036691d",
+      "repository": "qutebrowser__qutebrowser",
+      "hard51": false
+    },
+    {
+      "id": "instance_qutebrowser__qutebrowser-e70f5b03187bdd40e8bf70f5f3ead840f52d1f42-v02ad04386d5238fe2d1a1be450df257370de4b6a",
+      "repository": "qutebrowser__qutebrowser",
+      "hard51": true
+    },
+    {
+      "id": "instance_tutao__tutanota-de49d486feef842101506adf040a0f00ded59519-v10a26bfb45a064b93f4fc044a0254925037b88f1",
+      "repository": "tutao__tutanota",
+      "hard51": false
+    },
+    {
+      "id": "instance_NodeBB__NodeBB-9c576a0758690f45a6ca03b5884c601e473bf2c1-vd59a5728dfc977f44533186ace531248c2917516",
+      "repository": "NodeBB__NodeBB",
+      "hard51": false
+    },
+    {
+      "id": "instance_ansible__ansible-cd9c4eb5a6b2bfaf4a6709f001ce3d0c92c1eed2-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "repository": "ansible__ansible",
+      "hard51": false
+    },
+    {
+      "id": "instance_ansible__ansible-d62496fe416623e88b90139dc7917080cb04ce70-v0f01c69f1e2528b935359cfe578530722bca2c59",
+      "repository": "ansible__ansible",
+      "hard51": true
+    },
+    {
+      "id": "instance_element-hq__element-web-8f3c8b35153d2227af45f32e46bd1e15bd60b71f-vnan",
+      "repository": "element-hq__element-web",
+      "hard51": false
+    },
+    {
+      "id": "instance_element-hq__element-web-772df3021201d9c73835a626df8dcb6334ad9a3e-vnan",
+      "repository": "element-hq__element-web",
+      "hard51": true
+    },
+    {
+      "id": "instance_flipt-io__flipt-b22f5f02e40b225b6b93fff472914973422e97c6",
+      "repository": "flipt-io__flipt",
+      "hard51": false
+    },
+    {
+      "id": "instance_flipt-io__flipt-3d5a345f94c2adc8a0eaa102c189c08ad4c0f8e8",
+      "repository": "flipt-io__flipt",
+      "hard51": true
+    },
+    {
+      "id": "instance_future-architect__vuls-e4728e388120b311c4ed469e4f942e0347a2689b-v264a82e2f4818e30f5a25e4da53b27ba119f62b5",
+      "repository": "future-architect__vuls",
+      "hard51": false
+    },
+    {
+      "id": "instance_gravitational__teleport-2bb3bbbd8aff1164a2353381cb79e1dc93b90d28-vee9b09fb20c43af7e520f57e9239bbcf46b7113d",
+      "repository": "gravitational__teleport",
+      "hard51": false
+    },
+    {
+      "id": "instance_gravitational__teleport-eda668c30d9d3b56d9c69197b120b01013611186",
+      "repository": "gravitational__teleport",
+      "hard51": true
+    }
+  ]
+}

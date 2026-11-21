@@ -1,0 +1,21 @@
+{
+  "as_of": "2026-11-20",
+  "basis": "OpenAI public Standard API equivalent, USD per million tokens, 30-minute cache writes",
+  "long_input_threshold": 272000,
+  "models": {
+    "gpt-6-luna": {
+      "source": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      "input": 0.1,
+      "cache_read": 0.01,
+      "cache_write": 0.125,
+      "output": 0.5
+    },
+    "gpt-6.2-astra": {
+      "source": "https://developers.openai.com/api/docs/models/gpt-6.2-astra",
+      "input": 8,
+      "cache_read": 0.4,
+      "cache_write": 10,
+      "output": 40
+    }
+  }
+}

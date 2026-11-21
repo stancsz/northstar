@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Request Desk</title>
+<style>
+body { font: 16px system-ui, sans-serif; margin: 36px auto; max-width: 860px; padding: 0 20px; color: #102238; }
+header { border-bottom: 1px solid #c6d1dd; }
+select, button, textarea { font: inherit; margin: 8px 8px 8px 0; padding: 8px; }
+#rows > div { display: flex; gap: 18px; align-items: center; border-bottom: 1px solid #d7e0ea; }
+button { cursor: pointer; }
+[hidden] { display: none; }
+</style>
+<header><h1>Request Desk</h1></header>
+<label>Team
+  <select aria-label="Team"><option value="">All teams</option><option>Atlas</option><option>Beacon</option></select>
+</label>
+<label>Status
+  <select aria-label="Status"><option value="">All statuses</option><option>New</option><option>Review</option><option>Closed</option></select>
+</label>
+<div id="rows" aria-live="polite"></div>
+<section id="editor" hidden>
+  <h2 id="edit-title"></h2>
+  <label>New status <select aria-label="New status"><option>New</option><option>Review</option><option>Closed</option></select></label>
+  <label>Owner <select aria-label="Owner"><option>Unassigned</option><option>Jamie</option><option>Morgan</option></select></label>
+  <label>Note <textarea aria-label="Note"></textarea></label>
+  <button>Preview update</button>
+  <button>Cancel edit</button>
+</section>
+<section id="preview" hidden>
+  <h2>Preview update</h2><p id="preview-text"></p>
+  <button>Confirm update</button><button>Back to edit</button>
+</section>
+<p id="notice" role="status"></p>
+<script src="seed.js"></script>
+<script>
+const $ = (query) => document.querySelector(query);
+let records = JSON.parse(JSON.stringify(window.SEED));
+let selected = null;
+let draft = null;
+window.deskState = () => ({records, preview: draft !== null, selected: selected?.id ?? null});
+function filterRows() {
+  const team = $('[aria-label="Team"]').value;
+  const status = $('[aria-label="Status"]').value;
+  $('#rows').replaceChildren();
+  for (const row of records.filter(item => (!team || team === item.team) && (!status || status === item.status))) {
+    const line = document.createElement('div');
+    const summary = document.createElement('span');
+    summary.textContent = [row.id, row.name, row.team, row.status, row.owner].join(' · ');
+    const open = document.createElement('button');
+    open.textContent = 'Open ' + row.id;
+    open.onclick = () => {
+      selected = row;
+      draft = null;
+      $('#preview').hidden = true;
+      $('#editor').hidden = false;
+      $('#edit-title').textContent = 'Edit ' + row.id + ' · ' + row.name;
+      $('[aria-label="New status"]').value = row.status;
+      $('[aria-label="Owner"]').value = row.owner;
+      $('[aria-label="Note"]').value = row.note;
+    };
+    line.append(summary, open);
+    $('#rows').append(line);
+  }
+}
+function bind(label, action) {
+  const button = [...document.querySelectorAll('button')].find(item => item.textContent === label);
+  button.onclick = action;
+}
+function closeEditor() {
+  selected = null;
+  draft = null;
+  $('#editor').hidden = true;
+  $('#preview').hidden = true;
+}
+bind('Preview update', () => {
+  draft = {...selected, status: $('[aria-label="New status"]').value,
+    owner: $('[aria-label="Owner"]').value, note: $('[aria-label="Note"]').value};
+  $('#preview-text').textContent = [draft.id, draft.status, draft.owner, draft.note].join(' · ');
+  $('#editor').hidden = true;
+  $('#preview').hidden = false;
+});
+bind('Back to edit', () => {
+  draft = null;
+  $('#preview').hidden = true;
+  $('#editor').hidden = false;
+});
+bind('Cancel edit', closeEditor);
+bind('Confirm update', () => {
+  const id = draft.id;
+  records = records.map(row => row.id === id ? draft : row);
+  closeEditor();
+  filterRows();
+  $('#notice').textContent = 'Updated ' + id;
+});
+$('[aria-label="Team"]').onchange = filterRows;
+$('[aria-label="Status"]').onchange = filterRows;
+filterRows();
+</script>
